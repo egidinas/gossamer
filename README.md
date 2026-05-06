@@ -50,14 +50,17 @@ Open `http://127.0.0.1:5179/#landing`.
 go test ./...
 cd web
 npm run test:contracts
+npm run test:browser
 npm run build
 ```
+
+`npm run test:browser` starts the local Go API and Vite app, visits every UI route at desktop and mobile widths, fails on page errors or horizontal overflow, and writes screenshots to `web/test-artifacts/screenshots/`. The artifact directory is ignored by git.
 
 ## Demo Surface
 
 The UI exposes eight views:
 
-- landing: public-safe project story and navigation,
+- landing: public-safe project story, navigation, and compact parallel FAT preview,
 - mission map: synthetic test article, facilities, buses, and campaigns,
 - supervisor: swimlane board for parallel FAT and qualification activities with backend-defined hero graphs,
 - graph wall: backend-defined graph lanes over deterministic telemetry,

@@ -21,6 +21,7 @@ if (!manifest.synthetic_only) throw new Error("manifest must be synthetic_only")
 for (const route of ["landing", "supervisor", "bus-tap"]) {
   if (!appSource.includes(route)) throw new Error(`missing ${route} route in App.tsx`);
 }
+if (!appSource.includes("report")) throw new Error("missing report route in App.tsx");
 
 const supervisor = await readJSON("supervisor_overview.json");
 requireEnvelope("supervisor", supervisor);
@@ -50,10 +51,16 @@ for (const campaignID of manifest.campaigns) {
   const campaign = await readJSON(`campaigns/${campaignID}.json`);
   requireEnvelope(campaignID, campaign);
   if (!Array.isArray(campaign.requirements) || campaign.requirements.length < 8) throw new Error(`${campaignID} requirements missing`);
+  if (!Array.isArray(campaign.anomalies)) throw new Error(`${campaignID} anomalies must be an array`);
   const graph = await readJSON(`graph_models/${campaignID}.json`);
   requireEnvelope(`${campaignID} graph`, graph);
   const report = await readJSON(`reports/${campaignID}_report.json`);
   requireEnvelope(`${campaignID} report`, report);
+  if (!Array.isArray(report.requirements)) throw new Error(`${campaignID} report requirements must be an array`);
+  if (!Array.isArray(report.sources)) throw new Error(`${campaignID} report sources must be an array`);
+  if (!Array.isArray(report.graph_evidence)) throw new Error(`${campaignID} report graph evidence must be an array`);
+  if (!Array.isArray(report.anomalies)) throw new Error(`${campaignID} report anomalies must be an array`);
+  if (!Array.isArray(report.reproducibility)) throw new Error(`${campaignID} report reproducibility must be an array`);
   for (const lane of graph.lanes) {
     for (const series of lane.series) {
       if (!series.units || !series.role) throw new Error(`${series.id} missing units or role`);

@@ -44,3 +44,5 @@ These ranges are intentionally generic. They support conversation about system b
 ## Determinism
 
 `generated_at` is fixed in public fixtures, and every sample is computed from deterministic formulas. The fixture test suite verifies that repeated generation produces byte-identical outputs for representative contract files.
+
+Campaign and evidence-report collections are serialized as arrays even when empty. For example, campaigns without synthetic anomalies use `"anomalies": []` rather than `null`, which keeps browser views and export tooling on one stable contract shape.

@@ -31,4 +31,4 @@ The model deliberately avoids:
 
 ## UI
 
-The Bus Tap page renders bidirectional TM and TC columns, stream cards, counters, latency, source and destination nodes, and recent event summaries. It is designed to look like a live operational tap while remaining entirely synthetic.
+The Bus Tap page renders bidirectional TM and TC columns, stream cards, counters, latency, source and destination nodes, and recent event summaries. It is designed to look like a live operational tap while remaining entirely synthetic. The layout is intentionally card-based so long fictional bus names and counters remain readable on desktop and mobile screenshots.
