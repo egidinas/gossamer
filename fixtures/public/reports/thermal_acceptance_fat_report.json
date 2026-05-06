@@ -142,7 +142,22 @@
       "evidence_suitability": "supporting",
       "signals": [
         "obc_boot_state",
-        "obc_command_counter"
+        "obc_command_counter",
+        "tc_packet_counter"
+      ]
+    },
+    {
+      "id": "spacecraft_rf",
+      "label": "Spacecraft RF Comms",
+      "owner": "subsystem_test_role",
+      "bus": "telemetry_bus",
+      "quality": "fresh",
+      "freshness_ms": 450,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "rf_link_margin_db",
+        "tm_packet_counter"
       ]
     },
     {
@@ -171,6 +186,22 @@
       "evidence_suitability": "primary",
       "signals": [
         "tvac_pressure_pa"
+      ]
+    },
+    {
+      "id": "demo_bus_virtualization",
+      "label": "Demo Bus Virtualization Tap",
+      "owner": "test_conductor_role",
+      "bus": "telemetry_bus",
+      "quality": "synthetic",
+      "freshness_ms": 200,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "bus_latency_ms",
+        "tm_packet_counter",
+        "tc_packet_counter",
+        "dropped_frame_count"
       ]
     },
     {

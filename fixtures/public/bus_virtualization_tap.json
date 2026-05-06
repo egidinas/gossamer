@@ -1,0 +1,465 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-01-15T10:00:00Z",
+  "connection_id": "bus_virtualization_demo",
+  "description": "Polling replay of fictional TM and TC envelopes between generic test nodes.",
+  "replay_cursor": "cursor-aurorasat-demo-001",
+  "streams": [
+    {
+      "id": "tm_primary",
+      "label": "AuroraSat-1 TM to Archive",
+      "direction": "TM",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "bus": "telemetry_bus",
+      "quality": "fresh",
+      "latency_ms": 22,
+      "packet_counter": 6748,
+      "dropped_frames": 0
+    },
+    {
+      "id": "tc_primary",
+      "label": "Flatsat Rack TC to AuroraSat-1",
+      "direction": "TC",
+      "source_node": "flatsat_rack_a",
+      "destination_node": "aurorasat_1",
+      "bus": "command_bus",
+      "quality": "fresh",
+      "latency_ms": 31,
+      "packet_counter": 214,
+      "dropped_frames": 0
+    },
+    {
+      "id": "facility_tm",
+      "label": "Facility Control TM to Archive",
+      "direction": "TM",
+      "source_node": "thermal_chamber_a",
+      "destination_node": "archive_node_a",
+      "bus": "facility_control_bus",
+      "quality": "fresh",
+      "latency_ms": 28,
+      "packet_counter": 4080,
+      "dropped_frames": 0
+    }
+  ],
+  "events": [
+    {
+      "id": "BUS-TM-0001",
+      "stream_id": "tm_primary",
+      "direction": "TM",
+      "timestamp": "2026-01-15T10:00:00Z",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "event_class": "telemetry_sample",
+      "authority": "read_only_tap",
+      "quality": "fresh",
+      "latency_ms": 18,
+      "packet_counter": 6000,
+      "fields": {
+        "bus_latency_ms": 18,
+        "eps_bus_voltage_v": 28,
+        "thermal_zone_1_deg_c": -17.6
+      },
+      "states": {
+        "rf_link_sim_state": "locked"
+      },
+      "summary": "Synthetic telemetry envelope mirrored into the archive tap."
+    },
+    {
+      "id": "BUS-TC-0001",
+      "stream_id": "tc_primary",
+      "direction": "TC",
+      "timestamp": "2026-01-15T10:00:00Z",
+      "source_node": "flatsat_rack_a",
+      "destination_node": "aurorasat_1",
+      "event_class": "command_request",
+      "authority": "demo_operator_lease",
+      "quality": "fresh",
+      "latency_ms": 30,
+      "packet_counter": 120,
+      "fields": {
+        "expected_ack_ms": 120,
+        "requested_step": 0
+      },
+      "states": {
+        "authorization": "accepted",
+        "execution_ack": "complete"
+      },
+      "summary": "Fictional command request accepted by the mocked authority lease."
+    },
+    {
+      "id": "BUS-TM-0002",
+      "stream_id": "tm_primary",
+      "direction": "TM",
+      "timestamp": "2026-01-15T10:15:00Z",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "event_class": "telemetry_sample",
+      "authority": "read_only_tap",
+      "quality": "fresh",
+      "latency_ms": 19,
+      "packet_counter": 6017,
+      "fields": {
+        "bus_latency_ms": 19.07,
+        "eps_bus_voltage_v": 28.04,
+        "thermal_zone_1_deg_c": -12.92
+      },
+      "states": {
+        "rf_link_sim_state": "locked"
+      },
+      "summary": "Synthetic telemetry envelope mirrored into the archive tap."
+    },
+    {
+      "id": "BUS-TM-0003",
+      "stream_id": "tm_primary",
+      "direction": "TM",
+      "timestamp": "2026-01-15T10:30:00Z",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "event_class": "telemetry_sample",
+      "authority": "read_only_tap",
+      "quality": "fresh",
+      "latency_ms": 20,
+      "packet_counter": 6034,
+      "fields": {
+        "bus_latency_ms": 20.11,
+        "eps_bus_voltage_v": 28.08,
+        "thermal_zone_1_deg_c": -8.27
+      },
+      "states": {
+        "rf_link_sim_state": "locked"
+      },
+      "summary": "Synthetic telemetry envelope mirrored into the archive tap."
+    },
+    {
+      "id": "BUS-TM-0004",
+      "stream_id": "tm_primary",
+      "direction": "TM",
+      "timestamp": "2026-01-15T10:45:00Z",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "event_class": "telemetry_sample",
+      "authority": "read_only_tap",
+      "quality": "fresh",
+      "latency_ms": 21,
+      "packet_counter": 6051,
+      "fields": {
+        "bus_latency_ms": 21.12,
+        "eps_bus_voltage_v": 28.12,
+        "thermal_zone_1_deg_c": -3.66
+      },
+      "states": {
+        "rf_link_sim_state": "locked"
+      },
+      "summary": "Synthetic telemetry envelope mirrored into the archive tap."
+    },
+    {
+      "id": "BUS-TC-0002",
+      "stream_id": "tc_primary",
+      "direction": "TC",
+      "timestamp": "2026-01-15T10:45:00Z",
+      "source_node": "flatsat_rack_a",
+      "destination_node": "aurorasat_1",
+      "event_class": "command_request",
+      "authority": "demo_operator_lease",
+      "quality": "fresh",
+      "latency_ms": 33,
+      "packet_counter": 126,
+      "fields": {
+        "expected_ack_ms": 120,
+        "requested_step": 1
+      },
+      "states": {
+        "authorization": "accepted",
+        "execution_ack": "complete"
+      },
+      "summary": "Fictional command request accepted by the mocked authority lease."
+    },
+    {
+      "id": "BUS-TM-0005",
+      "stream_id": "tm_primary",
+      "direction": "TM",
+      "timestamp": "2026-01-15T11:00:00Z",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "event_class": "telemetry_sample",
+      "authority": "read_only_tap",
+      "quality": "fresh",
+      "latency_ms": 22,
+      "packet_counter": 6068,
+      "fields": {
+        "bus_latency_ms": 22.08,
+        "eps_bus_voltage_v": 28.15,
+        "thermal_zone_1_deg_c": 0.89
+      },
+      "states": {
+        "rf_link_sim_state": "locked"
+      },
+      "summary": "Synthetic telemetry envelope mirrored into the archive tap."
+    },
+    {
+      "id": "BUS-TM-0006",
+      "stream_id": "tm_primary",
+      "direction": "TM",
+      "timestamp": "2026-01-15T11:15:00Z",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "event_class": "telemetry_sample",
+      "authority": "read_only_tap",
+      "quality": "fresh",
+      "latency_ms": 23,
+      "packet_counter": 6085,
+      "fields": {
+        "bus_latency_ms": 22.96,
+        "eps_bus_voltage_v": 28.19,
+        "thermal_zone_1_deg_c": 5.36
+      },
+      "states": {
+        "rf_link_sim_state": "locked"
+      },
+      "summary": "Synthetic telemetry envelope mirrored into the archive tap."
+    },
+    {
+      "id": "BUS-TM-0007",
+      "stream_id": "tm_primary",
+      "direction": "TM",
+      "timestamp": "2026-01-15T11:30:00Z",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "event_class": "telemetry_sample",
+      "authority": "read_only_tap",
+      "quality": "fresh",
+      "latency_ms": 24,
+      "packet_counter": 6102,
+      "fields": {
+        "bus_latency_ms": 23.75,
+        "eps_bus_voltage_v": 28.22,
+        "thermal_zone_1_deg_c": 9.73
+      },
+      "states": {
+        "rf_link_sim_state": "locked"
+      },
+      "summary": "Synthetic telemetry envelope mirrored into the archive tap."
+    },
+    {
+      "id": "BUS-TC-0003",
+      "stream_id": "tc_primary",
+      "direction": "TC",
+      "timestamp": "2026-01-15T11:30:00Z",
+      "source_node": "flatsat_rack_a",
+      "destination_node": "aurorasat_1",
+      "event_class": "command_request",
+      "authority": "demo_operator_lease",
+      "quality": "fresh",
+      "latency_ms": 36,
+      "packet_counter": 132,
+      "fields": {
+        "expected_ack_ms": 120,
+        "requested_step": 2
+      },
+      "states": {
+        "authorization": "accepted",
+        "execution_ack": "complete"
+      },
+      "summary": "Fictional command request accepted by the mocked authority lease."
+    },
+    {
+      "id": "BUS-TM-0008",
+      "stream_id": "tm_primary",
+      "direction": "TM",
+      "timestamp": "2026-01-15T11:45:00Z",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "event_class": "telemetry_sample",
+      "authority": "read_only_tap",
+      "quality": "fresh",
+      "latency_ms": 24,
+      "packet_counter": 6119,
+      "fields": {
+        "bus_latency_ms": 24.44,
+        "eps_bus_voltage_v": 28.24,
+        "thermal_zone_1_deg_c": 13.97
+      },
+      "states": {
+        "rf_link_sim_state": "locked"
+      },
+      "summary": "Synthetic telemetry envelope mirrored into the archive tap."
+    },
+    {
+      "id": "BUS-TM-0009",
+      "stream_id": "tm_primary",
+      "direction": "TM",
+      "timestamp": "2026-01-15T12:00:00Z",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "event_class": "telemetry_sample",
+      "authority": "read_only_tap",
+      "quality": "fresh",
+      "latency_ms": 25,
+      "packet_counter": 6136,
+      "fields": {
+        "bus_latency_ms": 25.02,
+        "eps_bus_voltage_v": 28.26,
+        "thermal_zone_1_deg_c": 18.07
+      },
+      "states": {
+        "rf_link_sim_state": "locked"
+      },
+      "summary": "Synthetic telemetry envelope mirrored into the archive tap."
+    },
+    {
+      "id": "BUS-TM-0010",
+      "stream_id": "tm_primary",
+      "direction": "TM",
+      "timestamp": "2026-01-15T12:15:00Z",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "event_class": "telemetry_sample",
+      "authority": "read_only_tap",
+      "quality": "fresh",
+      "latency_ms": 25,
+      "packet_counter": 6153,
+      "fields": {
+        "bus_latency_ms": 25.47,
+        "eps_bus_voltage_v": 28.28,
+        "thermal_zone_1_deg_c": 22.02
+      },
+      "states": {
+        "rf_link_sim_state": "locked"
+      },
+      "summary": "Synthetic telemetry envelope mirrored into the archive tap."
+    },
+    {
+      "id": "BUS-TC-0004",
+      "stream_id": "tc_primary",
+      "direction": "TC",
+      "timestamp": "2026-01-15T12:15:00Z",
+      "source_node": "flatsat_rack_a",
+      "destination_node": "aurorasat_1",
+      "event_class": "command_request",
+      "authority": "demo_operator_lease",
+      "quality": "fresh",
+      "latency_ms": 39,
+      "packet_counter": 138,
+      "fields": {
+        "expected_ack_ms": 120,
+        "requested_step": 3
+      },
+      "states": {
+        "authorization": "accepted",
+        "execution_ack": "complete"
+      },
+      "summary": "Fictional command request accepted by the mocked authority lease."
+    },
+    {
+      "id": "BUS-TM-0011",
+      "stream_id": "tm_primary",
+      "direction": "TM",
+      "timestamp": "2026-01-15T12:30:00Z",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "event_class": "telemetry_sample",
+      "authority": "read_only_tap",
+      "quality": "fresh",
+      "latency_ms": 26,
+      "packet_counter": 6170,
+      "fields": {
+        "bus_latency_ms": 25.78,
+        "eps_bus_voltage_v": 28.29,
+        "thermal_zone_1_deg_c": 25.78
+      },
+      "states": {
+        "rf_link_sim_state": "locked"
+      },
+      "summary": "Synthetic telemetry envelope mirrored into the archive tap."
+    },
+    {
+      "id": "BUS-TM-0012",
+      "stream_id": "tm_primary",
+      "direction": "TM",
+      "timestamp": "2026-01-15T12:45:00Z",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "event_class": "telemetry_sample",
+      "authority": "read_only_tap",
+      "quality": "fresh",
+      "latency_ms": 26,
+      "packet_counter": 6187,
+      "fields": {
+        "bus_latency_ms": 25.96,
+        "eps_bus_voltage_v": 28.3,
+        "thermal_zone_1_deg_c": 29.35
+      },
+      "states": {
+        "rf_link_sim_state": "locked"
+      },
+      "summary": "Synthetic telemetry envelope mirrored into the archive tap."
+    },
+    {
+      "id": "BUS-TM-0013",
+      "stream_id": "tm_primary",
+      "direction": "TM",
+      "timestamp": "2026-01-15T13:00:00Z",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "event_class": "telemetry_sample",
+      "authority": "read_only_tap",
+      "quality": "fresh",
+      "latency_ms": 26,
+      "packet_counter": 6204,
+      "fields": {
+        "bus_latency_ms": 26,
+        "eps_bus_voltage_v": 28.3,
+        "thermal_zone_1_deg_c": 32.72
+      },
+      "states": {
+        "rf_link_sim_state": "locked"
+      },
+      "summary": "Synthetic telemetry envelope mirrored into the archive tap."
+    },
+    {
+      "id": "BUS-TC-0005",
+      "stream_id": "tc_primary",
+      "direction": "TC",
+      "timestamp": "2026-01-15T13:00:00Z",
+      "source_node": "flatsat_rack_a",
+      "destination_node": "aurorasat_1",
+      "event_class": "command_request",
+      "authority": "demo_operator_lease",
+      "quality": "fresh",
+      "latency_ms": 42,
+      "packet_counter": 144,
+      "fields": {
+        "expected_ack_ms": 120,
+        "requested_step": 4
+      },
+      "states": {
+        "authorization": "accepted",
+        "execution_ack": "complete"
+      },
+      "summary": "Fictional command request accepted by the mocked authority lease."
+    },
+    {
+      "id": "BUS-TM-0014",
+      "stream_id": "tm_primary",
+      "direction": "TM",
+      "timestamp": "2026-01-15T13:15:00Z",
+      "source_node": "aurorasat_1",
+      "destination_node": "archive_node_a",
+      "event_class": "telemetry_sample",
+      "authority": "read_only_tap",
+      "quality": "fresh",
+      "latency_ms": 26,
+      "packet_counter": 6221,
+      "fields": {
+        "bus_latency_ms": 25.89,
+        "eps_bus_voltage_v": 28.3,
+        "thermal_zone_1_deg_c": 35.86
+      },
+      "states": {
+        "rf_link_sim_state": "locked"
+      },
+      "summary": "Synthetic telemetry envelope mirrored into the archive tap."
+    }
+  ]
+}

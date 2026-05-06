@@ -67,6 +67,30 @@
       ]
     },
     {
+      "id": "bus",
+      "label": "Virtual Bus",
+      "series": [
+        {
+          "id": "bus_latency_ms",
+          "label": "Bus Latency",
+          "role": "virtual_bus_health",
+          "units": "ms",
+          "source": "demo_bus_virtualization",
+          "min": 0,
+          "max": 250
+        },
+        {
+          "id": "tm_packet_counter",
+          "label": "TM Counter",
+          "role": "telemetry_counter",
+          "units": "count",
+          "source": "demo_bus_virtualization",
+          "min": 0,
+          "max": 8000
+        }
+      ]
+    },
+    {
       "id": "quality",
       "label": "Source Quality",
       "series": [

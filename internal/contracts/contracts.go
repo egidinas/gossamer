@@ -124,6 +124,11 @@ type GraphSeries struct {
 	Max    float64 `json:"max"`
 }
 
+type GraphPoint struct {
+	Timestamp string  `json:"timestamp"`
+	Value     float64 `json:"value"`
+}
+
 type GraphLane struct {
 	ID     string        `json:"id"`
 	Label  string        `json:"label"`
@@ -134,6 +139,79 @@ type GraphModel struct {
 	Envelope
 	CampaignID string      `json:"campaign_id"`
 	Lanes      []GraphLane `json:"lanes"`
+}
+
+type SupervisorHeroGraph struct {
+	ID     string       `json:"id"`
+	Label  string       `json:"label"`
+	Signal string       `json:"signal"`
+	Units  string       `json:"units"`
+	Role   string       `json:"role"`
+	Source string       `json:"source"`
+	Min    float64      `json:"min"`
+	Max    float64      `json:"max"`
+	Values []GraphPoint `json:"values"`
+}
+
+type SupervisorLane struct {
+	ID                 string                `json:"id"`
+	Label              string                `json:"label"`
+	Facility           string                `json:"facility"`
+	Campaign           string                `json:"campaign"`
+	Activity           string                `json:"activity"`
+	State              string                `json:"state"`
+	Result             string                `json:"result"`
+	PrimaryBus         string                `json:"primary_bus"`
+	RequirementSummary string                `json:"requirement_summary"`
+	SourceQuality      string                `json:"source_quality"`
+	HeroGraphs         []SupervisorHeroGraph `json:"hero_graphs"`
+	Notes              []string              `json:"notes"`
+}
+
+type SupervisorOverview struct {
+	Envelope
+	TestArticle string           `json:"test_article"`
+	Summary     string           `json:"summary"`
+	Lanes       []SupervisorLane `json:"lanes"`
+}
+
+type BusStream struct {
+	ID              string `json:"id"`
+	Label           string `json:"label"`
+	Direction       string `json:"direction"`
+	SourceNode      string `json:"source_node"`
+	DestinationNode string `json:"destination_node"`
+	Bus             string `json:"bus"`
+	Quality         string `json:"quality"`
+	LatencyMS       int    `json:"latency_ms"`
+	PacketCounter   int    `json:"packet_counter"`
+	DroppedFrames   int    `json:"dropped_frames"`
+}
+
+type BusEvent struct {
+	ID              string             `json:"id"`
+	StreamID        string             `json:"stream_id"`
+	Direction       string             `json:"direction"`
+	Timestamp       string             `json:"timestamp"`
+	SourceNode      string             `json:"source_node"`
+	DestinationNode string             `json:"destination_node"`
+	EventClass      string             `json:"event_class"`
+	Authority       string             `json:"authority"`
+	Quality         string             `json:"quality"`
+	LatencyMS       int                `json:"latency_ms"`
+	PacketCounter   int                `json:"packet_counter"`
+	Fields          map[string]float64 `json:"fields"`
+	States          map[string]string  `json:"states"`
+	Summary         string             `json:"summary"`
+}
+
+type BusVirtualizationTap struct {
+	Envelope
+	ConnectionID string      `json:"connection_id"`
+	Description  string      `json:"description"`
+	ReplayCursor string      `json:"replay_cursor"`
+	Streams      []BusStream `json:"streams"`
+	Events       []BusEvent  `json:"events"`
 }
 
 type Anomaly struct {
@@ -147,10 +225,10 @@ type Anomaly struct {
 
 type EvidenceReport struct {
 	Envelope
-	CampaignID       string        `json:"campaign_id"`
-	Summary          string        `json:"summary"`
-	Result           string        `json:"result"`
-	Requirements     []Requirement `json:"requirements"`
+	CampaignID        string        `json:"campaign_id"`
+	Summary           string        `json:"summary"`
+	Result            string        `json:"result"`
+	Requirements      []Requirement `json:"requirements"`
 	Sources           []Source      `json:"sources"`
 	GraphEvidence     []string      `json:"graph_evidence"`
 	Anomalies         []Anomaly     `json:"anomalies"`
@@ -163,7 +241,7 @@ type CommandAuthorityState struct {
 	LeaseOwner      string   `json:"lease_owner"`
 	LeaseState      string   `json:"lease_state"`
 	AllowedCommands []string `json:"allowed_commands"`
-	LastCommand      string   `json:"last_command"`
+	LastCommand     string   `json:"last_command"`
 }
 
 func ValidateEnvelope(e Envelope) error {
@@ -251,7 +329,83 @@ func ValidateGraphModel(g GraphModel) error {
 	return nil
 }
 
+func ValidateSupervisorOverview(o SupervisorOverview) error {
+	if err := ValidateEnvelope(o.Envelope); err != nil {
+		return err
+	}
+	if len(o.Lanes) < 4 {
+		return errors.New("supervisor overview requires at least four lanes")
+	}
+	hasTemperature := false
+	for _, lane := range o.Lanes {
+		if empty(lane.ID) || empty(lane.Facility) || empty(lane.Campaign) || empty(lane.State) {
+			return fmt.Errorf("supervisor lane %s requires id, facility, campaign, and state", lane.ID)
+		}
+		if len(lane.HeroGraphs) == 0 {
+			return fmt.Errorf("supervisor lane %s requires hero graphs", lane.ID)
+		}
+		for _, graph := range lane.HeroGraphs {
+			if empty(graph.ID) || empty(graph.Signal) || empty(graph.Units) || empty(graph.Role) || empty(graph.Source) {
+				return fmt.Errorf("supervisor graph %s requires id, signal, units, role, and source", graph.ID)
+			}
+			if len(graph.Values) == 0 {
+				return fmt.Errorf("supervisor graph %s requires values", graph.ID)
+			}
+			if graph.Units == "degC" {
+				hasTemperature = true
+			}
+		}
+	}
+	if !hasTemperature {
+		return errors.New("supervisor overview requires at least one temperature hero graph")
+	}
+	return nil
+}
+
+func ValidateBusVirtualizationTap(tap BusVirtualizationTap) error {
+	if err := ValidateEnvelope(tap.Envelope); err != nil {
+		return err
+	}
+	if empty(tap.ConnectionID) {
+		return errors.New("bus tap connection_id is required")
+	}
+	streams := map[string]BusStream{}
+	for _, stream := range tap.Streams {
+		if empty(stream.ID) || empty(stream.Direction) || empty(stream.SourceNode) || empty(stream.DestinationNode) || empty(stream.Bus) {
+			return fmt.Errorf("bus stream %s requires id, direction, nodes, and bus", stream.ID)
+		}
+		if stream.Direction != "TM" && stream.Direction != "TC" {
+			return fmt.Errorf("bus stream %s has invalid direction %q", stream.ID, stream.Direction)
+		}
+		streams[stream.ID] = stream
+	}
+	seenTM := false
+	seenTC := false
+	for _, event := range tap.Events {
+		if empty(event.ID) || empty(event.StreamID) || empty(event.Direction) || empty(event.Timestamp) || empty(event.EventClass) {
+			return fmt.Errorf("bus event %s requires id, stream, direction, timestamp, and class", event.ID)
+		}
+		if _, ok := streams[event.StreamID]; !ok {
+			return fmt.Errorf("bus event %s references unknown stream %s", event.ID, event.StreamID)
+		}
+		switch event.Direction {
+		case "TM":
+			seenTM = true
+		case "TC":
+			seenTC = true
+		default:
+			return fmt.Errorf("bus event %s has invalid direction %q", event.ID, event.Direction)
+		}
+		if !SourceQualityStates[event.Quality] {
+			return fmt.Errorf("bus event %s has unknown quality %q", event.ID, event.Quality)
+		}
+	}
+	if !seenTM || !seenTC {
+		return errors.New("bus tap requires both TM and TC events")
+	}
+	return nil
+}
+
 func empty(s string) bool {
 	return strings.TrimSpace(s) == ""
 }
-

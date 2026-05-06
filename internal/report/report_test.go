@@ -27,3 +27,18 @@ func TestBuildTVACReportCarriesAnomaly(t *testing.T) {
 		t.Fatal("expected anomaly")
 	}
 }
+
+func TestBuildReportForEveryCampaign(t *testing.T) {
+	for _, campaignID := range []string{"flatsat_derisking", "thermal_acceptance_fat", "tvac_qualification", "integrated_system_fat"} {
+		report, err := Build(campaignID)
+		if err != nil {
+			t.Fatalf("%s: %v", campaignID, err)
+		}
+		if report.CampaignID != campaignID {
+			t.Fatalf("campaign id = %s, want %s", report.CampaignID, campaignID)
+		}
+		if len(report.GraphEvidence) < 2 {
+			t.Fatalf("%s missing graph evidence", campaignID)
+		}
+	}
+}

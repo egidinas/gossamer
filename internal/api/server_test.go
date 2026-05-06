@@ -22,6 +22,12 @@ func newTestServer(t *testing.T) *Server {
 	if err := report.Write(dir, "tvac_qualification"); err != nil {
 		t.Fatal(err)
 	}
+	if err := report.Write(dir, "flatsat_derisking"); err != nil {
+		t.Fatal(err)
+	}
+	if err := report.Write(dir, "integrated_system_fat"); err != nil {
+		t.Fatal(err)
+	}
 	return New(dir)
 }
 
@@ -71,5 +77,32 @@ func TestCommandRequiresLease(t *testing.T) {
 	server.ServeHTTP(rec, req)
 	if rec.Code != http.StatusConflict {
 		t.Fatalf("status = %d, want 409", rec.Code)
+	}
+}
+
+func TestSupervisorEndpointServesOverview(t *testing.T) {
+	server := newTestServer(t)
+	req := httptest.NewRequest(http.MethodGet, "/api/supervisor", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+	if !strings.Contains(rec.Body.String(), `"lanes"`) || !strings.Contains(rec.Body.String(), `"hero_graphs"`) {
+		t.Fatalf("body missing supervisor lanes or hero graphs: %s", rec.Body.String())
+	}
+}
+
+func TestBusTapEndpointServesTMAndTCEvents(t *testing.T) {
+	server := newTestServer(t)
+	req := httptest.NewRequest(http.MethodGet, "/api/bus-tap", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+	body := rec.Body.String()
+	if !strings.Contains(body, `"direction": "TM"`) || !strings.Contains(body, `"direction": "TC"`) {
+		t.Fatalf("body missing TM or TC events: %s", body)
 	}
 }
