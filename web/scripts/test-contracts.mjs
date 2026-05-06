@@ -3,6 +3,7 @@ import { join } from "node:path";
 
 const root = new URL("../..", import.meta.url).pathname;
 const publicDir = join(root, "fixtures", "public");
+const appSource = await readFile(join(root, "web", "src", "App.tsx"), "utf8");
 
 function requireEnvelope(name, value) {
   if (value.schema_version !== 1) throw new Error(`${name} has invalid schema_version`);
@@ -17,6 +18,26 @@ const manifest = await readJSON("manifest.json");
 requireEnvelope("manifest", manifest);
 if (manifest.name !== "Gossamer") throw new Error("manifest name mismatch");
 if (!manifest.synthetic_only) throw new Error("manifest must be synthetic_only");
+for (const route of ["landing", "supervisor", "bus-tap"]) {
+  if (!appSource.includes(route)) throw new Error(`missing ${route} route in App.tsx`);
+}
+
+const supervisor = await readJSON("supervisor_overview.json");
+requireEnvelope("supervisor", supervisor);
+if (!Array.isArray(supervisor.lanes) || supervisor.lanes.length < 4) throw new Error("supervisor requires at least four lanes");
+let hasTemperatureHero = false;
+for (const lane of supervisor.lanes) {
+  if (!Array.isArray(lane.hero_graphs) || lane.hero_graphs.length === 0) throw new Error(`supervisor lane ${lane.id} missing hero graphs`);
+  for (const graph of lane.hero_graphs) {
+    if (graph.units === "degC" && Array.isArray(graph.values) && graph.values.length > 0) hasTemperatureHero = true;
+  }
+}
+if (!hasTemperatureHero) throw new Error("supervisor requires a temperature hero graph");
+
+const busTap = await readJSON("bus_virtualization_tap.json");
+requireEnvelope("bus tap", busTap);
+if (!busTap.events?.some((event) => event.direction === "TM")) throw new Error("bus tap missing TM events");
+if (!busTap.events?.some((event) => event.direction === "TC")) throw new Error("bus tap missing TC events");
 
 const sources = await readJSON("source_catalogue.json");
 requireEnvelope("sources", sources);
@@ -31,6 +52,8 @@ for (const campaignID of manifest.campaigns) {
   if (!Array.isArray(campaign.requirements) || campaign.requirements.length < 8) throw new Error(`${campaignID} requirements missing`);
   const graph = await readJSON(`graph_models/${campaignID}.json`);
   requireEnvelope(`${campaignID} graph`, graph);
+  const report = await readJSON(`reports/${campaignID}_report.json`);
+  requireEnvelope(`${campaignID} report`, report);
   for (const lane of graph.lanes) {
     for (const series of lane.series) {
       if (!series.units || !series.role) throw new Error(`${series.id} missing units or role`);
@@ -39,4 +62,3 @@ for (const campaignID of manifest.campaigns) {
 }
 
 console.log("contract fixtures ok");
-

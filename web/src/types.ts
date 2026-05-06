@@ -92,6 +92,11 @@ export type GraphSeries = {
   max: number;
 };
 
+export type GraphPoint = {
+  timestamp: string;
+  value: number;
+};
+
 export type GraphLane = {
   id: string;
   label: string;
@@ -101,6 +106,77 @@ export type GraphLane = {
 export type GraphModel = Envelope & {
   campaign_id: string;
   lanes: GraphLane[];
+};
+
+export type SupervisorHeroGraph = {
+  id: string;
+  label: string;
+  signal: string;
+  units: string;
+  role: string;
+  source: string;
+  min: number;
+  max: number;
+  values: GraphPoint[];
+};
+
+export type SupervisorLane = {
+  id: string;
+  label: string;
+  facility: string;
+  campaign: string;
+  activity: string;
+  state: string;
+  result: string;
+  primary_bus: string;
+  requirement_summary: string;
+  source_quality: string;
+  hero_graphs: SupervisorHeroGraph[];
+  notes: string[];
+};
+
+export type SupervisorOverview = Envelope & {
+  test_article: string;
+  summary: string;
+  lanes: SupervisorLane[];
+};
+
+export type BusStream = {
+  id: string;
+  label: string;
+  direction: "TM" | "TC";
+  source_node: string;
+  destination_node: string;
+  bus: string;
+  quality: string;
+  latency_ms: number;
+  packet_counter: number;
+  dropped_frames: number;
+};
+
+export type BusEvent = {
+  id: string;
+  stream_id: string;
+  direction: "TM" | "TC";
+  timestamp: string;
+  source_node: string;
+  destination_node: string;
+  event_class: string;
+  authority: string;
+  quality: string;
+  latency_ms: number;
+  packet_counter: number;
+  fields: Record<string, number>;
+  states: Record<string, string>;
+  summary: string;
+};
+
+export type BusVirtualizationTap = Envelope & {
+  connection_id: string;
+  description: string;
+  replay_cursor: string;
+  streams: BusStream[];
+  events: BusEvent[];
 };
 
 export type TelemetrySample = {
@@ -128,4 +204,3 @@ export type EvidenceReport = Envelope & {
   reproducibility: string[];
   synthetic_data_note: string;
 };
-

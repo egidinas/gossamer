@@ -1,11 +1,13 @@
 import type {
   Campaign,
   CampaignList,
+  BusVirtualizationTap,
   CommandAuthorityState,
   EvidenceReport,
   GraphModel,
   Manifest,
   SourceCatalogue,
+  SupervisorOverview,
   TelemetrySample,
   Topology
 } from "./types";
@@ -31,6 +33,8 @@ export const api = {
   manifest: () => getJSON<Manifest>("/api/manifest"),
   topology: () => getJSON<Topology>("/api/topology"),
   sources: () => getJSON<SourceCatalogue>("/api/sources"),
+  supervisor: () => getJSON<SupervisorOverview>("/api/supervisor"),
+  busTap: () => getJSON<BusVirtualizationTap>("/api/bus-tap"),
   campaigns: () => getJSON<CampaignList>("/api/campaigns"),
   campaign: (id: string) => getJSON<Campaign>(`/api/campaigns/${id}`),
   telemetry: (id: string) => getJSONL<TelemetrySample>(`/api/campaigns/${id}/telemetry`),
@@ -41,4 +45,3 @@ export const api = {
   releaseLease: () => fetch("/api/command-authority/release-lease", { method: "POST" }).then(() => api.commandAuthority()),
   mockCommand: () => fetch("/api/command-authority/mock-command", { method: "POST" }).then(() => api.commandAuthority())
 };
-
