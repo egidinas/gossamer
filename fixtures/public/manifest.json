@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-01-15T10:00:00Z",
+  "name": "Gossamer",
+  "description": "Synthetic spacecraft environmental-test operating model demonstrator.",
+  "test_article": "AuroraSat-1",
+  "campaigns": [
+    "flatsat_derisking",
+    "thermal_acceptance_fat",
+    "tvac_qualification",
+    "integrated_system_fat"
+  ],
+  "public_demo": true,
+  "synthetic_only": true
+}

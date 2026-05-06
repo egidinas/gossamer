@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-01-15T10:00:00Z",
+  "campaign_id": "tvac_qualification",
+  "lanes": [
+    {
+      "id": "thermal",
+      "label": "Thermal",
+      "series": [
+        {
+          "id": "chamber_air_deg_c",
+          "label": "Chamber Air",
+          "role": "facility_environment",
+          "units": "degC",
+          "source": "facility_thermal",
+          "min": -45,
+          "max": 70
+        },
+        {
+          "id": "thermal_zone_1_deg_c",
+          "label": "Thermal Zone 1",
+          "role": "article_temperature",
+          "units": "degC",
+          "source": "facility_thermal",
+          "min": -45,
+          "max": 70
+        }
+      ]
+    },
+    {
+      "id": "pressure",
+      "label": "Pressure",
+      "series": [
+        {
+          "id": "tvac_pressure_pa",
+          "label": "TVAC Pressure",
+          "role": "facility_environment",
+          "units": "Pa",
+          "source": "facility_pressure",
+          "min": 0.001,
+          "max": 101325
+        }
+      ]
+    },
+    {
+      "id": "power",
+      "label": "Power",
+      "series": [
+        {
+          "id": "eps_bus_voltage_v",
+          "label": "Bus Voltage",
+          "role": "spacecraft_power",
+          "units": "V",
+          "source": "spacecraft_power",
+          "min": 26,
+          "max": 30
+        },
+        {
+          "id": "eps_bus_current_a",
+          "label": "Bus Current",
+          "role": "spacecraft_power",
+          "units": "A",
+          "source": "spacecraft_power",
+          "min": 0,
+          "max": 8
+        }
+      ]
+    },
+    {
+      "id": "quality",
+      "label": "Source Quality",
+      "series": [
+        {
+          "id": "source_freshness_ms",
+          "label": "Source Freshness",
+          "role": "data_quality",
+          "units": "ms",
+          "source": "demo_quality",
+          "min": 0,
+          "max": 6000
+        }
+      ]
+    }
+  ]
+}

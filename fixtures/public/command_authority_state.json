@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-01-15T10:00:00Z",
+  "lease_owner": "",
+  "lease_state": "available",
+  "allowed_commands": [
+    "set_demo_marker",
+    "acknowledge_anomaly",
+    "hold_fixture_state"
+  ],
+  "last_command": ""
+}

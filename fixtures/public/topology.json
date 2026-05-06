@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-01-15T10:00:00Z",
+  "nodes": [
+    {
+      "id": "aurorasat_1",
+      "label": "AuroraSat-1",
+      "kind": "test_article",
+      "status": "in_test",
+      "quality": "synthetic"
+    },
+    {
+      "id": "thermal_chamber_a",
+      "label": "Thermal Chamber A",
+      "kind": "facility",
+      "status": "available",
+      "quality": "fresh"
+    },
+    {
+      "id": "tvac_chamber_q1",
+      "label": "TVAC Chamber Q1",
+      "kind": "facility",
+      "status": "campaign_active",
+      "quality": "fresh"
+    },
+    {
+      "id": "flatsat_rack_a",
+      "label": "Flatsat Rack A",
+      "kind": "facility",
+      "status": "available",
+      "quality": "fresh"
+    },
+    {
+      "id": "archive_node_a",
+      "label": "Archive Node A",
+      "kind": "data_system",
+      "status": "recording",
+      "quality": "fresh"
+    }
+  ],
+  "links": [
+    {
+      "source": "aurorasat_1",
+      "target": "archive_node_a",
+      "bus": "telemetry_bus"
+    },
+    {
+      "source": "thermal_chamber_a",
+      "target": "aurorasat_1",
+      "bus": "facility_control_bus"
+    },
+    {
+      "source": "tvac_chamber_q1",
+      "target": "aurorasat_1",
+      "bus": "facility_control_bus"
+    },
+    {
+      "source": "flatsat_rack_a",
+      "target": "aurorasat_1",
+      "bus": "command_bus"
+    }
+  ]
+}
