@@ -1,0 +1,10 @@
+/.env
+/.DS_Store
+/coverage/
+/dist/
+/node_modules/
+/tmp/
+/web/dist/
+/web/node_modules/
+*.log
+

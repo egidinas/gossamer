@@ -1,0 +1,9 @@
+{
+  "name": "gossamer-workspace",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix web run build",
+    "test:contracts": "npm --prefix web run test:contracts"
+  }
+}
+
