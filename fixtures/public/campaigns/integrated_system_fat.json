@@ -122,6 +122,6 @@
       "rationale": "Evaluated from deterministic synthetic fixture data."
     }
   ],
-  "anomalies": null,
+  "anomalies": [],
   "synthetic_note": "Synthetic campaign generated for public demonstration only."
 }

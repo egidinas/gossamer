@@ -150,6 +150,7 @@ func buildCampaign(env contracts.Envelope, id string) contracts.Campaign {
 		Envelope:      env,
 		ID:            id,
 		Article:       "AuroraSat-1",
+		Anomalies:     []contracts.Anomaly{},
 		SyntheticNote: "Synthetic campaign generated for public demonstration only.",
 		Start:         FixedTime.Format(time.RFC3339),
 		End:           FixedTime.Add(11 * time.Hour).Format(time.RFC3339),

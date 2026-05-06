@@ -223,7 +223,7 @@
     "fixtures/public/graph_models/integrated_system_fat.json",
     "fixtures/public/telemetry/integrated_system_fat.jsonl"
   ],
-  "anomalies": null,
+  "anomalies": [],
   "reproducibility": [
     "go run ./cmd/gossamer-fixtures",
     "go run ./cmd/gossamer-report --campaign integrated_system_fat"

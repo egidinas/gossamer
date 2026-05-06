@@ -27,6 +27,10 @@ func Build(campaignID string) (contracts.EvidenceReport, error) {
 			result = "inconclusive"
 		}
 	}
+	anomalies := campaign.Anomalies
+	if anomalies == nil {
+		anomalies = []contracts.Anomaly{}
+	}
 	return contracts.EvidenceReport{
 		Envelope:          contracts.NewEnvelope(synthetic.FixedTime),
 		CampaignID:        campaignID,
@@ -35,7 +39,7 @@ func Build(campaignID string) (contracts.EvidenceReport, error) {
 		Requirements:      reqs,
 		Sources:           set.SourceCatalogue.Sources,
 		GraphEvidence:     []string{fmt.Sprintf("fixtures/public/graph_models/%s.json", campaignID), fmt.Sprintf("fixtures/public/telemetry/%s.jsonl", campaignID)},
-		Anomalies:         campaign.Anomalies,
+		Anomalies:         anomalies,
 		Reproducibility:   []string{"go run ./cmd/gossamer-fixtures", fmt.Sprintf("go run ./cmd/gossamer-report --campaign %s", campaignID)},
 		SyntheticDataNote: "This report is generated from deterministic synthetic data for public demonstration only.",
 	}, nil
