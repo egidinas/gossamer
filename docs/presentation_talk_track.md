@@ -8,12 +8,15 @@ Gossamer models a fictional spacecraft test program called `AuroraSat-1`. The po
 
 ## Walkthrough
 
-1. Mission map: show the fictional subsystems, facilities, buses, and campaign sequence.
-2. Source catalogue: explain why test software needs provenance, freshness, and quality before it trusts data.
-3. Graph wall: show that plots are driven by backend graph contracts, not UI guesses.
-4. Requirement matrix: connect synthetic telemetry to pass, fail, and inconclusive outcomes.
-5. Command authority: show a mocked lease flow for controlled operations.
-6. Evidence report: close the loop from test execution to reviewable artifact.
+1. Landing page: position Gossamer as a reusable clean-room demonstrator, not a private project clone.
+2. Mission map: show the fictional subsystems, facilities, buses, and campaign sequence.
+3. Supervisor: show parallel FAT and qualification swimlanes, with temperature and bus-health hero graphs owned by the backend contract.
+4. Source catalogue: explain why test software needs provenance, freshness, and quality before it trusts data.
+5. Graph wall: show that plots are driven by backend graph contracts, not UI guesses.
+6. Requirement matrix: connect synthetic telemetry to pass, fail, and inconclusive outcomes.
+7. Command authority: show a mocked lease flow for controlled operations.
+8. Bus tap: show fictional TM and TC replay events moving between generic nodes without exposing any real packet details.
+9. Evidence report: close the loop from test execution to reviewable artifact.
 
 ## What To Emphasize
 
@@ -21,6 +24,7 @@ Gossamer models a fictional spacecraft test program called `AuroraSat-1`. The po
 - The implementation is small enough to inspect, but structured like a real product seed.
 - The same pattern scales from flatsat derisking to integrated system FAT or qualification.
 - Synthetic fixtures make architecture visible without needing private hardware or data.
+- The bus virtualization view is a teaching model for observability and authority, not a protocol implementation.
 
 ## Natural Follow-Ups
 

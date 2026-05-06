@@ -8,6 +8,7 @@ The repository is independent, fictional, and not affiliated with any employer o
 
 - A fictional `AuroraSat-1` test article moving through flatsat, thermal acceptance, TVAC qualification, and integrated system FAT campaigns.
 - Backend-owned semantic contracts for source quality, graph lanes, requirements, command authority, and evidence reports.
+- A landing page, supervisor swimlane board, and virtual bus tap that make the demo usable as a public portfolio walkthrough.
 - Deterministic synthetic fixtures that make the demo reproducible.
 - A local API and operator UI that can be shown without hardware, private networks, or external services.
 - A reusable portfolio artifact for discussing test-system architecture, clean-room abstraction, and operator workflows without exposing protected work.
@@ -26,8 +27,10 @@ The repository is independent, fictional, and not affiliated with any employer o
 
 ```bash
 go run ./cmd/gossamer-fixtures
+go run ./cmd/gossamer-report --campaign flatsat_derisking
 go run ./cmd/gossamer-report --campaign thermal_acceptance_fat
 go run ./cmd/gossamer-report --campaign tvac_qualification
+go run ./cmd/gossamer-report --campaign integrated_system_fat
 go run ./cmd/gossamer-server
 ```
 
@@ -39,7 +42,7 @@ npm install
 npm run dev -- --host 127.0.0.1 --port 5179
 ```
 
-Open `http://127.0.0.1:5179/#mission-map`.
+Open `http://127.0.0.1:5179/#landing`.
 
 ## Verification
 
@@ -52,13 +55,16 @@ npm run build
 
 ## Demo Surface
 
-The UI exposes six views:
+The UI exposes eight views:
 
+- landing: public-safe project story and navigation,
 - mission map: synthetic test article, facilities, buses, and campaigns,
+- supervisor: swimlane board for parallel FAT and qualification activities with backend-defined hero graphs,
 - graph wall: backend-defined graph lanes over deterministic telemetry,
 - source catalogue: freshness, quality, and provenance for synthetic sources,
 - requirement matrix: requirement results with evidence references,
 - command authority: mocked lease and command path,
+- bus tap: fictional data-bus virtualization view with separated TM and TC replay events,
 - evidence report: campaign-level summary, anomalies, and export-ready records.
 
 ## Clean-Room Boundary

@@ -12,10 +12,10 @@ Gossamer is intentionally small, but it models the same control points that matt
 
 ## Flow
 
-1. `cmd/gossamer-fixtures` creates synthetic campaign, source, topology, graph, and telemetry fixtures under `fixtures/public`.
+1. `cmd/gossamer-fixtures` creates synthetic campaign, source, topology, supervisor, bus tap, graph, and telemetry fixtures under `fixtures/public`.
 2. `cmd/gossamer-report` evaluates campaign requirements against fixture telemetry and writes evidence reports.
 3. `cmd/gossamer-server` serves read-only fixture contracts and mocked command-authority endpoints.
-4. `web` consumes those API contracts and renders six operator views.
+4. `web` consumes those API contracts and renders the landing page plus operator views.
 
 ## Contracts
 
@@ -25,7 +25,7 @@ Every top-level API payload carries:
 - `generated_at`: deterministic timestamp for public fixtures,
 - typed content owned by `internal/contracts`.
 
-This keeps the frontend from deriving critical meaning from labels. The browser receives already-classified source states, graph series roles, requirement results, and command-authority state.
+This keeps the frontend from deriving critical meaning from labels. The browser receives already-classified source states, graph series roles, supervisor lane states, bus stream health, requirement results, and command-authority state.
 
 ## Extension Points
 
