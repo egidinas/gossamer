@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-01-15T10:00:00Z",
+  "campaign_id": "tvac_qualification",
+  "summary": "TVAC Qualification evidence package for AuroraSat-1.",
+  "result": "inconclusive",
+  "requirements": [
+    {
+      "id": "REQ-CYCLE-COUNT",
+      "title": "Required cycle count completed",
+      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "result": "pass",
+      "evidence": [
+        "fixtures/public/telemetry/tvac_qualification.jsonl",
+        "fixtures/public/graph_models/tvac_qualification.json"
+      ],
+      "rationale": "Synthetic telemetry and campaign metadata satisfy this public demo requirement."
+    },
+    {
+      "id": "REQ-HOT-TARGET",
+      "title": "Hot target reached",
+      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "result": "pass",
+      "evidence": [
+        "fixtures/public/telemetry/tvac_qualification.jsonl",
+        "fixtures/public/graph_models/tvac_qualification.json"
+      ],
+      "rationale": "Synthetic telemetry and campaign metadata satisfy this public demo requirement."
+    },
+    {
+      "id": "REQ-COLD-TARGET",
+      "title": "Cold target reached",
+      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "result": "pass",
+      "evidence": [
+        "fixtures/public/telemetry/tvac_qualification.jsonl",
+        "fixtures/public/graph_models/tvac_qualification.json"
+      ],
+      "rationale": "Synthetic telemetry and campaign metadata satisfy this public demo requirement."
+    },
+    {
+      "id": "REQ-STABILITY",
+      "title": "Stabilization window achieved",
+      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "result": "inconclusive",
+      "evidence": [
+        "fixtures/public/telemetry/tvac_qualification.jsonl",
+        "fixtures/public/graph_models/tvac_qualification.json"
+      ],
+      "rationale": "Synthetic evidence marks this item for review to demonstrate anomaly disposition workflow."
+    },
+    {
+      "id": "REQ-DWELL",
+      "title": "Dwell duration achieved",
+      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "result": "pass",
+      "evidence": [
+        "fixtures/public/telemetry/tvac_qualification.jsonl",
+        "fixtures/public/graph_models/tvac_qualification.json"
+      ],
+      "rationale": "Synthetic telemetry and campaign metadata satisfy this public demo requirement."
+    },
+    {
+      "id": "REQ-FUNC-GATE-PRE",
+      "title": "Pre-environment functional gate passed",
+      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "result": "pass",
+      "evidence": [
+        "fixtures/public/telemetry/tvac_qualification.jsonl",
+        "fixtures/public/graph_models/tvac_qualification.json"
+      ],
+      "rationale": "Synthetic telemetry and campaign metadata satisfy this public demo requirement."
+    },
+    {
+      "id": "REQ-FUNC-GATE-DURING",
+      "title": "During-environment functional gate passed",
+      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "result": "pass",
+      "evidence": [
+        "fixtures/public/telemetry/tvac_qualification.jsonl",
+        "fixtures/public/graph_models/tvac_qualification.json"
+      ],
+      "rationale": "Synthetic telemetry and campaign metadata satisfy this public demo requirement."
+    },
+    {
+      "id": "REQ-FUNC-GATE-POST",
+      "title": "Post-environment functional gate passed",
+      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "result": "pass",
+      "evidence": [
+        "fixtures/public/telemetry/tvac_qualification.jsonl",
+        "fixtures/public/graph_models/tvac_qualification.json"
+      ],
+      "rationale": "Synthetic telemetry and campaign metadata satisfy this public demo requirement."
+    },
+    {
+      "id": "REQ-DATA-QUALITY",
+      "title": "Evidence data quality acceptable",
+      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "result": "inconclusive",
+      "evidence": [
+        "fixtures/public/telemetry/tvac_qualification.jsonl",
+        "fixtures/public/graph_models/tvac_qualification.json"
+      ],
+      "rationale": "Synthetic evidence marks this item for review to demonstrate anomaly disposition workflow."
+    },
+    {
+      "id": "REQ-ANOMALY-REVIEW",
+      "title": "Anomaly review disposition complete",
+      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "result": "inconclusive",
+      "evidence": [
+        "fixtures/public/telemetry/tvac_qualification.jsonl",
+        "fixtures/public/graph_models/tvac_qualification.json"
+      ],
+      "rationale": "Synthetic evidence marks this item for review to demonstrate anomaly disposition workflow."
+    }
+  ],
+  "sources": [
+    {
+      "id": "spacecraft_power",
+      "label": "Spacecraft Power",
+      "owner": "egse_power_role",
+      "bus": "telemetry_bus",
+      "quality": "fresh",
+      "freshness_ms": 250,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "primary",
+      "signals": [
+        "eps_bus_voltage_v",
+        "eps_bus_current_a"
+      ]
+    },
+    {
+      "id": "spacecraft_cdh",
+      "label": "Spacecraft CDH",
+      "owner": "subsystem_test_role",
+      "bus": "subsystem_event_bus",
+      "quality": "fresh",
+      "freshness_ms": 500,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "obc_boot_state",
+        "obc_command_counter"
+      ]
+    },
+    {
+      "id": "facility_thermal",
+      "label": "Facility Thermal",
+      "owner": "facility_test_role",
+      "bus": "facility_control_bus",
+      "quality": "fresh",
+      "freshness_ms": 300,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "primary",
+      "signals": [
+        "thermal_zone_1_deg_c",
+        "thermal_zone_2_deg_c",
+        "chamber_air_deg_c"
+      ]
+    },
+    {
+      "id": "facility_pressure",
+      "label": "Facility Pressure",
+      "owner": "facility_test_role",
+      "bus": "facility_control_bus",
+      "quality": "fresh",
+      "freshness_ms": 300,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "primary",
+      "signals": [
+        "tvac_pressure_pa"
+      ]
+    },
+    {
+      "id": "demo_quality",
+      "label": "Demo Quality Monitor",
+      "owner": "test_conductor_role",
+      "bus": "telemetry_bus",
+      "quality": "synthetic",
+      "freshness_ms": 1000,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "source_freshness_ms",
+        "facility_interlock_state"
+      ]
+    }
+  ],
+  "graph_evidence": [
+    "fixtures/public/graph_models/tvac_qualification.json",
+    "fixtures/public/telemetry/tvac_qualification.jsonl"
+  ],
+  "anomalies": [
+    {
+      "id": "ANOM-TVAC-001",
+      "title": "Synthetic pressure source degradation during cold dwell",
+      "severity": "medium",
+      "status": "needs_disposition",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#sample-32",
+      "disposition": "Review required before closure."
+    }
+  ],
+  "reproducibility": [
+    "go run ./cmd/gossamer-fixtures",
+    "go run ./cmd/gossamer-report --campaign tvac_qualification"
+  ],
+  "synthetic_data_note": "This report is generated from deterministic synthetic data for public demonstration only."
+}

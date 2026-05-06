@@ -40,7 +40,7 @@ func Evaluate(input EvaluationInput) []contracts.Requirement {
 		if checks[req.ID] {
 			result = "pass"
 		}
-		if input.Campaign.ID == "tvac_qualification" && (req.ID == "REQ-DATA-QUALITY" || req.ID == "REQ-ANOMALY-REVIEW") {
+		if input.Campaign.ID == "tvac_qualification" && (req.ID == "REQ-STABILITY" || req.ID == "REQ-DATA-QUALITY" || req.ID == "REQ-ANOMALY-REVIEW") {
 			result = "inconclusive"
 		}
 		req.Result = result
