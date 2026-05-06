@@ -19,9 +19,9 @@ export function SupervisorView({ overview }: { overview: SupervisorOverview }) {
                 <StatusBadge value={lane.result || lane.state} />
               </div>
               <div className="lane-meta-grid">
-                <span>{lane.facility}</span>
-                <span>{lane.primary_bus}</span>
-                <StatusBadge value={lane.source_quality} />
+                <div><span className="label">Facility</span><strong>{lane.facility}</strong></div>
+                <div><span className="label">Primary bus</span><strong>{lane.primary_bus}</strong></div>
+                <div><span className="label">Source quality</span><StatusBadge value={lane.source_quality} /></div>
               </div>
               <div className="hero-graph-grid">
                 {lane.hero_graphs.map((graph) => (

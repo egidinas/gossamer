@@ -20,10 +20,10 @@ export function BusTapView({ tap }: { tap: BusVirtualizationTap }) {
               </div>
               <span>{stream.source_node} {"->"} {stream.destination_node}</span>
               <div className="metric-grid compact">
-                <div><span className="label">Bus</span><strong>{stream.bus}</strong></div>
-                <div><span className="label">Latency</span><strong>{stream.latency_ms} ms</strong></div>
-                <div><span className="label">Counter</span><strong>{stream.packet_counter}</strong></div>
-                <div><span className="label">Dropped</span><strong>{stream.dropped_frames}</strong></div>
+                <div className="stream-metric"><span className="label">Bus</span><strong>{stream.bus}</strong></div>
+                <div className="stream-metric"><span className="label">Latency</span><strong>{stream.latency_ms} ms</strong></div>
+                <div className="stream-metric"><span className="label">Counter</span><strong>{stream.packet_counter}</strong></div>
+                <div className="stream-metric"><span className="label">Dropped</span><strong>{stream.dropped_frames}</strong></div>
               </div>
               <StatusBadge value={stream.quality} />
             </div>

@@ -5,6 +5,7 @@ import { StatusBadge } from "../components/StatusBadge";
 
 export function LandingView({ manifest, campaigns, supervisor }: { manifest: Manifest; campaigns: Campaign[]; supervisor: SupervisorOverview }) {
   const passing = campaigns.filter((campaign) => campaign.result === "pass").length;
+  const previewLanes = supervisor.lanes.slice(0, 3);
 
   return (
     <div className="landing-grid">
@@ -17,6 +18,18 @@ export function LandingView({ manifest, campaigns, supervisor }: { manifest: Man
         <div className="hero-actions">
           <a href="#supervisor"><Activity size={17} /> Supervisor</a>
           <a href="#bus-tap"><Network size={17} /> Bus Tap</a>
+        </div>
+        <div className="landing-preview" aria-label="supervisor preview">
+          <div className="landing-preview-head">
+            <strong>Parallel FAT Snapshot</strong>
+            <span>{supervisor.test_article}</span>
+          </div>
+          {previewLanes.map((lane) => (
+            <div className="preview-row" key={lane.id}>
+              <span>{lane.label}</span>
+              <StatusBadge value={lane.result || lane.state} />
+            </div>
+          ))}
         </div>
       </section>
       <OperatorPanel title="Demo Envelope" meta={manifest.test_article}>
