@@ -1,0 +1,14 @@
+# Example only. Replace the domain and paths in a private deployment checkout.
+gossamer.example.invalid {
+	root * /srv/gossamer/web/dist
+	encode zstd gzip
+	file_server
+
+	handle /api/* {
+		reverse_proxy 127.0.0.1:8095
+	}
+
+	handle /healthz {
+		reverse_proxy 127.0.0.1:8095
+	}
+}

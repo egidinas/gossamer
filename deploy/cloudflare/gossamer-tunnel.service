@@ -1,0 +1,13 @@
+[Unit]
+Description=Gossamer temporary public demo tunnel
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/cloudflared tunnel --config /etc/gossamer/cloudflared.yml run
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
