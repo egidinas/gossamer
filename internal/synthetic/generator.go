@@ -255,14 +255,14 @@ func buildThermalProgram(campaignID, facility string, cycleCount int, coldTarget
 	preContextMinutes := 720
 	rampRate := commandedRampRateDegCMin
 	dwellMinutes := fixedDwellMinutes
-	timingModel := thermalTimingModel{kind: "air", slowNodeTauMin: 118, survivalTauScale: 1.15, gateBufferMinutes: 45, fixedDwellMinutes: fixedDwellMinutes, stabilityBandDegC: 2.0}
+	timingModel := thermalTimingModel{kind: "air", slowNodeTauMin: 135, survivalTauScale: 1.18, gateBufferMinutes: 45, fixedDwellMinutes: fixedDwellMinutes, stabilityBandDegC: 2.0}
 	if campaignID == "tvac_qualification" {
 		kind = "tvac_qualification"
 		label = "TVac Qualification - 8 cycle vacuum thermal profile"
 		preContextMinutes = 1560
 		rampRate = commandedRampRateDegCMin
 		dwellMinutes = fixedDwellMinutes
-		timingModel = thermalTimingModel{kind: "vacuum", slowNodeTauMin: 150, survivalTauScale: 1.28, gateBufferMinutes: 60, fixedDwellMinutes: fixedDwellMinutes, stabilityBandDegC: 2.0}
+		timingModel = thermalTimingModel{kind: "vacuum", slowNodeTauMin: 205, survivalTauScale: 1.35, gateBufferMinutes: 60, fixedDwellMinutes: fixedDwellMinutes, stabilityBandDegC: 2.0}
 	}
 	hotSurvivalTarget := hotTarget + 10
 	coldSurvivalTarget := coldTarget - 10
@@ -689,15 +689,20 @@ func buildGraphWall(env contracts.Envelope, campaignID string, hero contracts.He
 		)
 	}
 	add("thermal_environment", graphCard("thermal_program", "Chamber command, ghost, acceptance, actual", "line", "primary_hero", "degC", "temperature_c", "facility_thermal", thermalProgramSignals))
-	add("thermal_environment", graphCard("dut_temperature", "DUT temperatures in chamber context", "line", "companion", "degC", "temperature_c", "dut_thermal", []contracts.GraphWallSignal{
+	dutTemperatureSignals := []contracts.GraphWallSignal{
 		graphSignal("trace.context.chamber_air", "Chamber air", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
 		graphSignal("trace.dut_temp_a", "High-dissipation DUT node", "degC", "dut_thermal", "actual", "measurement", "dut", "temperature_c", "thermal_environment"),
 		graphSignal("trace.dut_temp_b", "Vacuum-detached DUT node", "degC", "dut_thermal", "actual", "measurement", "dut", "temperature_c", "thermal_environment"),
 		graphSignal("trace.table_loop", "Fluid interface", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
-		graphSignal("trace.shroud_inlet", "Shroud inlet", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
-		graphSignal("trace.shroud_outlet", "Shroud outlet", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
-		graphSignal("trace.shroud_gradient", "Shroud gradient", "degC", "facility_thermal", "source_quality", "measurement", "facility", "temperature_c", "thermal_environment"),
-	}))
+	}
+	if campaignID == "tvac_qualification" {
+		dutTemperatureSignals = append(dutTemperatureSignals,
+			graphSignal("trace.shroud_inlet", "Shroud inlet", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
+			graphSignal("trace.shroud_outlet", "Shroud outlet", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
+			graphSignal("trace.shroud_gradient", "Shroud gradient", "degC", "facility_thermal", "source_quality", "measurement", "facility", "temperature_c", "thermal_environment"),
+		)
+	}
+	add("thermal_environment", graphCard("dut_temperature", "DUT temperatures in chamber context", "line", "companion", "degC", "temperature_c", "dut_thermal", dutTemperatureSignals))
 	if campaignID == "tvac_qualification" {
 		add("facility_response", graphCard("tvac_pressure", "TVac pressure pumpdown and bursts", "line", "companion", "mbar", "log_pressure_mbar", "facility_pressure", []contracts.GraphWallSignal{
 			graphSignal("trace.tvac_pressure", "Pressure", "mbar", "facility_pressure", "actual", "measurement", "facility", "pressure_mbar", "facility_response"),

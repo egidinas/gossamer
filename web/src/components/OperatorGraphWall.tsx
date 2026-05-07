@@ -25,6 +25,41 @@ const roleColors: Record<string, string> = {
   state: "#8bd3a5",
 };
 
+const signalColors: Record<string, string> = {
+  "trace.command.chamber": "#ffe66d",
+  "trace.ghost.profile": "#8fa2ad",
+  "trace.acceptance.temperature": "#4ee28a",
+  "trace.actual.chamber_air": "#39d5ff",
+  "trace.context.chamber_air": "#39d5ff",
+  "trace.table_loop": "#ff9f43",
+  "trace.interface": "#ff9f43",
+  "trace.shroud": "#c084fc",
+  "trace.shroud_inlet": "#7dd3fc",
+  "trace.shroud_outlet": "#f0abfc",
+  "trace.dut_temp_a": "#ff5f7e",
+  "trace.dut_temp_b": "#2dd4bf",
+  "trace.tvac_pressure": "#facc15",
+  "trace.total_power": "#f97316",
+  "trace.subsystem_power": "#60a5fa",
+  "trace.bus_packets": "#a78bfa",
+  "trace.bus_retries": "#fb7185",
+  "trace.phase_enum": "#e5e7eb",
+  "trace.functional_gate_active": "#fbbf24",
+  "trace.stability_reached": "#34d399",
+  "trace.dwell_active": "#38bdf8",
+  "trace.dwell_complete": "#a78bfa",
+  "trace.dut_ready": "#84cc16",
+  "trace.dut_operative": "#22c55e",
+  "trace.payload_active": "#f97316",
+  "trace.rf_link_locked": "#06b6d4",
+  "trace.fault_flag": "#fb7185",
+};
+
+function colorForSignal(signal: Pick<TileSeries, "id" | "role" | "render_kind"> | { id: string; role: string; kind?: string }, index = 0) {
+  const kind = "kind" in signal ? signal.kind : ("render_kind" in signal ? signal.render_kind : undefined);
+  return signalColors[signal.id] ?? roleColors[signal.role] ?? (kind ? roleColors[kind] : undefined) ?? palette(index);
+}
+
 export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }: Props) {
   const [manifest, setManifest] = useState<GraphTileManifest | null>(null);
   const [tiles, setTiles] = useState<Record<string, GraphTile>>({});
@@ -262,7 +297,7 @@ function GraphWallCardView({
           <div className="graph-card-legend-rail">
             {visibleSignals.map((signal) => (
               <span key={signal.id} title={`${signal.label} / ${signal.source_family}`}>
-                <i style={{ background: roleColors[signal.role] ?? roleColors[signal.kind] ?? "#d8e8f8" }} />
+                <i style={{ background: colorForSignal(signal) }} />
                 {signal.label}
               </span>
             ))}
@@ -334,7 +369,7 @@ function SwimlaneTile({ tile, heroGraph, currentTimeMs }: { tile: GraphTile; her
           <span>{series.label}</span>
           <div>
             {stateBlocks(series, start, span).map((block) => (
-              <i key={block.key} style={{ left: `${block.left}%`, width: `${block.width}%`, background: block.value > 0 ? (roleColors[series.role] ?? "#8bd3a5") : "rgba(64,82,99,0.35)" }} />
+              <i key={block.key} style={{ left: `${block.left}%`, width: `${block.width}%`, background: block.value > 0 ? colorForSignal(series) : "rgba(64,82,99,0.35)" }} />
             ))}
             {Number.isFinite(now) && <b style={{ left: `${Math.max(0, Math.min(100, ((now - start) / span) * 100))}%` }} />}
           </div>
@@ -417,7 +452,7 @@ function uplotData(tile: GraphTile): UPlotBuild {
     series.push({
       label: seriesTile.label,
       scale,
-      stroke: roleColors[seriesTile.role] ?? roleColors[seriesTile.render_kind] ?? palette(index),
+      stroke: colorForSignal(seriesTile, index),
       width: lineWidthFor(seriesTile.role),
       dash: seriesTile.role === "ghost" ? [7, 4] : seriesTile.role === "acceptance_band" ? [2, 5] : undefined,
       points: { show: false }
@@ -442,11 +477,11 @@ function seriesDrawOrder(a: TileSeries, b: TileSeries) {
 }
 
 function lineWidthFor(role: string) {
-  if (role === "command") return 1.35;
-  if (role === "ghost") return 1.15;
-  if (role === "acceptance_band") return 0.9;
+  if (role === "command") return 1.55;
+  if (role === "ghost") return 0.9;
+  if (role === "acceptance_band") return 0.75;
   if (role === "counter" || role === "source_quality") return 1.05;
-  return 0.95;
+  return 0.85;
 }
 
 function sharedTimeGrid(tile: GraphTile, tileSeries: TileSeries[]): number[] {
@@ -589,10 +624,10 @@ function resampleSeries(tile: GraphTile, series: TileSeries, xValues: number[]):
 function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphModel, currentTimeMs?: number) {
   const ctx = plot.ctx;
   const bbox = plot.bbox;
-  const left = bbox.left / devicePixelRatio;
-  const top = bbox.top / devicePixelRatio;
-  const width = bbox.width / devicePixelRatio;
-  const height = bbox.height / devicePixelRatio;
+  const left = bbox.left;
+  const top = bbox.top;
+  const width = bbox.width;
+  const height = bbox.height;
   const start = Date.parse(tile.t0);
   const end = Date.parse(tile.t1);
   const span = Math.max(1, end - start);

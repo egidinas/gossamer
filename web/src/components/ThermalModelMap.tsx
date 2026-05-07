@@ -1,5 +1,4 @@
-import type { CSSProperties } from "react";
-import type { TestItemThermalDiagram, ThermalDiagramLink, ThermalDiagramNode } from "../types";
+import type { TestItemThermalDiagram, ThermalDiagramNode } from "../types";
 
 type Props = {
   diagram: TestItemThermalDiagram;
@@ -8,6 +7,10 @@ type Props = {
 
 export function ThermalModelMap({ diagram, meta = [] }: Props) {
   const nodes = new Map(diagram.nodes.map((node) => [node.id, node]));
+  const boundaryNodes = diagram.nodes.filter((node) => node.kind === "environment" || node.kind === "interface");
+  const componentNodes = diagram.nodes.filter((node) => node.kind === "component");
+  const itemNode = diagram.nodes.find((node) => node.kind === "test_item");
+  const modifierNodes = diagram.nodes.filter((node) => node.kind !== "environment" && node.kind !== "interface" && node.kind !== "component" && node.kind !== "test_item");
 
   return (
     <section className="thermal-diagram-panel" aria-label={`${diagram.label} model map`}>
@@ -23,26 +26,31 @@ export function ThermalModelMap({ diagram, meta = [] }: Props) {
         ))}
       </div>
       <div className="thermal-diagram-canvas">
-        <div className="thermal-diagram-links">
+        <div className="thermal-map-boundaries">
+          {boundaryNodes.map((node) => <ThermalNode key={node.id} node={node} />)}
+          {modifierNodes.map((node) => <ThermalNode key={node.id} node={node} />)}
+        </div>
+        <div className="thermal-map-item">
+          <span>{itemNode?.label ?? "Test item"}</span>
+          <div>
+            {componentNodes.map((node) => <ThermalNode key={node.id} node={node} />)}
+          </div>
+        </div>
+        <div className="thermal-map-couplings">
           {diagram.links.map((link) => {
             const source = nodes.get(link.source);
             const target = nodes.get(link.target);
             if (!source || !target) return null;
-            return <ThermalLink key={link.id} link={link} source={source} target={target} />;
+            return (
+              <div className={`thermal-coupling-row thermal-link-${link.kind}`} key={link.id}>
+                <i style={{ opacity: 0.36 + Math.max(0, Math.min(1, link.strength)) * 0.6 }} />
+                <span>{source.label}</span>
+                <b>{link.label}</b>
+                <span>{target.label}</span>
+              </div>
+            );
           })}
         </div>
-        {diagram.nodes.map((node) => (
-          <div
-            className={`thermal-diagram-node thermal-node-${node.kind}`}
-            key={node.id}
-            style={{ left: `${node.x}%`, top: `${node.y}%` }}
-            title={node.signal ? `${node.label}: ${node.signal}` : node.label}
-          >
-            <strong>{node.label}</strong>
-            <span>{node.role.replaceAll("_", " ")}</span>
-            {node.signal && <small>{node.signal}</small>}
-          </div>
-        ))}
       </div>
       <div className="thermal-diagram-notes">
         {diagram.links.map((link) => (
@@ -55,24 +63,12 @@ export function ThermalModelMap({ diagram, meta = [] }: Props) {
   );
 }
 
-function ThermalLink({ link, source, target }: { link: ThermalDiagramLink; source: ThermalDiagramNode; target: ThermalDiagramNode }) {
-  const dx = target.x - source.x;
-  const dy = target.y - source.y;
-  const length = Math.sqrt(dx * dx + dy * dy);
-  const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-  const style = {
-    left: `${source.x}%`,
-    top: `${source.y}%`,
-    width: `${length}%`,
-    transform: `rotate(${angle}deg)`,
-    "--link-strength": `${Math.max(1, Math.min(5, link.strength * 5))}px`,
-  } as CSSProperties;
-
+function ThermalNode({ node }: { node: ThermalDiagramNode }) {
   return (
-    <i
-      className={`thermal-diagram-link thermal-link-${link.kind}`}
-      style={style}
-      title={link.signal ? `${link.label}: ${link.signal}` : link.label}
-    />
+    <div className={`thermal-map-node thermal-node-${node.kind}`} title={node.signal ? `${node.label}: ${node.signal}` : node.label}>
+      <strong>{node.label}</strong>
+      <span>{node.role.replaceAll("_", " ")}</span>
+      {node.signal && <small>{node.signal}</small>}
+    </div>
   );
 }

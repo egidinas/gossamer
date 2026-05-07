@@ -79,8 +79,8 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 		sensorBiasDegC: 0.14, sensorNoiseDegC: 0.08,
 	}
 	lazyNode := componentParams{
-		capacitanceJPerK: 18500, airConductanceWPerK: 0.24, tableConductanceWPerK: 0.045,
-		radiatingAreaM2: 0.105, emissivity: 0.82, baseSelfHeatW: 0.9, payloadSelfHeatW: 0.9, gateSelfHeatW: 2.8,
+		capacitanceJPerK: 10500, airConductanceWPerK: 0.42, tableConductanceWPerK: 0.23,
+		radiatingAreaM2: 0.13, emissivity: 0.84, baseSelfHeatW: 0.85, payloadSelfHeatW: 0.8, gateSelfHeatW: 2.4,
 		sensorBiasDegC: -0.20, sensorNoiseDegC: 0.10,
 	}
 	samples := []contracts.TelemetrySample{}

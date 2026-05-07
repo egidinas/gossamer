@@ -39,8 +39,8 @@ func TestThermalCampaignsExposeExplicitCyclePrograms(t *testing.T) {
 		minHours   float64
 		maxHours   float64
 	}{
-		{campaignID: "thermal_acceptance_fat", wantCycles: 4, wantKind: "thermal_chamber_fat", minHours: 100, maxHours: 125},
-		{campaignID: "tvac_qualification", wantCycles: 8, wantKind: "tvac_qualification", minHours: 230, maxHours: 285},
+		{campaignID: "thermal_acceptance_fat", wantCycles: 4, wantKind: "thermal_chamber_fat", minHours: 100, maxHours: 145},
+		{campaignID: "tvac_qualification", wantCycles: 8, wantKind: "tvac_qualification", minHours: 230, maxHours: 350},
 	}
 
 	for _, tc := range cases {
@@ -159,6 +159,43 @@ func TestThermalCampaignsExposeExplicitCyclePrograms(t *testing.T) {
 			for _, wantGate := range []string{"ambient_pre", "vacuum_pre", "vacuum_post", "post"} {
 				if !functionalGateNamed(campaign.ThermalProgram, wantGate) {
 					t.Fatalf("%s missing TVac pressure/ambient gate %q", tc.campaignID, wantGate)
+				}
+			}
+		}
+	}
+}
+
+func TestThermalDwellStartsOnlyAfterObservedStability(t *testing.T) {
+	set := Build()
+	for _, campaignID := range []string{"thermal_acceptance_fat", "tvac_qualification"} {
+		campaign := set.Campaigns[campaignID]
+		telemetry := set.Telemetry[campaignID]
+		for _, dwell := range campaign.ThermalProgram.DwellWindows {
+			start := mustParseTime(t, dwell.Start)
+			windowStart := start.Add(-60 * time.Minute)
+			for _, signalID := range []string{"chamber_air_deg_c", "interface_plate_deg_c", "thermal_zone_1_deg_c", "thermal_zone_2_deg_c"} {
+				minValue := math.Inf(1)
+				maxValue := math.Inf(-1)
+				count := 0
+				for _, sample := range telemetry {
+					ts := mustParseTime(t, sample.Timestamp)
+					if ts.Before(windowStart) || ts.After(start) {
+						continue
+					}
+					value, ok := sample.Signals[signalID]
+					if !ok {
+						continue
+					}
+					minValue = math.Min(minValue, value)
+					maxValue = math.Max(maxValue, value)
+					count++
+				}
+				if count < 4 {
+					t.Fatalf("%s dwell %s has only %d samples for %s in pre-stability window", campaignID, dwell.ID, count, signalID)
+				}
+				allowedDrift := dwell.StabilityBandC + 0.25
+				if drift := maxValue - minValue; drift > allowedDrift {
+					t.Fatalf("%s dwell %s signal %s drifts %.2f C in the hour before stability, want <= %.2f C", campaignID, dwell.ID, signalID, drift, allowedDrift)
 				}
 			}
 		}

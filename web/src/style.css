@@ -725,6 +725,10 @@ button {
 
 .thermal-diagram-canvas {
   position: relative;
+  display: grid;
+  grid-template-columns: minmax(118px, 0.34fr) minmax(160px, 0.42fr) minmax(150px, 0.5fr);
+  gap: 6px;
+  align-items: stretch;
   min-height: 152px;
   min-width: 0;
   border: 1px solid #17283a;
@@ -732,19 +736,7 @@ button {
     linear-gradient(90deg, rgba(86, 214, 223, 0.05), transparent 38%, rgba(184, 166, 255, 0.04)),
     #03070c;
   overflow: hidden;
-}
-
-.thermal-diagram-links {
-  position: absolute;
-  inset: 0;
-}
-
-.thermal-diagram-link {
-  position: absolute;
-  height: var(--link-strength, 2px);
-  border-radius: 999px;
-  background: #56d6df;
-  transform-origin: 0 50%;
+  padding: 6px;
 }
 
 .thermal-link-conduction {
@@ -774,14 +766,45 @@ button {
   text-align: center;
 }
 
-.thermal-diagram-node {
-  position: absolute;
-  z-index: 3;
+.thermal-map-boundaries,
+.thermal-map-item,
+.thermal-map-couplings {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.thermal-map-boundaries {
+  align-content: center;
+}
+
+.thermal-map-item {
+  align-content: stretch;
+  border: 1px solid #294768;
+  border-radius: 3px;
+  background: rgba(8, 18, 29, 0.86);
+  padding: 6px;
+}
+
+.thermal-map-item > span {
+  color: #f2f7ff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.thermal-map-item > div {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 5px;
+  align-content: center;
+}
+
+.thermal-map-node {
   display: grid;
   gap: 2px;
-  min-width: 96px;
-  max-width: 150px;
-  transform: translate(-50%, -50%);
+  min-width: 0;
   border: 1px solid #294768;
   border-radius: 3px;
   background: rgba(9, 19, 30, 0.94);
@@ -801,7 +824,7 @@ button {
   border-color: #476b55;
 }
 
-.thermal-diagram-node strong {
+.thermal-map-node strong {
   overflow: hidden;
   color: #f2f7ff;
   font-size: 10px;
@@ -810,8 +833,8 @@ button {
   white-space: nowrap;
 }
 
-.thermal-diagram-node span,
-.thermal-diagram-node small {
+.thermal-map-node span,
+.thermal-map-node small {
   overflow: hidden;
   color: #91a7b8;
   font-size: 8px;
@@ -821,9 +844,66 @@ button {
   white-space: nowrap;
 }
 
-.thermal-diagram-node small {
+.thermal-map-node small {
   color: #8bd0d8;
   text-transform: none;
+}
+
+.thermal-map-couplings {
+  align-content: center;
+}
+
+.thermal-coupling-row {
+  display: grid;
+  grid-template-columns: 5px minmax(42px, 0.8fr) minmax(58px, 1fr) minmax(42px, 0.8fr);
+  gap: 5px;
+  align-items: center;
+  min-width: 0;
+  border: 1px solid #17283a;
+  border-radius: 2px;
+  background: rgba(9, 19, 30, 0.82);
+  padding: 4px 5px;
+}
+
+.thermal-coupling-row i {
+  align-self: stretch;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.thermal-coupling-row span,
+.thermal-coupling-row b {
+  overflow: hidden;
+  color: #a9bac7;
+  font-size: 8px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.thermal-coupling-row b {
+  color: #f2f7ff;
+  font-weight: 700;
+}
+
+.thermal-coupling-row.thermal-link-conduction {
+  color: #b8a6ff;
+  background: rgba(184, 166, 255, 0.06);
+}
+
+.thermal-coupling-row.thermal-link-radiation {
+  color: #f0c85a;
+  background: rgba(240, 200, 90, 0.06);
+}
+
+.thermal-coupling-row.thermal-link-convection {
+  color: #56d6df;
+  background: rgba(86, 214, 223, 0.06);
+}
+
+.thermal-coupling-row.thermal-link-modifier {
+  color: #8fa2ad;
+  background: rgba(143, 162, 173, 0.06);
 }
 
 .instant-route-shell {
@@ -1786,6 +1866,7 @@ code {
   }
 
   .thermal-diagram-canvas {
+    grid-template-columns: minmax(0, 1fr);
     min-height: 210px;
   }
 
