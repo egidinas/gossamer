@@ -1081,10 +1081,11 @@ button {
 
 .graph-wall-card {
   --card-height-weight: 1;
-  --plot-height: 240px;
+  --plot-height: 260px;
   display: grid;
-  grid-template-columns: 92px minmax(0, 1fr) 164px;
+  grid-template-columns: minmax(0, 1fr) 164px;
   gap: 0;
+  position: relative;
   min-width: 0;
   height: var(--plot-height);
   min-height: var(--plot-height);
@@ -1095,7 +1096,10 @@ button {
 }
 
 .graph-card-pinned {
-  --plot-height: 760px;
+  --plot-height: 620px;
+  position: sticky;
+  top: 130px;
+  z-index: 12;
 }
 
 .graph-card-state,
@@ -1121,8 +1125,24 @@ button {
 }
 
 .graph-card-label-rail {
-  grid-template-columns: 18px minmax(0, 1fr);
-  border-right: 1px solid #17283a;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  z-index: 8;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  width: auto;
+  max-width: min(240px, calc(100% - 180px));
+  border: 1px solid rgba(39, 60, 77, 0.78);
+  border-radius: 3px;
+  background: rgba(3, 7, 12, 0.82);
+  padding: 2px;
+}
+
+.graph-card-actions {
+  display: inline-grid;
+  grid-template-columns: 16px 16px;
+  gap: 2px;
 }
 
 .graph-card-toggle {
@@ -1136,6 +1156,29 @@ button {
   background: #03070c;
   color: #91a7b8;
   padding: 0;
+}
+
+.graph-card-pin {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #20364d;
+  border-radius: 2px;
+  background: #03070c;
+  color: #7890a4;
+  padding: 0;
+}
+
+.graph-card-pin.active {
+  border-color: #56d6df;
+  color: #56d6df;
+}
+
+.graph-card-pin span {
+  font-size: 10px;
+  line-height: 1;
 }
 
 .graph-card-toggle span {
@@ -1178,7 +1221,7 @@ button {
 .graph-card-inline-title {
   position: absolute;
   top: 5px;
-  left: 54px;
+  left: 46px;
   z-index: 4;
   display: inline-flex;
   align-items: baseline;
@@ -1193,7 +1236,7 @@ button {
 
 .hero-state-footer {
   position: absolute;
-  left: 46px;
+  left: 40px;
   right: 54px;
   bottom: 0;
   z-index: 5;

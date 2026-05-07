@@ -77,6 +77,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
   const [manifest, setManifest] = useState<GraphTileManifest | null>(null);
   const [tiles, setTiles] = useState<Record<string, GraphTile>>({});
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [pinOverrides, setPinOverrides] = useState<Record<string, boolean>>({});
   const [hoverTimeMs, setHoverTimeMs] = useState<number | undefined>(undefined);
   const [peekTimeMs, setPeekTimeMs] = useState<number | undefined>(undefined);
   const fullTimeRange = useMemo(() => graphTimeRange(heroGraph), [heroGraph]);
@@ -94,6 +95,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
     setViewRange(fullTimeRange);
     setManifest(null);
     setTiles({});
+    setPinOverrides({});
     requestedTiles.current.clear();
     api.tileManifest(campaignId).then((next) => {
       if (cancelled) return;
@@ -157,12 +159,14 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
               const isPrimary = card.id === primaryCardID;
               const cardRef = manifestCards.get(card.id);
               const isCollapsed = collapsed[card.id] ?? false;
+              const isPinned = pinOverrides[card.id] ?? card.placement.pinned;
               return (
                 <Fragment key={card.id}>
                   <GraphWallCardView
                     card={card}
                     cardRef={cardRef}
                     collapsed={isCollapsed}
+                    pinned={isPinned}
                     currentTimeMs={currentTimeMs}
                     hoverTimeMs={hoverTimeMs}
                     heroGraph={heroGraph}
@@ -174,6 +178,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
                     onTimeRange={setViewRange}
                     tile={tiles[card.id]}
                     onToggle={() => setCollapsed((existing) => ({ ...existing, [card.id]: !isCollapsed }))}
+                    onPinToggle={() => setPinOverrides((existing) => ({ ...existing, [card.id]: !isPinned }))}
                   />
                   {isPrimary && execution && <ExecutionProgress execution={execution} heroGraph={heroGraph} currentTimeMs={currentTimeMs} />}
                 </Fragment>
@@ -304,6 +309,7 @@ function GraphWallCardView({
   card,
   cardRef,
   collapsed,
+  pinned,
   currentTimeMs,
   hoverTimeMs,
   heroGraph,
@@ -314,11 +320,13 @@ function GraphWallCardView({
   timeRange,
   onTimeRange,
   tile,
-  onToggle
+  onToggle,
+  onPinToggle
 }: {
   card: GraphWallCard;
   cardRef?: GraphTileCardRef;
   collapsed: boolean;
+  pinned: boolean;
   currentTimeMs?: number;
   hoverTimeMs?: number;
   heroGraph: HeroGraphModel;
@@ -330,6 +338,7 @@ function GraphWallCardView({
   onTimeRange: (range: TimeRange) => void;
   tile?: GraphTile;
   onToggle: () => void;
+  onPinToggle: () => void;
 }) {
   const renderKind = cardRef?.render_kind ?? card.render_kind ?? renderKindFor(card.kind);
   const visibleSignals = (cardRef?.signals ?? card.signals).slice(0, renderKind === "swimlane" ? 10 : 7);
@@ -337,15 +346,20 @@ function GraphWallCardView({
 
   return (
     <article
-      className={`graph-wall-card graph-card-${card.kind} graph-render-${renderKind} ${card.placement.pinned ? "graph-card-pinned" : ""} ${collapsed ? "graph-card-collapsed" : ""}`}
+      className={`graph-wall-card graph-card-${card.kind} graph-render-${renderKind} ${pinned ? "graph-card-pinned" : ""} ${collapsed ? "graph-card-collapsed" : ""}`}
       data-card-id={card.id}
       data-card-kind={card.kind}
       data-render-kind={renderKind}
     >
       <div className="graph-card-label-rail">
-        <button className="graph-card-toggle" type="button" onClick={onToggle} aria-label={collapsed ? `Expand ${card.title}` : `Collapse ${card.title}`}>
-          <span aria-hidden="true">{collapsed ? "+" : "-"}</span>
-        </button>
+        <div className="graph-card-actions">
+          <button className="graph-card-toggle" type="button" onClick={onToggle} aria-label={collapsed ? `Expand ${card.title}` : `Collapse ${card.title}`}>
+            <span aria-hidden="true">{collapsed ? "+" : "-"}</span>
+          </button>
+          <button className={`graph-card-pin ${pinned ? "active" : ""}`} type="button" onClick={onPinToggle} aria-label={pinned ? `Unpin ${card.title}` : `Pin ${card.title}`}>
+            <span aria-hidden="true">{pinned ? "●" : "○"}</span>
+          </button>
+        </div>
         <strong>{card.title}</strong>
       </div>
       {!collapsed && (
@@ -1046,11 +1060,17 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
       ctx.lineTo(x + 4, top + 12);
       ctx.closePath();
       ctx.fill();
+      const label = shortGateLabel(marker.label);
       ctx.save();
-      ctx.translate(x + 5, top + 30);
-      ctx.rotate(-Math.PI / 4.5);
       ctx.font = "9px system-ui, sans-serif";
-      ctx.fillText(shortGateLabel(marker.label), 0, 0);
+      const metrics = ctx.measureText(label);
+      const labelWidth = Math.max(28, metrics.width);
+      const labelX = Math.max(left + 6, Math.min(left + width - labelWidth - 6, x + 5));
+      const labelY = Math.max(top + 24, Math.min(top + height - 12, top + 31));
+      ctx.translate(labelX, labelY);
+      const nearRightEdge = x > left + width - 72;
+      ctx.rotate(nearRightEdge ? -Math.PI / 9 : -Math.PI / 5.2);
+      ctx.fillText(label, 0, 0);
       ctx.restore();
     } else {
       ctx.beginPath();
