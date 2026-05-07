@@ -23,11 +23,6 @@ const (
 	maxComponentIntegrationStep      = time.Minute
 	minimumVolatilePool              = 0.004
 	volatileCapacityPressureMinutes  = 0.5882352941176471
-
-	// P2+P3 boundary response constants (for power-balance computation)
-	chamberHeaterMaxW      = 420.0
-	chamberCoolingMaxW     = 850.0
-	shroudCoolingShareFraction = 0.78
 )
 
 type Result struct {
@@ -508,9 +503,6 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 			"tvac_exhaust_water_flow_nominal":        1.0,
 			"functional_gate_fast_self_heat_w":       fastNode.gateSelfHeatW,
 			"functional_gate_lazy_self_heat_w":       lazyNode.gateSelfHeatW,
-			"chamber_heater_max_w":                   chamberHeaterMaxW,
-			"chamber_cooling_max_w":                  chamberCoolingMaxW,
-			"shroud_cooling_share_fraction":          shroudCoolingShareFraction,
 		},
 	}
 	return Result{
