@@ -38,6 +38,15 @@ const (
 	// noise sequences stay bit-identical.
 	correlatedDriftTauMinutes = 120.0
 	correlatedDriftSigmaDegC  = 0.05
+
+	// P2 second-order boundary response: chamber air and the non-TVac shroud
+	// chase their commanded setpoint via a damped harmonic oscillator instead
+	// of a pure first-order exponential, producing a small overshoot and
+	// short ringdown that look like real PID-driven thermal facilities.
+	// secondOrderTauScale is chosen so 4/(zeta*omega) matches the original
+	// first-order tau in minutes — i.e. settling time is preserved.
+	secondOrderDampingZeta = 0.7
+	secondOrderTauScale    = 5.71 // = 4 / 0.7, settling-time-matching factor
 )
 
 type Result struct {
@@ -69,6 +78,8 @@ type state struct {
 	tcPackets              float64
 	drops                  float64
 	chamberDriftBiasDegC   float64
+	chamberAirVel          float64 // °C/s, second-order chase rate
+	shroudVel              float64 // °C/s, second-order chase rate (non-TVac path)
 }
 
 type componentParams struct {
@@ -150,7 +161,8 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 			tauAir = 11.0
 		}
 		actuatorPush := 0.035 * (heaterDuty - ln2Duty)
-		st.chamberAir += firstOrderDelta(st.chamberAir, command, tauAir, dt) + actuatorPush*0.05
+		st.chamberAir, st.chamberAirVel = secondOrderStep(st.chamberAir, st.chamberAirVel, command, tauAir, dt)
+		st.chamberAir += actuatorPush * 0.05
 		st.chamberAir += noise(rng, 0.08)
 
 		tableTarget := st.chamberAir
@@ -199,7 +211,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 			st.shroudOutlet += noise(rng, 0.05)
 			st.shroud += noise(rng, 0.04)
 		} else {
-			st.shroud += firstOrderDelta(st.shroud, shroudTarget, shroudTau, dt)
+			st.shroud, st.shroudVel = secondOrderStep(st.shroud, st.shroudVel, shroudTarget, shroudTau, dt)
 			st.shroud += noise(rng, 0.045)
 			st.shroudInlet = st.shroud
 			st.shroudOutlet = st.shroud
@@ -816,6 +828,26 @@ func firstOrderDelta(current, target, tauMin float64, dt time.Duration) float64 
 	}
 	alpha := 1 - math.Exp(-dt.Minutes()/tauMin)
 	return (target - current) * clamp(alpha, 0, 1)
+}
+
+// secondOrderStep advances a damped harmonic oscillator (current, vel) chasing
+// command, where tauMin is the first-order time constant whose settling time
+// the oscillator's settling time should approximate. Returns the new (T, v).
+//
+// All time arithmetic is in seconds: tauMin is converted to seconds before
+// computing omega, and dt.Seconds() drives the integrator step. Mixing
+// minutes and seconds here is the easiest way to get a 60x error.
+func secondOrderStep(current, vel, command, tauMin float64, dt time.Duration) (float64, float64) {
+	if tauMin <= 0 {
+		return command, 0
+	}
+	tauSec := tauMin * 60.0
+	omega := secondOrderTauScale / tauSec // rad/s
+	dtSec := dt.Seconds()
+	accel := omega*omega*(command-current) - 2*secondOrderDampingZeta*omega*vel
+	newVel := vel + accel*dtSec
+	newT := current + newVel*dtSec
+	return newT, newVel
 }
 
 // updateSlowDrift advances a discrete Ornstein-Uhlenbeck process whose
