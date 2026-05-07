@@ -2333,7 +2333,7 @@ code {
 
   .graph-card-pinned .graph-card-plot-shell,
   .graph-card-pinned .graph-card-canvas {
-    --plot-height: 260px;
+    --plot-height: 320px;
     height: var(--plot-height);
   }
 
@@ -2342,7 +2342,7 @@ code {
   .graph-card-event .graph-card-canvas,
   .graph-card-state .graph-card-plot-shell,
   .graph-card-event .graph-card-plot-shell {
-    --plot-height: 64px;
+    --plot-height: 84px;
     height: var(--plot-height);
   }
 
@@ -2387,5 +2387,77 @@ code {
 
   .companion-graph svg {
     height: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .shell {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  .topbar {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .topbar-campaign {
+    min-width: 0;
+    justify-items: start;
+    width: 100%;
+  }
+
+  .nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+
+  .nav a {
+    flex: 0 0 auto;
+  }
+
+  .graph-card-pinned .graph-card-plot-shell,
+  .graph-card-pinned .graph-card-canvas {
+    --plot-height: 280px;
+    height: var(--plot-height);
+  }
+
+  .graph-card-legend-rail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .graph-card-legend-rail em,
+  .graph-card-legend-rail small {
+    font-size: 11px;
+  }
+
+  .graph-card-legend-rail span {
+    grid-template-columns: 14px minmax(0, 1fr) auto;
+  }
+
+  .execution-now-strip span,
+  .execution-now-strip em,
+  .requirement-progress-card span,
+  .requirement-progress-card em,
+  .requirement-progress-card small {
+    font-size: 11px;
+  }
+
+  .execution-now-strip strong,
+  .requirement-progress-card strong {
+    font-size: 16px;
+  }
+
+  .site-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
   }
 }
