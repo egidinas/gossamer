@@ -1550,6 +1550,9 @@ func thermalContextDuration(program *contracts.ThermalProgram) time.Duration {
 	if context < 90*time.Minute {
 		return 90 * time.Minute
 	}
+	if context > 90*time.Minute {
+		return 90 * time.Minute
+	}
 	return context
 }
 

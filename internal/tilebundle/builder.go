@@ -190,12 +190,13 @@ func BuildTile(model contracts.GraphModel, cardID, levelID, t0s, t1s string, lat
 		}
 		series = append(series, tileSeries)
 	}
-	bands := intersectBands(model.HeroGraph.PhaseBands, start, end)
-	bands = append(bands, intersectBands(model.HeroGraph.DwellWindows, start, end)...)
+	laneToken := commandCenterLaneToken(card)
+	bands := filterCardBands(intersectBands(model.HeroGraph.PhaseBands, start, end), laneToken)
+	bands = append(bands, filterCardBands(intersectBands(model.HeroGraph.DwellWindows, start, end), laneToken)...)
 	markers := []contracts.GraphMarker{}
 	events := []contracts.TileEvent{}
-	if card.CardID == "thermal_program" || card.RenderKind == "event_rail" || card.RenderKind == "swimlane" {
-		markers = intersectMarkers(model.HeroGraph.Markers, start, end)
+	if card.IncludeMarkers || card.CardID == "thermal_program" || card.RenderKind == "event_rail" || card.RenderKind == "swimlane" {
+		markers = filterCardMarkers(intersectMarkers(model.HeroGraph.Markers, start, end), laneToken)
 		events = make([]contracts.TileEvent, 0, len(markers))
 		for _, marker := range markers {
 			events = append(events, contracts.TileEvent{ID: marker.ID, Kind: marker.Kind, Label: marker.Label, Timestamp: marker.Timestamp, RequirementID: requirementID(marker.Kind), EvidenceRef: marker.EvidenceRef, Result: marker.Result, Value: marker.Value})
@@ -224,6 +225,54 @@ func BuildTile(model contracts.GraphModel, cardID, levelID, t0s, t1s string, lat
 		Markers:    markers,
 		Events:     events,
 	}, nil
+}
+
+func commandCenterLaneToken(card contracts.GraphTileCardRef) string {
+	for _, signal := range card.Signals {
+		if !strings.HasPrefix(signal.ID, "cc.") {
+			continue
+		}
+		parts := strings.Split(signal.ID, ".")
+		if len(parts) >= 3 {
+			return strings.ToLower(parts[1])
+		}
+	}
+	return ""
+}
+
+func filterCardBands(bands []contracts.GraphBand, laneToken string) []contracts.GraphBand {
+	if laneToken == "" {
+		return bands
+	}
+	filtered := make([]contracts.GraphBand, 0, len(bands))
+	for _, band := range bands {
+		if band.Kind == "weekend" || containsLaneToken(laneToken, band.ID, band.Label) {
+			filtered = append(filtered, band)
+		}
+	}
+	return filtered
+}
+
+func filterCardMarkers(markers []contracts.GraphMarker, laneToken string) []contracts.GraphMarker {
+	if laneToken == "" {
+		return markers
+	}
+	filtered := make([]contracts.GraphMarker, 0, len(markers))
+	for _, marker := range markers {
+		if containsLaneToken(laneToken, marker.ID, marker.Label, marker.EvidenceRef) {
+			filtered = append(filtered, marker)
+		}
+	}
+	return filtered
+}
+
+func containsLaneToken(laneToken string, values ...string) bool {
+	for _, value := range values {
+		if strings.Contains(strings.ToLower(value), laneToken) {
+			return true
+		}
+	}
+	return false
 }
 
 type tileWindow struct{ Start, End time.Time }

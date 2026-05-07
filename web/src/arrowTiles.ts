@@ -32,10 +32,11 @@ export async function arrowTile(campaignId: string, card: GraphTileCardRef, grap
   const series = built.map((item) => item.series);
   const rawPointCount = built.reduce((sum, item) => sum + item.rawCount, 0);
   const pointCount = built.reduce((sum, item) => sum + item.pointCount, 0);
-  const bands = intersectByWindow([...(graph.hero_graph?.phase_bands ?? []), ...(graph.hero_graph?.dwell_windows ?? [])], t0, t1);
-  const markers = intersectMarkers(graph.hero_graph?.markers ?? [], t0, t1);
-  const events = (card.card_id === "thermal_program" || card.render_kind === "event_rail" || card.render_kind === "swimlane")
-    ? markers.map((marker) => ({
+  const laneToken = commandCenterLaneToken(card);
+  const markerEligible = card.include_markers || card.card_id === "thermal_program" || card.render_kind === "event_rail" || card.render_kind === "swimlane";
+  const bands = filterLaneBands(intersectByWindow([...(graph.hero_graph?.phase_bands ?? []), ...(graph.hero_graph?.dwell_windows ?? [])], t0, t1), laneToken);
+  const markers = markerEligible ? filterLaneMarkers(intersectMarkers(graph.hero_graph?.markers ?? [], t0, t1), laneToken) : [];
+  const events = markers.map((marker) => ({
       id: marker.id,
       kind: marker.kind,
       label: marker.label,
@@ -43,8 +44,7 @@ export async function arrowTile(campaignId: string, card: GraphTileCardRef, grap
       result: marker.result,
       value: marker.value,
       evidence_ref: marker.evidence_ref
-    }))
-    : [];
+    }));
   return {
     schema_version: 1,
     generated_at: new Date().toISOString(),
@@ -236,4 +236,26 @@ function intersectMarkers<T extends { timestamp: string }>(items: T[], t0: numbe
     const t = Date.parse(item.timestamp);
     return Number.isFinite(t) && t >= t0 && t <= t1;
   });
+}
+
+function commandCenterLaneToken(card: GraphTileCardRef) {
+  for (const signal of card.signals ?? []) {
+    const match = signal.id.match(/^cc\.([a-z0-9_-]+)\./i);
+    if (match) return match[1].toLowerCase();
+  }
+  return "";
+}
+
+function filterLaneBands<T extends { id?: string; label?: string; kind?: string }>(items: T[], laneToken: string): T[] {
+  if (!laneToken) return items;
+  return items.filter((item) => item.kind === "weekend" || containsLaneToken(laneToken, item.id, item.label));
+}
+
+function filterLaneMarkers<T extends { id?: string; label?: string; evidence_ref?: string }>(items: T[], laneToken: string): T[] {
+  if (!laneToken) return items;
+  return items.filter((item) => containsLaneToken(laneToken, item.id, item.label, item.evidence_ref));
+}
+
+function containsLaneToken(laneToken: string, ...values: Array<string | undefined>) {
+  return values.some((value) => (value ?? "").toLowerCase().includes(laneToken));
 }

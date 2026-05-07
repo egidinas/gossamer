@@ -5,9 +5,9 @@
   "manifest_path": "/data/current/campaigns/tvac_qualification/manifest.json",
   "time_range": {
     "start": "2026-01-15T10:00:00Z",
-    "end": "2026-01-31T23:57:00Z",
+    "end": "2026-01-29T02:12:00Z",
     "anchor": "2026-01-15T10:00:00Z",
-    "range_seconds": 1432620,
+    "range_seconds": 1181520,
     "mode": "absolute_fixture",
     "source": "thermal_program"
   },
@@ -1163,7 +1163,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-VACUUM-POST",
-      "timestamp": "2026-01-30T15:12:00Z",
+      "timestamp": "2026-01-29T01:42:00Z",
       "status": "pass",
       "label": "Final ambient-temperature functional test under vacuum"
     },
@@ -1172,7 +1172,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-POST",
-      "timestamp": "2026-01-31T23:31:12Z",
+      "timestamp": "2026-01-29T01:42:00Z",
       "status": "pass",
       "label": "Ambient-pressure functional test after vent"
     },
@@ -1181,7 +1181,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C01-HOT",
-      "timestamp": "2026-01-17T17:44:00Z",
+      "timestamp": "2026-01-17T13:45:00Z",
       "status": "inconclusive",
       "label": "Hot survival recovery functional test"
     },
@@ -1190,7 +1190,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C01-COLD",
-      "timestamp": "2026-01-19T04:29:00Z",
+      "timestamp": "2026-01-18T20:09:00Z",
       "status": "pass",
       "label": "Cold survival recovery functional test"
     },
@@ -1199,7 +1199,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C02-HOT",
-      "timestamp": "2026-01-20T00:01:00Z",
+      "timestamp": "2026-01-19T13:36:00Z",
       "status": "inconclusive",
       "label": "Cycle 2 hot dwell functional test"
     },
@@ -1208,7 +1208,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C02-COLD",
-      "timestamp": "2026-01-20T19:03:00Z",
+      "timestamp": "2026-01-20T07:03:00Z",
       "status": "pass",
       "label": "Cycle 2 cold dwell functional test"
     },
@@ -1217,7 +1217,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C03-HOT",
-      "timestamp": "2026-01-21T14:41:00Z",
+      "timestamp": "2026-01-21T00:30:00Z",
       "status": "inconclusive",
       "label": "Cycle 3 hot dwell functional test"
     },
@@ -1226,7 +1226,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C03-COLD",
-      "timestamp": "2026-01-22T10:24:00Z",
+      "timestamp": "2026-01-21T17:57:00Z",
       "status": "pass",
       "label": "Cycle 3 cold dwell functional test"
     },
@@ -1235,7 +1235,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C04-HOT",
-      "timestamp": "2026-01-23T06:02:00Z",
+      "timestamp": "2026-01-22T11:24:00Z",
       "status": "inconclusive",
       "label": "Cycle 4 hot dwell functional test"
     },
@@ -1244,7 +1244,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C04-COLD",
-      "timestamp": "2026-01-24T01:41:00Z",
+      "timestamp": "2026-01-23T04:51:00Z",
       "status": "pass",
       "label": "Cycle 4 cold dwell functional test"
     },
@@ -1253,7 +1253,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C05-HOT",
-      "timestamp": "2026-01-24T20:36:00Z",
+      "timestamp": "2026-01-23T22:18:00Z",
       "status": "inconclusive",
       "label": "Cycle 5 hot dwell functional test"
     },
@@ -1262,7 +1262,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C05-COLD",
-      "timestamp": "2026-01-25T16:00:00Z",
+      "timestamp": "2026-01-24T15:45:00Z",
       "status": "pass",
       "label": "Cycle 5 cold dwell functional test"
     },
@@ -1271,7 +1271,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C06-HOT",
-      "timestamp": "2026-01-26T11:32:00Z",
+      "timestamp": "2026-01-25T09:12:00Z",
       "status": "inconclusive",
       "label": "Cycle 6 hot dwell functional test"
     },
@@ -1280,7 +1280,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C06-COLD",
-      "timestamp": "2026-01-27T07:04:00Z",
+      "timestamp": "2026-01-26T02:39:00Z",
       "status": "pass",
       "label": "Cycle 6 cold dwell functional test"
     },
@@ -1289,7 +1289,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C07-HOT",
-      "timestamp": "2026-01-28T02:36:00Z",
+      "timestamp": "2026-01-26T20:06:00Z",
       "status": "inconclusive",
       "label": "Cycle 7 hot dwell functional test"
     },
@@ -1298,7 +1298,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C07-COLD",
-      "timestamp": "2026-01-28T22:08:00Z",
+      "timestamp": "2026-01-27T13:33:00Z",
       "status": "pass",
       "label": "Cycle 7 cold dwell functional test"
     },
@@ -1307,7 +1307,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C08-HOT",
-      "timestamp": "2026-01-29T17:40:00Z",
+      "timestamp": "2026-01-28T07:00:00Z",
       "status": "inconclusive",
       "label": "Cycle 8 hot dwell functional test"
     },
@@ -1316,7 +1316,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-FUNC-C08-COLD",
-      "timestamp": "2026-01-30T13:12:00Z",
+      "timestamp": "2026-01-29T00:27:00Z",
       "status": "pass",
       "label": "Cycle 8 cold dwell functional test"
     },
@@ -1334,7 +1334,7 @@
       "requirement_id": "REQ-ANOMALY-REVIEW",
       "card_id": "thermal_program",
       "marker_id": "TVAC-LN2-VALVE-REVIEW",
-      "timestamp": "2026-01-26T17:22:00Z",
+      "timestamp": "2026-01-25T14:17:00Z",
       "status": "review",
       "label": "LN2 valve duty review window"
     },
@@ -1343,7 +1343,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C01-hot_survival",
-      "timestamp": "2026-01-17T04:30:00Z",
+      "timestamp": "2026-01-17T05:30:00Z",
       "status": "pass",
       "label": "Stable Hot survival dwell confirmed"
     },
@@ -1352,7 +1352,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C01-hot_operational",
-      "timestamp": "2026-01-17T14:10:00Z",
+      "timestamp": "2026-01-17T13:05:00Z",
       "status": "pass",
       "label": "Stable Hot operational dwell confirmed"
     },
@@ -1361,7 +1361,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C01-cold_survival",
-      "timestamp": "2026-01-18T15:04:00Z",
+      "timestamp": "2026-01-18T11:54:00Z",
       "status": "pass",
       "label": "Stable Cold survival dwell confirmed"
     },
@@ -1370,7 +1370,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C01-cold_operational",
-      "timestamp": "2026-01-19T00:44:00Z",
+      "timestamp": "2026-01-18T19:29:00Z",
       "status": "pass",
       "label": "Stable Cold operational dwell confirmed"
     },
@@ -1379,7 +1379,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C02-hot_operational",
-      "timestamp": "2026-01-19T20:16:00Z",
+      "timestamp": "2026-01-19T12:56:00Z",
       "status": "pass",
       "label": "Stable Hot operational dwell confirmed"
     },
@@ -1388,7 +1388,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C02-cold_operational",
-      "timestamp": "2026-01-20T15:48:00Z",
+      "timestamp": "2026-01-20T06:23:00Z",
       "status": "pass",
       "label": "Stable Cold operational dwell confirmed"
     },
@@ -1397,7 +1397,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C03-hot_operational",
-      "timestamp": "2026-01-21T11:20:00Z",
+      "timestamp": "2026-01-20T23:50:00Z",
       "status": "pass",
       "label": "Stable Hot operational dwell confirmed"
     },
@@ -1406,7 +1406,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C03-cold_operational",
-      "timestamp": "2026-01-22T06:52:00Z",
+      "timestamp": "2026-01-21T17:17:00Z",
       "status": "pass",
       "label": "Stable Cold operational dwell confirmed"
     },
@@ -1415,7 +1415,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C04-hot_operational",
-      "timestamp": "2026-01-23T02:24:00Z",
+      "timestamp": "2026-01-22T10:44:00Z",
       "status": "pass",
       "label": "Stable Hot operational dwell confirmed"
     },
@@ -1424,7 +1424,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C04-cold_operational",
-      "timestamp": "2026-01-23T21:56:00Z",
+      "timestamp": "2026-01-23T04:11:00Z",
       "status": "pass",
       "label": "Stable Cold operational dwell confirmed"
     },
@@ -1433,7 +1433,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C05-hot_operational",
-      "timestamp": "2026-01-24T17:28:00Z",
+      "timestamp": "2026-01-23T21:38:00Z",
       "status": "pass",
       "label": "Stable Hot operational dwell confirmed"
     },
@@ -1442,7 +1442,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C05-cold_operational",
-      "timestamp": "2026-01-25T13:00:00Z",
+      "timestamp": "2026-01-24T15:05:00Z",
       "status": "pass",
       "label": "Stable Cold operational dwell confirmed"
     },
@@ -1451,7 +1451,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C06-hot_operational",
-      "timestamp": "2026-01-26T08:32:00Z",
+      "timestamp": "2026-01-25T08:32:00Z",
       "status": "pass",
       "label": "Stable Hot operational dwell confirmed"
     },
@@ -1460,7 +1460,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C06-cold_operational",
-      "timestamp": "2026-01-27T04:04:00Z",
+      "timestamp": "2026-01-26T01:59:00Z",
       "status": "pass",
       "label": "Stable Cold operational dwell confirmed"
     },
@@ -1469,7 +1469,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C07-hot_operational",
-      "timestamp": "2026-01-27T23:36:00Z",
+      "timestamp": "2026-01-26T19:26:00Z",
       "status": "pass",
       "label": "Stable Hot operational dwell confirmed"
     },
@@ -1478,7 +1478,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C07-cold_operational",
-      "timestamp": "2026-01-28T19:08:00Z",
+      "timestamp": "2026-01-27T12:53:00Z",
       "status": "pass",
       "label": "Stable Cold operational dwell confirmed"
     },
@@ -1487,7 +1487,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C08-hot_operational",
-      "timestamp": "2026-01-29T14:40:00Z",
+      "timestamp": "2026-01-28T06:20:00Z",
       "status": "pass",
       "label": "Stable Hot operational dwell confirmed"
     },
@@ -1496,7 +1496,7 @@
       "requirement_id": "REQ-STABILITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-STABLE-C08-cold_operational",
-      "timestamp": "2026-01-30T10:12:00Z",
+      "timestamp": "2026-01-28T23:47:00Z",
       "status": "pass",
       "label": "Stable Cold operational dwell confirmed"
     },
@@ -1514,7 +1514,7 @@
       "requirement_id": "REQ-DATA-QUALITY",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-PRESSURE-GATE-POST",
-      "timestamp": "2026-01-30T14:42:00Z",
+      "timestamp": "2026-01-29T01:12:00Z",
       "status": "pass",
       "label": "Vacuum pressure gate held for final test"
     },
@@ -1541,7 +1541,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-VACUUM-POST",
-      "timestamp": "2026-01-30T15:12:00Z",
+      "timestamp": "2026-01-29T01:42:00Z",
       "status": "pass",
       "label": "Final ambient-temperature functional test under vacuum"
     },
@@ -1550,7 +1550,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-POST",
-      "timestamp": "2026-01-31T23:31:12Z",
+      "timestamp": "2026-01-29T01:42:00Z",
       "status": "pass",
       "label": "Ambient-pressure functional test after vent"
     },
@@ -1559,7 +1559,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C01-HOT",
-      "timestamp": "2026-01-17T17:44:00Z",
+      "timestamp": "2026-01-17T13:45:00Z",
       "status": "inconclusive",
       "label": "Hot survival recovery functional test"
     },
@@ -1568,7 +1568,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C01-COLD",
-      "timestamp": "2026-01-19T04:29:00Z",
+      "timestamp": "2026-01-18T20:09:00Z",
       "status": "pass",
       "label": "Cold survival recovery functional test"
     },
@@ -1577,7 +1577,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C02-HOT",
-      "timestamp": "2026-01-20T00:01:00Z",
+      "timestamp": "2026-01-19T13:36:00Z",
       "status": "inconclusive",
       "label": "Cycle 2 hot dwell functional test"
     },
@@ -1586,7 +1586,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C02-COLD",
-      "timestamp": "2026-01-20T19:03:00Z",
+      "timestamp": "2026-01-20T07:03:00Z",
       "status": "pass",
       "label": "Cycle 2 cold dwell functional test"
     },
@@ -1595,7 +1595,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C03-HOT",
-      "timestamp": "2026-01-21T14:41:00Z",
+      "timestamp": "2026-01-21T00:30:00Z",
       "status": "inconclusive",
       "label": "Cycle 3 hot dwell functional test"
     },
@@ -1604,7 +1604,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C03-COLD",
-      "timestamp": "2026-01-22T10:24:00Z",
+      "timestamp": "2026-01-21T17:57:00Z",
       "status": "pass",
       "label": "Cycle 3 cold dwell functional test"
     },
@@ -1613,7 +1613,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C04-HOT",
-      "timestamp": "2026-01-23T06:02:00Z",
+      "timestamp": "2026-01-22T11:24:00Z",
       "status": "inconclusive",
       "label": "Cycle 4 hot dwell functional test"
     },
@@ -1622,7 +1622,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C04-COLD",
-      "timestamp": "2026-01-24T01:41:00Z",
+      "timestamp": "2026-01-23T04:51:00Z",
       "status": "pass",
       "label": "Cycle 4 cold dwell functional test"
     },
@@ -1631,7 +1631,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C05-HOT",
-      "timestamp": "2026-01-24T20:36:00Z",
+      "timestamp": "2026-01-23T22:18:00Z",
       "status": "inconclusive",
       "label": "Cycle 5 hot dwell functional test"
     },
@@ -1640,7 +1640,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C05-COLD",
-      "timestamp": "2026-01-25T16:00:00Z",
+      "timestamp": "2026-01-24T15:45:00Z",
       "status": "pass",
       "label": "Cycle 5 cold dwell functional test"
     },
@@ -1649,7 +1649,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C06-HOT",
-      "timestamp": "2026-01-26T11:32:00Z",
+      "timestamp": "2026-01-25T09:12:00Z",
       "status": "inconclusive",
       "label": "Cycle 6 hot dwell functional test"
     },
@@ -1658,7 +1658,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C06-COLD",
-      "timestamp": "2026-01-27T07:04:00Z",
+      "timestamp": "2026-01-26T02:39:00Z",
       "status": "pass",
       "label": "Cycle 6 cold dwell functional test"
     },
@@ -1667,7 +1667,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C07-HOT",
-      "timestamp": "2026-01-28T02:36:00Z",
+      "timestamp": "2026-01-26T20:06:00Z",
       "status": "inconclusive",
       "label": "Cycle 7 hot dwell functional test"
     },
@@ -1676,7 +1676,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C07-COLD",
-      "timestamp": "2026-01-28T22:08:00Z",
+      "timestamp": "2026-01-27T13:33:00Z",
       "status": "pass",
       "label": "Cycle 7 cold dwell functional test"
     },
@@ -1685,7 +1685,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C08-HOT",
-      "timestamp": "2026-01-29T17:40:00Z",
+      "timestamp": "2026-01-28T07:00:00Z",
       "status": "inconclusive",
       "label": "Cycle 8 hot dwell functional test"
     },
@@ -1694,7 +1694,7 @@
       "requirement_id": "REQ-FUNC-GATE",
       "card_id": "thermal_program",
       "marker_id": "tvac_qualification-EVID-C08-COLD",
-      "timestamp": "2026-01-30T13:12:00Z",
+      "timestamp": "2026-01-29T00:27:00Z",
       "status": "pass",
       "label": "Cycle 8 cold dwell functional test"
     }

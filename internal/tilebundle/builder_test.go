@@ -103,6 +103,54 @@ func TestSwimlaneTileEncodesSpans(t *testing.T) {
 	}
 }
 
+func TestCommandCenterTileFiltersLaneLocalMarkersAndBands(t *testing.T) {
+	model := smallModel()
+	model.CampaignID = "command_center_fat"
+	model.HeroGraph.PhaseBands = []contracts.GraphBand{
+		{ID: "thermal_chamber_alpha-fat-01-window", Label: "Alpha FAT 01", Kind: "test_window", Start: "2026-01-01T00:00:00Z", End: "2026-01-01T02:00:00Z"},
+		{ID: "thermal_chamber_bravo-fat-01-window", Label: "Bravo FAT 01", Kind: "test_window", Start: "2026-01-01T00:00:00Z", End: "2026-01-01T02:00:00Z"},
+		{ID: "weekend-20260103", Label: "Weekend", Kind: "weekend", Start: "2026-01-01T00:00:00Z", End: "2026-01-01T02:00:00Z"},
+	}
+	model.HeroGraph.Markers = []contracts.GraphMarker{
+		{ID: "thermal_chamber_alpha-fat-01-FUNC-C01-HOT", Label: "Alpha hot gate", Kind: "functional_gate", Timestamp: "2026-01-01T01:00:00Z", EvidenceRef: "reports/command_center_fat.json#thermal_chamber_alpha-fat-01"},
+		{ID: "thermal_chamber_bravo-fat-01-FUNC-C01-HOT", Label: "Bravo hot gate", Kind: "functional_gate", Timestamp: "2026-01-01T01:00:00Z", EvidenceRef: "reports/command_center_fat.json#thermal_chamber_bravo-fat-01"},
+	}
+	model.HeroGraph.Traces = append(model.HeroGraph.Traces, contracts.GraphTrace{
+		ID: "cc.alpha.command_deg_c", Label: "Alpha command", Role: "command", Units: "degC", AxisID: "temperature", Source: "plan",
+		Values: []contracts.GraphPoint{
+			{Timestamp: "2026-01-01T00:00:00Z", Value: 20},
+			{Timestamp: "2026-01-01T01:00:00Z", Value: 40},
+		},
+	})
+	alphaCard := contracts.GraphTileCardRef{
+		CardID: "cc.alpha.lane", Title: "Alpha chamber FAT lane", RenderKind: "line", AxisPolicy: "shared_time", IncludeMarkers: true,
+		Signals: []contracts.GraphWallSignal{
+			{ID: "cc.alpha.command_deg_c", Label: "Command", Unit: "degC", Role: "command", Kind: "analog", Source: "plan", SourceFamily: "thermal", AxisID: "temperature"},
+		},
+	}
+	model.TileManifest.Cards = append(model.TileManifest.Cards, alphaCard)
+
+	tile, err := BuildTile(model, "cc.alpha.lane", "minute", "", "", false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !hasBand(tile.Bands, "Alpha FAT 01") {
+		t.Fatalf("alpha lane band missing: %+v", tile.Bands)
+	}
+	if !hasBand(tile.Bands, "Weekend") {
+		t.Fatalf("shared weekend band missing: %+v", tile.Bands)
+	}
+	if hasBand(tile.Bands, "Bravo FAT 01") {
+		t.Fatalf("bravo band leaked into alpha tile: %+v", tile.Bands)
+	}
+	if !hasMarker(tile.Markers, "Alpha hot gate") || !hasEvent(tile.Events, "Alpha hot gate") {
+		t.Fatalf("alpha functional marker/event missing: markers=%+v events=%+v", tile.Markers, tile.Events)
+	}
+	if hasMarker(tile.Markers, "Bravo hot gate") || hasEvent(tile.Events, "Bravo hot gate") {
+		t.Fatalf("bravo functional marker/event leaked into alpha tile: markers=%+v events=%+v", tile.Markers, tile.Events)
+	}
+}
+
 func TestWriteBundleCreatesStaticManifestAndCompressedTiles(t *testing.T) {
 	out := t.TempDir()
 	manifest, err := WriteBundle([]contracts.GraphModel{smallModel()}, Options{
@@ -144,6 +192,33 @@ func seriesByID(tile contracts.GraphTile, id string) contracts.TileSeries {
 		}
 	}
 	return contracts.TileSeries{}
+}
+
+func hasBand(bands []contracts.GraphBand, label string) bool {
+	for _, band := range bands {
+		if band.Label == label {
+			return true
+		}
+	}
+	return false
+}
+
+func hasMarker(markers []contracts.GraphMarker, label string) bool {
+	for _, marker := range markers {
+		if marker.Label == label {
+			return true
+		}
+	}
+	return false
+}
+
+func hasEvent(events []contracts.TileEvent, label string) bool {
+	for _, event := range events {
+		if event.Label == label {
+			return true
+		}
+	}
+	return false
 }
 
 func smallModel() contracts.GraphModel {

@@ -38,6 +38,7 @@
       "chamber_name": "Alpha",
       "facility": "TC-A",
       "summary": "Alpha chamber ladder with completed, live, and forecast FAT slots.",
+      "graph_card_id": "cc.alpha.lane",
       "runs": [
         {
           "id": "thermal_chamber_alpha-fat-01",
@@ -45,308 +46,54 @@
           "title": "Alpha FAT 01",
           "state": "complete",
           "result": "pass",
-          "start": "2026-01-05T08:00:00Z",
-          "end": "2026-01-08T20:00:00Z",
-          "reset_start": "2026-01-09T08:00:00Z",
-          "reset_end": "2026-01-10T08:00:00Z",
+          "start": "2026-01-05T15:00:00Z",
+          "end": "2026-01-10T01:13:00Z",
+          "reset_start": "2026-01-12T08:00:00Z",
+          "reset_end": "2026-01-12T11:00:00Z",
           "manifest": {
             "id": "thermal_chamber_alpha-fat-01-manifest",
             "label": "Alpha item manifest",
-            "article": "Optical terminal 41-A",
-            "serial_number": "OT-A-2600",
+            "article": "DUT 41-A",
+            "serial_number": "DUT-A-2600",
             "facility": "TC-A",
             "chamber_name": "Alpha",
             "campaign_id": "thermal_acceptance_fat",
             "operator_next": "archive evidence",
             "state": "complete",
             "result": "pass",
-            "start": "2026-01-05T08:00:00Z",
-            "end": "2026-01-08T20:00:00Z",
-            "reset_start": "2026-01-09T08:00:00Z",
-            "reset_end": "2026-01-10T08:00:00Z"
+            "start": "2026-01-05T15:00:00Z",
+            "end": "2026-01-10T01:13:00Z",
+            "reset_start": "2026-01-12T08:00:00Z",
+            "reset_end": "2026-01-12T11:00:00Z"
           },
-          "traces": [
-            {
-              "id": "ghost",
-              "label": "Nominal profile",
-              "role": "ghost",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-05T08:00:00Z",
-                  "value": 22
-                },
-                {
-                  "timestamp": "2026-01-05T11:00:00Z",
-                  "value": 34.798
-                },
-                {
-                  "timestamp": "2026-01-05T14:00:00Z",
-                  "value": 47.595
-                },
-                {
-                  "timestamp": "2026-01-05T17:00:00Z",
-                  "value": 60.393
-                },
-                {
-                  "timestamp": "2026-01-05T20:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-05T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-06T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-06T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-06T08:00:00Z",
-                  "value": 54.524
-                },
-                {
-                  "timestamp": "2026-01-06T11:00:00Z",
-                  "value": 30.714
-                },
-                {
-                  "timestamp": "2026-01-06T14:00:00Z",
-                  "value": 6.905
-                },
-                {
-                  "timestamp": "2026-01-06T17:00:00Z",
-                  "value": -16.905
-                },
-                {
-                  "timestamp": "2026-01-06T20:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-06T23:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-07T02:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-07T05:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-07T08:00:00Z",
-                  "value": -34.048
-                },
-                {
-                  "timestamp": "2026-01-07T11:00:00Z",
-                  "value": -10.238
-                },
-                {
-                  "timestamp": "2026-01-07T14:00:00Z",
-                  "value": 13.571
-                },
-                {
-                  "timestamp": "2026-01-07T17:00:00Z",
-                  "value": 37.381
-                },
-                {
-                  "timestamp": "2026-01-07T20:00:00Z",
-                  "value": 61.19
-                },
-                {
-                  "timestamp": "2026-01-07T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-08T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-08T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-08T08:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-08T11:00:00Z",
-                  "value": 54.908
-                },
-                {
-                  "timestamp": "2026-01-08T14:00:00Z",
-                  "value": 43.939
-                },
-                {
-                  "timestamp": "2026-01-08T17:00:00Z",
-                  "value": 32.969
-                },
-                {
-                  "timestamp": "2026-01-08T20:00:00Z",
-                  "value": 22
-                }
-              ]
-            },
-            {
-              "id": "actual",
-              "label": "Observed chamber",
-              "role": "actual",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-05T08:00:00Z",
-                  "value": 22
-                },
-                {
-                  "timestamp": "2026-01-05T11:00:00Z",
-                  "value": 35.474
-                },
-                {
-                  "timestamp": "2026-01-05T14:00:00Z",
-                  "value": 48.488
-                },
-                {
-                  "timestamp": "2026-01-05T17:00:00Z",
-                  "value": 60.895
-                },
-                {
-                  "timestamp": "2026-01-05T20:00:00Z",
-                  "value": 64.77
-                },
-                {
-                  "timestamp": "2026-01-05T23:00:00Z",
-                  "value": 64.195
-                },
-                {
-                  "timestamp": "2026-01-06T02:00:00Z",
-                  "value": 64.167
-                },
-                {
-                  "timestamp": "2026-01-06T05:00:00Z",
-                  "value": 64.706
-                },
-                {
-                  "timestamp": "2026-01-06T08:00:00Z",
-                  "value": 54.969
-                },
-                {
-                  "timestamp": "2026-01-06T11:00:00Z",
-                  "value": 31.596
-                },
-                {
-                  "timestamp": "2026-01-06T14:00:00Z",
-                  "value": 7.623
-                },
-                {
-                  "timestamp": "2026-01-06T17:00:00Z",
-                  "value": -16.838
-                },
-                {
-                  "timestamp": "2026-01-06T20:00:00Z",
-                  "value": -35.63
-                },
-                {
-                  "timestamp": "2026-01-06T23:00:00Z",
-                  "value": -35.899
-                },
-                {
-                  "timestamp": "2026-01-07T02:00:00Z",
-                  "value": -35.556
-                },
-                {
-                  "timestamp": "2026-01-07T05:00:00Z",
-                  "value": -34.836
-                },
-                {
-                  "timestamp": "2026-01-07T08:00:00Z",
-                  "value": -33.274
-                },
-                {
-                  "timestamp": "2026-01-07T11:00:00Z",
-                  "value": -9.382
-                },
-                {
-                  "timestamp": "2026-01-07T14:00:00Z",
-                  "value": 13.928
-                },
-                {
-                  "timestamp": "2026-01-07T17:00:00Z",
-                  "value": 36.996
-                },
-                {
-                  "timestamp": "2026-01-07T20:00:00Z",
-                  "value": 60.325
-                },
-                {
-                  "timestamp": "2026-01-07T23:00:00Z",
-                  "value": 64.243
-                },
-                {
-                  "timestamp": "2026-01-08T02:00:00Z",
-                  "value": 64.866
-                },
-                {
-                  "timestamp": "2026-01-08T05:00:00Z",
-                  "value": 65.58
-                },
-                {
-                  "timestamp": "2026-01-08T08:00:00Z",
-                  "value": 65.9
-                },
-                {
-                  "timestamp": "2026-01-08T11:00:00Z",
-                  "value": 55.516
-                },
-                {
-                  "timestamp": "2026-01-08T14:00:00Z",
-                  "value": 43.841
-                },
-                {
-                  "timestamp": "2026-01-08T17:00:00Z",
-                  "value": 32.233
-                },
-                {
-                  "timestamp": "2026-01-08T20:00:00Z",
-                  "value": 21.125
-                }
-              ]
-            }
-          ],
           "interaction_windows": [
             {
               "id": "thermal_chamber_alpha-fat-01-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-05T08:55:48Z",
-              "end": "2026-01-05T10:25:48Z"
+              "start": "2026-01-05T16:22:27Z",
+              "end": "2026-01-05T17:52:27Z"
             },
             {
               "id": "thermal_chamber_alpha-fat-01-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-06T21:53:24Z",
-              "end": "2026-01-06T23:23:24Z"
+              "start": "2026-01-07T15:06:34Z",
+              "end": "2026-01-07T16:36:34Z"
             },
             {
               "id": "thermal_chamber_alpha-fat-01-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-07T23:05:24Z",
-              "end": "2026-01-08T00:35:24Z"
+              "start": "2026-01-08T22:58:28Z",
+              "end": "2026-01-09T00:28:28Z"
             },
             {
               "id": "thermal_chamber_alpha-fat-01-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-08T14:12:36Z",
-              "end": "2026-01-08T15:42:36Z"
+              "start": "2026-01-09T18:05:37Z",
+              "end": "2026-01-09T19:35:37Z"
             }
           ],
           "events": [
@@ -354,21 +101,21 @@
               "id": "thermal_chamber_alpha-fat-01-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-05T08:00:00Z",
+              "timestamp": "2026-01-05T15:00:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_alpha-fat-01-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-08T20:00:00Z",
+              "timestamp": "2026-01-10T01:13:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_alpha-fat-01-reset",
               "label": "Reset ready",
               "kind": "reset",
-              "timestamp": "2026-01-10T08:00:00Z",
+              "timestamp": "2026-01-12T11:00:00Z",
               "state": "reset"
             }
           ]
@@ -379,296 +126,54 @@
           "title": "Alpha FAT 02",
           "state": "running",
           "result": "in_progress",
-          "start": "2026-01-12T08:00:00Z",
-          "end": "2026-01-15T20:00:00Z",
-          "reset_start": "2026-01-16T08:00:00Z",
-          "reset_end": "2026-01-17T08:00:00Z",
+          "start": "2026-01-12T15:00:00Z",
+          "end": "2026-01-17T01:13:00Z",
+          "reset_start": "2026-01-19T09:30:00Z",
+          "reset_end": "2026-01-19T12:30:00Z",
           "manifest": {
             "id": "thermal_chamber_alpha-fat-02-manifest",
             "label": "Alpha item manifest",
-            "article": "Optical terminal 42-A",
-            "serial_number": "OT-A-2611",
+            "article": "DUT 42-A",
+            "serial_number": "DUT-A-2611",
             "facility": "TC-A",
             "chamber_name": "Alpha",
             "campaign_id": "thermal_acceptance_fat",
             "operator_next": "monitor dwell gate",
             "state": "running",
             "result": "in_progress",
-            "start": "2026-01-12T08:00:00Z",
-            "end": "2026-01-15T20:00:00Z",
-            "reset_start": "2026-01-16T08:00:00Z",
-            "reset_end": "2026-01-17T08:00:00Z"
+            "start": "2026-01-12T15:00:00Z",
+            "end": "2026-01-17T01:13:00Z",
+            "reset_start": "2026-01-19T09:30:00Z",
+            "reset_end": "2026-01-19T12:30:00Z"
           },
-          "traces": [
-            {
-              "id": "ghost",
-              "label": "Nominal profile",
-              "role": "ghost",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-12T08:00:00Z",
-                  "value": 22
-                },
-                {
-                  "timestamp": "2026-01-12T11:00:00Z",
-                  "value": 34.798
-                },
-                {
-                  "timestamp": "2026-01-12T14:00:00Z",
-                  "value": 47.595
-                },
-                {
-                  "timestamp": "2026-01-12T17:00:00Z",
-                  "value": 60.393
-                },
-                {
-                  "timestamp": "2026-01-12T20:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-12T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-13T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-13T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-13T08:00:00Z",
-                  "value": 54.524
-                },
-                {
-                  "timestamp": "2026-01-13T11:00:00Z",
-                  "value": 30.714
-                },
-                {
-                  "timestamp": "2026-01-13T14:00:00Z",
-                  "value": 6.905
-                },
-                {
-                  "timestamp": "2026-01-13T17:00:00Z",
-                  "value": -16.905
-                },
-                {
-                  "timestamp": "2026-01-13T20:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-13T23:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-14T02:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-14T05:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-14T08:00:00Z",
-                  "value": -34.048
-                },
-                {
-                  "timestamp": "2026-01-14T11:00:00Z",
-                  "value": -10.238
-                },
-                {
-                  "timestamp": "2026-01-14T14:00:00Z",
-                  "value": 13.571
-                },
-                {
-                  "timestamp": "2026-01-14T17:00:00Z",
-                  "value": 37.381
-                },
-                {
-                  "timestamp": "2026-01-14T20:00:00Z",
-                  "value": 61.19
-                },
-                {
-                  "timestamp": "2026-01-14T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-15T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-15T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-15T08:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-15T11:00:00Z",
-                  "value": 54.908
-                },
-                {
-                  "timestamp": "2026-01-15T14:00:00Z",
-                  "value": 43.939
-                },
-                {
-                  "timestamp": "2026-01-15T17:00:00Z",
-                  "value": 32.969
-                },
-                {
-                  "timestamp": "2026-01-15T20:00:00Z",
-                  "value": 22
-                }
-              ]
-            },
-            {
-              "id": "actual",
-              "label": "Observed chamber",
-              "role": "actual",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-12T08:00:00Z",
-                  "value": 22.35
-                },
-                {
-                  "timestamp": "2026-01-12T11:00:00Z",
-                  "value": 35.824
-                },
-                {
-                  "timestamp": "2026-01-12T14:00:00Z",
-                  "value": 48.838
-                },
-                {
-                  "timestamp": "2026-01-12T17:00:00Z",
-                  "value": 61.245
-                },
-                {
-                  "timestamp": "2026-01-12T20:00:00Z",
-                  "value": 65.12
-                },
-                {
-                  "timestamp": "2026-01-12T23:00:00Z",
-                  "value": 64.545
-                },
-                {
-                  "timestamp": "2026-01-13T02:00:00Z",
-                  "value": 64.517
-                },
-                {
-                  "timestamp": "2026-01-13T05:00:00Z",
-                  "value": 65.056
-                },
-                {
-                  "timestamp": "2026-01-13T08:00:00Z",
-                  "value": 55.319
-                },
-                {
-                  "timestamp": "2026-01-13T11:00:00Z",
-                  "value": 31.946
-                },
-                {
-                  "timestamp": "2026-01-13T14:00:00Z",
-                  "value": 7.973
-                },
-                {
-                  "timestamp": "2026-01-13T17:00:00Z",
-                  "value": -16.488
-                },
-                {
-                  "timestamp": "2026-01-13T20:00:00Z",
-                  "value": -35.28
-                },
-                {
-                  "timestamp": "2026-01-13T23:00:00Z",
-                  "value": -35.549
-                },
-                {
-                  "timestamp": "2026-01-14T02:00:00Z",
-                  "value": -35.206
-                },
-                {
-                  "timestamp": "2026-01-14T05:00:00Z",
-                  "value": -34.486
-                },
-                {
-                  "timestamp": "2026-01-14T08:00:00Z",
-                  "value": -32.924
-                },
-                {
-                  "timestamp": "2026-01-14T11:00:00Z",
-                  "value": -9.032
-                },
-                {
-                  "timestamp": "2026-01-14T14:00:00Z",
-                  "value": 14.278
-                },
-                {
-                  "timestamp": "2026-01-14T17:00:00Z",
-                  "value": 37.346
-                },
-                {
-                  "timestamp": "2026-01-14T20:00:00Z",
-                  "value": 60.675
-                },
-                {
-                  "timestamp": "2026-01-14T23:00:00Z",
-                  "value": 64.593
-                },
-                {
-                  "timestamp": "2026-01-15T02:00:00Z",
-                  "value": 65.216
-                },
-                {
-                  "timestamp": "2026-01-15T05:00:00Z",
-                  "value": 65.93
-                },
-                {
-                  "timestamp": "2026-01-15T08:00:00Z",
-                  "value": 66.25
-                },
-                {
-                  "timestamp": "2026-01-15T11:00:00Z",
-                  "value": 55.866
-                }
-              ]
-            }
-          ],
           "interaction_windows": [
             {
               "id": "thermal_chamber_alpha-fat-02-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-12T08:55:48Z",
-              "end": "2026-01-12T10:25:48Z"
+              "start": "2026-01-12T16:22:27Z",
+              "end": "2026-01-12T17:52:27Z"
             },
             {
               "id": "thermal_chamber_alpha-fat-02-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-13T21:53:24Z",
-              "end": "2026-01-13T23:23:24Z"
+              "start": "2026-01-14T15:06:34Z",
+              "end": "2026-01-14T16:36:34Z"
             },
             {
               "id": "thermal_chamber_alpha-fat-02-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-14T23:05:24Z",
-              "end": "2026-01-15T00:35:24Z"
+              "start": "2026-01-15T22:58:28Z",
+              "end": "2026-01-16T00:28:28Z"
             },
             {
               "id": "thermal_chamber_alpha-fat-02-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-15T14:12:36Z",
-              "end": "2026-01-15T15:42:36Z"
+              "start": "2026-01-16T18:05:37Z",
+              "end": "2026-01-16T19:35:37Z"
             }
           ],
           "events": [
@@ -676,21 +181,21 @@
               "id": "thermal_chamber_alpha-fat-02-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-12T08:00:00Z",
+              "timestamp": "2026-01-12T15:00:00Z",
               "state": "running"
             },
             {
               "id": "thermal_chamber_alpha-fat-02-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-15T20:00:00Z",
+              "timestamp": "2026-01-17T01:13:00Z",
               "state": "running"
             },
             {
               "id": "thermal_chamber_alpha-fat-02-reset",
               "label": "Reset ready",
               "kind": "reset",
-              "timestamp": "2026-01-17T08:00:00Z",
+              "timestamp": "2026-01-19T12:30:00Z",
               "state": "reset"
             }
           ]
@@ -701,191 +206,54 @@
           "title": "Alpha FAT 03",
           "state": "scheduled",
           "result": "pending",
-          "start": "2026-01-19T08:00:00Z",
-          "end": "2026-01-22T20:00:00Z",
-          "reset_start": "2026-01-23T08:00:00Z",
-          "reset_end": "2026-01-24T08:00:00Z",
+          "start": "2026-01-20T15:00:00Z",
+          "end": "2026-01-25T01:13:00Z",
+          "reset_start": "2026-01-26T09:00:00Z",
+          "reset_end": "2026-01-26T12:00:00Z",
           "manifest": {
             "id": "thermal_chamber_alpha-fat-03-manifest",
             "label": "Alpha item manifest",
-            "article": "Optical terminal 43-A",
-            "serial_number": "OT-A-2622",
+            "article": "DUT 43-A",
+            "serial_number": "DUT-A-2622",
             "facility": "TC-A",
             "chamber_name": "Alpha",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare reset slot Fri 08:00",
+            "operator_next": "prepare reset slot Mon 09:00",
             "state": "scheduled",
             "result": "pending",
-            "start": "2026-01-19T08:00:00Z",
-            "end": "2026-01-22T20:00:00Z",
-            "reset_start": "2026-01-23T08:00:00Z",
-            "reset_end": "2026-01-24T08:00:00Z"
+            "start": "2026-01-20T15:00:00Z",
+            "end": "2026-01-25T01:13:00Z",
+            "reset_start": "2026-01-26T09:00:00Z",
+            "reset_end": "2026-01-26T12:00:00Z"
           },
-          "traces": [
-            {
-              "id": "ghost",
-              "label": "Nominal profile",
-              "role": "ghost",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-19T08:00:00Z",
-                  "value": 22
-                },
-                {
-                  "timestamp": "2026-01-19T11:00:00Z",
-                  "value": 34.798
-                },
-                {
-                  "timestamp": "2026-01-19T14:00:00Z",
-                  "value": 47.595
-                },
-                {
-                  "timestamp": "2026-01-19T17:00:00Z",
-                  "value": 60.393
-                },
-                {
-                  "timestamp": "2026-01-19T20:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-19T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-20T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-20T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-20T08:00:00Z",
-                  "value": 54.524
-                },
-                {
-                  "timestamp": "2026-01-20T11:00:00Z",
-                  "value": 30.714
-                },
-                {
-                  "timestamp": "2026-01-20T14:00:00Z",
-                  "value": 6.905
-                },
-                {
-                  "timestamp": "2026-01-20T17:00:00Z",
-                  "value": -16.905
-                },
-                {
-                  "timestamp": "2026-01-20T20:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-20T23:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-21T02:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-21T05:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-21T08:00:00Z",
-                  "value": -34.048
-                },
-                {
-                  "timestamp": "2026-01-21T11:00:00Z",
-                  "value": -10.238
-                },
-                {
-                  "timestamp": "2026-01-21T14:00:00Z",
-                  "value": 13.571
-                },
-                {
-                  "timestamp": "2026-01-21T17:00:00Z",
-                  "value": 37.381
-                },
-                {
-                  "timestamp": "2026-01-21T20:00:00Z",
-                  "value": 61.19
-                },
-                {
-                  "timestamp": "2026-01-21T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-22T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-22T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-22T08:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-22T11:00:00Z",
-                  "value": 54.908
-                },
-                {
-                  "timestamp": "2026-01-22T14:00:00Z",
-                  "value": 43.939
-                },
-                {
-                  "timestamp": "2026-01-22T17:00:00Z",
-                  "value": 32.969
-                },
-                {
-                  "timestamp": "2026-01-22T20:00:00Z",
-                  "value": 22
-                }
-              ]
-            },
-            {
-              "id": "actual",
-              "label": "Observed chamber",
-              "role": "actual",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": []
-            }
-          ],
           "interaction_windows": [
             {
               "id": "thermal_chamber_alpha-fat-03-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-19T08:55:48Z",
-              "end": "2026-01-19T10:25:48Z"
+              "start": "2026-01-20T16:22:27Z",
+              "end": "2026-01-20T17:52:27Z"
             },
             {
               "id": "thermal_chamber_alpha-fat-03-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-20T21:53:24Z",
-              "end": "2026-01-20T23:23:24Z"
+              "start": "2026-01-22T15:06:34Z",
+              "end": "2026-01-22T16:36:34Z"
             },
             {
               "id": "thermal_chamber_alpha-fat-03-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-21T23:05:24Z",
-              "end": "2026-01-22T00:35:24Z"
+              "start": "2026-01-23T22:58:28Z",
+              "end": "2026-01-24T00:28:28Z"
             },
             {
               "id": "thermal_chamber_alpha-fat-03-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-22T14:12:36Z",
-              "end": "2026-01-22T15:42:36Z"
+              "start": "2026-01-24T18:05:37Z",
+              "end": "2026-01-24T19:35:37Z"
             }
           ],
           "events": [
@@ -893,21 +261,21 @@
               "id": "thermal_chamber_alpha-fat-03-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-19T08:00:00Z",
+              "timestamp": "2026-01-20T15:00:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_alpha-fat-03-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-22T20:00:00Z",
+              "timestamp": "2026-01-25T01:13:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_alpha-fat-03-reset",
               "label": "Reset ready",
               "kind": "reset",
-              "timestamp": "2026-01-24T08:00:00Z",
+              "timestamp": "2026-01-26T12:00:00Z",
               "state": "reset"
             }
           ]
@@ -919,6 +287,7 @@
       "chamber_name": "Bravo",
       "facility": "TC-B",
       "summary": "Bravo chamber ladder with completed, live, and forecast FAT slots.",
+      "graph_card_id": "cc.bravo.lane",
       "runs": [
         {
           "id": "thermal_chamber_bravo-fat-01",
@@ -926,308 +295,54 @@
           "title": "Bravo FAT 01",
           "state": "complete",
           "result": "pass",
-          "start": "2026-01-06T08:00:00Z",
-          "end": "2026-01-09T20:00:00Z",
-          "reset_start": "2026-01-12T08:00:00Z",
-          "reset_end": "2026-01-13T08:00:00Z",
+          "start": "2026-01-07T13:00:00Z",
+          "end": "2026-01-11T23:13:00Z",
+          "reset_start": "2026-01-12T08:30:00Z",
+          "reset_end": "2026-01-12T11:30:00Z",
           "manifest": {
             "id": "thermal_chamber_bravo-fat-01-manifest",
             "label": "Bravo item manifest",
-            "article": "Optical terminal 48-B",
-            "serial_number": "OT-B-2700",
+            "article": "DUT 48-B",
+            "serial_number": "DUT-B-2700",
             "facility": "TC-B",
             "chamber_name": "Bravo",
             "campaign_id": "thermal_acceptance_fat",
             "operator_next": "archive evidence",
             "state": "complete",
             "result": "pass",
-            "start": "2026-01-06T08:00:00Z",
-            "end": "2026-01-09T20:00:00Z",
-            "reset_start": "2026-01-12T08:00:00Z",
-            "reset_end": "2026-01-13T08:00:00Z"
+            "start": "2026-01-07T13:00:00Z",
+            "end": "2026-01-11T23:13:00Z",
+            "reset_start": "2026-01-12T08:30:00Z",
+            "reset_end": "2026-01-12T11:30:00Z"
           },
-          "traces": [
-            {
-              "id": "ghost",
-              "label": "Nominal profile",
-              "role": "ghost",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-06T08:00:00Z",
-                  "value": 22
-                },
-                {
-                  "timestamp": "2026-01-06T11:00:00Z",
-                  "value": 34.798
-                },
-                {
-                  "timestamp": "2026-01-06T14:00:00Z",
-                  "value": 47.595
-                },
-                {
-                  "timestamp": "2026-01-06T17:00:00Z",
-                  "value": 60.393
-                },
-                {
-                  "timestamp": "2026-01-06T20:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-06T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-07T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-07T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-07T08:00:00Z",
-                  "value": 54.524
-                },
-                {
-                  "timestamp": "2026-01-07T11:00:00Z",
-                  "value": 30.714
-                },
-                {
-                  "timestamp": "2026-01-07T14:00:00Z",
-                  "value": 6.905
-                },
-                {
-                  "timestamp": "2026-01-07T17:00:00Z",
-                  "value": -16.905
-                },
-                {
-                  "timestamp": "2026-01-07T20:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-07T23:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-08T02:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-08T05:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-08T08:00:00Z",
-                  "value": -34.048
-                },
-                {
-                  "timestamp": "2026-01-08T11:00:00Z",
-                  "value": -10.238
-                },
-                {
-                  "timestamp": "2026-01-08T14:00:00Z",
-                  "value": 13.571
-                },
-                {
-                  "timestamp": "2026-01-08T17:00:00Z",
-                  "value": 37.381
-                },
-                {
-                  "timestamp": "2026-01-08T20:00:00Z",
-                  "value": 61.19
-                },
-                {
-                  "timestamp": "2026-01-08T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-09T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-09T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-09T08:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-09T11:00:00Z",
-                  "value": 54.908
-                },
-                {
-                  "timestamp": "2026-01-09T14:00:00Z",
-                  "value": 43.939
-                },
-                {
-                  "timestamp": "2026-01-09T17:00:00Z",
-                  "value": 32.969
-                },
-                {
-                  "timestamp": "2026-01-09T20:00:00Z",
-                  "value": 22
-                }
-              ]
-            },
-            {
-              "id": "actual",
-              "label": "Observed chamber",
-              "role": "actual",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-06T08:00:00Z",
-                  "value": 22.152
-                },
-                {
-                  "timestamp": "2026-01-06T11:00:00Z",
-                  "value": 34.218
-                },
-                {
-                  "timestamp": "2026-01-06T14:00:00Z",
-                  "value": 46.44
-                },
-                {
-                  "timestamp": "2026-01-06T17:00:00Z",
-                  "value": 59.21
-                },
-                {
-                  "timestamp": "2026-01-06T20:00:00Z",
-                  "value": 64.356
-                },
-                {
-                  "timestamp": "2026-01-06T23:00:00Z",
-                  "value": 65.095
-                },
-                {
-                  "timestamp": "2026-01-07T02:00:00Z",
-                  "value": 65.531
-                },
-                {
-                  "timestamp": "2026-01-07T05:00:00Z",
-                  "value": 65.369
-                },
-                {
-                  "timestamp": "2026-01-07T08:00:00Z",
-                  "value": 54.241
-                },
-                {
-                  "timestamp": "2026-01-07T11:00:00Z",
-                  "value": 29.734
-                },
-                {
-                  "timestamp": "2026-01-07T14:00:00Z",
-                  "value": 5.656
-                },
-                {
-                  "timestamp": "2026-01-07T17:00:00Z",
-                  "value": -17.811
-                },
-                {
-                  "timestamp": "2026-01-07T20:00:00Z",
-                  "value": -35.186
-                },
-                {
-                  "timestamp": "2026-01-07T23:00:00Z",
-                  "value": -34.577
-                },
-                {
-                  "timestamp": "2026-01-08T02:00:00Z",
-                  "value": -34.494
-                },
-                {
-                  "timestamp": "2026-01-08T05:00:00Z",
-                  "value": -34.993
-                },
-                {
-                  "timestamp": "2026-01-08T08:00:00Z",
-                  "value": -34.783
-                },
-                {
-                  "timestamp": "2026-01-08T11:00:00Z",
-                  "value": -11.453
-                },
-                {
-                  "timestamp": "2026-01-08T14:00:00Z",
-                  "value": 12.464
-                },
-                {
-                  "timestamp": "2026-01-08T17:00:00Z",
-                  "value": 36.897
-                },
-                {
-                  "timestamp": "2026-01-08T20:00:00Z",
-                  "value": 61.421
-                },
-                {
-                  "timestamp": "2026-01-08T23:00:00Z",
-                  "value": 65.55
-                },
-                {
-                  "timestamp": "2026-01-09T02:00:00Z",
-                  "value": 65.258
-                },
-                {
-                  "timestamp": "2026-01-09T05:00:00Z",
-                  "value": 64.552
-                },
-                {
-                  "timestamp": "2026-01-09T08:00:00Z",
-                  "value": 63.913
-                },
-                {
-                  "timestamp": "2026-01-09T11:00:00Z",
-                  "value": 53.684
-                },
-                {
-                  "timestamp": "2026-01-09T14:00:00Z",
-                  "value": 43.171
-                },
-                {
-                  "timestamp": "2026-01-09T17:00:00Z",
-                  "value": 32.943
-                },
-                {
-                  "timestamp": "2026-01-09T20:00:00Z",
-                  "value": 22.494
-                }
-              ]
-            }
-          ],
           "interaction_windows": [
             {
               "id": "thermal_chamber_bravo-fat-01-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-06T08:55:48Z",
-              "end": "2026-01-06T10:25:48Z"
+              "start": "2026-01-07T14:22:27Z",
+              "end": "2026-01-07T15:52:27Z"
             },
             {
               "id": "thermal_chamber_bravo-fat-01-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-07T21:53:24Z",
-              "end": "2026-01-07T23:23:24Z"
+              "start": "2026-01-09T13:06:34Z",
+              "end": "2026-01-09T14:36:34Z"
             },
             {
               "id": "thermal_chamber_bravo-fat-01-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-08T23:05:24Z",
-              "end": "2026-01-09T00:35:24Z"
+              "start": "2026-01-10T20:58:28Z",
+              "end": "2026-01-10T22:28:28Z"
             },
             {
               "id": "thermal_chamber_bravo-fat-01-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-09T14:12:36Z",
-              "end": "2026-01-09T15:42:36Z"
+              "start": "2026-01-11T16:05:37Z",
+              "end": "2026-01-11T17:35:37Z"
             }
           ],
           "events": [
@@ -1235,21 +350,21 @@
               "id": "thermal_chamber_bravo-fat-01-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-06T08:00:00Z",
+              "timestamp": "2026-01-07T13:00:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_bravo-fat-01-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-09T20:00:00Z",
+              "timestamp": "2026-01-11T23:13:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_bravo-fat-01-reset",
               "label": "Reset ready",
               "kind": "reset",
-              "timestamp": "2026-01-13T08:00:00Z",
+              "timestamp": "2026-01-12T11:30:00Z",
               "state": "reset"
             }
           ]
@@ -1260,232 +375,54 @@
           "title": "Bravo FAT 02",
           "state": "running",
           "result": "in_progress",
-          "start": "2026-01-14T08:00:00Z",
-          "end": "2026-01-17T20:00:00Z",
+          "start": "2026-01-12T16:30:00Z",
+          "end": "2026-01-17T02:43:00Z",
           "reset_start": "2026-01-19T08:00:00Z",
-          "reset_end": "2026-01-20T08:00:00Z",
+          "reset_end": "2026-01-19T11:00:00Z",
           "manifest": {
             "id": "thermal_chamber_bravo-fat-02-manifest",
             "label": "Bravo item manifest",
-            "article": "Optical terminal 49-B",
-            "serial_number": "OT-B-2711",
+            "article": "DUT 49-B",
+            "serial_number": "DUT-B-2711",
             "facility": "TC-B",
             "chamber_name": "Bravo",
             "campaign_id": "thermal_acceptance_fat",
             "operator_next": "monitor dwell gate",
             "state": "running",
             "result": "in_progress",
-            "start": "2026-01-14T08:00:00Z",
-            "end": "2026-01-17T20:00:00Z",
+            "start": "2026-01-12T16:30:00Z",
+            "end": "2026-01-17T02:43:00Z",
             "reset_start": "2026-01-19T08:00:00Z",
-            "reset_end": "2026-01-20T08:00:00Z"
+            "reset_end": "2026-01-19T11:00:00Z"
           },
-          "traces": [
-            {
-              "id": "ghost",
-              "label": "Nominal profile",
-              "role": "ghost",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-14T08:00:00Z",
-                  "value": 22
-                },
-                {
-                  "timestamp": "2026-01-14T11:00:00Z",
-                  "value": 34.798
-                },
-                {
-                  "timestamp": "2026-01-14T14:00:00Z",
-                  "value": 47.595
-                },
-                {
-                  "timestamp": "2026-01-14T17:00:00Z",
-                  "value": 60.393
-                },
-                {
-                  "timestamp": "2026-01-14T20:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-14T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-15T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-15T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-15T08:00:00Z",
-                  "value": 54.524
-                },
-                {
-                  "timestamp": "2026-01-15T11:00:00Z",
-                  "value": 30.714
-                },
-                {
-                  "timestamp": "2026-01-15T14:00:00Z",
-                  "value": 6.905
-                },
-                {
-                  "timestamp": "2026-01-15T17:00:00Z",
-                  "value": -16.905
-                },
-                {
-                  "timestamp": "2026-01-15T20:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-15T23:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-16T02:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-16T05:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-16T08:00:00Z",
-                  "value": -34.048
-                },
-                {
-                  "timestamp": "2026-01-16T11:00:00Z",
-                  "value": -10.238
-                },
-                {
-                  "timestamp": "2026-01-16T14:00:00Z",
-                  "value": 13.571
-                },
-                {
-                  "timestamp": "2026-01-16T17:00:00Z",
-                  "value": 37.381
-                },
-                {
-                  "timestamp": "2026-01-16T20:00:00Z",
-                  "value": 61.19
-                },
-                {
-                  "timestamp": "2026-01-16T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-17T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-17T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-17T08:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-17T11:00:00Z",
-                  "value": 54.908
-                },
-                {
-                  "timestamp": "2026-01-17T14:00:00Z",
-                  "value": 43.939
-                },
-                {
-                  "timestamp": "2026-01-17T17:00:00Z",
-                  "value": 32.969
-                },
-                {
-                  "timestamp": "2026-01-17T20:00:00Z",
-                  "value": 22
-                }
-              ]
-            },
-            {
-              "id": "actual",
-              "label": "Observed chamber",
-              "role": "actual",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-14T08:00:00Z",
-                  "value": 22.502
-                },
-                {
-                  "timestamp": "2026-01-14T11:00:00Z",
-                  "value": 34.568
-                },
-                {
-                  "timestamp": "2026-01-14T14:00:00Z",
-                  "value": 46.79
-                },
-                {
-                  "timestamp": "2026-01-14T17:00:00Z",
-                  "value": 59.56
-                },
-                {
-                  "timestamp": "2026-01-14T20:00:00Z",
-                  "value": 64.706
-                },
-                {
-                  "timestamp": "2026-01-14T23:00:00Z",
-                  "value": 65.445
-                },
-                {
-                  "timestamp": "2026-01-15T02:00:00Z",
-                  "value": 65.881
-                },
-                {
-                  "timestamp": "2026-01-15T05:00:00Z",
-                  "value": 65.719
-                },
-                {
-                  "timestamp": "2026-01-15T08:00:00Z",
-                  "value": 54.591
-                },
-                {
-                  "timestamp": "2026-01-15T11:00:00Z",
-                  "value": 30.084
-                }
-              ]
-            }
-          ],
           "interaction_windows": [
             {
               "id": "thermal_chamber_bravo-fat-02-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-14T08:55:48Z",
-              "end": "2026-01-14T10:25:48Z"
+              "start": "2026-01-12T17:52:27Z",
+              "end": "2026-01-12T19:22:27Z"
             },
             {
               "id": "thermal_chamber_bravo-fat-02-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-15T21:53:24Z",
-              "end": "2026-01-15T23:23:24Z"
+              "start": "2026-01-14T16:36:34Z",
+              "end": "2026-01-14T18:06:34Z"
             },
             {
               "id": "thermal_chamber_bravo-fat-02-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-16T23:05:24Z",
-              "end": "2026-01-17T00:35:24Z"
+              "start": "2026-01-16T00:28:28Z",
+              "end": "2026-01-16T01:58:28Z"
             },
             {
               "id": "thermal_chamber_bravo-fat-02-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-17T14:12:36Z",
-              "end": "2026-01-17T15:42:36Z"
+              "start": "2026-01-16T19:35:37Z",
+              "end": "2026-01-16T21:05:37Z"
             }
           ],
           "events": [
@@ -1493,21 +430,21 @@
               "id": "thermal_chamber_bravo-fat-02-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-14T08:00:00Z",
+              "timestamp": "2026-01-12T16:30:00Z",
               "state": "running"
             },
             {
               "id": "thermal_chamber_bravo-fat-02-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-17T20:00:00Z",
+              "timestamp": "2026-01-17T02:43:00Z",
               "state": "running"
             },
             {
               "id": "thermal_chamber_bravo-fat-02-reset",
               "label": "Reset ready",
               "kind": "reset",
-              "timestamp": "2026-01-20T08:00:00Z",
+              "timestamp": "2026-01-19T11:00:00Z",
               "state": "reset"
             }
           ]
@@ -1518,191 +455,54 @@
           "title": "Bravo FAT 03",
           "state": "scheduled",
           "result": "pending",
-          "start": "2026-01-21T08:00:00Z",
-          "end": "2026-01-24T20:00:00Z",
-          "reset_start": "2026-01-26T08:00:00Z",
-          "reset_end": "2026-01-27T08:00:00Z",
+          "start": "2026-01-19T17:00:00Z",
+          "end": "2026-01-24T03:13:00Z",
+          "reset_start": "2026-01-26T09:30:00Z",
+          "reset_end": "2026-01-26T12:30:00Z",
           "manifest": {
             "id": "thermal_chamber_bravo-fat-03-manifest",
             "label": "Bravo item manifest",
-            "article": "Optical terminal 50-B",
-            "serial_number": "OT-B-2722",
+            "article": "DUT 50-B",
+            "serial_number": "DUT-B-2722",
             "facility": "TC-B",
             "chamber_name": "Bravo",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare reset slot Mon 08:00",
+            "operator_next": "prepare reset slot Mon 09:30",
             "state": "scheduled",
             "result": "pending",
-            "start": "2026-01-21T08:00:00Z",
-            "end": "2026-01-24T20:00:00Z",
-            "reset_start": "2026-01-26T08:00:00Z",
-            "reset_end": "2026-01-27T08:00:00Z"
+            "start": "2026-01-19T17:00:00Z",
+            "end": "2026-01-24T03:13:00Z",
+            "reset_start": "2026-01-26T09:30:00Z",
+            "reset_end": "2026-01-26T12:30:00Z"
           },
-          "traces": [
-            {
-              "id": "ghost",
-              "label": "Nominal profile",
-              "role": "ghost",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-21T08:00:00Z",
-                  "value": 22
-                },
-                {
-                  "timestamp": "2026-01-21T11:00:00Z",
-                  "value": 34.798
-                },
-                {
-                  "timestamp": "2026-01-21T14:00:00Z",
-                  "value": 47.595
-                },
-                {
-                  "timestamp": "2026-01-21T17:00:00Z",
-                  "value": 60.393
-                },
-                {
-                  "timestamp": "2026-01-21T20:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-21T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-22T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-22T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-22T08:00:00Z",
-                  "value": 54.524
-                },
-                {
-                  "timestamp": "2026-01-22T11:00:00Z",
-                  "value": 30.714
-                },
-                {
-                  "timestamp": "2026-01-22T14:00:00Z",
-                  "value": 6.905
-                },
-                {
-                  "timestamp": "2026-01-22T17:00:00Z",
-                  "value": -16.905
-                },
-                {
-                  "timestamp": "2026-01-22T20:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-22T23:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-23T02:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-23T05:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-23T08:00:00Z",
-                  "value": -34.048
-                },
-                {
-                  "timestamp": "2026-01-23T11:00:00Z",
-                  "value": -10.238
-                },
-                {
-                  "timestamp": "2026-01-23T14:00:00Z",
-                  "value": 13.571
-                },
-                {
-                  "timestamp": "2026-01-23T17:00:00Z",
-                  "value": 37.381
-                },
-                {
-                  "timestamp": "2026-01-23T20:00:00Z",
-                  "value": 61.19
-                },
-                {
-                  "timestamp": "2026-01-23T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-24T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-24T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-24T08:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-24T11:00:00Z",
-                  "value": 54.908
-                },
-                {
-                  "timestamp": "2026-01-24T14:00:00Z",
-                  "value": 43.939
-                },
-                {
-                  "timestamp": "2026-01-24T17:00:00Z",
-                  "value": 32.969
-                },
-                {
-                  "timestamp": "2026-01-24T20:00:00Z",
-                  "value": 22
-                }
-              ]
-            },
-            {
-              "id": "actual",
-              "label": "Observed chamber",
-              "role": "actual",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": []
-            }
-          ],
           "interaction_windows": [
             {
               "id": "thermal_chamber_bravo-fat-03-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-21T08:55:48Z",
-              "end": "2026-01-21T10:25:48Z"
+              "start": "2026-01-19T18:22:27Z",
+              "end": "2026-01-19T19:52:27Z"
             },
             {
               "id": "thermal_chamber_bravo-fat-03-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-22T21:53:24Z",
-              "end": "2026-01-22T23:23:24Z"
+              "start": "2026-01-21T17:06:34Z",
+              "end": "2026-01-21T18:36:34Z"
             },
             {
               "id": "thermal_chamber_bravo-fat-03-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-23T23:05:24Z",
-              "end": "2026-01-24T00:35:24Z"
+              "start": "2026-01-23T00:58:28Z",
+              "end": "2026-01-23T02:28:28Z"
             },
             {
               "id": "thermal_chamber_bravo-fat-03-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-24T14:12:36Z",
-              "end": "2026-01-24T15:42:36Z"
+              "start": "2026-01-23T20:05:37Z",
+              "end": "2026-01-23T21:35:37Z"
             }
           ],
           "events": [
@@ -1710,21 +510,21 @@
               "id": "thermal_chamber_bravo-fat-03-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-21T08:00:00Z",
+              "timestamp": "2026-01-19T17:00:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_bravo-fat-03-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-24T20:00:00Z",
+              "timestamp": "2026-01-24T03:13:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_bravo-fat-03-reset",
               "label": "Reset ready",
               "kind": "reset",
-              "timestamp": "2026-01-27T08:00:00Z",
+              "timestamp": "2026-01-26T12:30:00Z",
               "state": "reset"
             }
           ]
@@ -1736,6 +536,7 @@
       "chamber_name": "Charlie",
       "facility": "TC-C",
       "summary": "Charlie chamber ladder with completed, live, and forecast FAT slots.",
+      "graph_card_id": "cc.charlie.lane",
       "runs": [
         {
           "id": "thermal_chamber_charlie-fat-01",
@@ -1743,308 +544,54 @@
           "title": "Charlie FAT 01",
           "state": "complete",
           "result": "pass",
-          "start": "2026-01-07T08:00:00Z",
-          "end": "2026-01-10T20:00:00Z",
-          "reset_start": "2026-01-12T08:00:00Z",
-          "reset_end": "2026-01-13T08:00:00Z",
+          "start": "2026-01-08T15:00:00Z",
+          "end": "2026-01-13T01:13:00Z",
+          "reset_start": "2026-01-13T09:00:00Z",
+          "reset_end": "2026-01-13T12:00:00Z",
           "manifest": {
             "id": "thermal_chamber_charlie-fat-01-manifest",
             "label": "Charlie item manifest",
-            "article": "Optical terminal 55-C",
-            "serial_number": "OT-C-2800",
+            "article": "DUT 55-C",
+            "serial_number": "DUT-C-2800",
             "facility": "TC-C",
             "chamber_name": "Charlie",
             "campaign_id": "thermal_acceptance_fat",
             "operator_next": "archive evidence",
             "state": "complete",
             "result": "pass",
-            "start": "2026-01-07T08:00:00Z",
-            "end": "2026-01-10T20:00:00Z",
-            "reset_start": "2026-01-12T08:00:00Z",
-            "reset_end": "2026-01-13T08:00:00Z"
+            "start": "2026-01-08T15:00:00Z",
+            "end": "2026-01-13T01:13:00Z",
+            "reset_start": "2026-01-13T09:00:00Z",
+            "reset_end": "2026-01-13T12:00:00Z"
           },
-          "traces": [
-            {
-              "id": "ghost",
-              "label": "Nominal profile",
-              "role": "ghost",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-07T08:00:00Z",
-                  "value": 22
-                },
-                {
-                  "timestamp": "2026-01-07T11:00:00Z",
-                  "value": 34.798
-                },
-                {
-                  "timestamp": "2026-01-07T14:00:00Z",
-                  "value": 47.595
-                },
-                {
-                  "timestamp": "2026-01-07T17:00:00Z",
-                  "value": 60.393
-                },
-                {
-                  "timestamp": "2026-01-07T20:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-07T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-08T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-08T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-08T08:00:00Z",
-                  "value": 54.524
-                },
-                {
-                  "timestamp": "2026-01-08T11:00:00Z",
-                  "value": 30.714
-                },
-                {
-                  "timestamp": "2026-01-08T14:00:00Z",
-                  "value": 6.905
-                },
-                {
-                  "timestamp": "2026-01-08T17:00:00Z",
-                  "value": -16.905
-                },
-                {
-                  "timestamp": "2026-01-08T20:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-08T23:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-09T02:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-09T05:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-09T08:00:00Z",
-                  "value": -34.048
-                },
-                {
-                  "timestamp": "2026-01-09T11:00:00Z",
-                  "value": -10.238
-                },
-                {
-                  "timestamp": "2026-01-09T14:00:00Z",
-                  "value": 13.571
-                },
-                {
-                  "timestamp": "2026-01-09T17:00:00Z",
-                  "value": 37.381
-                },
-                {
-                  "timestamp": "2026-01-09T20:00:00Z",
-                  "value": 61.19
-                },
-                {
-                  "timestamp": "2026-01-09T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-10T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-10T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-10T08:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-10T11:00:00Z",
-                  "value": 54.908
-                },
-                {
-                  "timestamp": "2026-01-10T14:00:00Z",
-                  "value": 43.939
-                },
-                {
-                  "timestamp": "2026-01-10T17:00:00Z",
-                  "value": 32.969
-                },
-                {
-                  "timestamp": "2026-01-10T20:00:00Z",
-                  "value": 22
-                }
-              ]
-            },
-            {
-              "id": "actual",
-              "label": "Observed chamber",
-              "role": "actual",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-07T08:00:00Z",
-                  "value": 20.467
-                },
-                {
-                  "timestamp": "2026-01-07T11:00:00Z",
-                  "value": 33.803
-                },
-                {
-                  "timestamp": "2026-01-07T14:00:00Z",
-                  "value": 47.34
-                },
-                {
-                  "timestamp": "2026-01-07T17:00:00Z",
-                  "value": 60.574
-                },
-                {
-                  "timestamp": "2026-01-07T20:00:00Z",
-                  "value": 65.019
-                },
-                {
-                  "timestamp": "2026-01-07T23:00:00Z",
-                  "value": 64.367
-                },
-                {
-                  "timestamp": "2026-01-08T02:00:00Z",
-                  "value": 63.67
-                },
-                {
-                  "timestamp": "2026-01-08T05:00:00Z",
-                  "value": 63.401
-                },
-                {
-                  "timestamp": "2026-01-08T08:00:00Z",
-                  "value": 53.267
-                },
-                {
-                  "timestamp": "2026-01-08T11:00:00Z",
-                  "value": 30.179
-                },
-                {
-                  "timestamp": "2026-01-08T14:00:00Z",
-                  "value": 6.978
-                },
-                {
-                  "timestamp": "2026-01-08T17:00:00Z",
-                  "value": -16.748
-                },
-                {
-                  "timestamp": "2026-01-08T20:00:00Z",
-                  "value": -35.343
-                },
-                {
-                  "timestamp": "2026-01-08T23:00:00Z",
-                  "value": -36.085
-                },
-                {
-                  "timestamp": "2026-01-09T02:00:00Z",
-                  "value": -36.565
-                },
-                {
-                  "timestamp": "2026-01-09T05:00:00Z",
-                  "value": -36.457
-                },
-                {
-                  "timestamp": "2026-01-09T08:00:00Z",
-                  "value": -34.882
-                },
-                {
-                  "timestamp": "2026-01-09T11:00:00Z",
-                  "value": -10.358
-                },
-                {
-                  "timestamp": "2026-01-09T14:00:00Z",
-                  "value": 13.771
-                },
-                {
-                  "timestamp": "2026-01-09T17:00:00Z",
-                  "value": 37.289
-                },
-                {
-                  "timestamp": "2026-01-09T20:00:00Z",
-                  "value": 60.393
-                },
-                {
-                  "timestamp": "2026-01-09T23:00:00Z",
-                  "value": 63.563
-                },
-                {
-                  "timestamp": "2026-01-10T02:00:00Z",
-                  "value": 63.425
-                },
-                {
-                  "timestamp": "2026-01-10T05:00:00Z",
-                  "value": 63.882
-                },
-                {
-                  "timestamp": "2026-01-10T08:00:00Z",
-                  "value": 64.623
-                },
-                {
-                  "timestamp": "2026-01-10T11:00:00Z",
-                  "value": 55.053
-                },
-                {
-                  "timestamp": "2026-01-10T14:00:00Z",
-                  "value": 44.03
-                },
-                {
-                  "timestamp": "2026-01-10T17:00:00Z",
-                  "value": 32.47
-                },
-                {
-                  "timestamp": "2026-01-10T20:00:00Z",
-                  "value": 20.773
-                }
-              ]
-            }
-          ],
           "interaction_windows": [
             {
               "id": "thermal_chamber_charlie-fat-01-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-07T08:55:48Z",
-              "end": "2026-01-07T10:25:48Z"
+              "start": "2026-01-08T16:22:27Z",
+              "end": "2026-01-08T17:52:27Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-01-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-08T21:53:24Z",
-              "end": "2026-01-08T23:23:24Z"
+              "start": "2026-01-10T15:06:34Z",
+              "end": "2026-01-10T16:36:34Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-01-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-09T23:05:24Z",
-              "end": "2026-01-10T00:35:24Z"
+              "start": "2026-01-11T22:58:28Z",
+              "end": "2026-01-12T00:28:28Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-01-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-10T14:12:36Z",
-              "end": "2026-01-10T15:42:36Z"
+              "start": "2026-01-12T18:05:37Z",
+              "end": "2026-01-12T19:35:37Z"
             }
           ],
           "events": [
@@ -2052,21 +599,21 @@
               "id": "thermal_chamber_charlie-fat-01-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-07T08:00:00Z",
+              "timestamp": "2026-01-08T15:00:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_charlie-fat-01-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-10T20:00:00Z",
+              "timestamp": "2026-01-13T01:13:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_charlie-fat-01-reset",
               "label": "Reset ready",
               "kind": "reset",
-              "timestamp": "2026-01-13T08:00:00Z",
+              "timestamp": "2026-01-13T12:00:00Z",
               "state": "reset"
             }
           ]
@@ -2077,232 +624,54 @@
           "title": "Charlie FAT 02",
           "state": "running",
           "result": "in_progress",
-          "start": "2026-01-14T08:00:00Z",
-          "end": "2026-01-17T20:00:00Z",
-          "reset_start": "2026-01-19T08:00:00Z",
-          "reset_end": "2026-01-20T08:00:00Z",
+          "start": "2026-01-13T17:00:00Z",
+          "end": "2026-01-18T03:13:00Z",
+          "reset_start": "2026-01-19T08:30:00Z",
+          "reset_end": "2026-01-19T11:30:00Z",
           "manifest": {
             "id": "thermal_chamber_charlie-fat-02-manifest",
             "label": "Charlie item manifest",
-            "article": "Optical terminal 56-C",
-            "serial_number": "OT-C-2811",
+            "article": "DUT 56-C",
+            "serial_number": "DUT-C-2811",
             "facility": "TC-C",
             "chamber_name": "Charlie",
             "campaign_id": "thermal_acceptance_fat",
             "operator_next": "monitor dwell gate",
             "state": "running",
             "result": "in_progress",
-            "start": "2026-01-14T08:00:00Z",
-            "end": "2026-01-17T20:00:00Z",
-            "reset_start": "2026-01-19T08:00:00Z",
-            "reset_end": "2026-01-20T08:00:00Z"
+            "start": "2026-01-13T17:00:00Z",
+            "end": "2026-01-18T03:13:00Z",
+            "reset_start": "2026-01-19T08:30:00Z",
+            "reset_end": "2026-01-19T11:30:00Z"
           },
-          "traces": [
-            {
-              "id": "ghost",
-              "label": "Nominal profile",
-              "role": "ghost",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-14T08:00:00Z",
-                  "value": 22
-                },
-                {
-                  "timestamp": "2026-01-14T11:00:00Z",
-                  "value": 34.798
-                },
-                {
-                  "timestamp": "2026-01-14T14:00:00Z",
-                  "value": 47.595
-                },
-                {
-                  "timestamp": "2026-01-14T17:00:00Z",
-                  "value": 60.393
-                },
-                {
-                  "timestamp": "2026-01-14T20:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-14T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-15T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-15T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-15T08:00:00Z",
-                  "value": 54.524
-                },
-                {
-                  "timestamp": "2026-01-15T11:00:00Z",
-                  "value": 30.714
-                },
-                {
-                  "timestamp": "2026-01-15T14:00:00Z",
-                  "value": 6.905
-                },
-                {
-                  "timestamp": "2026-01-15T17:00:00Z",
-                  "value": -16.905
-                },
-                {
-                  "timestamp": "2026-01-15T20:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-15T23:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-16T02:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-16T05:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-16T08:00:00Z",
-                  "value": -34.048
-                },
-                {
-                  "timestamp": "2026-01-16T11:00:00Z",
-                  "value": -10.238
-                },
-                {
-                  "timestamp": "2026-01-16T14:00:00Z",
-                  "value": 13.571
-                },
-                {
-                  "timestamp": "2026-01-16T17:00:00Z",
-                  "value": 37.381
-                },
-                {
-                  "timestamp": "2026-01-16T20:00:00Z",
-                  "value": 61.19
-                },
-                {
-                  "timestamp": "2026-01-16T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-17T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-17T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-17T08:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-17T11:00:00Z",
-                  "value": 54.908
-                },
-                {
-                  "timestamp": "2026-01-17T14:00:00Z",
-                  "value": 43.939
-                },
-                {
-                  "timestamp": "2026-01-17T17:00:00Z",
-                  "value": 32.969
-                },
-                {
-                  "timestamp": "2026-01-17T20:00:00Z",
-                  "value": 22
-                }
-              ]
-            },
-            {
-              "id": "actual",
-              "label": "Observed chamber",
-              "role": "actual",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-14T08:00:00Z",
-                  "value": 20.817
-                },
-                {
-                  "timestamp": "2026-01-14T11:00:00Z",
-                  "value": 34.153
-                },
-                {
-                  "timestamp": "2026-01-14T14:00:00Z",
-                  "value": 47.69
-                },
-                {
-                  "timestamp": "2026-01-14T17:00:00Z",
-                  "value": 60.924
-                },
-                {
-                  "timestamp": "2026-01-14T20:00:00Z",
-                  "value": 65.369
-                },
-                {
-                  "timestamp": "2026-01-14T23:00:00Z",
-                  "value": 64.717
-                },
-                {
-                  "timestamp": "2026-01-15T02:00:00Z",
-                  "value": 64.02
-                },
-                {
-                  "timestamp": "2026-01-15T05:00:00Z",
-                  "value": 63.751
-                },
-                {
-                  "timestamp": "2026-01-15T08:00:00Z",
-                  "value": 53.617
-                },
-                {
-                  "timestamp": "2026-01-15T11:00:00Z",
-                  "value": 30.529
-                }
-              ]
-            }
-          ],
           "interaction_windows": [
             {
               "id": "thermal_chamber_charlie-fat-02-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-14T08:55:48Z",
-              "end": "2026-01-14T10:25:48Z"
+              "start": "2026-01-13T18:22:27Z",
+              "end": "2026-01-13T19:52:27Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-02-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-15T21:53:24Z",
-              "end": "2026-01-15T23:23:24Z"
+              "start": "2026-01-15T17:06:34Z",
+              "end": "2026-01-15T18:36:34Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-02-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-16T23:05:24Z",
-              "end": "2026-01-17T00:35:24Z"
+              "start": "2026-01-17T00:58:28Z",
+              "end": "2026-01-17T02:28:28Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-02-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-17T14:12:36Z",
-              "end": "2026-01-17T15:42:36Z"
+              "start": "2026-01-17T20:05:37Z",
+              "end": "2026-01-17T21:35:37Z"
             }
           ],
           "events": [
@@ -2310,21 +679,21 @@
               "id": "thermal_chamber_charlie-fat-02-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-14T08:00:00Z",
+              "timestamp": "2026-01-13T17:00:00Z",
               "state": "running"
             },
             {
               "id": "thermal_chamber_charlie-fat-02-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-17T20:00:00Z",
+              "timestamp": "2026-01-18T03:13:00Z",
               "state": "running"
             },
             {
               "id": "thermal_chamber_charlie-fat-02-reset",
               "label": "Reset ready",
               "kind": "reset",
-              "timestamp": "2026-01-20T08:00:00Z",
+              "timestamp": "2026-01-19T11:30:00Z",
               "state": "reset"
             }
           ]
@@ -2335,191 +704,54 @@
           "title": "Charlie FAT 03",
           "state": "scheduled",
           "result": "pending",
-          "start": "2026-01-21T08:00:00Z",
-          "end": "2026-01-24T20:00:00Z",
+          "start": "2026-01-19T15:00:00Z",
+          "end": "2026-01-24T01:13:00Z",
           "reset_start": "2026-01-26T08:00:00Z",
-          "reset_end": "2026-01-27T08:00:00Z",
+          "reset_end": "2026-01-26T11:00:00Z",
           "manifest": {
             "id": "thermal_chamber_charlie-fat-03-manifest",
             "label": "Charlie item manifest",
-            "article": "Optical terminal 57-C",
-            "serial_number": "OT-C-2822",
+            "article": "DUT 57-C",
+            "serial_number": "DUT-C-2822",
             "facility": "TC-C",
             "chamber_name": "Charlie",
             "campaign_id": "thermal_acceptance_fat",
             "operator_next": "prepare reset slot Mon 08:00",
             "state": "scheduled",
             "result": "pending",
-            "start": "2026-01-21T08:00:00Z",
-            "end": "2026-01-24T20:00:00Z",
+            "start": "2026-01-19T15:00:00Z",
+            "end": "2026-01-24T01:13:00Z",
             "reset_start": "2026-01-26T08:00:00Z",
-            "reset_end": "2026-01-27T08:00:00Z"
+            "reset_end": "2026-01-26T11:00:00Z"
           },
-          "traces": [
-            {
-              "id": "ghost",
-              "label": "Nominal profile",
-              "role": "ghost",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-21T08:00:00Z",
-                  "value": 22
-                },
-                {
-                  "timestamp": "2026-01-21T11:00:00Z",
-                  "value": 34.798
-                },
-                {
-                  "timestamp": "2026-01-21T14:00:00Z",
-                  "value": 47.595
-                },
-                {
-                  "timestamp": "2026-01-21T17:00:00Z",
-                  "value": 60.393
-                },
-                {
-                  "timestamp": "2026-01-21T20:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-21T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-22T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-22T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-22T08:00:00Z",
-                  "value": 54.524
-                },
-                {
-                  "timestamp": "2026-01-22T11:00:00Z",
-                  "value": 30.714
-                },
-                {
-                  "timestamp": "2026-01-22T14:00:00Z",
-                  "value": 6.905
-                },
-                {
-                  "timestamp": "2026-01-22T17:00:00Z",
-                  "value": -16.905
-                },
-                {
-                  "timestamp": "2026-01-22T20:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-22T23:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-23T02:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-23T05:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-23T08:00:00Z",
-                  "value": -34.048
-                },
-                {
-                  "timestamp": "2026-01-23T11:00:00Z",
-                  "value": -10.238
-                },
-                {
-                  "timestamp": "2026-01-23T14:00:00Z",
-                  "value": 13.571
-                },
-                {
-                  "timestamp": "2026-01-23T17:00:00Z",
-                  "value": 37.381
-                },
-                {
-                  "timestamp": "2026-01-23T20:00:00Z",
-                  "value": 61.19
-                },
-                {
-                  "timestamp": "2026-01-23T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-24T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-24T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-24T08:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-24T11:00:00Z",
-                  "value": 54.908
-                },
-                {
-                  "timestamp": "2026-01-24T14:00:00Z",
-                  "value": 43.939
-                },
-                {
-                  "timestamp": "2026-01-24T17:00:00Z",
-                  "value": 32.969
-                },
-                {
-                  "timestamp": "2026-01-24T20:00:00Z",
-                  "value": 22
-                }
-              ]
-            },
-            {
-              "id": "actual",
-              "label": "Observed chamber",
-              "role": "actual",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": []
-            }
-          ],
           "interaction_windows": [
             {
               "id": "thermal_chamber_charlie-fat-03-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-21T08:55:48Z",
-              "end": "2026-01-21T10:25:48Z"
+              "start": "2026-01-19T16:22:27Z",
+              "end": "2026-01-19T17:52:27Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-03-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-22T21:53:24Z",
-              "end": "2026-01-22T23:23:24Z"
+              "start": "2026-01-21T15:06:34Z",
+              "end": "2026-01-21T16:36:34Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-03-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-23T23:05:24Z",
-              "end": "2026-01-24T00:35:24Z"
+              "start": "2026-01-22T22:58:28Z",
+              "end": "2026-01-23T00:28:28Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-03-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-24T14:12:36Z",
-              "end": "2026-01-24T15:42:36Z"
+              "start": "2026-01-23T18:05:37Z",
+              "end": "2026-01-23T19:35:37Z"
             }
           ],
           "events": [
@@ -2527,21 +759,21 @@
               "id": "thermal_chamber_charlie-fat-03-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-21T08:00:00Z",
+              "timestamp": "2026-01-19T15:00:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_charlie-fat-03-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-24T20:00:00Z",
+              "timestamp": "2026-01-24T01:13:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_charlie-fat-03-reset",
               "label": "Reset ready",
               "kind": "reset",
-              "timestamp": "2026-01-27T08:00:00Z",
+              "timestamp": "2026-01-26T11:00:00Z",
               "state": "reset"
             }
           ]
@@ -2553,6 +785,7 @@
       "chamber_name": "Delta",
       "facility": "TC-D",
       "summary": "Delta chamber ladder with completed, live, and forecast FAT slots.",
+      "graph_card_id": "cc.delta.lane",
       "runs": [
         {
           "id": "thermal_chamber_delta-fat-01",
@@ -2560,308 +793,54 @@
           "title": "Delta FAT 01",
           "state": "complete",
           "result": "pass",
-          "start": "2026-01-08T08:00:00Z",
-          "end": "2026-01-11T20:00:00Z",
-          "reset_start": "2026-01-12T08:00:00Z",
-          "reset_end": "2026-01-13T08:00:00Z",
+          "start": "2026-01-09T17:00:00Z",
+          "end": "2026-01-14T03:13:00Z",
+          "reset_start": "2026-01-14T09:30:00Z",
+          "reset_end": "2026-01-14T12:30:00Z",
           "manifest": {
             "id": "thermal_chamber_delta-fat-01-manifest",
             "label": "Delta item manifest",
-            "article": "Optical terminal 62-D",
-            "serial_number": "OT-D-2900",
+            "article": "DUT 62-D",
+            "serial_number": "DUT-D-2900",
             "facility": "TC-D",
             "chamber_name": "Delta",
             "campaign_id": "thermal_acceptance_fat",
             "operator_next": "archive evidence",
             "state": "complete",
             "result": "pass",
-            "start": "2026-01-08T08:00:00Z",
-            "end": "2026-01-11T20:00:00Z",
-            "reset_start": "2026-01-12T08:00:00Z",
-            "reset_end": "2026-01-13T08:00:00Z"
+            "start": "2026-01-09T17:00:00Z",
+            "end": "2026-01-14T03:13:00Z",
+            "reset_start": "2026-01-14T09:30:00Z",
+            "reset_end": "2026-01-14T12:30:00Z"
           },
-          "traces": [
-            {
-              "id": "ghost",
-              "label": "Nominal profile",
-              "role": "ghost",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-08T08:00:00Z",
-                  "value": 22
-                },
-                {
-                  "timestamp": "2026-01-08T11:00:00Z",
-                  "value": 34.798
-                },
-                {
-                  "timestamp": "2026-01-08T14:00:00Z",
-                  "value": 47.595
-                },
-                {
-                  "timestamp": "2026-01-08T17:00:00Z",
-                  "value": 60.393
-                },
-                {
-                  "timestamp": "2026-01-08T20:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-08T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-09T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-09T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-09T08:00:00Z",
-                  "value": 54.524
-                },
-                {
-                  "timestamp": "2026-01-09T11:00:00Z",
-                  "value": 30.714
-                },
-                {
-                  "timestamp": "2026-01-09T14:00:00Z",
-                  "value": 6.905
-                },
-                {
-                  "timestamp": "2026-01-09T17:00:00Z",
-                  "value": -16.905
-                },
-                {
-                  "timestamp": "2026-01-09T20:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-09T23:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-10T02:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-10T05:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-10T08:00:00Z",
-                  "value": -34.048
-                },
-                {
-                  "timestamp": "2026-01-10T11:00:00Z",
-                  "value": -10.238
-                },
-                {
-                  "timestamp": "2026-01-10T14:00:00Z",
-                  "value": 13.571
-                },
-                {
-                  "timestamp": "2026-01-10T17:00:00Z",
-                  "value": 37.381
-                },
-                {
-                  "timestamp": "2026-01-10T20:00:00Z",
-                  "value": 61.19
-                },
-                {
-                  "timestamp": "2026-01-10T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-11T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-11T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-11T08:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-11T11:00:00Z",
-                  "value": 54.908
-                },
-                {
-                  "timestamp": "2026-01-11T14:00:00Z",
-                  "value": 43.939
-                },
-                {
-                  "timestamp": "2026-01-11T17:00:00Z",
-                  "value": 32.969
-                },
-                {
-                  "timestamp": "2026-01-11T20:00:00Z",
-                  "value": 22
-                }
-              ]
-            },
-            {
-              "id": "actual",
-              "label": "Observed chamber",
-              "role": "actual",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-08T08:00:00Z",
-                  "value": 21.831
-                },
-                {
-                  "timestamp": "2026-01-08T11:00:00Z",
-                  "value": 34.466
-                },
-                {
-                  "timestamp": "2026-01-08T14:00:00Z",
-                  "value": 46.612
-                },
-                {
-                  "timestamp": "2026-01-08T17:00:00Z",
-                  "value": 58.713
-                },
-                {
-                  "timestamp": "2026-01-08T20:00:00Z",
-                  "value": 63.051
-                },
-                {
-                  "timestamp": "2026-01-08T23:00:00Z",
-                  "value": 63.394
-                },
-                {
-                  "timestamp": "2026-01-09T02:00:00Z",
-                  "value": 64.114
-                },
-                {
-                  "timestamp": "2026-01-09T05:00:00Z",
-                  "value": 64.723
-                },
-                {
-                  "timestamp": "2026-01-09T08:00:00Z",
-                  "value": 54.33
-                },
-                {
-                  "timestamp": "2026-01-09T11:00:00Z",
-                  "value": 30.021
-                },
-                {
-                  "timestamp": "2026-01-09T14:00:00Z",
-                  "value": 5.47
-                },
-                {
-                  "timestamp": "2026-01-09T17:00:00Z",
-                  "value": -18.82
-                },
-                {
-                  "timestamp": "2026-01-09T20:00:00Z",
-                  "value": -36.807
-                },
-                {
-                  "timestamp": "2026-01-09T23:00:00Z",
-                  "value": -36.184
-                },
-                {
-                  "timestamp": "2026-01-10T02:00:00Z",
-                  "value": -35.47
-                },
-                {
-                  "timestamp": "2026-01-10T05:00:00Z",
-                  "value": -35.15
-                },
-                {
-                  "timestamp": "2026-01-10T08:00:00Z",
-                  "value": -34.49
-                },
-                {
-                  "timestamp": "2026-01-10T11:00:00Z",
-                  "value": -11.386
-                },
-                {
-                  "timestamp": "2026-01-10T14:00:00Z",
-                  "value": 11.785
-                },
-                {
-                  "timestamp": "2026-01-10T17:00:00Z",
-                  "value": 35.456
-                },
-                {
-                  "timestamp": "2026-01-10T20:00:00Z",
-                  "value": 59.723
-                },
-                {
-                  "timestamp": "2026-01-10T23:00:00Z",
-                  "value": 64.273
-                },
-                {
-                  "timestamp": "2026-01-11T02:00:00Z",
-                  "value": 64.794
-                },
-                {
-                  "timestamp": "2026-01-11T05:00:00Z",
-                  "value": 64.741
-                },
-                {
-                  "timestamp": "2026-01-11T08:00:00Z",
-                  "value": 64.15
-                },
-                {
-                  "timestamp": "2026-01-11T11:00:00Z",
-                  "value": 53.331
-                },
-                {
-                  "timestamp": "2026-01-11T14:00:00Z",
-                  "value": 41.993
-                },
-                {
-                  "timestamp": "2026-01-11T17:00:00Z",
-                  "value": 31.264
-                },
-                {
-                  "timestamp": "2026-01-11T20:00:00Z",
-                  "value": 20.981
-                }
-              ]
-            }
-          ],
           "interaction_windows": [
             {
               "id": "thermal_chamber_delta-fat-01-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-08T08:55:48Z",
-              "end": "2026-01-08T10:25:48Z"
+              "start": "2026-01-09T18:22:27Z",
+              "end": "2026-01-09T19:52:27Z"
             },
             {
               "id": "thermal_chamber_delta-fat-01-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-09T21:53:24Z",
-              "end": "2026-01-09T23:23:24Z"
+              "start": "2026-01-11T17:06:34Z",
+              "end": "2026-01-11T18:36:34Z"
             },
             {
               "id": "thermal_chamber_delta-fat-01-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-10T23:05:24Z",
-              "end": "2026-01-11T00:35:24Z"
+              "start": "2026-01-13T00:58:28Z",
+              "end": "2026-01-13T02:28:28Z"
             },
             {
               "id": "thermal_chamber_delta-fat-01-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-11T14:12:36Z",
-              "end": "2026-01-11T15:42:36Z"
+              "start": "2026-01-13T20:05:37Z",
+              "end": "2026-01-13T21:35:37Z"
             }
           ],
           "events": [
@@ -2869,21 +848,21 @@
               "id": "thermal_chamber_delta-fat-01-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-08T08:00:00Z",
+              "timestamp": "2026-01-09T17:00:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_delta-fat-01-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-11T20:00:00Z",
+              "timestamp": "2026-01-14T03:13:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_delta-fat-01-reset",
               "label": "Reset ready",
               "kind": "reset",
-              "timestamp": "2026-01-13T08:00:00Z",
+              "timestamp": "2026-01-14T12:30:00Z",
               "state": "reset"
             }
           ]
@@ -2892,234 +871,56 @@
           "id": "thermal_chamber_delta-fat-02",
           "campaign_id": "thermal_acceptance_fat",
           "title": "Delta FAT 02",
-          "state": "running",
-          "result": "in_progress",
-          "start": "2026-01-14T08:00:00Z",
-          "end": "2026-01-17T20:00:00Z",
-          "reset_start": "2026-01-19T08:00:00Z",
-          "reset_end": "2026-01-20T08:00:00Z",
+          "state": "scheduled",
+          "result": "pending",
+          "start": "2026-01-16T11:30:00Z",
+          "end": "2026-01-20T21:43:00Z",
+          "reset_start": "2026-01-21T09:00:00Z",
+          "reset_end": "2026-01-21T12:00:00Z",
           "manifest": {
             "id": "thermal_chamber_delta-fat-02-manifest",
             "label": "Delta item manifest",
-            "article": "Optical terminal 63-D",
-            "serial_number": "OT-D-2911",
+            "article": "DUT 63-D",
+            "serial_number": "DUT-D-2911",
             "facility": "TC-D",
             "chamber_name": "Delta",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "monitor dwell gate",
-            "state": "running",
-            "result": "in_progress",
-            "start": "2026-01-14T08:00:00Z",
-            "end": "2026-01-17T20:00:00Z",
-            "reset_start": "2026-01-19T08:00:00Z",
-            "reset_end": "2026-01-20T08:00:00Z"
+            "operator_next": "prepare reset slot Wed 09:00",
+            "state": "scheduled",
+            "result": "pending",
+            "start": "2026-01-16T11:30:00Z",
+            "end": "2026-01-20T21:43:00Z",
+            "reset_start": "2026-01-21T09:00:00Z",
+            "reset_end": "2026-01-21T12:00:00Z"
           },
-          "traces": [
-            {
-              "id": "ghost",
-              "label": "Nominal profile",
-              "role": "ghost",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-14T08:00:00Z",
-                  "value": 22
-                },
-                {
-                  "timestamp": "2026-01-14T11:00:00Z",
-                  "value": 34.798
-                },
-                {
-                  "timestamp": "2026-01-14T14:00:00Z",
-                  "value": 47.595
-                },
-                {
-                  "timestamp": "2026-01-14T17:00:00Z",
-                  "value": 60.393
-                },
-                {
-                  "timestamp": "2026-01-14T20:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-14T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-15T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-15T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-15T08:00:00Z",
-                  "value": 54.524
-                },
-                {
-                  "timestamp": "2026-01-15T11:00:00Z",
-                  "value": 30.714
-                },
-                {
-                  "timestamp": "2026-01-15T14:00:00Z",
-                  "value": 6.905
-                },
-                {
-                  "timestamp": "2026-01-15T17:00:00Z",
-                  "value": -16.905
-                },
-                {
-                  "timestamp": "2026-01-15T20:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-15T23:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-16T02:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-16T05:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-16T08:00:00Z",
-                  "value": -34.048
-                },
-                {
-                  "timestamp": "2026-01-16T11:00:00Z",
-                  "value": -10.238
-                },
-                {
-                  "timestamp": "2026-01-16T14:00:00Z",
-                  "value": 13.571
-                },
-                {
-                  "timestamp": "2026-01-16T17:00:00Z",
-                  "value": 37.381
-                },
-                {
-                  "timestamp": "2026-01-16T20:00:00Z",
-                  "value": 61.19
-                },
-                {
-                  "timestamp": "2026-01-16T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-17T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-17T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-17T08:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-17T11:00:00Z",
-                  "value": 54.908
-                },
-                {
-                  "timestamp": "2026-01-17T14:00:00Z",
-                  "value": 43.939
-                },
-                {
-                  "timestamp": "2026-01-17T17:00:00Z",
-                  "value": 32.969
-                },
-                {
-                  "timestamp": "2026-01-17T20:00:00Z",
-                  "value": 22
-                }
-              ]
-            },
-            {
-              "id": "actual",
-              "label": "Observed chamber",
-              "role": "actual",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-14T08:00:00Z",
-                  "value": 22.181
-                },
-                {
-                  "timestamp": "2026-01-14T11:00:00Z",
-                  "value": 34.816
-                },
-                {
-                  "timestamp": "2026-01-14T14:00:00Z",
-                  "value": 46.962
-                },
-                {
-                  "timestamp": "2026-01-14T17:00:00Z",
-                  "value": 59.063
-                },
-                {
-                  "timestamp": "2026-01-14T20:00:00Z",
-                  "value": 63.401
-                },
-                {
-                  "timestamp": "2026-01-14T23:00:00Z",
-                  "value": 63.744
-                },
-                {
-                  "timestamp": "2026-01-15T02:00:00Z",
-                  "value": 64.464
-                },
-                {
-                  "timestamp": "2026-01-15T05:00:00Z",
-                  "value": 65.073
-                },
-                {
-                  "timestamp": "2026-01-15T08:00:00Z",
-                  "value": 54.68
-                },
-                {
-                  "timestamp": "2026-01-15T11:00:00Z",
-                  "value": 30.371
-                }
-              ]
-            }
-          ],
           "interaction_windows": [
             {
               "id": "thermal_chamber_delta-fat-02-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-14T08:55:48Z",
-              "end": "2026-01-14T10:25:48Z"
+              "start": "2026-01-16T12:52:27Z",
+              "end": "2026-01-16T14:22:27Z"
             },
             {
               "id": "thermal_chamber_delta-fat-02-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-15T21:53:24Z",
-              "end": "2026-01-15T23:23:24Z"
+              "start": "2026-01-18T11:36:34Z",
+              "end": "2026-01-18T13:06:34Z"
             },
             {
               "id": "thermal_chamber_delta-fat-02-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-16T23:05:24Z",
-              "end": "2026-01-17T00:35:24Z"
+              "start": "2026-01-19T19:28:28Z",
+              "end": "2026-01-19T20:58:28Z"
             },
             {
               "id": "thermal_chamber_delta-fat-02-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-17T14:12:36Z",
-              "end": "2026-01-17T15:42:36Z"
+              "start": "2026-01-20T14:35:37Z",
+              "end": "2026-01-20T16:05:37Z"
             }
           ],
           "events": [
@@ -3127,21 +928,21 @@
               "id": "thermal_chamber_delta-fat-02-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-14T08:00:00Z",
-              "state": "running"
+              "timestamp": "2026-01-16T11:30:00Z",
+              "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-02-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-17T20:00:00Z",
-              "state": "running"
+              "timestamp": "2026-01-20T21:43:00Z",
+              "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-02-reset",
               "label": "Reset ready",
               "kind": "reset",
-              "timestamp": "2026-01-20T08:00:00Z",
+              "timestamp": "2026-01-21T12:00:00Z",
               "state": "reset"
             }
           ]
@@ -3152,191 +953,54 @@
           "title": "Delta FAT 03",
           "state": "scheduled",
           "result": "pending",
-          "start": "2026-01-21T08:00:00Z",
-          "end": "2026-01-24T20:00:00Z",
-          "reset_start": "2026-01-26T08:00:00Z",
-          "reset_end": "2026-01-27T08:00:00Z",
+          "start": "2026-01-21T15:00:00Z",
+          "end": "2026-01-26T01:13:00Z",
+          "reset_start": "2026-01-26T08:30:00Z",
+          "reset_end": "2026-01-26T11:30:00Z",
           "manifest": {
             "id": "thermal_chamber_delta-fat-03-manifest",
             "label": "Delta item manifest",
-            "article": "Optical terminal 64-D",
-            "serial_number": "OT-D-2922",
+            "article": "DUT 64-D",
+            "serial_number": "DUT-D-2922",
             "facility": "TC-D",
             "chamber_name": "Delta",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare reset slot Mon 08:00",
+            "operator_next": "prepare reset slot Mon 08:30",
             "state": "scheduled",
             "result": "pending",
-            "start": "2026-01-21T08:00:00Z",
-            "end": "2026-01-24T20:00:00Z",
-            "reset_start": "2026-01-26T08:00:00Z",
-            "reset_end": "2026-01-27T08:00:00Z"
+            "start": "2026-01-21T15:00:00Z",
+            "end": "2026-01-26T01:13:00Z",
+            "reset_start": "2026-01-26T08:30:00Z",
+            "reset_end": "2026-01-26T11:30:00Z"
           },
-          "traces": [
-            {
-              "id": "ghost",
-              "label": "Nominal profile",
-              "role": "ghost",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": [
-                {
-                  "timestamp": "2026-01-21T08:00:00Z",
-                  "value": 22
-                },
-                {
-                  "timestamp": "2026-01-21T11:00:00Z",
-                  "value": 34.798
-                },
-                {
-                  "timestamp": "2026-01-21T14:00:00Z",
-                  "value": 47.595
-                },
-                {
-                  "timestamp": "2026-01-21T17:00:00Z",
-                  "value": 60.393
-                },
-                {
-                  "timestamp": "2026-01-21T20:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-21T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-22T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-22T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-22T08:00:00Z",
-                  "value": 54.524
-                },
-                {
-                  "timestamp": "2026-01-22T11:00:00Z",
-                  "value": 30.714
-                },
-                {
-                  "timestamp": "2026-01-22T14:00:00Z",
-                  "value": 6.905
-                },
-                {
-                  "timestamp": "2026-01-22T17:00:00Z",
-                  "value": -16.905
-                },
-                {
-                  "timestamp": "2026-01-22T20:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-22T23:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-23T02:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-23T05:00:00Z",
-                  "value": -35
-                },
-                {
-                  "timestamp": "2026-01-23T08:00:00Z",
-                  "value": -34.048
-                },
-                {
-                  "timestamp": "2026-01-23T11:00:00Z",
-                  "value": -10.238
-                },
-                {
-                  "timestamp": "2026-01-23T14:00:00Z",
-                  "value": 13.571
-                },
-                {
-                  "timestamp": "2026-01-23T17:00:00Z",
-                  "value": 37.381
-                },
-                {
-                  "timestamp": "2026-01-23T20:00:00Z",
-                  "value": 61.19
-                },
-                {
-                  "timestamp": "2026-01-23T23:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-24T02:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-24T05:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-24T08:00:00Z",
-                  "value": 65
-                },
-                {
-                  "timestamp": "2026-01-24T11:00:00Z",
-                  "value": 54.908
-                },
-                {
-                  "timestamp": "2026-01-24T14:00:00Z",
-                  "value": 43.939
-                },
-                {
-                  "timestamp": "2026-01-24T17:00:00Z",
-                  "value": 32.969
-                },
-                {
-                  "timestamp": "2026-01-24T20:00:00Z",
-                  "value": 22
-                }
-              ]
-            },
-            {
-              "id": "actual",
-              "label": "Observed chamber",
-              "role": "actual",
-              "units": "degC",
-              "min": -45,
-              "max": 75,
-              "values": []
-            }
-          ],
           "interaction_windows": [
             {
               "id": "thermal_chamber_delta-fat-03-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-21T08:55:48Z",
-              "end": "2026-01-21T10:25:48Z"
+              "start": "2026-01-21T16:22:27Z",
+              "end": "2026-01-21T17:52:27Z"
             },
             {
               "id": "thermal_chamber_delta-fat-03-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-22T21:53:24Z",
-              "end": "2026-01-22T23:23:24Z"
+              "start": "2026-01-23T15:06:34Z",
+              "end": "2026-01-23T16:36:34Z"
             },
             {
               "id": "thermal_chamber_delta-fat-03-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-23T23:05:24Z",
-              "end": "2026-01-24T00:35:24Z"
+              "start": "2026-01-24T22:58:28Z",
+              "end": "2026-01-25T00:28:28Z"
             },
             {
               "id": "thermal_chamber_delta-fat-03-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-24T14:12:36Z",
-              "end": "2026-01-24T15:42:36Z"
+              "start": "2026-01-25T18:05:37Z",
+              "end": "2026-01-25T19:35:37Z"
             }
           ],
           "events": [
@@ -3344,26 +1008,27 @@
               "id": "thermal_chamber_delta-fat-03-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-21T08:00:00Z",
+              "timestamp": "2026-01-21T15:00:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-03-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-24T20:00:00Z",
+              "timestamp": "2026-01-26T01:13:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-03-reset",
               "label": "Reset ready",
               "kind": "reset",
-              "timestamp": "2026-01-27T08:00:00Z",
+              "timestamp": "2026-01-26T11:30:00Z",
               "state": "reset"
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "graph_campaign_id": "command_center_fat"
 }

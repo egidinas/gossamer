@@ -6,6 +6,7 @@ import (
 	"math"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -15,6 +16,8 @@ import (
 )
 
 var FixedTime = time.Date(2026, 1, 15, 10, 0, 0, 0, time.UTC)
+
+const CommandCenterGraphCampaignID = "command_center_fat"
 
 var CampaignIDs = []string{
 	"flatsat_derisking",
@@ -49,6 +52,9 @@ func Build() FixtureSet {
 		telemetry[id] = samples
 		graphs[id] = buildGraphModel(env, campaign)
 	}
+	commandCenter, commandCenterTelemetry, commandCenterGraph := buildCommandCenterFATBundle(env)
+	telemetry[CommandCenterGraphCampaignID] = commandCenterTelemetry
+	graphs[CommandCenterGraphCampaignID] = commandCenterGraph
 	return FixtureSet{
 		Manifest: contracts.Manifest{
 			Envelope:      env,
@@ -84,7 +90,7 @@ func Build() FixtureSet {
 			LastCommand:     "",
 		},
 		Supervisor:       buildSupervisorOverview(env, campaigns, telemetry),
-		CommandCenterFAT: buildCommandCenterFAT(env),
+		CommandCenterFAT: commandCenter,
 		BusTap:           buildBusTap(env, telemetry["integrated_system_fat"]),
 		Campaigns:        campaigns,
 		Telemetry:        telemetry,
@@ -122,7 +128,10 @@ func WritePublicFixtures(root string) error {
 	if err := writeJSON(filepath.Join(base, "supervisor_overview.json"), set.Supervisor); err != nil {
 		return err
 	}
-	if err := writeJSON(filepath.Join(base, "command_center_fat.json"), set.CommandCenterFAT); err != nil {
+	commandCenterOverview := set.CommandCenterFAT
+	commandCenterOverview.HeroGraph = nil
+	commandCenterOverview.GraphWall = nil
+	if err := writeJSON(filepath.Join(base, "command_center_fat.json"), commandCenterOverview); err != nil {
 		return err
 	}
 	if err := writeJSON(filepath.Join(base, "bus_virtualization_tap.json"), set.BusTap); err != nil {
@@ -138,6 +147,12 @@ func WritePublicFixtures(root string) error {
 		if err := writeJSON(filepath.Join(base, "graph_models", id+".json"), set.GraphModels[id]); err != nil {
 			return err
 		}
+	}
+	if err := arrowtelemetry.WriteCampaign(filepath.Join(base, "telemetry", CommandCenterGraphCampaignID+".arrow"), CommandCenterGraphCampaignID, set.Telemetry[CommandCenterGraphCampaignID], arrowtelemetry.MetadataFromGraph(set.GraphModels[CommandCenterGraphCampaignID])); err != nil {
+		return err
+	}
+	if err := writeJSON(filepath.Join(base, "graph_models", CommandCenterGraphCampaignID+".json"), set.GraphModels[CommandCenterGraphCampaignID]); err != nil {
+		return err
 	}
 	return nil
 }
@@ -257,7 +272,8 @@ func buildThermalProgram(campaignID, facility string, cycleCount int, coldTarget
 	kind := "thermal_chamber_fat"
 	label := "Thermal Chamber FAT - 4 cycle acceptance profile"
 	commandedRampRateDegCMin := 1.0
-	fixedDwellMinutes := 180
+	fixedDwellMinutes := 60
+	survivalMarginK := 5.0
 	preContextMinutes := 720
 	rampRate := commandedRampRateDegCMin
 	dwellMinutes := fixedDwellMinutes
@@ -265,13 +281,15 @@ func buildThermalProgram(campaignID, facility string, cycleCount int, coldTarget
 	if campaignID == "tvac_qualification" {
 		kind = "tvac_qualification"
 		label = "TVac Qualification - 8 cycle vacuum thermal profile"
+		fixedDwellMinutes = 55
+		survivalMarginK = 10
 		preContextMinutes = 1560
 		rampRate = commandedRampRateDegCMin
 		dwellMinutes = fixedDwellMinutes
 		timingModel = thermalTimingModel{kind: "vacuum", slowNodeTauMin: 205, survivalTauScale: 1.35, gateBufferMinutes: 60, fixedDwellMinutes: fixedDwellMinutes, stabilityBandDegC: 2.0}
 	}
-	hotSurvivalTarget := hotTarget + 10
-	coldSurvivalTarget := coldTarget - 10
+	hotSurvivalTarget := hotTarget + survivalMarginK
+	coldSurvivalTarget := coldTarget - survivalMarginK
 
 	program := &contracts.ThermalProgram{
 		ID:              campaignID + "_program",
@@ -313,9 +331,10 @@ func buildThermalProgram(campaignID, facility string, cycleCount int, coldTarget
 	}
 	addDwell := func(cycle int, suffix, label, kind string, target float64) contracts.CyclePhase {
 		stabilizeMinutes := timingModel.stabilizationMinutes(lastTransitionDegC, isSurvivalPhase(kind))
-		minutes := stabilizeMinutes + timingModel.fixedDwellMinutes + timingModel.gateBufferMinutes
+		stabilityGuardMinutes := timingModel.gateBufferMinutes
+		minutes := stabilizeMinutes + stabilityGuardMinutes + timingModel.fixedDwellMinutes
 		phase := addPhase(cycle, suffix, label, kind, minutes, target)
-		stableAt := mustTime(phase.Start).Add(time.Duration(stabilizeMinutes) * time.Minute)
+		stableAt := mustTime(phase.Start).Add(time.Duration(stabilizeMinutes+stabilityGuardMinutes) * time.Minute)
 		dwellEnd := stableAt.Add(time.Duration(timingModel.fixedDwellMinutes) * time.Minute)
 		phaseEnd := mustTime(phase.End)
 		if !dwellEnd.Before(phaseEnd) {
@@ -458,7 +477,14 @@ func thermalContextDuration(program *contracts.ThermalProgram) time.Duration {
 		return 90 * time.Minute
 	}
 	cycling := mustTime(program.Cycles[len(program.Cycles)-1].End).Sub(mustTime(program.Cycles[0].Start))
-	return time.Duration(float64(cycling) * 0.10)
+	context := time.Duration(float64(cycling) * 0.10)
+	if context < 90*time.Minute {
+		return 90 * time.Minute
+	}
+	if context > 90*time.Minute {
+		return 90 * time.Minute
+	}
+	return context
 }
 
 func deterministicOperatorDelay(campaignID string, cycle int, gate string, stableAt time.Time, program *contracts.ThermalProgram) time.Duration {
@@ -862,7 +888,8 @@ func buildTileManifest(env contracts.Envelope, campaignID string, wall contracts
 				CardID: card.ID, Title: card.Title, RenderKind: card.RenderKind, Unit: card.Unit, AxisPolicy: card.AxisPolicy,
 				TileEndpoint: strings.ReplaceAll(card.TileEndpoint, "{campaign_id}", campaignID), LatestEndpoint: strings.ReplaceAll(card.LatestEndpoint, "{campaign_id}", campaignID),
 				Collapsible: card.Collapsible, DefaultExpanded: card.DefaultExpanded, SupportsTimeZoom: card.SupportsTimeZoom, SupportsYZoom: card.SupportsYZoom,
-				Signals: card.Signals,
+				IncludeMarkers: card.IncludeMarkers,
+				Signals:        card.Signals,
 			}
 			manifest.Cards = append(manifest.Cards, ref)
 		}
@@ -1018,7 +1045,20 @@ func supervisorLane(id, label, facility string, campaign contracts.Campaign, act
 	return lane
 }
 
-func buildCommandCenterFAT(env contracts.Envelope) contracts.CommandCenterFAT {
+func buildCommandCenterFATBundle(env contracts.Envelope) (contracts.CommandCenterFAT, []contracts.TelemetrySample, contracts.GraphModel) {
+	baseProgram := buildThermalProgram(CommandCenterGraphCampaignID, "multi_chamber_fat", 4, -35, 65)
+	baseSim := environmentalsim.Simulate(CommandCenterGraphCampaignID, baseProgram, FixedTime)
+	baseStart := mustTime(baseProgram.Cycles[0].Start)
+	baseEnd := mustTime(baseProgram.Cycles[len(baseProgram.Cycles)-1].End)
+	runDuration := baseEnd.Sub(baseStart)
+	model := buildCommandCenterFAT(env, runDuration)
+	samples, graph := buildCommandCenterGraphModel(env, model, baseProgram, baseSim, baseStart)
+	model.HeroGraph = graph.HeroGraph
+	model.GraphWall = graph.GraphWall
+	return model, samples, graph
+}
+
+func buildCommandCenterFAT(env contracts.Envelope, runDuration time.Duration) contracts.CommandCenterFAT {
 	windowStart := time.Date(FixedTime.Year(), FixedTime.Month(), FixedTime.Day(), 0, 0, 0, 0, time.UTC)
 	for windowStart.Weekday() != time.Monday {
 		windowStart = windowStart.AddDate(0, 0, -1)
@@ -1035,22 +1075,27 @@ func buildCommandCenterFAT(env contracts.Envelope) contracts.CommandCenterFAT {
 		{"thermal_chamber_delta", "Delta", "TC-D", 3},
 	}
 	lanes := make([]contracts.CommandCenterLane, 0, len(chambers))
+	assignedStarts := []time.Time{}
+	assignedFinishes := []time.Time{}
 	for laneIndex, chamber := range chambers {
-		start := workdayAt(windowStart.AddDate(0, 0, chamber.offsetDays), 8)
+		start := commandCenterTestStartAfterPrep(workdayAt(windowStart.AddDate(0, 0, chamber.offsetDays), commandCenterPreferredStartHour(laneIndex, 0)), laneIndex, 0)
 		runs := []contracts.CommandCenterRun{}
 		for runIndex := 0; runIndex < 3; runIndex++ {
-			runEnd := start.Add(84 * time.Hour)
-			resetStart := workdayResetStart(runEnd)
-			resetEnd := resetStart.Add(24 * time.Hour)
+			start = commandCenterDeconflictStart(start, runDuration, assignedStarts, assignedFinishes)
+			runEnd := start.Add(runDuration)
+			resetStart, resetEnd := commandCenterBreakdownWindow(runEnd, laneIndex, runIndex)
 			state, result := commandCenterState(start, runEnd)
 			runs = append(runs, buildCommandCenterRun(chamber.id, chamber.name, chamber.facility, laneIndex, runIndex, start, runEnd, resetStart, resetEnd, state, result))
-			start = nextWorkdayAt(resetEnd.Add(16*time.Hour), 8)
+			assignedStarts = append(assignedStarts, start)
+			assignedFinishes = append(assignedFinishes, runEnd)
+			start = commandCenterTestStartAfterPrep(resetEnd, laneIndex, runIndex+1)
 		}
 		lanes = append(lanes, contracts.CommandCenterLane{
 			ID:          chamber.id,
 			ChamberName: chamber.name,
 			Facility:    chamber.facility,
 			Summary:     fmt.Sprintf("%s chamber ladder with completed, live, and forecast FAT slots.", chamber.name),
+			GraphCardID: commandCenterLaneCardID(chamber.id),
 			Runs:        runs,
 		})
 	}
@@ -1066,13 +1111,14 @@ func buildCommandCenterFAT(env contracts.Envelope) contracts.CommandCenterFAT {
 		WorkdayEndHour:   18,
 		WeekendBands:     weekendBands(windowStart, windowEnd),
 		Lanes:            lanes,
+		GraphCampaignID:  CommandCenterGraphCampaignID,
 	}
 }
 
 func buildCommandCenterRun(chamberID, chamberName, facility string, laneIndex, runIndex int, start, end, resetStart, resetEnd time.Time, state, result string) contracts.CommandCenterRun {
 	runID := fmt.Sprintf("%s-fat-%02d", chamberID, runIndex+1)
-	article := fmt.Sprintf("Optical terminal %02d-%s", 41+laneIndex*7+runIndex, strings.ToUpper(chamberName[:1]))
-	serial := fmt.Sprintf("OT-%s-%04d", strings.ToUpper(chamberName[:1]), 2600+laneIndex*100+runIndex*11)
+	article := fmt.Sprintf("DUT %02d-%s", 41+laneIndex*7+runIndex, strings.ToUpper(chamberName[:1]))
+	serial := fmt.Sprintf("DUT-%s-%04d", strings.ToUpper(chamberName[:1]), 2600+laneIndex*100+runIndex*11)
 	operatorNext := commandCenterOperatorNext(state, resetStart, resetEnd)
 	manifest := contracts.CommandCenterTestItemManifest{
 		ID:           runID + "-manifest",
@@ -1091,20 +1137,16 @@ func buildCommandCenterRun(chamberID, chamberName, facility string, laneIndex, r
 		ResetEnd:     resetEnd.Format(time.RFC3339),
 	}
 	return contracts.CommandCenterRun{
-		ID:         runID,
-		CampaignID: "thermal_acceptance_fat",
-		Title:      fmt.Sprintf("%s FAT %02d", chamberName, runIndex+1),
-		State:      state,
-		Result:     result,
-		Start:      start.Format(time.RFC3339),
-		End:        end.Format(time.RFC3339),
-		ResetStart: resetStart.Format(time.RFC3339),
-		ResetEnd:   resetEnd.Format(time.RFC3339),
-		Manifest:   manifest,
-		Traces: []contracts.CommandCenterTrace{
-			commandCenterTrace("ghost", "Nominal profile", "ghost", "degC", start, end, laneIndex, runIndex, false),
-			commandCenterTrace("actual", "Observed chamber", "actual", "degC", start, end, laneIndex, runIndex, true),
-		},
+		ID:                 runID,
+		CampaignID:         "thermal_acceptance_fat",
+		Title:              fmt.Sprintf("%s FAT %02d", chamberName, runIndex+1),
+		State:              state,
+		Result:             result,
+		Start:              start.Format(time.RFC3339),
+		End:                end.Format(time.RFC3339),
+		ResetStart:         resetStart.Format(time.RFC3339),
+		ResetEnd:           resetEnd.Format(time.RFC3339),
+		Manifest:           manifest,
 		InteractionWindows: commandCenterInteractionWindows(runID, start, end),
 		Events: []contracts.CommandCenterEvent{
 			{ID: runID + "-start", Label: "FAT start", Kind: "start", Timestamp: start.Format(time.RFC3339), State: state},
@@ -1114,49 +1156,414 @@ func buildCommandCenterRun(chamberID, chamberName, facility string, laneIndex, r
 	}
 }
 
-func commandCenterTrace(id, label, role, units string, start, end time.Time, laneIndex, runIndex int, actual bool) contracts.CommandCenterTrace {
-	points := []contracts.GraphPoint{}
-	duration := end.Sub(start)
-	limit := 28
-	if actual && FixedTime.Before(end) {
-		if FixedTime.Before(start) {
-			limit = -1
-		} else {
-			limit = int(math.Ceil(float64(limit) * FixedTime.Sub(start).Seconds() / duration.Seconds()))
-		}
+func buildCommandCenterGraphModel(env contracts.Envelope, commandCenter contracts.CommandCenterFAT, baseProgram *contracts.ThermalProgram, baseSim environmentalsim.Result, baseStart time.Time) ([]contracts.TelemetrySample, contracts.GraphModel) {
+	windowStart := mustTime(commandCenter.WindowStart)
+	windowEnd := mustTime(commandCenter.WindowEnd)
+	hero := contracts.HeroGraphModel{
+		ID:         CommandCenterGraphCampaignID + "_hero",
+		Title:      "Command Center FAT chamber lanes",
+		Owner:      "test_conductor_role",
+		Provenance: baseSim.Provenance.Source,
+		TimeAxis: contracts.GraphTimeAxis{
+			Start:        commandCenter.WindowStart,
+			End:          commandCenter.WindowEnd,
+			Anchor:       commandCenter.Now,
+			Now:          commandCenter.Now,
+			RangeSeconds: int(windowEnd.Sub(windowStart).Seconds()),
+			Clamp:        true,
+			LatestPolicy: "actual until command center now, ghost after cursor",
+		},
+		Axes: []contracts.GraphYAxis{
+			{ID: "temperature_c", Label: "Temperature", Units: "degC", Scale: "linear", Min: -55, Max: 82, Side: "left", Format: "fixed_1"},
+		},
+		Execution: &contracts.ExecutionState{
+			Mode:             "simulated_live_command_center",
+			Now:              commandCenter.Now,
+			PercentComplete:  round(100 * windowPercent(FixedTime, windowStart, windowEnd)),
+			Acceleration:     "wall clock replay cursor",
+			PastDataPolicy:   "physics as-run traces are emitted only before now",
+			FutureDataPolicy: "dashed ghost traces and planned FT markers after now",
+			CompletedCycles:  completedCommandCenterRuns(commandCenter),
+			TargetCycles:     totalCommandCenterRuns(commandCenter),
+			CurrentCycle:     0,
+			CurrentPhase:     "multi_chamber_ladder",
+		},
 	}
-	for i := 0; i <= 28; i++ {
-		if actual && i > limit {
-			break
+	samples := []contracts.TelemetrySample{}
+	graphLanes := []contracts.GraphLane{}
+	baseGhost := commandCenterTraceValues(baseSim.HeroGraph.Traces, "trace.ghost.profile")
+	for laneIndex, lane := range commandCenter.Lanes {
+		prefix := commandCenterSignalPrefix(lane.ID)
+		commandID := prefix + ".command_deg_c"
+		ghostID := prefix + ".ghost_deg_c"
+		chamberID := prefix + ".chamber_deg_c"
+		dutID := prefix + ".dut_deg_c"
+		commandTrace := contracts.GraphTrace{ID: commandID, Label: lane.ChamberName + " command", Role: "command", Units: "degC", AxisID: "temperature_c", Source: "thermal_program"}
+		ghostTrace := contracts.GraphTrace{ID: ghostID, Label: lane.ChamberName + " ghost", Role: "ghost", Units: "degC", AxisID: "temperature_c", Source: "thermal_program"}
+		chamberTrace := contracts.GraphTrace{ID: chamberID, Label: lane.ChamberName + " chamber air", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: "facility_thermal"}
+		dutTrace := contracts.GraphTrace{ID: dutID, Label: lane.ChamberName + " DUT", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: "dut_thermal"}
+		graphLanes = append(graphLanes, contracts.GraphLane{
+			ID: lane.ID, Label: lane.ChamberName, Series: []contracts.GraphSeries{
+				{ID: commandID, Label: "Command", Role: "command", Units: "degC", Source: "thermal_program", Min: -55, Max: 82},
+				{ID: ghostID, Label: "Ghost", Role: "ghost", Units: "degC", Source: "thermal_program", Min: -55, Max: 82},
+				{ID: chamberID, Label: "Chamber air", Role: "facility_environment", Units: "degC", Source: "facility_thermal", Min: -55, Max: 82},
+				{ID: dutID, Label: "DUT", Role: "article_temperature", Units: "degC", Source: "dut_thermal", Min: -55, Max: 82},
+			},
+		})
+		for runIndex, run := range lane.Runs {
+			runStart := mustTime(run.Start)
+			runEnd := mustTime(run.End)
+			hero.PhaseBands = append(hero.PhaseBands, contracts.GraphBand{ID: run.ID + "-window", Label: run.Title, Kind: "test_window", Start: run.Start, End: run.End, Result: run.Result})
+			hero.PhaseBands = append(hero.PhaseBands, contracts.GraphBand{ID: run.ID + "-reset", Label: lane.ChamberName + " reset", Kind: "reset", Start: run.ResetStart, End: run.ResetEnd, Result: "planned"})
+			for _, band := range shiftedGraphBands(baseSim.HeroGraph.PhaseBands, run.ID, runStart, baseStart) {
+				hero.PhaseBands = append(hero.PhaseBands, band)
+			}
+			for _, band := range shiftedGraphBands(baseSim.HeroGraph.DwellWindows, run.ID, runStart, baseStart) {
+				hero.DwellWindows = append(hero.DwellWindows, band)
+			}
+			for _, gate := range baseProgram.FunctionalGates {
+				ts := shiftTime(mustTime(gate.Timestamp), runStart, baseStart)
+				if ts.Before(runStart) || ts.After(runEnd) {
+					continue
+				}
+				hero.Markers = append(hero.Markers, contracts.GraphMarker{
+					ID:          fmt.Sprintf("%s-%s", run.ID, strings.TrimPrefix(gate.ID, CommandCenterGraphCampaignID+"-")),
+					Label:       fmt.Sprintf("%s %s", lane.ChamberName, gate.Label),
+					Kind:        "functional_gate",
+					Role:        "event",
+					Timestamp:   ts.Format(time.RFC3339),
+					CycleIndex:  gate.CycleIndex + laneIndex*10 + runIndex,
+					AxisID:      "temperature_c",
+					Value:       70,
+					Result:      "pass",
+					EvidenceRef: fmt.Sprintf("reports/%s.json#%s", CommandCenterGraphCampaignID, run.ID),
+				})
+			}
+			for i, sample := range baseSim.Samples {
+				t := shiftTime(mustTime(sample.Timestamp), runStart, baseStart)
+				if t.Before(windowStart) || t.After(windowEnd) || t.Before(runStart) || t.After(runEnd) {
+					continue
+				}
+				ghost := sampleValueByIndex(baseGhost, i, sample.Signals["chamber_setpoint_deg_c"])
+				command := sample.Signals["chamber_setpoint_deg_c"]
+				chamber := sample.Signals["chamber_air_deg_c"] + float64(laneIndex)*0.22
+				dut := sample.Signals["thermal_zone_1_deg_c"] + float64(laneIndex)*0.18
+				commandTrace.Values = append(commandTrace.Values, graphPointAt(t, command))
+				ghostTrace.Values = append(ghostTrace.Values, graphPointAt(t, ghost))
+				signalValues := map[string]float64{
+					commandID: round(command),
+					ghostID:   round(ghost),
+				}
+				if !t.After(FixedTime) {
+					chamberTrace.Values = append(chamberTrace.Values, graphPointAt(t, chamber))
+					dutTrace.Values = append(dutTrace.Values, graphPointAt(t, dut))
+					signalValues[chamberID] = round(chamber)
+					signalValues[dutID] = round(dut)
+				}
+				samples = append(samples, contracts.TelemetrySample{Timestamp: t.Format(time.RFC3339), Quality: sample.Quality, Signals: signalValues, States: map[string]string{"command_center_lane": lane.ID, "command_center_run": run.ID}})
+			}
 		}
-		t := start.Add(time.Duration(float64(duration) * float64(i) / 28))
-		phase := float64(i) / 28
-		value := commandCenterTemperatureProfile(phase)
-		if actual {
-			value += 0.9*math.Sin(float64(i+laneIndex*3)*0.85) + 0.35*float64(runIndex-laneIndex)
-		}
-		points = append(points, contracts.GraphPoint{Timestamp: t.Format(time.RFC3339), Value: round(value)})
+		hero.Traces = append(hero.Traces, commandTrace, ghostTrace, chamberTrace, dutTrace)
 	}
-	return contracts.CommandCenterTrace{ID: id, Label: label, Role: role, Units: units, Min: -45, Max: 75, Values: points}
+	for _, weekend := range commandCenter.WeekendBands {
+		hero.PhaseBands = append(hero.PhaseBands, contracts.GraphBand{ID: weekend.ID, Label: weekend.Label, Kind: weekend.Kind, Start: weekend.Start, End: weekend.End})
+	}
+	sort.Slice(samples, func(i, j int) bool { return samples[i].Timestamp < samples[j].Timestamp })
+	sort.Slice(hero.Markers, func(i, j int) bool { return hero.Markers[i].Timestamp < hero.Markers[j].Timestamp })
+	wall := buildCommandCenterGraphWall(env, commandCenter, hero, baseSim.Provenance)
+	manifest := buildTileManifest(env, CommandCenterGraphCampaignID, wall, hero)
+	return samples, contracts.GraphModel{
+		Envelope:             env,
+		CampaignID:           CommandCenterGraphCampaignID,
+		Lanes:                graphLanes,
+		ThermalProgram:       baseProgram,
+		SimulationProvenance: &baseSim.Provenance,
+		HeroGraph:            &hero,
+		GraphWall:            &wall,
+		TileManifest:         &manifest,
+	}
 }
 
-func commandCenterTemperatureProfile(phase float64) float64 {
-	switch {
-	case phase < 0.12:
-		return 22 + (65-22)*phase/0.12
-	case phase < 0.27:
-		return 65
-	case phase < 0.42:
-		return 65 + (-35-65)*(phase-0.27)/0.15
-	case phase < 0.57:
-		return -35
-	case phase < 0.72:
-		return -35 + (65+35)*(phase-0.57)/0.15
-	case phase < 0.86:
-		return 65
-	default:
-		return 65 + (22-65)*(phase-0.86)/0.14
+func buildCommandCenterGraphWall(env contracts.Envelope, commandCenter contracts.CommandCenterFAT, hero contracts.HeroGraphModel, provenance contracts.SimulationProvenance) contracts.GraphWallModel {
+	groupID := CommandCenterGraphCampaignID + "_operator_wall"
+	wall := contracts.GraphWallModel{
+		ID:           CommandCenterGraphCampaignID + "_graph_wall",
+		Title:        "Command Center FAT operator graph wall",
+		GeneratedAt:  env.GeneratedAt,
+		SourceMode:   "arrow_backend_owned",
+		GraphVersion: "gossamer.graph_wall.v1",
+		Owner:        "gossamer_backend_fixture_generator",
+		Provenance:   provenance.Source,
+		TimeRange: contracts.GraphWallTimeRange{
+			Start:        hero.TimeAxis.Start,
+			End:          hero.TimeAxis.End,
+			Anchor:       hero.TimeAxis.Anchor,
+			RangeSeconds: hero.TimeAxis.RangeSeconds,
+			Mode:         "absolute_fixture",
+			Source:       "command_center_fat",
+		},
+		TilePolicy: contracts.GraphTilePolicy{
+			DefaultPoints:               1200,
+			MaxPoints:                   4200,
+			LiveTileMinRefreshMS:        1000,
+			HistoryTileMaxCount:         128,
+			ViewportPrefetchPX:          760,
+			TileBufferMaxEntries:        256,
+			TileBufferTTLMS:             90000,
+			ResolutionLevels:            []string{"raw", "1m", "5m", "15m"},
+			SubscriberRole:              "operator_supervisor",
+			SharedTimebaseRequired:      true,
+			LegendMayAffectPlotWidth:    false,
+			MalformedSVGPathHardFailure: true,
+		},
+		GraphGroups: []contracts.GraphGroup{{
+			ID:              groupID,
+			Title:           "Four-chamber FAT command center",
+			Mode:            "multi_chamber_command_center",
+			BehaviorProfile: "loom_dense_operator_wall",
+			Application:     "environmental_test_command_center",
+			SectionIDs:      []string{"command_center_lanes"},
+			Interaction: contracts.GraphInteraction{
+				SharedTimeline: true, SharedCrosshair: true, VerticalGrid: true, SingleTimeAxis: true,
+				CursorMode: "inspect", CrosshairScope: "all_cards", TimelineGridMode: "absolute_workday_ladder",
+			},
+			Layout: contracts.GraphLayoutContract{
+				PinnedCardsSeparate: true,
+				OverflowMode:        "vertical_scroll_only",
+				AxisRail:            "fixed_left_and_right",
+				LegendRail:          "fixed_right_outside_plot",
+				LabelRail:           "fixed_left_outside_plot",
+				PlotAreaPolicy:      "same_width_all_cards",
+			},
+		}},
 	}
+	section := contracts.GraphSection{ID: "command_center_lanes", Title: "Chamber lanes", GroupID: groupID, Transport: "arrow_ipc", Direction: "derived", Status: "fresh"}
+	for i, lane := range commandCenter.Lanes {
+		prefix := commandCenterSignalPrefix(lane.ID)
+		card := graphCard(commandCenterLaneCardID(lane.ID), lane.ChamberName+" chamber FAT lane", "line", "primary_hero", "degC", "temperature_c", "facility_thermal", []contracts.GraphWallSignal{
+			graphSignal(prefix+".command_deg_c", "Command", "degC", "thermal_program", "command", "command", "facility", "temperature_c", "command_center_lanes"),
+			graphSignal(prefix+".ghost_deg_c", "Ghost", "degC", "thermal_program", "ghost", "ghost", "facility", "temperature_c", "command_center_lanes"),
+			graphSignal(prefix+".chamber_deg_c", "Chamber air", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "command_center_lanes"),
+			graphSignal(prefix+".dut_deg_c", "DUT", "degC", "dut_thermal", "actual", "measurement", "dut", "temperature_c", "command_center_lanes"),
+		})
+		card.IncludeMarkers = true
+		card.Placement.SectionID = section.ID
+		card.Placement.GroupID = groupID
+		card.Placement.Order = i + 1
+		card.Placement.Pinned = i == 0
+		card.Placement.DefaultVisible = true
+		card.Placement.ResizePolicy = "fixed_plot_area"
+		section.Cards = append(section.Cards, card)
+	}
+	wall.Sections = []contracts.GraphSection{section}
+	return wall
+}
+
+func commandCenterTraceValues(traces []contracts.GraphTrace, id string) []contracts.GraphPoint {
+	for _, trace := range traces {
+		if trace.ID == id {
+			return trace.Values
+		}
+	}
+	return nil
+}
+
+func sampleValueByIndex(points []contracts.GraphPoint, index int, fallback float64) float64 {
+	if index >= 0 && index < len(points) {
+		return points[index].Value
+	}
+	return fallback
+}
+
+func shiftedGraphBands(bands []contracts.GraphBand, prefix string, runStart, baseStart time.Time) []contracts.GraphBand {
+	out := make([]contracts.GraphBand, 0, len(bands))
+	for _, band := range bands {
+		band.ID = prefix + "-" + band.ID
+		band.Start = shiftTime(mustTime(band.Start), runStart, baseStart).Format(time.RFC3339)
+		band.End = shiftTime(mustTime(band.End), runStart, baseStart).Format(time.RFC3339)
+		out = append(out, band)
+	}
+	return out
+}
+
+func shiftTime(t, runStart, baseStart time.Time) time.Time {
+	return runStart.Add(t.Sub(baseStart))
+}
+
+func graphPointAt(t time.Time, value float64) contracts.GraphPoint {
+	return contracts.GraphPoint{Timestamp: t.Format(time.RFC3339), Value: round(value)}
+}
+
+func commandCenterSignalPrefix(chamberID string) string {
+	return "cc." + strings.TrimPrefix(chamberID, "thermal_chamber_")
+}
+
+func commandCenterLaneCardID(chamberID string) string {
+	return commandCenterSignalPrefix(chamberID) + ".lane"
+}
+
+func commandCenterResetDuration(laneIndex, runIndex int) time.Duration {
+	hours := []int{18, 22, 26, 20, 24, 28}
+	return time.Duration(hours[(laneIndex+runIndex)%len(hours)]) * time.Hour
+}
+
+func commandCenterPreferredStartHour(laneIndex, runIndex int) int {
+	slots := []int{11, 13, 15, 17}
+	return slots[(laneIndex+runIndex)%len(slots)]
+}
+
+func commandCenterTestStartAfterPrep(ready time.Time, laneIndex, runIndex int) time.Time {
+	prepStart := commandCenterPrepStart(ready, laneIndex, runIndex)
+	return addBusinessDuration(prepStart, 3*time.Hour)
+}
+
+func commandCenterPrepStart(t time.Time, laneIndex, runIndex int) time.Time {
+	hour := commandCenterPreferredStartHour(laneIndex, runIndex)
+	if t.Weekday() == time.Saturday || t.Weekday() == time.Sunday {
+		return commandCenterEarliestPrep(nextWorkdayAt(t, hour).Add(-3 * time.Hour))
+	}
+	slot := time.Date(t.Year(), t.Month(), t.Day(), hour-3, 0, 0, 0, time.UTC)
+	slot = commandCenterEarliestPrep(slot)
+	if !slot.Before(t) && isBusinessHour(slot) {
+		return slot
+	}
+	for _, lateHour := range []int{hour + 2, hour + 4} {
+		if lateHour > 16 {
+			continue
+		}
+		lateSlot := time.Date(t.Year(), t.Month(), t.Day(), lateHour-3, 0, 0, 0, time.UTC)
+		lateSlot = commandCenterEarliestPrep(lateSlot)
+		if !lateSlot.Before(t) && isBusinessHour(lateSlot) {
+			return lateSlot
+		}
+	}
+	return commandCenterEarliestPrep(nextWorkdayAt(t.AddDate(0, 0, 1), hour).Add(-3 * time.Hour))
+}
+
+func commandCenterEarliestPrep(t time.Time) time.Time {
+	earliest := time.Date(t.Year(), t.Month(), t.Day(), 8, 30, 0, 0, time.UTC)
+	if t.Before(earliest) {
+		return earliest
+	}
+	return t
+}
+
+func commandCenterDeconflictStart(start time.Time, runDuration time.Duration, assignedStarts, assignedFinishes []time.Time) time.Time {
+	candidate := commandCenterBusinessTestStart(start)
+	for attempts := 0; attempts < 128; attempts++ {
+		finish := candidate.Add(runDuration)
+		if commandCenterSpaced(candidate, assignedStarts, 90*time.Minute) && commandCenterSpaced(finish, assignedFinishes, 90*time.Minute) {
+			return candidate
+		}
+		candidate = commandCenterBusinessTestStart(addBusinessDuration(candidate, 90*time.Minute))
+	}
+	return candidate
+}
+
+func commandCenterBusinessTestStart(t time.Time) time.Time {
+	if t.Weekday() == time.Saturday || t.Weekday() == time.Sunday {
+		return nextWorkdayAt(t, 11).Add(30 * time.Minute)
+	}
+	earliest := time.Date(t.Year(), t.Month(), t.Day(), 11, 30, 0, 0, time.UTC)
+	if t.Before(earliest) {
+		return earliest
+	}
+	end := time.Date(t.Year(), t.Month(), t.Day(), 18, 0, 0, 0, time.UTC)
+	if !t.Before(end) {
+		return nextWorkdayAt(t.AddDate(0, 0, 1), 11).Add(30 * time.Minute)
+	}
+	return t
+}
+
+func commandCenterSpaced(candidate time.Time, assigned []time.Time, minGap time.Duration) bool {
+	for _, other := range assigned {
+		gap := candidate.Sub(other)
+		if gap < 0 {
+			gap = -gap
+		}
+		if gap < minGap {
+			return false
+		}
+	}
+	return true
+}
+
+func commandCenterBreakdownWindow(runEnd time.Time, laneIndex, runIndex int) (time.Time, time.Time) {
+	start := workdayResetStart(runEnd)
+	jitter := time.Duration((laneIndex*17+runIndex*11)%4) * 30 * time.Minute
+	start = addBusinessDuration(start, jitter)
+	end := addBusinessDuration(start, 3*time.Hour)
+	return start, end
+}
+
+func addBusinessDuration(start time.Time, duration time.Duration) time.Time {
+	if duration <= 0 {
+		return start
+	}
+	current := start
+	remaining := duration
+	for remaining > 0 {
+		current = nextBusinessTime(current)
+		dayEnd := time.Date(current.Year(), current.Month(), current.Day(), 18, 0, 0, 0, time.UTC)
+		available := dayEnd.Sub(current)
+		if remaining <= available {
+			return current.Add(remaining)
+		}
+		remaining -= available
+		current = nextWorkdayAt(current.AddDate(0, 0, 1), 8)
+	}
+	return current
+}
+
+func nextBusinessTime(t time.Time) time.Time {
+	if t.Weekday() == time.Saturday || t.Weekday() == time.Sunday {
+		return nextWorkdayAt(t, 8)
+	}
+	start := time.Date(t.Year(), t.Month(), t.Day(), 8, 0, 0, 0, time.UTC)
+	if t.Before(start) {
+		return start
+	}
+	end := time.Date(t.Year(), t.Month(), t.Day(), 18, 0, 0, 0, time.UTC)
+	if !t.Before(end) {
+		return nextWorkdayAt(t.AddDate(0, 0, 1), 8)
+	}
+	return t
+}
+
+func isBusinessHour(t time.Time) bool {
+	if t.Weekday() == time.Saturday || t.Weekday() == time.Sunday {
+		return false
+	}
+	start := time.Date(t.Year(), t.Month(), t.Day(), 8, 0, 0, 0, time.UTC)
+	end := time.Date(t.Year(), t.Month(), t.Day(), 18, 0, 0, 0, time.UTC)
+	return !t.Before(start) && t.Before(end)
+}
+
+func completedCommandCenterRuns(model contracts.CommandCenterFAT) int {
+	count := 0
+	for _, lane := range model.Lanes {
+		for _, run := range lane.Runs {
+			if run.State == "complete" {
+				count++
+			}
+		}
+	}
+	return count
+}
+
+func totalCommandCenterRuns(model contracts.CommandCenterFAT) int {
+	count := 0
+	for _, lane := range model.Lanes {
+		count += len(lane.Runs)
+	}
+	return count
+}
+
+func windowPercent(t, start, end time.Time) float64 {
+	if !end.After(start) {
+		return 0
+	}
+	return math.Max(0, math.Min(1, float64(t.Sub(start))/float64(end.Sub(start))))
 }
 
 func commandCenterInteractionWindows(runID string, start, end time.Time) []contracts.CommandCenterBand {

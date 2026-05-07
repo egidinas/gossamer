@@ -282,7 +282,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
   }, [collapsed, manifest, tiles, viewRange]);
 
   return (
-    <div className="operator-graph-wall" data-graph-wall-version={wall.graph_version} data-tile-backed="true">
+    <div className="operator-graph-wall" data-campaign-id={campaignId} data-graph-wall-version={wall.graph_version} data-tile-backed="true">
       <SharedTimeAxis
         fullRange={fullTimeRange}
         timeRange={viewRange}
@@ -304,7 +304,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
                 const isPrimary = card.id === primaryCardID;
                 const cardRef = manifestCards.get(card.id);
                 const isCollapsed = collapsed[card.id] ?? false;
-                const isPinned = pinOverrides[card.id] ?? (isPrimary || card.placement.pinned);
+                const isPinned = pinOverrides[card.id] ?? ((isPrimary && campaignId !== "command_center_fat") || card.placement.pinned);
                 return (
                   <GraphWallCardView
                     key={card.id}
@@ -455,7 +455,7 @@ function ExecutionProgress({ execution, heroGraph, currentTimeMs }: { execution:
         <i style={{ width: `${Math.max(0, Math.min(100, livePercent))}%` }} />
       </div>
       <div className="requirement-progress-grid">
-        {execution.requirement_progress.map((req) => (
+        {(execution.requirement_progress ?? []).map((req) => (
           <div className="requirement-progress-card" key={req.id}>
             <span>{req.id}</span>
             <strong>{req.completed}/{req.target}</strong>

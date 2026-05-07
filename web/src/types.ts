@@ -429,6 +429,7 @@ export type GraphWallCard = {
   default_expanded?: boolean;
   supports_time_zoom?: boolean;
   supports_y_zoom?: boolean;
+  include_markers?: boolean;
   signals: GraphWallSignal[];
 };
 
@@ -525,6 +526,7 @@ export type GraphTileCardRef = {
   collapsible: boolean;
   supports_time_zoom: boolean;
   supports_y_zoom: boolean;
+  include_markers?: boolean;
   signals: GraphWallSignal[];
   evidence_links?: EvidenceLink[];
 };
@@ -777,7 +779,7 @@ export type CommandCenterRun = {
   reset_start: string;
   reset_end: string;
   manifest: CommandCenterTestItemManifest;
-  traces: CommandCenterTrace[];
+  traces?: CommandCenterTrace[];
   interaction_windows: CommandCenterBand[];
   events: CommandCenterEvent[];
 };
@@ -787,6 +789,7 @@ export type CommandCenterLane = {
   chamber_name: string;
   facility: string;
   summary: string;
+  graph_card_id?: string;
   runs: CommandCenterRun[];
 };
 
@@ -799,6 +802,9 @@ export type CommandCenterFAT = Envelope & {
   window_end: string;
   workday_start_hour: number;
   workday_end_hour: number;
+  graph_campaign_id?: string;
+  hero_graph?: HeroGraphModel;
+  graph_wall?: GraphWallModel;
   weekend_bands: CommandCenterBand[];
   lanes: CommandCenterLane[];
 };

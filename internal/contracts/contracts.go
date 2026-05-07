@@ -466,6 +466,7 @@ type GraphWallCard struct {
 	Bucket           string             `json:"bucket,omitempty"`
 	Note             string             `json:"note,omitempty"`
 	RenderKind       string             `json:"render_kind,omitempty"`
+	IncludeMarkers   bool               `json:"include_markers,omitempty"`
 	TileEndpoint     string             `json:"tile_endpoint,omitempty"`
 	LatestEndpoint   string             `json:"latest_endpoint,omitempty"`
 	Collapsible      bool               `json:"collapsible,omitempty"`
@@ -542,6 +543,7 @@ type GraphTileCardRef struct {
 	CardID           string            `json:"card_id"`
 	Title            string            `json:"title"`
 	RenderKind       string            `json:"render_kind"`
+	IncludeMarkers   bool              `json:"include_markers,omitempty"`
 	Unit             string            `json:"unit,omitempty"`
 	AxisPolicy       string            `json:"axis_policy"`
 	TileEndpoint     string            `json:"tile_endpoint"`
@@ -807,7 +809,7 @@ type CommandCenterRun struct {
 	ResetStart         string                        `json:"reset_start"`
 	ResetEnd           string                        `json:"reset_end"`
 	Manifest           CommandCenterTestItemManifest `json:"manifest"`
-	Traces             []CommandCenterTrace          `json:"traces"`
+	Traces             []CommandCenterTrace          `json:"traces,omitempty"`
 	InteractionWindows []CommandCenterBand           `json:"interaction_windows"`
 	Events             []CommandCenterEvent          `json:"events"`
 }
@@ -817,6 +819,7 @@ type CommandCenterLane struct {
 	ChamberName string             `json:"chamber_name"`
 	Facility    string             `json:"facility"`
 	Summary     string             `json:"summary"`
+	GraphCardID string             `json:"graph_card_id,omitempty"`
 	Runs        []CommandCenterRun `json:"runs"`
 }
 
@@ -832,6 +835,9 @@ type CommandCenterFAT struct {
 	WorkdayEndHour   int                 `json:"workday_end_hour"`
 	WeekendBands     []CommandCenterBand `json:"weekend_bands"`
 	Lanes            []CommandCenterLane `json:"lanes"`
+	GraphCampaignID  string              `json:"graph_campaign_id,omitempty"`
+	HeroGraph        *HeroGraphModel     `json:"hero_graph,omitempty"`
+	GraphWall        *GraphWallModel     `json:"graph_wall,omitempty"`
 }
 
 type BusStream struct {

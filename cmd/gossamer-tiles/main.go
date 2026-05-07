@@ -19,7 +19,7 @@ func main() {
 		out         = flag.String("out", "fixtures/public_tiles", "tile bundle output root")
 		dataVersion = flag.String("data-version", time.Now().UTC().Format("20060102T150405Z"), "immutable data bundle version")
 		current     = flag.Bool("current", true, "also refresh fixtures/public_tiles/current")
-		campaigns   = flag.String("campaigns", "thermal_acceptance_fat,tvac_qualification", "comma-separated campaign IDs")
+		campaigns   = flag.String("campaigns", "thermal_acceptance_fat,tvac_qualification,command_center_fat", "comma-separated campaign IDs")
 		levels      = flag.String("levels", "minute", "comma-separated tile levels to materialize")
 	)
 	flag.Parse()

@@ -38,9 +38,10 @@ func TestThermalCampaignsExposeExplicitCyclePrograms(t *testing.T) {
 		wantKind   string
 		minHours   float64
 		maxHours   float64
+		wantMargin float64
 	}{
-		{campaignID: "thermal_acceptance_fat", wantCycles: 4, wantKind: "thermal_chamber_fat", minHours: 100, maxHours: 145},
-		{campaignID: "tvac_qualification", wantCycles: 8, wantKind: "tvac_qualification", minHours: 230, maxHours: 350},
+		{campaignID: "thermal_acceptance_fat", wantCycles: 4, wantKind: "thermal_chamber_fat", minHours: 88, maxHours: 108, wantMargin: 5},
+		{campaignID: "tvac_qualification", wantCycles: 8, wantKind: "tvac_qualification", minHours: 300, maxHours: 335, wantMargin: 10},
 	}
 
 	for _, tc := range cases {
@@ -112,6 +113,26 @@ func TestThermalCampaignsExposeExplicitCyclePrograms(t *testing.T) {
 		}
 		if len(campaign.ThermalProgram.FunctionalGates) < 4 {
 			t.Fatalf("%s functional gates = %d, want pre/cold/hot/post coverage", tc.campaignID, len(campaign.ThermalProgram.FunctionalGates))
+		}
+		preGate := functionalGateByID(campaign.ThermalProgram, "PRE")
+		postGate := functionalGateByID(campaign.ThermalProgram, "POST")
+		if tc.campaignID == "tvac_qualification" {
+			preGate = functionalGateByID(campaign.ThermalProgram, "AMBIENT-PRE")
+		}
+		if preGate.ID == "" || postGate.ID == "" {
+			t.Fatalf("%s missing ambient start or final post gate", tc.campaignID)
+		}
+		ambientHours := mustParseTime(t, postGate.Timestamp).Sub(mustParseTime(t, preGate.Timestamp)).Hours()
+		if ambientHours < tc.minHours || ambientHours > tc.maxHours {
+			t.Fatalf("%s ambient-to-final gate duration = %.1fh, want %.1f..%.1fh", tc.campaignID, ambientHours, tc.minHours, tc.maxHours)
+		}
+		hotSurvival := phaseByID(campaign.ThermalProgram, "C01-HOT-SURVIVAL")
+		coldSurvival := phaseByID(campaign.ThermalProgram, "C01-COLD-SURVIVAL")
+		if math.Abs(hotSurvival.TargetDegC-(campaign.ThermalProgram.HotTargetDegC+tc.wantMargin)) > 0.01 {
+			t.Fatalf("%s hot survival target = %.1f, want design hot + %.1f K", tc.campaignID, hotSurvival.TargetDegC, tc.wantMargin)
+		}
+		if math.Abs(coldSurvival.TargetDegC-(campaign.ThermalProgram.ColdTargetDegC-tc.wantMargin)) > 0.01 {
+			t.Fatalf("%s cold survival target = %.1f, want design cold - %.1f K", tc.campaignID, coldSurvival.TargetDegC, tc.wantMargin)
 		}
 		expectedCycleDwellGates := tc.wantCycles * 2
 		cycleDwellGates := 0
@@ -229,6 +250,15 @@ func functionalGateNamed(program *contracts.ThermalProgram, gate string) bool {
 		}
 	}
 	return false
+}
+
+func functionalGateByID(program *contracts.ThermalProgram, idSuffix string) contracts.FunctionalGate {
+	for _, functionalGate := range program.FunctionalGates {
+		if strings.HasSuffix(functionalGate.ID, "-FUNC-"+idSuffix) {
+			return functionalGate
+		}
+	}
+	return contracts.FunctionalGate{}
 }
 
 func TestThermalTelemetryCarriesCyclePhaseAndFacilitySafetySignals(t *testing.T) {
@@ -1061,6 +1091,9 @@ func TestBuildProducesBusVirtualizationWithTMAndTCEvents(t *testing.T) {
 func TestTelemetryIncludesRicherBusAndThermalSignalsWithinPlausibleBounds(t *testing.T) {
 	set := Build()
 	for campaignID, samples := range set.Telemetry {
+		if campaignID == CommandCenterGraphCampaignID {
+			continue
+		}
 		for _, sample := range samples {
 			for _, signal := range []string{"bus_latency_ms", "tm_packet_counter", "tc_packet_counter"} {
 				if _, ok := sample.Signals[signal]; !ok {
@@ -1120,25 +1153,253 @@ func TestBuildProducesCommandCenterFATWorkdayLadder(t *testing.T) {
 		if lane.ChamberName != wantNames[i] {
 			t.Fatalf("lane %d chamber = %q, want %q", i, lane.ChamberName, wantNames[i])
 		}
+		if lane.GraphCardID == "" {
+			t.Fatalf("%s missing graph card id", lane.ChamberName)
+		}
 		if len(lane.Runs) != 3 {
 			t.Fatalf("%s runs = %d, want 3", lane.ChamberName, len(lane.Runs))
 		}
-		for _, run := range lane.Runs {
+		for runIndex, run := range lane.Runs {
 			start := mustTime(run.Start)
 			if start.Weekday() == time.Saturday || start.Weekday() == time.Sunday {
 				t.Fatalf("%s starts on weekend: %s", run.ID, run.Start)
 			}
+			if !isBusinessHour(start) {
+				t.Fatalf("%s starts outside business hours: %s", run.ID, run.Start)
+			}
+			if start.Hour() < 11 || (start.Hour() == 11 && start.Minute() < 30) {
+				t.Fatalf("%s starts before 3h prep can complete from 08:30: %s", run.ID, run.Start)
+			}
 			end := mustTime(run.End)
+			runHours := end.Sub(start).Hours()
+			if runHours < 88 || runHours > 108 {
+				t.Fatalf("%s duration = %.1fh, want acceptance-like 88..108h", run.ID, runHours)
+			}
 			reset := mustTime(run.ResetStart)
+			resetEnd := mustTime(run.ResetEnd)
 			if (end.Weekday() == time.Saturday || end.Weekday() == time.Sunday) && reset.Weekday() != time.Monday {
 				t.Fatalf("%s weekend end reset = %s, want Monday", run.ID, run.ResetStart)
+			}
+			if !isBusinessHour(reset) || !isBusinessHour(resetEnd.Add(-time.Nanosecond)) {
+				t.Fatalf("%s breakdown/reset window outside business hours: %s..%s", run.ID, run.ResetStart, run.ResetEnd)
+			}
+			if got := addBusinessDuration(reset, 3*time.Hour); !got.Equal(resetEnd) {
+				t.Fatalf("%s reset end = %s, want 3 business hours after %s (%s)", run.ID, run.ResetEnd, run.ResetStart, got.Format(time.RFC3339))
 			}
 			if run.Manifest.ChamberName != lane.ChamberName || run.Manifest.SerialNumber == "" {
 				t.Fatalf("%s missing item manifest: %#v", run.ID, run.Manifest)
 			}
+			if strings.Contains(run.Manifest.Article, "Optical") || strings.HasPrefix(run.Manifest.SerialNumber, "OT-") {
+				t.Fatalf("%s manifest uses deprecated optical terminal naming: %#v", run.ID, run.Manifest)
+			}
+			if len(run.Traces) != 0 {
+				t.Fatalf("%s carries deprecated per-run JSON traces: %d", run.ID, len(run.Traces))
+			}
+			if runIndex > 0 {
+				previous := lane.Runs[runIndex-1]
+				ready := mustTime(previous.ResetEnd)
+				if start.Before(ready) {
+					t.Fatalf("%s starts before prior reset is ready: %s < %s", run.ID, run.Start, previous.ResetEnd)
+				}
+				if ready.Weekday() != time.Saturday && ready.Weekday() != time.Sunday && ready.Hour() < 12 && !sameUTCDate(start, ready) {
+					t.Fatalf("%s ready during morning at %s but restarts at %s", run.ID, previous.ResetEnd, run.Start)
+				}
+			}
 		}
 	}
+	assertCommandCenterSpacing(t, model)
 	if len(model.WeekendBands) != 3 {
 		t.Fatalf("weekend bands = %d, want 3", len(model.WeekendBands))
 	}
+}
+
+func assertCommandCenterSpacing(t *testing.T, model contracts.CommandCenterFAT) {
+	t.Helper()
+	type event struct {
+		id string
+		t  time.Time
+	}
+	starts := []event{}
+	finishes := []event{}
+	for _, lane := range model.Lanes {
+		for _, run := range lane.Runs {
+			starts = append(starts, event{id: run.ID + " start", t: mustTime(run.Start)})
+			finishes = append(finishes, event{id: run.ID + " finish", t: mustTime(run.End)})
+		}
+	}
+	check := func(kind string, events []event) {
+		for i := 0; i < len(events); i++ {
+			for j := i + 1; j < len(events); j++ {
+				gap := events[i].t.Sub(events[j].t)
+				if gap < 0 {
+					gap = -gap
+				}
+				if gap < 90*time.Minute {
+					t.Fatalf("command center %s events are bunched: %s at %s and %s at %s gap %s", kind, events[i].id, events[i].t.Format(time.RFC3339), events[j].id, events[j].t.Format(time.RFC3339), gap)
+				}
+			}
+		}
+	}
+	check("start", starts)
+	check("finish", finishes)
+}
+
+func TestBuildProducesCommandCenterFATGraphWallContract(t *testing.T) {
+	set := Build()
+	model := set.CommandCenterFAT
+	if model.GraphCampaignID != "command_center_fat" {
+		t.Fatalf("graph campaign id = %q, want command_center_fat", model.GraphCampaignID)
+	}
+	if model.GraphWall == nil {
+		t.Fatal("command center missing graph wall")
+	}
+	if model.HeroGraph == nil {
+		t.Fatal("command center missing hero graph")
+	}
+	if model.GraphWall.SourceMode != "arrow_backend_owned" {
+		t.Fatalf("source mode = %q, want arrow_backend_owned", model.GraphWall.SourceMode)
+	}
+	if model.GraphWall.TimeRange.Start != model.WindowStart || model.GraphWall.TimeRange.End != model.WindowEnd {
+		t.Fatalf("graph wall range = %s..%s, want command center window %s..%s", model.GraphWall.TimeRange.Start, model.GraphWall.TimeRange.End, model.WindowStart, model.WindowEnd)
+	}
+	if model.HeroGraph.TimeAxis.Start != model.WindowStart || model.HeroGraph.TimeAxis.End != model.WindowEnd {
+		t.Fatalf("hero axis = %s..%s, want command center window %s..%s", model.HeroGraph.TimeAxis.Start, model.HeroGraph.TimeAxis.End, model.WindowStart, model.WindowEnd)
+	}
+	if model.HeroGraph.TimeAxis.Now != model.Now {
+		t.Fatalf("hero now = %q, want %q", model.HeroGraph.TimeAxis.Now, model.Now)
+	}
+
+	cards := map[string]contracts.GraphWallCard{}
+	for _, section := range model.GraphWall.Sections {
+		for _, card := range section.Cards {
+			cards[card.ID] = card
+		}
+	}
+	for _, lane := range model.Lanes {
+		card, ok := cards[lane.GraphCardID]
+		if !ok {
+			t.Fatalf("%s graph card %q not present in wall", lane.ChamberName, lane.GraphCardID)
+		}
+		if !card.IncludeMarkers {
+			t.Fatalf("%s card does not request FT markers", lane.GraphCardID)
+		}
+		roles := map[string]int{}
+		for _, signal := range card.Signals {
+			roles[signal.Role]++
+		}
+		for _, role := range []string{"command", "ghost", "actual"} {
+			if roles[role] == 0 {
+				t.Fatalf("%s missing %s signal: %#v", lane.GraphCardID, role, card.Signals)
+			}
+		}
+		if roles["actual"] < 2 {
+			t.Fatalf("%s needs chamber and DUT actual traces, got %d actual signals", lane.GraphCardID, roles["actual"])
+		}
+	}
+
+	passGates := 0
+	for _, marker := range model.HeroGraph.Markers {
+		if marker.Kind == "functional_gate" && marker.Result == "pass" {
+			passGates++
+		}
+	}
+	if passGates < 24 {
+		t.Fatalf("FT pass gate markers = %d, want at least 24", passGates)
+	}
+}
+
+func TestBuildProducesCommandCenterTelemetryFromPhysicsSimulation(t *testing.T) {
+	set := Build()
+	graph, ok := set.GraphModels["command_center_fat"]
+	if !ok {
+		t.Fatal("missing command_center_fat graph model")
+	}
+	if graph.GraphWall == nil || graph.HeroGraph == nil || graph.TileManifest == nil {
+		t.Fatalf("command center graph model incomplete: wall=%t hero=%t manifest=%t", graph.GraphWall != nil, graph.HeroGraph != nil, graph.TileManifest != nil)
+	}
+	samples := set.Telemetry["command_center_fat"]
+	if len(samples) < 1500 {
+		t.Fatalf("command center telemetry samples = %d, want detailed physics trace", len(samples))
+	}
+
+	now := FixedTime
+	signalValues := map[string][]struct {
+		t time.Time
+		v float64
+	}{}
+	for _, sample := range samples {
+		ts := mustTime(sample.Timestamp)
+		for id, value := range sample.Signals {
+			signalValues[id] = append(signalValues[id], struct {
+				t time.Time
+				v float64
+			}{t: ts, v: value})
+		}
+	}
+	for _, lane := range set.CommandCenterFAT.Lanes {
+		prefix := commandCenterSignalPrefix(lane.ID)
+		commandID := prefix + ".command_deg_c"
+		ghostID := prefix + ".ghost_deg_c"
+		chamberID := prefix + ".chamber_deg_c"
+		dutID := prefix + ".dut_deg_c"
+		for _, id := range []string{commandID, ghostID, chamberID, dutID} {
+			if len(signalValues[id]) < 300 {
+				t.Fatalf("%s points = %d, want physics-density trace", id, len(signalValues[id]))
+			}
+		}
+		for _, point := range signalValues[chamberID] {
+			if point.t.After(now) {
+				t.Fatalf("%s includes actual chamber data after now: %s", chamberID, point.t.Format(time.RFC3339))
+			}
+		}
+		if !hasPointAfter(signalValues[ghostID], now) {
+			t.Fatalf("%s has no ghost forecast after now", ghostID)
+		}
+		if meanAbsoluteDelta(signalValues[commandID], signalValues[chamberID]) < 0.01 {
+			t.Fatalf("%s chamber trace is too close to command to prove physics response", chamberID)
+		}
+		if meanAbsoluteDelta(signalValues[chamberID], signalValues[dutID]) < 0.10 {
+			t.Fatalf("%s DUT trace does not show thermal lag versus chamber", dutID)
+		}
+	}
+}
+
+func sameUTCDate(a, b time.Time) bool {
+	ay, am, ad := a.Date()
+	by, bm, bd := b.Date()
+	return ay == by && am == bm && ad == bd
+}
+
+func hasPointAfter(points []struct {
+	t time.Time
+	v float64
+}, cutoff time.Time) bool {
+	for _, point := range points {
+		if point.t.After(cutoff) {
+			return true
+		}
+	}
+	return false
+}
+
+func meanAbsoluteDelta(a, b []struct {
+	t time.Time
+	v float64
+}) float64 {
+	byTime := map[int64]float64{}
+	for _, point := range b {
+		byTime[point.t.Unix()] = point.v
+	}
+	var sum float64
+	var n int
+	for _, point := range a {
+		if value, ok := byTime[point.t.Unix()]; ok {
+			sum += math.Abs(point.v - value)
+			n++
+		}
+	}
+	if n == 0 {
+		return 0
+	}
+	return sum / float64(n)
 }

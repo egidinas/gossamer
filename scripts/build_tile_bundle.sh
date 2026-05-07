@@ -4,7 +4,7 @@ set -eu
 ROOT=${GOSSAMER_ROOT:-$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)}
 DATA_VERSION=${DATA_VERSION:-$(date -u +%Y%m%dT%H%M%SZ)}
 LEVELS=${GOSSAMER_TILE_LEVELS:-minute}
-CAMPAIGNS=${GOSSAMER_CAMPAIGNS:-thermal_acceptance_fat,tvac_qualification}
+CAMPAIGNS=${GOSSAMER_CAMPAIGNS:-thermal_acceptance_fat,tvac_qualification,command_center_fat}
 
 cd "$ROOT"
 go run ./cmd/gossamer-tiles \

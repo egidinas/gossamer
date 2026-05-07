@@ -614,6 +614,10 @@ button {
   padding-bottom: 66px;
 }
 
+.operator-graph-wall[data-campaign-id="command_center_fat"] {
+  padding-bottom: 76px;
+}
+
 .operator-wall-meta {
   display: flex;
   flex-wrap: wrap;
@@ -1111,6 +1115,11 @@ button {
   border-radius: 0;
   background: #071019;
   overflow: hidden;
+}
+
+.operator-graph-wall[data-campaign-id="command_center_fat"] .graph-wall-card {
+  --plot-height: clamp(190px, calc((100svh - 300px) / 4), 520px);
+  grid-template-columns: minmax(0, 1fr) clamp(150px, 10vw, 260px);
 }
 
 .graph-card-pinned {
@@ -2504,6 +2513,107 @@ code {
   padding: 3px 6px;
 }
 
+.command-center-manifest-strip {
+  border-top: 1px solid rgba(129, 173, 197, 0.18);
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding-top: 14px;
+}
+
+.command-center-manifest-lane {
+  background: #071019;
+  border: 1px solid rgba(129, 173, 197, 0.2);
+  border-radius: 8px;
+  min-width: 0;
+  padding: 10px;
+}
+
+.command-center-manifest-heading {
+  align-items: baseline;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  min-width: 0;
+}
+
+.command-center-manifest-heading strong {
+  color: #f3f8ff;
+  font-size: 16px;
+}
+
+.command-center-manifest-heading span {
+  color: #93a7b5;
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-center-run-list {
+  display: grid;
+  gap: 8px;
+}
+
+.command-center-run-manifest {
+  background: rgba(12, 25, 36, 0.82);
+  border: 1px solid rgba(129, 173, 197, 0.2);
+  border-radius: 6px;
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 8px;
+}
+
+.command-center-run-manifest.complete {
+  border-color: rgba(90, 214, 134, 0.36);
+}
+
+.command-center-run-manifest.running {
+  border-color: rgba(255, 216, 95, 0.58);
+}
+
+.command-center-run-manifest.scheduled {
+  border-color: rgba(184, 166, 255, 0.34);
+}
+
+.command-center-run-manifest strong,
+.command-center-run-manifest span,
+.command-center-run-manifest em {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-center-run-manifest strong {
+  color: #f3f8ff;
+  font-size: 12px;
+}
+
+.command-center-run-manifest span,
+.command-center-run-manifest em {
+  color: #93a7b5;
+  font-size: 11px;
+  font-style: normal;
+}
+
+.command-center-run-status,
+.command-center-reset {
+  align-items: center;
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+}
+
+.command-center-run-status {
+  justify-content: space-between;
+}
+
+.command-center-reset {
+  color: #c7d5df;
+}
+
 @media (max-width: 820px) {
   .shell {
     padding: 12px;
@@ -2748,5 +2858,49 @@ code {
     flex-direction: column;
     align-items: flex-start;
     gap: 6px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .operator-graph-wall[data-campaign-id="command_center_fat"] .graph-wall-card {
+    --plot-height: clamp(170px, calc((100svh - 240px) / 4), 260px);
+    grid-template-columns: minmax(0, 1fr) 136px;
+  }
+}
+
+@media (max-width: 820px) {
+  .operator-graph-wall[data-campaign-id="command_center_fat"] {
+    padding-bottom: 72px;
+  }
+
+  .operator-graph-wall[data-campaign-id="command_center_fat"] .graph-wall-card {
+    --plot-height: clamp(300px, 54svh, 440px);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .operator-graph-wall[data-campaign-id="command_center_fat"] .graph-card-plot-shell,
+  .operator-graph-wall[data-campaign-id="command_center_fat"] .graph-card-canvas {
+    --plot-height: clamp(300px, 54svh, 440px);
+    height: var(--plot-height);
+  }
+
+  .operator-graph-wall[data-campaign-id="command_center_fat"] .graph-card-legend-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .operator-graph-wall[data-campaign-id="command_center_fat"] .graph-wall-card {
+    --plot-height: clamp(280px, 52svh, 400px);
+  }
+
+  .operator-graph-wall[data-campaign-id="command_center_fat"] .graph-card-plot-shell,
+  .operator-graph-wall[data-campaign-id="command_center_fat"] .graph-card-canvas {
+    --plot-height: clamp(280px, 52svh, 400px);
+    height: var(--plot-height);
+  }
+
+  .operator-graph-wall[data-campaign-id="command_center_fat"] .graph-card-legend-rail {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
