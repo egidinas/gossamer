@@ -33,21 +33,21 @@ const roleColors: Record<string, string> = {
 };
 
 const signalColors: Record<string, string> = {
-  "trace.command.chamber": "#ffe66d",
-  "trace.ghost.profile": "#8fa2ad",
+  "trace.command.chamber": "#ffd400",
+  "trace.ghost.profile": "#f8fafc",
   "trace.acceptance.temperature": "#4ee28a",
-  "trace.actual.chamber_air": "#39d5ff",
-  "trace.context.chamber_air": "#39d5ff",
-  "trace.table_loop": "#ff9f43",
-  "trace.interface": "#ff9f43",
-  "trace.shroud": "#c084fc",
-  "trace.shroud_inlet": "#7dd3fc",
-  "trace.shroud_outlet": "#f0abfc",
-  "trace.dut_temp_a": "#ff5f7e",
-  "trace.dut_temp_b": "#2dd4bf",
-  "trace.tvac_pressure": "#3b82f6",
-  "trace.actual.tvac_pressure": "#3b82f6",
-  "trace.tvac_pressure_target": "#93c5fd",
+  "trace.actual.chamber_air": "#00c8ff",
+  "trace.context.chamber_air": "#00c8ff",
+  "trace.table_loop": "#ff8a00",
+  "trace.interface": "#ff8a00",
+  "trace.shroud": "#b65cff",
+  "trace.shroud_inlet": "#00a8ff",
+  "trace.shroud_outlet": "#ff58c8",
+  "trace.dut_temp_a": "#ff315f",
+  "trace.dut_temp_b": "#00d6a3",
+  "trace.tvac_pressure": "#1f6fff",
+  "trace.actual.tvac_pressure": "#1f6fff",
+  "trace.tvac_pressure_target": "#9cc7ff",
   "trace.tvac_outgassing": "#38bdf8",
   "trace.tvac_virtual_leak": "#60a5fa",
   "trace.tvac_roughing_pump": "#2563eb",
@@ -73,8 +73,48 @@ const signalColors: Record<string, string> = {
 function colorForSignal(signal: Pick<TileSeries, "id" | "role" | "render_kind" | "kind"> | { id: string; role: string; kind?: string }, index = 0) {
   const kind = "kind" in signal ? signal.kind : ("render_kind" in signal ? signal.render_kind : undefined);
   if (signalColors[signal.id]) return signalColors[signal.id];
+  const semantic = semanticColor(signal.id);
+  if (semantic) return semantic;
   if (signal.role === "command" || signal.role === "ghost" || signal.role === "acceptance_band" || signal.role === "interlock" || signal.role === "evidence") return roleColors[signal.role];
   return paletteForID(signal.id, index) ?? roleColors[signal.role] ?? (kind ? roleColors[kind] : undefined) ?? palette(index);
+}
+
+function semanticColor(id: string) {
+  const lower = id.toLowerCase();
+  if (lower.includes("dut_temp_a") || lower.includes("dut.a") || lower.includes("node_a")) return "#ff315f";
+  if (lower.includes("dut_temp_b") || lower.includes("dut.b") || lower.includes("node_b")) return "#00d6a3";
+  if (lower.includes("dut") && lower.includes("temp")) return "#ff6b35";
+  if (lower.includes("command") || lower.includes("target")) return "#ffd400";
+  if (lower.includes("ghost") || lower.includes("profile")) return "#f8fafc";
+  if (lower.includes("pressure")) return "#1f6fff";
+  if (lower.includes("power")) return "#ff7a35";
+  if (lower.includes("packet") || lower.includes("bus")) return "#b079ff";
+  if (lower.includes("ready") || lower.includes("operative") || lower.includes("stability")) return "#00d6a3";
+  if (lower.includes("fault") || lower.includes("error") || lower.includes("interlock")) return "#ff315f";
+  if (lower.includes("interface") || lower.includes("table") || lower.includes("platen")) return "#ff8a00";
+  if (lower.includes("shroud")) return "#b65cff";
+  if (lower.includes("chamber")) return "#00c8ff";
+  return undefined;
+}
+
+function orderLegendSignals<T extends { id: string; label?: string; role?: string; kind?: string; render_kind?: string }>(signals: T[]) {
+  return [...signals].sort((a, b) => signalPriority(a) - signalPriority(b));
+}
+
+function signalPriority(signal: { id: string; label?: string; role?: string; kind?: string; render_kind?: string }) {
+  const text = `${signal.id} ${signal.label ?? ""}`.toLowerCase();
+  if (signal.role === "command") return 0;
+  if (signal.role === "ghost") return 1;
+  if (signal.role === "acceptance_band") return 2;
+  if (text.includes("dut")) return 3;
+  if (text.includes("article") || text.includes("component")) return 4;
+  if (text.includes("interface") || text.includes("platen") || text.includes("table")) return 5;
+  if (text.includes("chamber") || text.includes("shroud")) return 6;
+  if (text.includes("pressure")) return 7;
+  if (text.includes("power")) return 8;
+  if (text.includes("bus") || text.includes("packet")) return 9;
+  if (signal.kind === "state" || signal.render_kind === "swimlane") return 10;
+  return 20;
 }
 
 export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }: Props) {
@@ -154,44 +194,47 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
         peekTimeMs={peekTimeMs}
         onTimeRange={setViewRange}
       />
-      {wall.sections.map((section) => (
-        <section className="operator-wall-section" key={section.id} data-section-id={section.id}>
-          {!(section.id === firstSectionID && primaryCardID) && <div className="operator-wall-section-title">
-            <strong>{section.title}</strong>
-            <span>{section.transport} / {section.direction}</span>
-          </div>}
-          <div className="operator-wall-cards">
-            {section.cards.map((card) => {
-              const cardRef = manifestCards.get(card.id);
-              const isCollapsed = collapsed[card.id] ?? false;
-              const isPinned = pinOverrides[card.id] ?? card.placement.pinned;
-              return (
-                <GraphWallCardView
-                  key={card.id}
-                  card={card}
-                  cardRef={cardRef}
-                  collapsed={isCollapsed}
-                  pinned={isPinned}
-                  height={cardHeights[card.id]}
-                  currentTimeMs={currentTimeMs}
-                  hoverTimeMs={hoverTimeMs}
-                  heroGraph={heroGraph}
-                  onHoverTime={setHoverTimeMs}
-                  onPeekTime={setPeekTimeMs}
-                  readoutMode={readoutMode}
-                  readoutTimeMs={readoutTimeMs}
-                  timeRange={viewRange}
-                  onTimeRange={setViewRange}
-                  tile={tiles[card.id]}
-                  onToggle={() => setCollapsed((existing) => ({ ...existing, [card.id]: !isCollapsed }))}
-                  onPinToggle={() => setPinOverrides((existing) => ({ ...existing, [card.id]: !isPinned }))}
-                  onHeightChange={(height) => setCardHeights((existing) => ({ ...existing, [card.id]: height }))}
-                />
-              );
-            })}
-          </div>
-        </section>
-      ))}
+      <div className="operator-wall-scrollframe">
+        {wall.sections.map((section) => (
+          <section className="operator-wall-section" key={section.id} data-section-id={section.id}>
+            {!(section.id === firstSectionID && primaryCardID) && <div className="operator-wall-section-title">
+              <strong>{section.title}</strong>
+              <span>{section.transport} / {section.direction}</span>
+            </div>}
+            <div className="operator-wall-cards">
+              {section.cards.map((card) => {
+                const isPrimary = card.id === primaryCardID;
+                const cardRef = manifestCards.get(card.id);
+                const isCollapsed = collapsed[card.id] ?? false;
+                const isPinned = pinOverrides[card.id] ?? (isPrimary || card.placement.pinned);
+                return (
+                  <GraphWallCardView
+                    key={card.id}
+                    card={card}
+                    cardRef={cardRef}
+                    collapsed={isCollapsed}
+                    pinned={isPinned}
+                    height={cardHeights[card.id]}
+                    currentTimeMs={currentTimeMs}
+                    hoverTimeMs={hoverTimeMs}
+                    heroGraph={heroGraph}
+                    onHoverTime={setHoverTimeMs}
+                    onPeekTime={setPeekTimeMs}
+                    readoutMode={readoutMode}
+                    readoutTimeMs={readoutTimeMs}
+                    timeRange={viewRange}
+                    onTimeRange={setViewRange}
+                    tile={tiles[card.id]}
+                    onToggle={() => setCollapsed((existing) => ({ ...existing, [card.id]: !isCollapsed }))}
+                    onPinToggle={() => setPinOverrides((existing) => ({ ...existing, [card.id]: !isPinned }))}
+                    onHeightChange={(height) => setCardHeights((existing) => ({ ...existing, [card.id]: height }))}
+                  />
+                );
+              })}
+            </div>
+          </section>
+        ))}
+      </div>
       {afterProgress}
       {execution && <ExecutionProgress execution={execution} heroGraph={heroGraph} currentTimeMs={currentTimeMs} />}
       <div className="operator-wall-meta">
@@ -351,7 +394,7 @@ function GraphWallCardView({
   onHeightChange: (height: number) => void;
 }) {
   const renderKind = cardRef?.render_kind ?? card.render_kind ?? renderKindFor(card.kind);
-  const visibleSignals = (cardRef?.signals ?? card.signals).slice(0, renderKind === "swimlane" ? 10 : 7);
+  const visibleSignals = orderLegendSignals(cardRef?.signals ?? card.signals).slice(0, renderKind === "swimlane" ? 10 : 7);
   const readouts = tile ? legendReadouts(tile, visibleSignals, readoutTimeMs, currentTimeMs) : new Map<string, string>();
   const cardRefEl = useRef<HTMLElement | null>(null);
   const minHeight = renderKind === "swimlane" || renderKind === "event_rail" ? 120 : 190;
@@ -663,7 +706,7 @@ function EventRailTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTim
         <i
           className={`event-marker event-${marker.result ?? marker.kind}`}
           key={marker.id}
-          style={{ left: `${Math.max(0, Math.min(100, ((Date.parse(marker.timestamp) - start) / span) * 100))}%` }}
+          style={{ left: `${Math.max(0, Math.min(100, ((Date.parse(marker.timestamp) - start) / span) * 100))}%`, background: markerColor(marker) }}
           title={`${marker.label} ${marker.timestamp}`}
         />
       ))}
@@ -796,17 +839,19 @@ function uplotData(tile: GraphTile, currentTimeMs?: number, viewportWidth = 900)
 
 function seriesDrawOrder(a: TileSeries, b: TileSeries) {
   const order: Record<string, number> = {
+    ghost: 5,
+    acceptance_band: 8,
     actual: 10,
     source_quality: 12,
     counter: 14,
-    acceptance_band: 20,
-    ghost: 30,
-    command: 40,
+    command: 45,
     event: 50,
     interlock: 55,
     evidence: 60,
   };
-  return (order[a.role] ?? 15) - (order[b.role] ?? 15);
+  const roleDelta = (order[a.role] ?? 15) - (order[b.role] ?? 15);
+  if (roleDelta) return roleDelta;
+  return signalPriority(a) - signalPriority(b);
 }
 
 function lineWidthFor(role: string) {
@@ -1079,21 +1124,23 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
     if (!Number.isFinite(markerTime)) return;
     const x = left + ((markerTime - start) / span) * width;
     if (x < left || x > left + width) return;
-    const color = marker.role === "interlock" ? "rgba(255,99,116,0.95)" : marker.role === "evidence" ? "rgba(184,166,255,0.95)" : "rgba(240,200,90,0.95)";
+    const color = markerColor(marker);
+    const anchor = marker.kind === "functional_gate" ? markerAnchor(plot, tile, markerTime, top, height) : null;
+    const anchorY = anchor?.y ?? top + 10;
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
     ctx.lineWidth = marker.kind === "functional_gate" ? 1.6 : 1.1;
     ctx.setLineDash(marker.role === "interlock" ? [5, 4] : []);
     ctx.beginPath();
-    ctx.moveTo(x, top + 2);
+    ctx.moveTo(x, marker.kind === "functional_gate" ? Math.max(top + 2, anchorY - 38) : top + 2);
     ctx.lineTo(x, top + height - 2);
     ctx.stroke();
     ctx.setLineDash([]);
     if (marker.kind === "functional_gate") {
       ctx.beginPath();
-      ctx.moveTo(x, top + 4);
-      ctx.lineTo(x - 4, top + 12);
-      ctx.lineTo(x + 4, top + 12);
+      ctx.moveTo(x, anchorY);
+      ctx.lineTo(x - 5, anchorY - 9);
+      ctx.lineTo(x + 5, anchorY - 9);
       ctx.closePath();
       ctx.fill();
       const label = shortGateLabel(marker.label);
@@ -1102,7 +1149,7 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
       const metrics = ctx.measureText(label);
       const labelWidth = Math.max(28, metrics.width);
       const labelX = Math.max(left + 6, Math.min(left + width - labelWidth - 6, x + 5));
-      const labelY = Math.max(top + 24, Math.min(top + height - 12, top + 31));
+      const labelY = Math.max(top + 14, Math.min(top + height - 12, anchorY - 12));
       ctx.translate(labelX, labelY);
       const nearRightEdge = x > left + width - 72;
       ctx.rotate(nearRightEdge ? -Math.PI / 9 : -Math.PI / 5.2);
@@ -1139,6 +1186,27 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
     }
   }
   ctx.restore();
+}
+
+function markerAnchor(plot: uPlot, tile: GraphTile, timeMs: number, top: number, height: number) {
+  const anchorSeries = tile.series.find((series) => series.id === "trace.command.chamber")
+    ?? tile.series.find((series) => series.role === "command" && (series.points ?? []).length)
+    ?? tile.series.find((series) => series.role === "ghost" && (series.points ?? []).length);
+  if (!anchorSeries) return null;
+  const raw = rawValueAt(anchorSeries, timeMs);
+  if (raw === undefined) return null;
+  const scale = scaleForSeries(tile, anchorSeries);
+  const y = plot.valToPos(displayValue(tile, anchorSeries, raw), scale);
+  if (!Number.isFinite(y)) return null;
+  return { y: Math.max(top + 12, Math.min(top + height - 10, y)) };
+}
+
+function markerColor(marker: { role?: string; result?: string; kind?: string }) {
+  if (marker.role === "interlock" || marker.result === "fail") return "rgba(255,49,95,0.96)";
+  if (marker.role === "evidence") return "rgba(176,121,255,0.96)";
+  if (marker.kind === "stability" || marker.result === "pass") return "rgba(0,214,163,0.96)";
+  if (marker.kind === "functional_gate") return "rgba(255,176,0,0.98)";
+  return "rgba(49,214,255,0.95)";
 }
 
 function shortGateLabel(label: string) {
