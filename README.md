@@ -2,6 +2,8 @@
 
 Gossamer is an environmental-test data and evidence demonstrator for exploring how requirements, test configuration, facility state, telemetry provenance, command authority, anomalies, and evidence reporting can become one repeatable operating model.
 
+**Live hosted demo:** [gossamer.jmeyer.space](https://gossamer.jmeyer.space/)
+
 The repository is independent, fictional, and not affiliated with any employer or customer. It does not contain real device data, real lab configuration, real protocol definitions, real facility procedures, or private identifiers.
 
 ## What It Shows
@@ -9,6 +11,7 @@ The repository is independent, fictional, and not affiliated with any employer o
 - A generic reference DUT moving through flatsat, thermal acceptance, TVac qualification, and integrated system FAT campaigns.
 - Backend-owned semantic contracts for source quality, graph lanes, requirements, command authority, and evidence reports.
 - A landing page, campaign graph pages, and virtual bus tap that make the demo usable as a technical portfolio walkthrough.
+- A lightweight hosted static/tile deployment for reviewing the project without a local checkout.
 - Deterministic synthetic fixtures that make the demo reproducible.
 - A local API and operator UI that can be shown without hardware, private networks, or external services.
 - A reusable portfolio artifact for discussing test-system architecture, source abstraction, and operator workflows.
@@ -76,4 +79,6 @@ Gossamer uses fictional names, deterministic fixture data, generic DUT subsystem
 
 ## Public Demo
 
-The project is intended to run locally first. For temporary public access, serve the Go API behind a narrow reverse proxy and serve the built web assets as static files. See [docs/public_demo_access.md](docs/public_demo_access.md) for a conservative deployment pattern.
+A hosted instance is available at [https://gossamer.jmeyer.space/](https://gossamer.jmeyer.space/). It serves the lightweight public UI and precomputed telemetry tile artifacts through Cloudflare Tunnel, so the project can be reviewed from GitHub without a local checkout.
+
+Local runs remain useful for regenerating fixtures, reports, and tile bundles. See [docs/public_demo_access.md](docs/public_demo_access.md) for the conservative deployment pattern.
