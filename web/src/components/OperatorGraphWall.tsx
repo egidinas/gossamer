@@ -17,6 +17,8 @@ type TimeRange = {
   end: number;
 };
 
+const TIME_GRID_TICK_COUNT = 9;
+
 const roleColors: Record<string, string> = {
   command: "#ffd85f",
   ghost: "#8aa7c4",
@@ -70,7 +72,9 @@ const signalColors: Record<string, string> = {
 
 function colorForSignal(signal: Pick<TileSeries, "id" | "role" | "render_kind" | "kind"> | { id: string; role: string; kind?: string }, index = 0) {
   const kind = "kind" in signal ? signal.kind : ("render_kind" in signal ? signal.render_kind : undefined);
-  return signalColors[signal.id] ?? roleColors[signal.role] ?? (kind ? roleColors[kind] : undefined) ?? palette(index);
+  if (signalColors[signal.id]) return signalColors[signal.id];
+  if (signal.role === "command" || signal.role === "ghost" || signal.role === "acceptance_band" || signal.role === "interlock" || signal.role === "evidence") return roleColors[signal.role];
+  return paletteForID(signal.id, index) ?? roleColors[signal.role] ?? (kind ? roleColors[kind] : undefined) ?? palette(index);
 }
 
 export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }: Props) {
@@ -590,7 +594,7 @@ function SwimlaneTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTime
   const end = timeRange.end;
   const span = Math.max(1, end - start);
   const now = currentTimeMs ?? Date.parse(heroGraph.time_axis.now ?? heroGraph.execution?.now ?? "");
-  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), 9);
+  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), TIME_GRID_TICK_COUNT);
   return (
     <div className="tile-swimlane" data-swimlane-card={tile.card_id}>
       {ticks.map((tick) => <i className="tile-shared-gridline" key={tick.iso} style={{ left: `${tick.ratio * 100}%` }} />)}
@@ -616,7 +620,7 @@ function EventRailTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTim
   const end = timeRange.end;
   const span = Math.max(1, end - start);
   const now = currentTimeMs ?? Date.parse(heroGraph.time_axis.now ?? heroGraph.execution?.now ?? "");
-  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), 9);
+  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), TIME_GRID_TICK_COUNT);
   return (
     <div className="tile-event-rail" data-event-card={tile.card_id}>
       {ticks.map((tick) => <span className="tile-shared-gridline" key={tick.iso} style={{ left: `${tick.ratio * 100}%` }} />)}
@@ -658,7 +662,7 @@ function SharedTimeAxis({
   peekTimeMs?: number;
   onTimeRange: (range: TimeRange) => void;
 }) {
-  const ticks = timeTicks(new Date(timeRange.start).toISOString(), new Date(timeRange.end).toISOString(), 7);
+  const ticks = timeTicks(new Date(timeRange.start).toISOString(), new Date(timeRange.end).toISOString(), TIME_GRID_TICK_COUNT);
   const start = timeRange.start;
   const end = timeRange.end;
   const now = currentTimeMs;
@@ -667,11 +671,9 @@ function SharedTimeAxis({
   const fullSpan = Math.max(1, fullRange.end - fullRange.start);
   const viewSpan = Math.max(1, timeRange.end - timeRange.start);
   const isZoomed = viewSpan < fullSpan * 0.995;
-  const zoomPercent = Math.round((fullSpan / viewSpan) * 100);
   const minSpan = Math.max(60_000, fullSpan / 600);
-  const setZoom = (value: number) => {
-    const ratio = Number(value) / 100;
-    const nextSpan = Math.max(minSpan, Math.min(fullSpan, fullSpan / Math.max(1, ratio)));
+  const zoomBy = (factor: number) => {
+    const nextSpan = Math.max(minSpan, Math.min(fullSpan, viewSpan * factor));
     const center = (timeRange.start + timeRange.end) / 2;
     onTimeRange(clampRange({ start: Math.round(center - nextSpan / 2), end: Math.round(center + nextSpan / 2) }, fullRange, minSpan));
   };
@@ -698,16 +700,15 @@ function SharedTimeAxis({
       </div>
       <div className="time-axis-controls">
         <span>{spanHours.toFixed(spanHours >= 24 ? 0 : 1)} h</span>
-        <label>
-          <small>zoom</small>
-          <input type="range" min="100" max="60000" step="25" value={Math.max(100, Math.min(60000, zoomPercent))} onChange={(event) => setZoom(Number(event.currentTarget.value))} />
-        </label>
-        <label className="time-axis-scroll">
-          <small>scroll</small>
-          <input type="range" min="0" max="1000" step="1" disabled={!isZoomed} value={Math.max(0, Math.min(1000, scrollValue))} onChange={(event) => setScroll(Number(event.currentTarget.value))} />
-        </label>
+        <small>zoom</small>
+        <button type="button" onClick={() => zoomBy(1.35)} aria-label="Zoom out">-</button>
+        <button type="button" onClick={() => zoomBy(0.72)} aria-label="Zoom in">+</button>
         <button type="button" disabled={!isZoomed} onClick={() => onTimeRange(fullRange)}>full</button>
       </div>
+      <label className="time-axis-scrollbar">
+        <small>scroll</small>
+        <input type="range" min="0" max="1000" step="1" disabled={!isZoomed} value={Math.max(0, Math.min(1000, scrollValue))} onChange={(event) => setScroll(Number(event.currentTarget.value))} />
+      </label>
     </div>
   );
 }
@@ -1019,7 +1020,7 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
   const end = timeRange?.end ?? Date.parse(tile.t1);
   const span = Math.max(1, end - start);
   ctx.save();
-  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), 9);
+  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), TIME_GRID_TICK_COUNT);
   ctx.strokeStyle = "rgba(83,112,140,0.16)";
   ctx.lineWidth = 1;
   ctx.setLineDash([]);
@@ -1236,7 +1237,32 @@ function renderKindFor(kind: string) {
 }
 
 function palette(index: number) {
-  return ["#56d6df", "#f0c85a", "#b8a6ff", "#8bd3a5", "#ff6374"][index % 5];
+  return distinctivePalette[index % distinctivePalette.length];
+}
+
+const distinctivePalette = [
+  "#31d6ff",
+  "#ffb000",
+  "#ff5c93",
+  "#00d084",
+  "#b079ff",
+  "#ff7a35",
+  "#44e0b7",
+  "#7aa2ff",
+  "#f5d742",
+  "#f15bb5",
+  "#2ec4b6",
+  "#e76f51",
+  "#9bff70",
+  "#00a6fb",
+  "#ffd166",
+  "#ef476f",
+];
+
+function paletteForID(id: string, fallbackIndex: number) {
+  let hash = fallbackIndex + 17;
+  for (let i = 0; i < id.length; i += 1) hash = ((hash << 5) - hash + id.charCodeAt(i)) | 0;
+  return distinctivePalette[Math.abs(hash) % distinctivePalette.length];
 }
 
 function timeTicks(startISO: string, endISO: string, count: number) {
