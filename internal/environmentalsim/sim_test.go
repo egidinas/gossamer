@@ -167,8 +167,11 @@ func TestVolatilePoolDepletionUsesNamedCapacity(t *testing.T) {
 		t.Fatal("volatileCapacityPressureMinutes must be positive")
 	}
 
-	_, nextPool, outgasRate, _, _, _, _ := advancePressure("tvac_qualification", 4.5, 0.72, 9*time.Hour, "hot_operational", 2, 70, 84, 63, 5*time.Minute)
-	want := clamp(0.72-outgasRate*5/volatileCapacityPressureMinutes, minimumVolatilePool, 1.0)
+	const testPressurePa = 4.5
+	const testShroudDegC = 70.0
+	_, nextPool, outgasRate, _, _, _, _ := advancePressure("tvac_qualification", testPressurePa, 0.72, 9*time.Hour, "hot_operational", 2, testShroudDegC, 84, 63, 5*time.Minute)
+	resorption := stickingCoefficient * testPressurePa * coldSurfaceAreaM2 * coldSurfaceFactor(testShroudDegC) * 5 / volatileCapacityPressureMinutes
+	want := clamp(0.72-outgasRate*5/volatileCapacityPressureMinutes+resorption, minimumVolatilePool, 1.0)
 
 	if !almostEqualRelative(nextPool, want, 1e-12) {
 		t.Fatalf("next volatile pool = %.12g, want outgas/capacity depletion %.12g", nextPool, want)

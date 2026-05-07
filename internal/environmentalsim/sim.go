@@ -23,6 +23,14 @@ const (
 	maxComponentIntegrationStep      = time.Minute
 	minimumVolatilePool              = 0.004
 	volatileCapacityPressureMinutes  = 0.5882352941176471
+
+	// P4 cryopumping re-sorption: cold surfaces capture volatiles between
+	// cryoSorptionCutoffWarmDegC (no capture) and cryoSorptionCutoffColdDegC
+	// (full capture); coldSurfaceFactor smoothly interpolates.
+	cryoSorptionCutoffWarmDegC = -40.0
+	cryoSorptionCutoffColdDegC = -70.0
+	stickingCoefficient        = 0.012
+	coldSurfaceAreaM2          = 1.0
 )
 
 type Result struct {
@@ -1002,6 +1010,19 @@ func solvePressureStep(previous, pumpRatePerMin, virtualLeak, outgasRate, dtMin 
 	return equilibrium + (previous-equilibrium)*math.Exp(-pumpRatePerMin*dtMin)
 }
 
+// coldSurfaceFactor returns the fraction of cryopumping re-sorption active at
+// a given shroud temperature: 0 above cryoSorptionCutoffWarmDegC, 1 below
+// cryoSorptionCutoffColdDegC, linear in between.
+func coldSurfaceFactor(shroudDegC float64) float64 {
+	if shroudDegC <= cryoSorptionCutoffColdDegC {
+		return 1
+	}
+	if shroudDegC >= cryoSorptionCutoffWarmDegC {
+		return 0
+	}
+	return (cryoSorptionCutoffWarmDegC - shroudDegC) / (cryoSorptionCutoffWarmDegC - cryoSorptionCutoffColdDegC)
+}
+
 func advancePressure(campaignID string, previous, volatilePool float64, elapsed time.Duration, phase string, cycle int, shroudDegC, fastComponentDegC, lazyComponentDegC float64, dt time.Duration) (pressure, nextPool, outgasRate, virtualLeak, roughingRemoval, turboRemoval, totalRemoval float64) {
 	if campaignID != "tvac_qualification" {
 		return standardAtmospherePa, volatilePool, 0, 0, 0, 0, 0
@@ -1058,7 +1079,9 @@ func advancePressure(campaignID string, previous, volatilePool float64, elapsed 
 	}
 	next = math.Max(ultimatePressure, next)
 	depletion := outgasRate * dtMin / volatileCapacityPressureMinutes
-	nextPool = clamp(volatilePool-depletion, minimumVolatilePool, 1.0)
+	resorptionRate := stickingCoefficient * previous * coldSurfaceAreaM2 * coldSurfaceFactor(shroudDegC)
+	resorption := resorptionRate * dtMin / volatileCapacityPressureMinutes
+	nextPool = clamp(volatilePool-depletion+resorption, minimumVolatilePool, 1.0)
 	return next, nextPool, outgasRate, virtualLeak, roughingRemoval, turboRemoval, totalRemoval
 }
 
