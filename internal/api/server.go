@@ -62,6 +62,7 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("/api/topology", s.fixture("topology.json"))
 	s.mux.HandleFunc("/api/sources", s.fixture("source_catalogue.json"))
 	s.mux.HandleFunc("/api/supervisor", s.fixture("supervisor_overview.json"))
+	s.mux.HandleFunc("/api/command-center/fat", s.fixture("command_center_fat.json"))
 	s.mux.HandleFunc("/api/bus-tap", s.fixture("bus_virtualization_tap.json"))
 	s.mux.HandleFunc("/api/campaigns", s.campaigns)
 	s.mux.HandleFunc("/api/campaigns/", s.campaignDetail)

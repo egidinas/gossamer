@@ -29,6 +29,7 @@ type FixtureSet struct {
 	SourceCatalogue  contracts.SourceCatalogue
 	CommandAuthority contracts.CommandAuthorityState
 	Supervisor       contracts.SupervisorOverview
+	CommandCenterFAT contracts.CommandCenterFAT
 	BusTap           contracts.BusVirtualizationTap
 	Campaigns        map[string]contracts.Campaign
 	Telemetry        map[string][]contracts.TelemetrySample
@@ -82,11 +83,12 @@ func Build() FixtureSet {
 			AllowedCommands: []string{"set_demo_marker", "acknowledge_anomaly", "hold_fixture_state"},
 			LastCommand:     "",
 		},
-		Supervisor:  buildSupervisorOverview(env, campaigns, telemetry),
-		BusTap:      buildBusTap(env, telemetry["integrated_system_fat"]),
-		Campaigns:   campaigns,
-		Telemetry:   telemetry,
-		GraphModels: graphs,
+		Supervisor:       buildSupervisorOverview(env, campaigns, telemetry),
+		CommandCenterFAT: buildCommandCenterFAT(env),
+		BusTap:           buildBusTap(env, telemetry["integrated_system_fat"]),
+		Campaigns:        campaigns,
+		Telemetry:        telemetry,
+		GraphModels:      graphs,
 	}
 }
 
@@ -118,6 +120,9 @@ func WritePublicFixtures(root string) error {
 		return err
 	}
 	if err := writeJSON(filepath.Join(base, "supervisor_overview.json"), set.Supervisor); err != nil {
+		return err
+	}
+	if err := writeJSON(filepath.Join(base, "command_center_fat.json"), set.CommandCenterFAT); err != nil {
 		return err
 	}
 	if err := writeJSON(filepath.Join(base, "bus_virtualization_tap.json"), set.BusTap); err != nil {
@@ -1011,6 +1016,233 @@ func supervisorLane(id, label, facility string, campaign contracts.Campaign, act
 		lane.EvidenceMarkers = campaign.ThermalProgram.EvidenceMarkers
 	}
 	return lane
+}
+
+func buildCommandCenterFAT(env contracts.Envelope) contracts.CommandCenterFAT {
+	windowStart := time.Date(FixedTime.Year(), FixedTime.Month(), FixedTime.Day(), 0, 0, 0, 0, time.UTC)
+	for windowStart.Weekday() != time.Monday {
+		windowStart = windowStart.AddDate(0, 0, -1)
+	}
+	windowStart = windowStart.AddDate(0, 0, -7)
+	windowEnd := windowStart.AddDate(0, 0, 21)
+	chambers := []struct {
+		id, name, facility string
+		offsetDays         int
+	}{
+		{"thermal_chamber_alpha", "Alpha", "TC-A", 0},
+		{"thermal_chamber_bravo", "Bravo", "TC-B", 1},
+		{"thermal_chamber_charlie", "Charlie", "TC-C", 2},
+		{"thermal_chamber_delta", "Delta", "TC-D", 3},
+	}
+	lanes := make([]contracts.CommandCenterLane, 0, len(chambers))
+	for laneIndex, chamber := range chambers {
+		start := workdayAt(windowStart.AddDate(0, 0, chamber.offsetDays), 8)
+		runs := []contracts.CommandCenterRun{}
+		for runIndex := 0; runIndex < 3; runIndex++ {
+			runEnd := start.Add(84 * time.Hour)
+			resetStart := workdayResetStart(runEnd)
+			resetEnd := resetStart.Add(24 * time.Hour)
+			state, result := commandCenterState(start, runEnd)
+			runs = append(runs, buildCommandCenterRun(chamber.id, chamber.name, chamber.facility, laneIndex, runIndex, start, runEnd, resetStart, resetEnd, state, result))
+			start = nextWorkdayAt(resetEnd.Add(16*time.Hour), 8)
+		}
+		lanes = append(lanes, contracts.CommandCenterLane{
+			ID:          chamber.id,
+			ChamberName: chamber.name,
+			Facility:    chamber.facility,
+			Summary:     fmt.Sprintf("%s chamber ladder with completed, live, and forecast FAT slots.", chamber.name),
+			Runs:        runs,
+		})
+	}
+	return contracts.CommandCenterFAT{
+		Envelope:         env,
+		ID:               "command_center_fat",
+		Title:            "Command Center FAT",
+		Summary:          "Four thermal chamber FAT swimlanes over a three-week operational window. Starts are constrained to workdays; resets resume on Monday after weekend finishes.",
+		Now:              FixedTime.Format(time.RFC3339),
+		WindowStart:      windowStart.Format(time.RFC3339),
+		WindowEnd:        windowEnd.Format(time.RFC3339),
+		WorkdayStartHour: 8,
+		WorkdayEndHour:   18,
+		WeekendBands:     weekendBands(windowStart, windowEnd),
+		Lanes:            lanes,
+	}
+}
+
+func buildCommandCenterRun(chamberID, chamberName, facility string, laneIndex, runIndex int, start, end, resetStart, resetEnd time.Time, state, result string) contracts.CommandCenterRun {
+	runID := fmt.Sprintf("%s-fat-%02d", chamberID, runIndex+1)
+	article := fmt.Sprintf("Optical terminal %02d-%s", 41+laneIndex*7+runIndex, strings.ToUpper(chamberName[:1]))
+	serial := fmt.Sprintf("OT-%s-%04d", strings.ToUpper(chamberName[:1]), 2600+laneIndex*100+runIndex*11)
+	operatorNext := commandCenterOperatorNext(state, resetStart, resetEnd)
+	manifest := contracts.CommandCenterTestItemManifest{
+		ID:           runID + "-manifest",
+		Label:        fmt.Sprintf("%s item manifest", chamberName),
+		Article:      article,
+		SerialNumber: serial,
+		Facility:     facility,
+		ChamberName:  chamberName,
+		CampaignID:   "thermal_acceptance_fat",
+		OperatorNext: operatorNext,
+		State:        state,
+		Result:       result,
+		Start:        start.Format(time.RFC3339),
+		End:          end.Format(time.RFC3339),
+		ResetStart:   resetStart.Format(time.RFC3339),
+		ResetEnd:     resetEnd.Format(time.RFC3339),
+	}
+	return contracts.CommandCenterRun{
+		ID:         runID,
+		CampaignID: "thermal_acceptance_fat",
+		Title:      fmt.Sprintf("%s FAT %02d", chamberName, runIndex+1),
+		State:      state,
+		Result:     result,
+		Start:      start.Format(time.RFC3339),
+		End:        end.Format(time.RFC3339),
+		ResetStart: resetStart.Format(time.RFC3339),
+		ResetEnd:   resetEnd.Format(time.RFC3339),
+		Manifest:   manifest,
+		Traces: []contracts.CommandCenterTrace{
+			commandCenterTrace("ghost", "Nominal profile", "ghost", "degC", start, end, laneIndex, runIndex, false),
+			commandCenterTrace("actual", "Observed chamber", "actual", "degC", start, end, laneIndex, runIndex, true),
+		},
+		InteractionWindows: commandCenterInteractionWindows(runID, start, end),
+		Events: []contracts.CommandCenterEvent{
+			{ID: runID + "-start", Label: "FAT start", Kind: "start", Timestamp: start.Format(time.RFC3339), State: state},
+			{ID: runID + "-end", Label: "FAT closeout", Kind: "closeout", Timestamp: end.Format(time.RFC3339), State: state},
+			{ID: runID + "-reset", Label: "Reset ready", Kind: "reset", Timestamp: resetEnd.Format(time.RFC3339), State: "reset"},
+		},
+	}
+}
+
+func commandCenterTrace(id, label, role, units string, start, end time.Time, laneIndex, runIndex int, actual bool) contracts.CommandCenterTrace {
+	points := []contracts.GraphPoint{}
+	duration := end.Sub(start)
+	limit := 28
+	if actual && FixedTime.Before(end) {
+		if FixedTime.Before(start) {
+			limit = -1
+		} else {
+			limit = int(math.Ceil(float64(limit) * FixedTime.Sub(start).Seconds() / duration.Seconds()))
+		}
+	}
+	for i := 0; i <= 28; i++ {
+		if actual && i > limit {
+			break
+		}
+		t := start.Add(time.Duration(float64(duration) * float64(i) / 28))
+		phase := float64(i) / 28
+		value := commandCenterTemperatureProfile(phase)
+		if actual {
+			value += 0.9*math.Sin(float64(i+laneIndex*3)*0.85) + 0.35*float64(runIndex-laneIndex)
+		}
+		points = append(points, contracts.GraphPoint{Timestamp: t.Format(time.RFC3339), Value: round(value)})
+	}
+	return contracts.CommandCenterTrace{ID: id, Label: label, Role: role, Units: units, Min: -45, Max: 75, Values: points}
+}
+
+func commandCenterTemperatureProfile(phase float64) float64 {
+	switch {
+	case phase < 0.12:
+		return 22 + (65-22)*phase/0.12
+	case phase < 0.27:
+		return 65
+	case phase < 0.42:
+		return 65 + (-35-65)*(phase-0.27)/0.15
+	case phase < 0.57:
+		return -35
+	case phase < 0.72:
+		return -35 + (65+35)*(phase-0.57)/0.15
+	case phase < 0.86:
+		return 65
+	default:
+		return 65 + (22-65)*(phase-0.86)/0.14
+	}
+}
+
+func commandCenterInteractionWindows(runID string, start, end time.Time) []contracts.CommandCenterBand {
+	duration := end.Sub(start)
+	points := []struct {
+		suffix, label string
+		offset        float64
+	}{
+		{"setup", "Setup review", 0.02},
+		{"cold", "Cold dwell gate", 0.46},
+		{"hot", "Hot dwell gate", 0.76},
+		{"closeout", "Closeout evidence", 0.94},
+	}
+	windows := make([]contracts.CommandCenterBand, 0, len(points))
+	for _, point := range points {
+		center := start.Add(time.Duration(point.offset * float64(duration)))
+		windows = append(windows, contracts.CommandCenterBand{ID: runID + "-" + point.suffix, Label: point.label, Kind: "operator_gate", Start: center.Add(-45 * time.Minute).Format(time.RFC3339), End: center.Add(45 * time.Minute).Format(time.RFC3339)})
+	}
+	return windows
+}
+
+func commandCenterState(start, end time.Time) (string, string) {
+	switch {
+	case FixedTime.Before(start):
+		return "scheduled", "pending"
+	case FixedTime.After(end):
+		return "complete", "pass"
+	default:
+		return "running", "in_progress"
+	}
+}
+
+func commandCenterOperatorNext(state string, resetStart, resetEnd time.Time) string {
+	switch state {
+	case "complete":
+		if FixedTime.Before(resetEnd) {
+			return "reset in progress"
+		}
+		return "archive evidence"
+	case "running":
+		return "monitor dwell gate"
+	default:
+		return fmt.Sprintf("prepare reset slot %s", resetStart.Format("Mon 15:04"))
+	}
+}
+
+func weekendBands(start, end time.Time) []contracts.CommandCenterBand {
+	bands := []contracts.CommandCenterBand{}
+	cursor := start
+	for cursor.Before(end) {
+		if cursor.Weekday() == time.Saturday {
+			bandEnd := cursor.AddDate(0, 0, 2)
+			if bandEnd.After(end) {
+				bandEnd = end
+			}
+			bands = append(bands, contracts.CommandCenterBand{ID: "weekend-" + cursor.Format("20060102"), Label: "Weekend", Kind: "weekend", Start: cursor.Format(time.RFC3339), End: bandEnd.Format(time.RFC3339)})
+			cursor = bandEnd
+			continue
+		}
+		cursor = cursor.AddDate(0, 0, 1)
+	}
+	return bands
+}
+
+func workdayAt(day time.Time, hour int) time.Time {
+	t := time.Date(day.Year(), day.Month(), day.Day(), hour, 0, 0, 0, time.UTC)
+	for t.Weekday() == time.Saturday || t.Weekday() == time.Sunday {
+		t = t.AddDate(0, 0, 1)
+	}
+	return t
+}
+
+func nextWorkdayAt(t time.Time, hour int) time.Time {
+	next := workdayAt(t, hour)
+	if !next.Before(t) {
+		return next
+	}
+	return workdayAt(t.AddDate(0, 0, 1), hour)
+}
+
+func workdayResetStart(t time.Time) time.Time {
+	next := time.Date(t.Year(), t.Month(), t.Day(), 8, 0, 0, 0, time.UTC)
+	if t.Hour() >= 8 {
+		next = next.AddDate(0, 0, 1)
+	}
+	return nextWorkdayAt(next, 8)
 }
 
 func graphPoints(samples []contracts.TelemetrySample, signal string, limit int) []contracts.GraphPoint {

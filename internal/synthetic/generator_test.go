@@ -1108,3 +1108,37 @@ func TestWritePublicFixturesCreatesDeterministicFiles(t *testing.T) {
 		}
 	}
 }
+
+func TestBuildProducesCommandCenterFATWorkdayLadder(t *testing.T) {
+	set := Build()
+	model := set.CommandCenterFAT
+	if len(model.Lanes) != 4 {
+		t.Fatalf("lanes = %d, want 4", len(model.Lanes))
+	}
+	wantNames := []string{"Alpha", "Bravo", "Charlie", "Delta"}
+	for i, lane := range model.Lanes {
+		if lane.ChamberName != wantNames[i] {
+			t.Fatalf("lane %d chamber = %q, want %q", i, lane.ChamberName, wantNames[i])
+		}
+		if len(lane.Runs) != 3 {
+			t.Fatalf("%s runs = %d, want 3", lane.ChamberName, len(lane.Runs))
+		}
+		for _, run := range lane.Runs {
+			start := mustTime(run.Start)
+			if start.Weekday() == time.Saturday || start.Weekday() == time.Sunday {
+				t.Fatalf("%s starts on weekend: %s", run.ID, run.Start)
+			}
+			end := mustTime(run.End)
+			reset := mustTime(run.ResetStart)
+			if (end.Weekday() == time.Saturday || end.Weekday() == time.Sunday) && reset.Weekday() != time.Monday {
+				t.Fatalf("%s weekend end reset = %s, want Monday", run.ID, run.ResetStart)
+			}
+			if run.Manifest.ChamberName != lane.ChamberName || run.Manifest.SerialNumber == "" {
+				t.Fatalf("%s missing item manifest: %#v", run.ID, run.Manifest)
+			}
+		}
+	}
+	if len(model.WeekendBands) != 3 {
+		t.Fatalf("weekend bands = %d, want 3", len(model.WeekendBands))
+	}
+}

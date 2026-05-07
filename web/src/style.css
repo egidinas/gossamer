@@ -2215,6 +2215,295 @@ code {
   background: #0f1519;
 }
 
+.command-center-view {
+  display: grid;
+  gap: 18px;
+}
+
+.command-center-header {
+  align-items: end;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.command-center-header h2 {
+  font-size: clamp(28px, 5vw, 58px);
+  margin: 4px 0 6px;
+}
+
+.command-center-header p {
+  color: #a7bac7;
+  line-height: 1.5;
+  max-width: 880px;
+  margin: 0;
+}
+
+.command-center-kpis {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(4, minmax(76px, 1fr));
+}
+
+.command-center-kpis div {
+  background: #08111b;
+  border: 1px solid rgba(129, 173, 197, 0.22);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.command-center-kpis span,
+.fat-lane-label span,
+.fat-run-manifest span,
+.fat-run-manifest em {
+  color: #93a7b5;
+  display: block;
+  font-size: 12px;
+}
+
+.command-center-kpis strong {
+  color: #f3f8ff;
+  display: block;
+  font-size: 18px;
+  margin-top: 4px;
+}
+
+.fat-timeline-shell {
+  background: #050a0f;
+  border: 1px solid rgba(129, 173, 197, 0.18);
+  border-radius: 8px;
+  overflow-x: auto;
+  padding: 12px 14px 16px;
+}
+
+.fat-timeline-header,
+.fat-ladder {
+  min-width: 1180px;
+}
+
+.fat-timeline-header {
+  height: 28px;
+  margin-left: 134px;
+  position: relative;
+}
+
+.fat-timeline-header span {
+  border-left: 1px solid rgba(143, 162, 173, 0.18);
+  color: #a7bac7;
+  font-size: 11px;
+  height: 100%;
+  padding-left: 5px;
+  position: absolute;
+  text-transform: uppercase;
+}
+
+.fat-timeline-header .weekend {
+  color: #ffd85f;
+}
+
+.fat-ladder {
+  display: grid;
+  gap: 10px;
+  position: relative;
+}
+
+.fat-weekend-layer {
+  inset: 0 0 0 134px;
+  pointer-events: none;
+  position: absolute;
+}
+
+.fat-weekend-band {
+  background: rgba(255, 216, 95, 0.08);
+  border-inline: 1px solid rgba(255, 216, 95, 0.18);
+  bottom: 0;
+  position: absolute;
+  top: 0;
+}
+
+.fat-now-marker {
+  background: #f2f7ff;
+  bottom: -4px;
+  box-shadow: 0 0 0 1px rgba(5, 10, 15, 0.95), 0 0 18px rgba(242, 247, 255, 0.5);
+  position: absolute;
+  top: -32px;
+  width: 2px;
+  z-index: 5;
+}
+
+.fat-chamber-lane {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 122px minmax(0, 1fr);
+  min-height: 144px;
+}
+
+.fat-lane-label {
+  align-self: stretch;
+  background: #071019;
+  border: 1px solid rgba(129, 173, 197, 0.2);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px;
+}
+
+.fat-lane-label strong {
+  color: #f3f8ff;
+  font-size: 20px;
+}
+
+.fat-lane-track {
+  background: linear-gradient(90deg, rgba(143, 162, 173, 0.12) 1px, transparent 1px) 0 0 / calc(100% / 21) 100%, #071019;
+  border: 1px solid rgba(129, 173, 197, 0.16);
+  border-radius: 8px;
+  min-height: 144px;
+  position: relative;
+}
+
+.fat-run-block,
+.fat-reset-block {
+  position: absolute;
+}
+
+.fat-run-block {
+  background: rgba(12, 25, 36, 0.96);
+  border: 1px solid rgba(86, 214, 223, 0.34);
+  border-radius: 8px;
+  bottom: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+  min-width: 132px;
+  overflow: hidden;
+  padding: 8px;
+  top: 12px;
+}
+
+.fat-run-block.complete {
+  border-color: rgba(90, 214, 134, 0.42);
+}
+
+.fat-run-block.running {
+  border-color: rgba(255, 216, 95, 0.76);
+}
+
+.fat-run-block.scheduled {
+  border-color: rgba(184, 166, 255, 0.42);
+}
+
+.fat-run-topline {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.fat-run-topline > span {
+  color: #f3f8ff;
+  font-size: 13px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fat-state {
+  align-items: center;
+  color: #c7d5df;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 11px;
+  gap: 4px;
+}
+
+.fat-state.complete {
+  color: #5ad686;
+}
+
+.fat-state.running {
+  color: #ffd85f;
+}
+
+.fat-state.scheduled {
+  color: #b8a6ff;
+}
+
+.fat-hero-trace {
+  display: block;
+  height: 48px;
+  margin: 6px 0;
+  width: 100%;
+}
+
+.fat-hero-trace path {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.fat-hero-trace .ghost {
+  stroke: rgba(242, 247, 255, 0.36);
+  stroke-dasharray: 5 4;
+  stroke-width: 2;
+}
+
+.fat-hero-trace .actual {
+  stroke: #56d6df;
+  stroke-width: 2.8;
+}
+
+.fat-run-manifest {
+  display: grid;
+  gap: 1px;
+}
+
+.fat-run-manifest strong {
+  color: #f3f8ff;
+  display: block;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fat-run-manifest em {
+  color: #ffd85f;
+  font-style: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fat-gate-marker {
+  background: #f2f7ff;
+  border: 2px solid #050a0f;
+  bottom: 6px;
+  height: 10px;
+  position: absolute;
+  transform: rotate(45deg);
+  width: 10px;
+}
+
+.fat-gate-marker.active {
+  background: #ffd85f;
+  box-shadow: 0 0 14px rgba(255, 216, 95, 0.72);
+}
+
+.fat-reset-block {
+  align-items: center;
+  background: rgba(143, 162, 173, 0.18);
+  border: 1px solid rgba(143, 162, 173, 0.28);
+  border-radius: 999px;
+  bottom: 6px;
+  color: #c7d5df;
+  display: inline-flex;
+  font-size: 11px;
+  gap: 4px;
+  justify-content: center;
+  min-width: 56px;
+  padding: 3px 6px;
+}
+
 @media (max-width: 820px) {
   .shell {
     padding: 12px;

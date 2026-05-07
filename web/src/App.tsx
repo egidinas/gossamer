@@ -1,7 +1,7 @@
-import { Activity, FileCheck, Home, ShieldCheck, User } from "lucide-react";
+import { Activity, CalendarDays, FileCheck, Home, ShieldCheck, User } from "lucide-react";
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { api } from "./api";
-import type { BusVirtualizationTap, Campaign, CommandAuthorityState, EvidenceReport, GraphModel, Manifest, SourceCatalogue, SupervisorOverview, Topology } from "./types";
+import type { BusVirtualizationTap, Campaign, CommandAuthorityState, CommandCenterFAT, EvidenceReport, GraphModel, Manifest, SourceCatalogue, SupervisorOverview, Topology } from "./types";
 import { LandingView } from "./views/LandingView";
 
 const MissionMapView = lazy(() => import("./views/MissionMapView").then((module) => ({ default: module.MissionMapView })));
@@ -13,8 +13,9 @@ const CommandAuthorityView = lazy(() => import("./views/CommandAuthorityView").t
 const EvidenceReportView = lazy(() => import("./views/EvidenceReportView").then((module) => ({ default: module.EvidenceReportView })));
 const BusTapView = lazy(() => import("./views/BusTapView").then((module) => ({ default: module.BusTapView })));
 const ProfileView = lazy(() => import("./views/ProfileView").then((module) => ({ default: module.ProfileView })));
+const CommandCenterFATView = lazy(() => import("./views/CommandCenterFATView").then((module) => ({ default: module.CommandCenterFATView })));
 
-type Route = "landing" | "profile" | "acceptance" | "qualification" | "mission-map" | "supervisor" | "graph-wall" | "sources" | "requirements" | "commands" | "bus-tap" | "report";
+type Route = "landing" | "profile" | "acceptance" | "command-center-fat" | "qualification" | "mission-map" | "supervisor" | "graph-wall" | "sources" | "requirements" | "commands" | "bus-tap" | "report";
 
 const campaignRouteMap: Partial<Record<Route, string>> = {
   acceptance: "thermal_acceptance_fat",
@@ -24,6 +25,7 @@ const campaignRouteMap: Partial<Record<Route, string>> = {
 const routes: Array<{ id: Route; label: string; icon: typeof Activity; published: boolean }> = [
   { id: "landing", label: "Home", icon: Home, published: true },
   { id: "acceptance", label: "Acceptance FAT", icon: Activity, published: true },
+  { id: "command-center-fat", label: "Command Center", icon: CalendarDays, published: true },
   { id: "qualification", label: "Qualification TVac", icon: Activity, published: true },
   { id: "report", label: "Evidence", icon: ShieldCheck, published: true },
   { id: "profile", label: "Profile", icon: User, published: true },
@@ -125,6 +127,7 @@ export function App() {
   const [campaigns, setCampaigns] = useState<Campaign[]>(bootCampaigns);
   const [activeCampaign, setActiveCampaign] = useState("thermal_acceptance_fat");
   const [graph, setGraph] = useState<GraphModel | null>(null);
+  const [commandCenterFAT, setCommandCenterFAT] = useState<CommandCenterFAT | null>(null);
   const [commands, setCommands] = useState<CommandAuthorityState | null>(null);
   const [report, setReport] = useState<EvidenceReport | null>(null);
   const [error, setError] = useState("");
@@ -159,6 +162,10 @@ export function App() {
 
   useEffect(() => {
     if (route === "landing") return;
+    if (route === "command-center-fat") {
+      api.commandCenterFAT().then(setCommandCenterFAT).catch((err: Error) => setError(err.message));
+      return;
+    }
     if (route === "report") {
       Promise.all([api.campaign(requestedCampaign), api.evidenceReport(requestedCampaign)])
         .then(([campaign, evidence]) => {
@@ -200,6 +207,7 @@ export function App() {
   const routeReady =
     route === "landing" ? landingReady :
     route === "profile" ? true :
+    route === "command-center-fat" ? landingReady && !!commandCenterFAT :
     route === "mission-map" ? landingReady && !!topology :
     route === "sources" ? landingReady && !!sources :
     route === "commands" ? landingReady && !!commands :
@@ -257,6 +265,7 @@ export function App() {
       {route !== "landing" && route !== "profile" && !(route === "acceptance" || route === "qualification" || route === "supervisor") && !routeReady && <div className="loading route-loading">Loading {routeLabel(route)} contracts...</div>}
       <Suspense fallback={<div className="loading route-loading">Loading view...</div>}>
         {route === "profile" && routeReady && <ProfileView />}
+        {route === "command-center-fat" && routeReady && commandCenterFAT && <CommandCenterFATView model={commandCenterFAT} />}
         {route === "mission-map" && routeReady && topology && <MissionMapView manifest={manifest} topology={topology} campaigns={campaigns} />}
         {(route === "acceptance" || route === "qualification" || route === "supervisor") && routeReady && selectedCampaign && graph && <SupervisorView overview={supervisor} campaign={selectedCampaign} graph={graph} />}
         {route === "graph-wall" && routeReady && graph && <GraphWallView model={graph} samples={[]} />}
@@ -277,6 +286,7 @@ export function App() {
       <footer className="site-footer">
         <span>Dr. Jonathan Meyer · jonathan@jmeyer.space</span>
         <a href="#acceptance">Physical model and components: FAT</a>
+        <a href="#command-center-fat">Command center FAT ladder</a>
         <a href="#qualification">Physical model and components: TVac</a>
         <a href="https://github.com/egidinas/gossamer" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
       </footer>
@@ -290,6 +300,8 @@ function hashRoute(): Route {
     "": "landing",
     home: "landing",
     evidence: "report",
+    "command-center": "command-center-fat",
+    "fat-command-center": "command-center-fat",
     "acceptance-fat": "acceptance",
     "thermal-acceptance-fat": "acceptance",
     "qualification-tvac": "qualification",

@@ -723,6 +723,86 @@ export type SupervisorOverview = Envelope & {
   lanes: SupervisorLane[];
 };
 
+export type CommandCenterBand = {
+  id: string;
+  label: string;
+  kind: string;
+  start: string;
+  end: string;
+};
+
+export type CommandCenterEvent = {
+  id: string;
+  label: string;
+  kind: string;
+  timestamp: string;
+  state: string;
+};
+
+export type CommandCenterTrace = {
+  id: string;
+  label: string;
+  role: string;
+  units: string;
+  min: number;
+  max: number;
+  values: GraphPoint[];
+};
+
+export type CommandCenterTestItemManifest = {
+  id: string;
+  label: string;
+  article: string;
+  serial_number: string;
+  facility: string;
+  chamber_name: string;
+  campaign_id: string;
+  operator_next: string;
+  state: string;
+  result: string;
+  start: string;
+  end: string;
+  reset_start: string;
+  reset_end: string;
+};
+
+export type CommandCenterRun = {
+  id: string;
+  campaign_id: string;
+  title: string;
+  state: string;
+  result: string;
+  start: string;
+  end: string;
+  reset_start: string;
+  reset_end: string;
+  manifest: CommandCenterTestItemManifest;
+  traces: CommandCenterTrace[];
+  interaction_windows: CommandCenterBand[];
+  events: CommandCenterEvent[];
+};
+
+export type CommandCenterLane = {
+  id: string;
+  chamber_name: string;
+  facility: string;
+  summary: string;
+  runs: CommandCenterRun[];
+};
+
+export type CommandCenterFAT = Envelope & {
+  id: string;
+  title: string;
+  summary: string;
+  now: string;
+  window_start: string;
+  window_end: string;
+  workday_start_hour: number;
+  workday_end_hour: number;
+  weekend_bands: CommandCenterBand[];
+  lanes: CommandCenterLane[];
+};
+
 export type BusStream = {
   id: string;
   label: string;

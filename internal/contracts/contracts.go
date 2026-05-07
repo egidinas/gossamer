@@ -753,6 +753,87 @@ type SupervisorOverview struct {
 	Lanes       []SupervisorLane `json:"lanes"`
 }
 
+type CommandCenterBand struct {
+	ID    string `json:"id"`
+	Label string `json:"label"`
+	Kind  string `json:"kind"`
+	Start string `json:"start"`
+	End   string `json:"end"`
+}
+
+type CommandCenterEvent struct {
+	ID        string `json:"id"`
+	Label     string `json:"label"`
+	Kind      string `json:"kind"`
+	Timestamp string `json:"timestamp"`
+	State     string `json:"state"`
+}
+
+type CommandCenterTrace struct {
+	ID     string       `json:"id"`
+	Label  string       `json:"label"`
+	Role   string       `json:"role"`
+	Units  string       `json:"units"`
+	Min    float64      `json:"min"`
+	Max    float64      `json:"max"`
+	Values []GraphPoint `json:"values"`
+}
+
+type CommandCenterTestItemManifest struct {
+	ID           string `json:"id"`
+	Label        string `json:"label"`
+	Article      string `json:"article"`
+	SerialNumber string `json:"serial_number"`
+	Facility     string `json:"facility"`
+	ChamberName  string `json:"chamber_name"`
+	CampaignID   string `json:"campaign_id"`
+	OperatorNext string `json:"operator_next"`
+	State        string `json:"state"`
+	Result       string `json:"result"`
+	Start        string `json:"start"`
+	End          string `json:"end"`
+	ResetStart   string `json:"reset_start"`
+	ResetEnd     string `json:"reset_end"`
+}
+
+type CommandCenterRun struct {
+	ID                 string                        `json:"id"`
+	CampaignID         string                        `json:"campaign_id"`
+	Title              string                        `json:"title"`
+	State              string                        `json:"state"`
+	Result             string                        `json:"result"`
+	Start              string                        `json:"start"`
+	End                string                        `json:"end"`
+	ResetStart         string                        `json:"reset_start"`
+	ResetEnd           string                        `json:"reset_end"`
+	Manifest           CommandCenterTestItemManifest `json:"manifest"`
+	Traces             []CommandCenterTrace          `json:"traces"`
+	InteractionWindows []CommandCenterBand           `json:"interaction_windows"`
+	Events             []CommandCenterEvent          `json:"events"`
+}
+
+type CommandCenterLane struct {
+	ID          string             `json:"id"`
+	ChamberName string             `json:"chamber_name"`
+	Facility    string             `json:"facility"`
+	Summary     string             `json:"summary"`
+	Runs        []CommandCenterRun `json:"runs"`
+}
+
+type CommandCenterFAT struct {
+	Envelope
+	ID               string              `json:"id"`
+	Title            string              `json:"title"`
+	Summary          string              `json:"summary"`
+	Now              string              `json:"now"`
+	WindowStart      string              `json:"window_start"`
+	WindowEnd        string              `json:"window_end"`
+	WorkdayStartHour int                 `json:"workday_start_hour"`
+	WorkdayEndHour   int                 `json:"workday_end_hour"`
+	WeekendBands     []CommandCenterBand `json:"weekend_bands"`
+	Lanes            []CommandCenterLane `json:"lanes"`
+}
+
 type BusStream struct {
 	ID              string `json:"id"`
 	Label           string `json:"label"`
