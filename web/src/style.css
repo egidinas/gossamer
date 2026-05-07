@@ -1092,6 +1092,11 @@ button {
   min-width: 0;
 }
 
+.operator-wall-cards .graph-wall-card + .graph-wall-card,
+.operator-wall-section + .operator-wall-section {
+  margin-top: -1px;
+}
+
 .graph-wall-card {
   --card-height-weight: 1;
   --plot-height: 260px;
@@ -1121,6 +1126,14 @@ button {
   --plot-height: 180px;
 }
 
+.graph-render-swimlane {
+  --plot-height: 260px;
+}
+
+.graph-render-event_rail {
+  --plot-height: 230px;
+}
+
 .graph-card-collapsed {
   grid-template-columns: minmax(0, 1fr);
   height: 30px;
@@ -1140,12 +1153,12 @@ button {
 .graph-card-label-rail {
   position: absolute;
   top: 3px;
-  left: 3px;
-  z-index: 8;
-  grid-template-columns: auto minmax(0, 1fr);
+  right: 3px;
+  z-index: 10;
+  grid-template-columns: auto;
   align-content: start;
   width: auto;
-  max-width: min(240px, calc(100% - 180px));
+  max-width: none;
   border: 1px solid rgba(39, 60, 77, 0.78);
   border-radius: 3px;
   background: rgba(3, 7, 12, 0.82);
@@ -1229,6 +1242,8 @@ button {
 .graph-card-plot-shell {
   position: relative;
   overflow: hidden;
+  --axis-left: 66px;
+  --axis-right: 70px;
 }
 
 .graph-card-resize {
@@ -1264,16 +1279,16 @@ button {
 
 .graph-card-inline-title {
   position: absolute;
-  top: 5px;
-  left: 46px;
+  top: 3px;
+  left: 3px;
   z-index: 4;
   display: inline-flex;
   align-items: baseline;
   gap: 8px;
-  max-width: calc(100% - 120px);
+  max-width: calc(100% - 84px);
   border: 1px solid rgba(39, 60, 77, 0.7);
   border-radius: 3px;
-  background: rgba(3, 7, 12, 0.78);
+  background: rgba(3, 7, 12, 0.84);
   padding: 2px 6px;
   pointer-events: none;
 }
@@ -1419,8 +1434,16 @@ button {
 
 .tile-swimlane {
   display: grid;
-  gap: 1px;
-  padding: 2px 0;
+  gap: 2px;
+  padding: 3px 0;
+}
+
+.tile-time-plane {
+  position: relative;
+  height: 100%;
+  min-width: 0;
+  margin-left: var(--axis-left);
+  margin-right: var(--axis-right);
 }
 
 .tile-shared-gridline {
@@ -1435,34 +1458,59 @@ button {
 
 .tile-swimlane-row {
   display: grid;
-  grid-template-columns: minmax(68px, 96px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
+  position: relative;
   min-width: 0;
-  min-height: 10px;
+  min-height: 17px;
 }
 
 .tile-swimlane-row span {
+  position: absolute;
+  top: 50%;
+  left: 4px;
+  z-index: 3;
+  max-width: min(220px, 34%);
   overflow: hidden;
   padding: 0 5px;
-  color: #91a7b8;
-  font-size: 9px;
+  transform: translateY(-50%);
+  border-radius: 2px;
+  background: rgba(3, 7, 12, 0.72);
+  color: #f2f7ff;
+  font-size: 10px;
+  font-weight: 750;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .tile-swimlane-row div {
   position: relative;
-  height: 8px;
+  height: 15px;
   min-width: 0;
-  border-left: 1px solid #17283a;
+  border-left: 0;
   background: rgba(23, 40, 58, 0.28);
 }
 
 .tile-swimlane-row i {
+  display: flex;
+  align-items: center;
   position: absolute;
   top: 1px;
   bottom: 1px;
   min-width: 1px;
+  overflow: hidden;
+  padding-left: 5px;
+}
+
+.tile-swimlane-row i small {
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 2px #000;
+  white-space: nowrap;
 }
 
 .tile-swimlane-row b,
@@ -1487,29 +1535,66 @@ button {
 }
 
 .tile-event-rail {
-  border-left: 1px solid #17283a;
+  border-left: 0;
   background:
     linear-gradient(to bottom, transparent 47%, rgba(83, 112, 140, 0.28) 47% 53%, transparent 53%),
     #03070c;
 }
 
-.tile-event-rail i,
-.tile-event-rail b {
+.event-marker-wrap,
+.event-chip-wrap {
   position: absolute;
-  top: 9px;
-  width: 2px;
-  height: calc(100% - 18px);
-  transform: translateX(-1px);
-  border-radius: 999px;
-  background: #f0c85a;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 140px;
+  transform: translateX(-50%);
+  pointer-events: auto;
 }
 
-.tile-event-rail b {
-  top: 50%;
-  width: 6px;
-  height: 6px;
-  transform: translate(-3px, -3px);
-  background: #b8a6ff;
+.event-marker-wrap strong,
+.event-chip-wrap strong {
+  overflow: hidden;
+  max-width: 150px;
+  padding: 2px 4px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  background: rgba(3, 7, 12, 0.78);
+  color: currentColor;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 3px #000;
+  white-space: nowrap;
+}
+
+.event-marker-wrap .event-marker,
+.event-chip-wrap .event-chip {
+  position: static;
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  transform: none;
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 999px;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.event-marker-functional_gate .event-marker {
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  border-radius: 0;
+}
+
+.event-marker-interlock .event-marker,
+.event-marker-fault .event-marker {
+  border-radius: 1px;
+  transform: rotate(45deg);
+}
+
+.event-chip-wrap .event-chip {
+  border-radius: 2px;
 }
 
 .operator-shared-time-axis {

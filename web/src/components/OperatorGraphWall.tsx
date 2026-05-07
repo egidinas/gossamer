@@ -68,6 +68,26 @@ const signalColors: Record<string, string> = {
   "trace.payload_active": "#f97316",
   "trace.rf_link_locked": "#06b6d4",
   "trace.fault_flag": "#fb7185",
+  "trace.power_total": "#ff7a00",
+  "trace.power_subsystem": "#00c8ff",
+  "trace.power_payload": "#ff315f",
+  "trace.power_avionics": "#00d6a3",
+  "trace.power_link": "#b079ff",
+  "trace.overall_packet_counter": "#f8fafc",
+  "trace.tm_packet_counter": "#00c8ff",
+  "trace.tc_packet_counter": "#ffd400",
+  "trace.dropped_frame_count": "#ff315f",
+  "trace.bus_latency": "#ffb000",
+  "trace.source_freshness": "#00d6a3",
+  "trace.cooling_water_temp": "#00a8ff",
+  "trace.pressurized_air_supply": "#ffd400",
+  "trace.air_dewpoint": "#b079ff",
+  "trace.ln2_duty": "#00a8ff",
+  "trace.freeze_margin": "#4ee28a",
+  "trace.tvac_cryo_exhaust": "#1f6fff",
+  "trace.tvac_scavenged_exhaust": "#00d6a3",
+  "trace.tvac_scavenger_water_return": "#ff8a00",
+  "trace.tvac_exhaust_cold_recovery": "#b079ff",
 };
 
 function colorForSignal(signal: Pick<TileSeries, "id" | "role" | "render_kind" | "kind"> | { id: string; role: string; kind?: string }, index = 0) {
@@ -115,6 +135,48 @@ function signalPriority(signal: { id: string; label?: string; role?: string; kin
   if (text.includes("bus") || text.includes("packet")) return 9;
   if (signal.kind === "state" || signal.render_kind === "swimlane") return 10;
   return 20;
+}
+
+function graphCardPriority(a: GraphWallCard, b: GraphWallCard) {
+  return graphCardRank(a) - graphCardRank(b);
+}
+
+function graphSectionPriority(a: GraphWallModel["sections"][number], b: GraphWallModel["sections"][number]) {
+  return graphSectionRank(a) - graphSectionRank(b);
+}
+
+function graphSectionRank(section: GraphWallModel["sections"][number]) {
+  return Math.min(...section.cards.map(graphCardRank), 100);
+}
+
+function graphCardRank(card: GraphWallCard) {
+  const id = card.id.toLowerCase();
+  const title = card.title.toLowerCase();
+  if (id === "thermal_program") return 0;
+  if (id.includes("dut_temperature") || title.includes("dut temperature")) return 10;
+  if (id.includes("dut_power") || title.includes("dut power")) return 20;
+  if (id.includes("tmtc_health")) return 30;
+  if (id.includes("tmtc_counters")) return 40;
+  if (id.includes("state_change") || card.render_kind === "swimlane") return 50;
+  if (id.includes("functional_events") || card.render_kind === "event_rail") return 60;
+  if (id.includes("facility") || id.includes("building") || id.includes("source_quality") || title.includes("testbed")) return 80;
+  return 70;
+}
+
+function blockLabel(label: string, value: number) {
+  const normalized = String(label ?? "").trim();
+  if (normalized && normalized !== "0" && normalized !== "1") return normalized;
+  return value > 0 ? "ACTIVE" : "idle";
+}
+
+function eventColor(kind?: string) {
+  const lower = (kind ?? "").toLowerCase();
+  if (lower.includes("functional") || lower.includes("gate")) return "#ffb000";
+  if (lower.includes("evidence")) return "#b079ff";
+  if (lower.includes("interlock") || lower.includes("fault")) return "#ff315f";
+  if (lower.includes("stability") || lower.includes("dwell")) return "#00d6a3";
+  if (lower.includes("pressure")) return "#1f6fff";
+  return "#31d6ff";
 }
 
 export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }: Props) {
@@ -195,14 +257,14 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
         onTimeRange={setViewRange}
       />
       <div className="operator-wall-scrollframe">
-        {wall.sections.map((section) => (
+        {[...wall.sections].sort(graphSectionPriority).map((section) => (
           <section className="operator-wall-section" key={section.id} data-section-id={section.id}>
             {!(section.id === firstSectionID && primaryCardID) && <div className="operator-wall-section-title">
               <strong>{section.title}</strong>
               <span>{section.transport} / {section.direction}</span>
             </div>}
             <div className="operator-wall-cards">
-              {section.cards.map((card) => {
+              {[...section.cards].sort(graphCardPriority).map((card) => {
                 const isPrimary = card.id === primaryCardID;
                 const cardRef = manifestCards.get(card.id);
                 const isCollapsed = collapsed[card.id] ?? false;
@@ -397,7 +459,7 @@ function GraphWallCardView({
   const visibleSignals = orderLegendSignals(cardRef?.signals ?? card.signals).slice(0, renderKind === "swimlane" ? 10 : 7);
   const readouts = tile ? legendReadouts(tile, visibleSignals, readoutTimeMs, currentTimeMs) : new Map<string, string>();
   const cardRefEl = useRef<HTMLElement | null>(null);
-  const minHeight = renderKind === "swimlane" || renderKind === "event_rail" ? 120 : 190;
+  const minHeight = renderKind === "swimlane" ? 190 : renderKind === "event_rail" ? 170 : 190;
   const maxHeight = card.id === "thermal_program" ? 760 : 560;
   const style = height ? ({ "--plot-height": `${height}px` } as CSSProperties) : undefined;
   const startResize = (event: ReactPointerEvent<HTMLButtonElement>) => {
@@ -538,6 +600,7 @@ function UPlotTile({
 }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const onHoverTimeRef = useRef(onHoverTime);
+  const onPeekTimeRef = useRef(onPeekTime);
   const hoverTimeRef = useRef(hoverTimeMs);
   const pointerInsideRef = useRef(false);
   const draggingRef = useRef(false);
@@ -546,6 +609,10 @@ function UPlotTile({
   useEffect(() => {
     onHoverTimeRef.current = onHoverTime;
   }, [onHoverTime]);
+
+  useEffect(() => {
+    onPeekTimeRef.current = onPeekTime;
+  }, [onPeekTime]);
 
   useEffect(() => {
     hoverTimeRef.current = hoverTimeMs;
@@ -594,7 +661,7 @@ function UPlotTile({
           ],
           setCursor: [
             (plot) => {
-              if (!pointerInsideRef.current) return;
+              if (!pointerInsideRef.current || draggingRef.current) return;
               const left = plot.cursor.left;
               if (left == null) return;
               const next = clampTime(plot.posToVal(left, "x"), data[0] as number[]);
@@ -609,44 +676,48 @@ function UPlotTile({
         }
       } as uPlot.Options & { sync: { key: string } };
       u = new uPlot(opts as uPlot.Options, data, host);
-      const markHover = (event: MouseEvent) => {
+      const movePointer = (event: PointerEvent) => {
         pointerInsideRef.current = true;
         const next = timeFromPointer(event);
         if (draggingRef.current) {
-          if (Number.isFinite(next)) onPeekTime(Math.round(next));
+          event.preventDefault();
+          if (Number.isFinite(next)) onPeekTimeRef.current(Math.round(next));
           return;
         }
         if (Number.isFinite(next)) onHoverTimeRef.current(Math.round(next));
       };
       const startDrag = (event: PointerEvent) => {
+        event.preventDefault();
         pointerInsideRef.current = true;
         draggingRef.current = true;
         host.setPointerCapture?.(event.pointerId);
         const next = timeFromPointer(event);
-        if (Number.isFinite(next)) onPeekTime(Math.round(next));
+        if (Number.isFinite(next)) onPeekTimeRef.current(Math.round(next));
       };
       const stopDrag = (event: PointerEvent) => {
         draggingRef.current = false;
         host.releasePointerCapture?.(event.pointerId);
         pointerInsideRef.current = false;
-        onPeekTime(undefined);
+        onPeekTimeRef.current(undefined);
         onHoverTimeRef.current(undefined);
       };
       const clearHover = () => {
         pointerInsideRef.current = false;
         draggingRef.current = false;
-        onPeekTime(undefined);
+        onPeekTimeRef.current(undefined);
         onHoverTimeRef.current(undefined);
       };
-      host.addEventListener("mousemove", markHover);
+      host.addEventListener("pointermove", movePointer);
       host.addEventListener("pointerdown", startDrag);
       host.addEventListener("pointerup", stopDrag);
+      host.addEventListener("pointercancel", stopDrag);
       host.addEventListener("mouseleave", clearHover);
       const originalDestroy = u.destroy.bind(u);
       u.destroy = () => {
-        host.removeEventListener("mousemove", markHover);
+        host.removeEventListener("pointermove", movePointer);
         host.removeEventListener("pointerdown", startDrag);
         host.removeEventListener("pointerup", stopDrag);
+        host.removeEventListener("pointercancel", stopDrag);
         host.removeEventListener("mouseleave", clearHover);
         originalDestroy();
       };
@@ -675,20 +746,24 @@ function SwimlaneTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTime
   const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), TIME_GRID_TICK_COUNT);
   return (
     <div className="tile-swimlane" data-swimlane-card={tile.card_id}>
-      {ticks.map((tick) => <i className="tile-shared-gridline" key={tick.iso} style={{ left: `${tick.ratio * 100}%` }} />)}
-      {tile.series.map((series) => (
-        <div className="tile-swimlane-row" key={series.id}>
-          <span>{series.label}</span>
-          <div>
-            {stateBlocks(series, start, span).map((block) => (
-              <i key={block.key} style={{ left: `${block.left}%`, width: `${block.width}%`, background: block.value > 0 ? colorForSignal(series) : "rgba(64,82,99,0.35)" }} />
-            ))}
-            {Number.isFinite(now) && <b style={{ left: `${Math.max(0, Math.min(100, ((now - start) / span) * 100))}%` }} />}
-            {Number.isFinite(hoverTimeMs) && <em style={{ left: `${Math.max(0, Math.min(100, (((hoverTimeMs as number) - start) / span) * 100))}%` }} />}
-            {Number.isFinite(readoutTimeMs) && readoutTimeMs !== hoverTimeMs && <em className="peek" style={{ left: `${Math.max(0, Math.min(100, (((readoutTimeMs as number) - start) / span) * 100))}%` }} />}
+      <div className="tile-time-plane">
+        {ticks.map((tick) => <i className="tile-shared-gridline" key={tick.iso} style={{ left: `${tick.ratio * 100}%` }} />)}
+        {tile.series.map((series) => (
+          <div className="tile-swimlane-row" key={series.id}>
+            <span>{series.label}</span>
+            <div>
+              {stateBlocks(series, start, span).map((block) => (
+                <i key={block.key} style={{ left: `${block.left}%`, width: `${block.width}%`, background: block.value > 0 ? colorForSignal(series) : "rgba(64,82,99,0.35)" }}>
+                  {block.width > 7 && <small>{blockLabel(block.label, block.value)}</small>}
+                </i>
+              ))}
+              {Number.isFinite(now) && <b style={{ left: `${Math.max(0, Math.min(100, ((now - start) / span) * 100))}%` }} />}
+              {Number.isFinite(hoverTimeMs) && <em style={{ left: `${Math.max(0, Math.min(100, (((hoverTimeMs as number) - start) / span) * 100))}%` }} />}
+              {Number.isFinite(readoutTimeMs) && readoutTimeMs !== hoverTimeMs && <em className="peek" style={{ left: `${Math.max(0, Math.min(100, (((readoutTimeMs as number) - start) / span) * 100))}%` }} />}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
@@ -701,26 +776,42 @@ function EventRailTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTim
   const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), TIME_GRID_TICK_COUNT);
   return (
     <div className="tile-event-rail" data-event-card={tile.card_id}>
-      {ticks.map((tick) => <span className="tile-shared-gridline" key={tick.iso} style={{ left: `${tick.ratio * 100}%` }} />)}
-      {(tile.markers ?? []).filter((marker) => inTimeRange(marker.timestamp, timeRange)).map((marker) => (
-        <i
-          className={`event-marker event-${marker.result ?? marker.kind}`}
-          key={marker.id}
-          style={{ left: `${Math.max(0, Math.min(100, ((Date.parse(marker.timestamp) - start) / span) * 100))}%`, background: markerColor(marker) }}
-          title={`${marker.label} ${marker.timestamp}`}
-        />
-      ))}
-      {(tile.events ?? []).filter((event) => inTimeRange(event.timestamp, timeRange)).map((event) => (
-        <b
-          className={`event-chip event-${event.kind}`}
-          key={event.id}
-          style={{ left: `${Math.max(0, Math.min(100, ((Date.parse(event.timestamp) - start) / span) * 100))}%` }}
-          title={`${event.label} ${event.timestamp}`}
-        />
-      ))}
-      {Number.isFinite(now) && <em style={{ left: `${Math.max(0, Math.min(100, ((now - start) / span) * 100))}%` }} />}
-      {Number.isFinite(hoverTimeMs) && <em className="hover" style={{ left: `${Math.max(0, Math.min(100, (((hoverTimeMs as number) - start) / span) * 100))}%` }} />}
-      {Number.isFinite(readoutTimeMs) && readoutTimeMs !== hoverTimeMs && <em className="peek" style={{ left: `${Math.max(0, Math.min(100, (((readoutTimeMs as number) - start) / span) * 100))}%` }} />}
+      <div className="tile-time-plane">
+        {ticks.map((tick) => <span className="tile-shared-gridline" key={tick.iso} style={{ left: `${tick.ratio * 100}%` }} />)}
+        {(tile.markers ?? []).filter((marker) => inTimeRange(marker.timestamp, timeRange)).map((marker, index) => {
+          const left = Math.max(0, Math.min(100, ((Date.parse(marker.timestamp) - start) / span) * 100));
+          const color = markerColor(marker);
+          return (
+            <span
+              className={`event-marker-wrap event-marker-${marker.kind ?? marker.role ?? "marker"}`}
+              key={marker.id}
+              style={{ left: `${left}%`, top: `${12 + (index % 5) * 21}px`, color }}
+              title={`${marker.label} ${marker.timestamp}`}
+            >
+              <i className={`event-marker event-${marker.result ?? marker.kind}`} style={{ background: color }} />
+              <strong>{shortGateLabel(marker.label)}</strong>
+            </span>
+          );
+        })}
+        {(tile.events ?? []).filter((event) => inTimeRange(event.timestamp, timeRange)).map((event, index) => {
+          const left = Math.max(0, Math.min(100, ((Date.parse(event.timestamp) - start) / span) * 100));
+          const color = eventColor(event.kind);
+          return (
+            <span
+              className={`event-chip-wrap event-chip-${event.kind}`}
+              key={event.id}
+              style={{ left: `${left}%`, top: `${118 + (index % 3) * 19}px`, color }}
+              title={`${event.label} ${event.timestamp}`}
+            >
+              <b className={`event-chip event-${event.kind}`} style={{ background: color }} />
+              <strong>{shortGateLabel(event.label)}</strong>
+            </span>
+          );
+        })}
+        {Number.isFinite(now) && <em style={{ left: `${Math.max(0, Math.min(100, ((now - start) / span) * 100))}%` }} />}
+        {Number.isFinite(hoverTimeMs) && <em className="hover" style={{ left: `${Math.max(0, Math.min(100, (((hoverTimeMs as number) - start) / span) * 100))}%` }} />}
+        {Number.isFinite(readoutTimeMs) && readoutTimeMs !== hoverTimeMs && <em className="peek" style={{ left: `${Math.max(0, Math.min(100, (((readoutTimeMs as number) - start) / span) * 100))}%` }} />}
+      </div>
     </div>
   );
 }
@@ -1145,14 +1236,19 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
       ctx.fill();
       const label = shortGateLabel(marker.label);
       ctx.save();
-      ctx.font = "9px system-ui, sans-serif";
+      ctx.font = "700 12px system-ui, sans-serif";
       const metrics = ctx.measureText(label);
-      const labelWidth = Math.max(28, metrics.width);
-      const labelX = Math.max(left + 6, Math.min(left + width - labelWidth - 6, x + 5));
-      const labelY = Math.max(top + 14, Math.min(top + height - 12, anchorY - 12));
+      const labelWidth = Math.max(34, metrics.width + 8);
+      const labelX = Math.max(left + 8, Math.min(left + width - labelWidth - 8, x + 7));
+      const labelY = Math.max(top + 18, Math.min(top + height - 14, anchorY - 12));
       ctx.translate(labelX, labelY);
       const nearRightEdge = x > left + width - 72;
       ctx.rotate(nearRightEdge ? -Math.PI / 9 : -Math.PI / 5.2);
+      ctx.fillStyle = "rgba(3,7,12,0.74)";
+      ctx.fillRect(-4, -13, labelWidth, 16);
+      ctx.fillStyle = "#fff6c2";
+      ctx.shadowColor = "rgba(0,0,0,0.88)";
+      ctx.shadowBlur = 4;
       ctx.fillText(label, 0, 0);
       ctx.restore();
     } else {
