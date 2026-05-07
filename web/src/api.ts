@@ -20,7 +20,16 @@ async function getJSON<T>(path: string): Promise<T> {
   if (!response.ok) {
     throw new Error(`${path} returned ${response.status}`);
   }
-  return response.json() as Promise<T>;
+  const text = await response.text();
+  const trimmed = text.trimStart();
+  if (trimmed.startsWith("<!doctype") || trimmed.startsWith("<html") || trimmed.startsWith("<")) {
+    throw new Error(`${path} returned HTML instead of JSON`);
+  }
+  try {
+    return JSON.parse(text) as T;
+  } catch (err) {
+    throw new Error(`${path} returned invalid JSON: ${err instanceof Error ? err.message : String(err)}`);
+  }
 }
 
 async function getJSONWithFallback<T>(primary: string, fallback: string): Promise<T> {
@@ -36,7 +45,8 @@ function isMissingStaticData(err: unknown) {
   return err instanceof Error && (
     err.message.includes(" returned 404") ||
     err.message.includes(" returned 405") ||
-    err.message.includes(" returned 500")
+    err.message.includes(" returned 500") ||
+    err.message.includes(" returned HTML instead of JSON")
   );
 }
 
