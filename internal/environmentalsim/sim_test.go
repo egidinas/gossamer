@@ -90,6 +90,41 @@ func TestAdvanceComponentIsStableAcrossSubsteps(t *testing.T) {
 	}
 }
 
+func TestSecondOrderStepIsConsistentAcrossCallerCadence(t *testing.T) {
+	oneStepT, oneStepVel := secondOrderStep(22, 0, -40, 18, 5*time.Minute)
+
+	substepT, substepVel := 22.0, 0.0
+	for i := 0; i < 5; i++ {
+		substepT, substepVel = secondOrderStep(substepT, substepVel, -40, 18, time.Minute)
+	}
+
+	if math.Abs(oneStepT-substepT) > 1e-9 {
+		t.Fatalf("5-minute second-order temp = %.12f C, five 1-minute steps = %.12f C", oneStepT, substepT)
+	}
+	if math.Abs(oneStepVel-substepVel) > 1e-12 {
+		t.Fatalf("5-minute second-order velocity = %.12f C/s, five 1-minute steps = %.12f C/s", oneStepVel, substepVel)
+	}
+}
+
+func TestSecondOrderStepOvershootsWithoutDiverging(t *testing.T) {
+	temp, vel := 22.0, 0.0
+	peak := temp
+	for i := 0; i < 24; i++ {
+		temp, vel = secondOrderStep(temp, vel, 70, 11, 5*time.Minute)
+		peak = math.Max(peak, temp)
+	}
+
+	if peak <= 70 {
+		t.Fatalf("second-order response peak = %.4f C, want visible overshoot above command", peak)
+	}
+	if math.Abs(temp-70) > 1.0 {
+		t.Fatalf("second-order response after 2h = %.4f C, want settled near command", temp)
+	}
+	if math.IsNaN(vel) || math.IsInf(vel, 0) {
+		t.Fatalf("second-order velocity diverged: %.12f", vel)
+	}
+}
+
 func TestAdvanceComponentPairExchangesRadiationBetweenNodes(t *testing.T) {
 	fastParams := componentParams{
 		capacitanceJPerK:             3200,

@@ -66,7 +66,7 @@ func Evaluate(input EvaluationInput) []contracts.Requirement {
 		}
 		req.Result = result
 		req.Evidence = []string{
-			fmt.Sprintf("fixtures/public/telemetry/%s.jsonl", input.Campaign.ID),
+			fmt.Sprintf("fixtures/public/telemetry/%s.arrow", input.Campaign.ID),
 			fmt.Sprintf("fixtures/public/graph_models/%s.json", input.Campaign.ID),
 		}
 		req.Rationale = rationale(req.ID, result, input.Campaign)

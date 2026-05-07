@@ -29,6 +29,9 @@ func main() {
 		log.Fatal(err)
 	}
 	versionedOut := filepath.Join(*root, *out, *dataVersion)
+	if err := os.RemoveAll(versionedOut); err != nil {
+		log.Fatal(err)
+	}
 	manifest, err := tilebundle.WriteBundle(models, tilebundle.Options{
 		DataVersion:  *dataVersion,
 		OutputDir:    versionedOut,
@@ -37,6 +40,9 @@ func main() {
 		Now:          time.Now().UTC(),
 	})
 	if err != nil {
+		log.Fatal(err)
+	}
+	if err := copyTelemetry(*root, versionedOut, manifest.Campaigns); err != nil {
 		log.Fatal(err)
 	}
 	if *current {
@@ -76,6 +82,28 @@ func loadModels(root, csv string) ([]contracts.GraphModel, error) {
 		return nil, fmt.Errorf("no campaigns selected")
 	}
 	return models, nil
+}
+
+func copyTelemetry(root string, out string, campaigns []contracts.TileCampaignManifest) error {
+	for _, campaign := range campaigns {
+		src := filepath.Join(root, "fixtures", "public", "telemetry", campaign.CampaignID+".arrow")
+		dst := filepath.Join(out, "campaigns", campaign.CampaignID, "telemetry.arrow")
+		if err := copyFile(src+".gz", dst+".gz"); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func copyFile(src, dst string) error {
+	data, err := os.ReadFile(src)
+	if err != nil {
+		return fmt.Errorf("%s: %w", src, err)
+	}
+	if err := os.MkdirAll(filepath.Dir(dst), 0o755); err != nil {
+		return err
+	}
+	return os.WriteFile(dst, data, 0o644)
 }
 
 func replaceDir(dst, src string) error {

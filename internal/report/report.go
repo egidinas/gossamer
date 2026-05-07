@@ -43,7 +43,7 @@ func Build(campaignID string) (contracts.EvidenceReport, error) {
 		Result:               result,
 		Requirements:         reqs,
 		Sources:              set.SourceCatalogue.Sources,
-		GraphEvidence:        []string{fmt.Sprintf("fixtures/public/graph_models/%s.json", campaignID), fmt.Sprintf("fixtures/public/telemetry/%s.jsonl", campaignID)},
+		GraphEvidence:        []string{fmt.Sprintf("fixtures/public/graph_models/%s.json", campaignID), fmt.Sprintf("fixtures/public/telemetry/%s.arrow", campaignID)},
 		Anomalies:            anomalies,
 		ThermalProgram:       campaign.ThermalProgram,
 		SimulationProvenance: simulationProvenance,

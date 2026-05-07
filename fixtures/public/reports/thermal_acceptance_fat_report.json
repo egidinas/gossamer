@@ -11,7 +11,7 @@
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
-        "fixtures/public/telemetry/thermal_acceptance_fat.jsonl",
+        "fixtures/public/telemetry/thermal_acceptance_fat.arrow",
         "fixtures/public/graph_models/thermal_acceptance_fat.json"
       ],
       "rationale": "Observed 4 backend-defined thermal cycles for Thermal Chamber FAT - 4 cycle acceptance profile."
@@ -22,7 +22,7 @@
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
-        "fixtures/public/telemetry/thermal_acceptance_fat.jsonl",
+        "fixtures/public/telemetry/thermal_acceptance_fat.arrow",
         "fixtures/public/graph_models/thermal_acceptance_fat.json"
       ],
       "rationale": "Chamber command, chamber air, article-zone traces, and acceptance bands show hot target achievement near 65.0 degC."
@@ -33,7 +33,7 @@
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
-        "fixtures/public/telemetry/thermal_acceptance_fat.jsonl",
+        "fixtures/public/telemetry/thermal_acceptance_fat.arrow",
         "fixtures/public/graph_models/thermal_acceptance_fat.json"
       ],
       "rationale": "Cold ramp, cooling actuator duty, chamber air, and article-zone traces show cold target achievement near -35.0 degC."
@@ -44,7 +44,7 @@
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
-        "fixtures/public/telemetry/thermal_acceptance_fat.jsonl",
+        "fixtures/public/telemetry/thermal_acceptance_fat.arrow",
         "fixtures/public/graph_models/thermal_acceptance_fat.json"
       ],
       "rationale": "The first cycle includes hot survival exposure before the hot operational functional gate."
@@ -55,7 +55,7 @@
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
-        "fixtures/public/telemetry/thermal_acceptance_fat.jsonl",
+        "fixtures/public/telemetry/thermal_acceptance_fat.arrow",
         "fixtures/public/graph_models/thermal_acceptance_fat.json"
       ],
       "rationale": "The first cycle includes cold survival exposure before the cold operational functional gate."
@@ -66,7 +66,7 @@
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
-        "fixtures/public/telemetry/thermal_acceptance_fat.jsonl",
+        "fixtures/public/telemetry/thermal_acceptance_fat.arrow",
         "fixtures/public/graph_models/thermal_acceptance_fat.json"
       ],
       "rationale": "Dwell-window evidence uses source freshness, article-zone convergence, and stability markers from the physics-backed thermal model."
@@ -77,7 +77,7 @@
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
-        "fixtures/public/telemetry/thermal_acceptance_fat.jsonl",
+        "fixtures/public/telemetry/thermal_acceptance_fat.arrow",
         "fixtures/public/graph_models/thermal_acceptance_fat.json"
       ],
       "rationale": "Hot and cold dwell windows are declared for all 4 cycles and referenced by telemetry evidence."
@@ -88,7 +88,7 @@
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
-        "fixtures/public/telemetry/thermal_acceptance_fat.jsonl",
+        "fixtures/public/telemetry/thermal_acceptance_fat.arrow",
         "fixtures/public/graph_models/thermal_acceptance_fat.json"
       ],
       "rationale": "Functional gate markers are present in telemetry and linked to load, TM/TC bus latency, packet counter, and thermal self-heating evidence."
@@ -99,7 +99,7 @@
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
-        "fixtures/public/telemetry/thermal_acceptance_fat.jsonl",
+        "fixtures/public/telemetry/thermal_acceptance_fat.arrow",
         "fixtures/public/graph_models/thermal_acceptance_fat.json"
       ],
       "rationale": "Functional gate markers are present in telemetry and linked to load, TM/TC bus latency, packet counter, and thermal self-heating evidence."
@@ -110,7 +110,7 @@
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
-        "fixtures/public/telemetry/thermal_acceptance_fat.jsonl",
+        "fixtures/public/telemetry/thermal_acceptance_fat.arrow",
         "fixtures/public/graph_models/thermal_acceptance_fat.json"
       ],
       "rationale": "Functional gate markers are present in telemetry and linked to load, TM/TC bus latency, packet counter, and thermal self-heating evidence."
@@ -121,7 +121,7 @@
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
-        "fixtures/public/telemetry/thermal_acceptance_fat.jsonl",
+        "fixtures/public/telemetry/thermal_acceptance_fat.arrow",
         "fixtures/public/graph_models/thermal_acceptance_fat.json"
       ],
       "rationale": "Functional gate markers are present in telemetry and linked to load, TM/TC bus latency, packet counter, and thermal self-heating evidence."
@@ -132,7 +132,7 @@
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
-        "fixtures/public/telemetry/thermal_acceptance_fat.jsonl",
+        "fixtures/public/telemetry/thermal_acceptance_fat.arrow",
         "fixtures/public/graph_models/thermal_acceptance_fat.json"
       ],
       "rationale": "Sensor freshness, dropout/source-quality flags, and graph evidence markers are evaluated from the generated physical telemetry."
@@ -143,7 +143,7 @@
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
-        "fixtures/public/telemetry/thermal_acceptance_fat.jsonl",
+        "fixtures/public/telemetry/thermal_acceptance_fat.arrow",
         "fixtures/public/graph_models/thermal_acceptance_fat.json"
       ],
       "rationale": "Interlock and anomaly disposition references are tied to exact cycle/phase timestamps in the thermal program."
@@ -308,7 +308,7 @@
   ],
   "graph_evidence": [
     "fixtures/public/graph_models/thermal_acceptance_fat.json",
-    "fixtures/public/telemetry/thermal_acceptance_fat.jsonl"
+    "fixtures/public/telemetry/thermal_acceptance_fat.arrow"
   ],
   "anomalies": [],
   "thermal_program": {
@@ -534,7 +534,7 @@
         "target_deg_c": 75,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-01-hot_survival-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-01-hot_survival-stable"
       },
       {
         "id": "C01-HOT-OPERATIONAL-WINDOW",
@@ -546,7 +546,7 @@
         "target_deg_c": 65,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-01-hot_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-01-hot_operational-stable"
       },
       {
         "id": "C01-COLD-SURVIVAL-WINDOW",
@@ -558,7 +558,7 @@
         "target_deg_c": -45,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-01-cold_survival-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-01-cold_survival-stable"
       },
       {
         "id": "C01-COLD-OPERATIONAL-WINDOW",
@@ -570,7 +570,7 @@
         "target_deg_c": -35,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-01-cold_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-01-cold_operational-stable"
       },
       {
         "id": "C02-HOT-OPERATIONAL-WINDOW",
@@ -582,7 +582,7 @@
         "target_deg_c": 65,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-02-hot_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-02-hot_operational-stable"
       },
       {
         "id": "C02-COLD-OPERATIONAL-WINDOW",
@@ -594,7 +594,7 @@
         "target_deg_c": -35,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-02-cold_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-02-cold_operational-stable"
       },
       {
         "id": "C03-HOT-OPERATIONAL-WINDOW",
@@ -606,7 +606,7 @@
         "target_deg_c": 65,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-03-hot_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-03-hot_operational-stable"
       },
       {
         "id": "C03-COLD-OPERATIONAL-WINDOW",
@@ -618,7 +618,7 @@
         "target_deg_c": -35,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-03-cold_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-03-cold_operational-stable"
       },
       {
         "id": "C04-HOT-OPERATIONAL-WINDOW",
@@ -630,7 +630,7 @@
         "target_deg_c": 65,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-04-hot_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-04-hot_operational-stable"
       },
       {
         "id": "C04-COLD-OPERATIONAL-WINDOW",
@@ -642,7 +642,7 @@
         "target_deg_c": -35,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-04-cold_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-04-cold_operational-stable"
       }
     ],
     "functional_gates": [
@@ -654,7 +654,7 @@
         "phase_id": "ambient_precheck",
         "timestamp": "2026-01-15T21:30:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-pre"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-pre"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-POST",
@@ -664,7 +664,7 @@
         "phase_id": "ambient_postcheck",
         "timestamp": "2026-01-21T20:35:30Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-post"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-post"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C01-HOT",
@@ -674,7 +674,7 @@
         "phase_id": "C01-HOT-OPERATIONAL",
         "timestamp": "2026-01-16T18:20:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-hot"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C01-COLD",
@@ -684,7 +684,7 @@
         "phase_id": "C01-COLD-OPERATIONAL",
         "timestamp": "2026-01-17T18:18:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-cold"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C02-HOT",
@@ -694,7 +694,7 @@
         "phase_id": "C02-HOT-OPERATIONAL",
         "timestamp": "2026-01-18T08:38:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-hot"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C02-COLD",
@@ -704,7 +704,7 @@
         "phase_id": "C02-COLD-OPERATIONAL",
         "timestamp": "2026-01-18T22:54:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-cold"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C03-HOT",
@@ -714,7 +714,7 @@
         "phase_id": "C03-HOT-OPERATIONAL",
         "timestamp": "2026-01-19T12:38:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-hot"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C03-COLD",
@@ -724,7 +724,7 @@
         "phase_id": "C03-COLD-OPERATIONAL",
         "timestamp": "2026-01-20T02:52:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-cold"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C04-HOT",
@@ -734,7 +734,7 @@
         "phase_id": "C04-HOT-OPERATIONAL",
         "timestamp": "2026-01-20T17:06:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-hot"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C04-COLD",
@@ -744,7 +744,7 @@
         "phase_id": "C04-COLD-OPERATIONAL",
         "timestamp": "2026-01-21T07:20:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-cold"
       }
     ],
     "interlock_windows": [
@@ -755,7 +755,7 @@
         "end": "2026-01-21T21:05:30Z",
         "state": "closed",
         "severity": "info",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#interlocks"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#interlocks"
       }
     ],
     "evidence_markers": [

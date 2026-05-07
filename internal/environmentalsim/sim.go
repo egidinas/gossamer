@@ -833,10 +833,6 @@ func firstOrderDelta(current, target, tauMin float64, dt time.Duration) float64 
 // secondOrderStep advances a damped harmonic oscillator (current, vel) chasing
 // command, where tauMin is the first-order time constant whose settling time
 // the oscillator's settling time should approximate. Returns the new (T, v).
-//
-// Substeps internally so the explicit integrator stays stable at the
-// caller's dt: semi-implicit Euler diverges when omega*dt is order unity,
-// and the simulator drives this with dt up to several minutes.
 func secondOrderStep(current, vel, command, tauMin float64, dt time.Duration) (float64, float64) {
 	if tauMin <= 0 {
 		return command, 0
@@ -844,6 +840,26 @@ func secondOrderStep(current, vel, command, tauMin float64, dt time.Duration) (f
 	tauSec := tauMin * 60.0
 	omega := secondOrderTauScale / tauSec // rad/s
 	dtSec := dt.Seconds()
+	if dtSec <= 0 {
+		return current, vel
+	}
+
+	zeta := secondOrderDampingZeta
+	if zeta <= 0 || zeta >= 1 {
+		return secondOrderStepSubstepped(current, vel, command, omega, dtSec)
+	}
+	displacement := current - command
+	dampedOmega := omega * math.Sqrt(1-zeta*zeta)
+	exponential := math.Exp(-zeta * omega * dtSec)
+	cosTerm := math.Cos(dampedOmega * dtSec)
+	sinTerm := math.Sin(dampedOmega * dtSec)
+	displacementMix := (vel + zeta*omega*displacement) / dampedOmega
+	newDisplacement := exponential * (displacement*cosTerm + displacementMix*sinTerm)
+	newVel := exponential * (vel*cosTerm - (omega*omega*displacement+zeta*omega*vel)/dampedOmega*sinTerm)
+	return command + newDisplacement, newVel
+}
+
+func secondOrderStepSubstepped(current, vel, command, omega, dtSec float64) (float64, float64) {
 	steps := int(math.Ceil(omega*dtSec/0.2)) + 1
 	subDt := dtSec / float64(steps)
 	for i := 0; i < steps; i++ {
@@ -1579,7 +1595,7 @@ func progressPercent(completed, target int) float64 {
 	if target <= 0 {
 		return 100
 	}
-	return round((float64(completed) / float64(target)) * 100)
+	return displayRound((float64(completed) / float64(target)) * 100)
 }
 
 func progressState(completed, target int) string {
@@ -1593,7 +1609,7 @@ func progressState(completed, target int) string {
 }
 
 func point(ts string, value float64) contracts.GraphPoint {
-	return contracts.GraphPoint{Timestamp: ts, Value: round(value)}
+	return contracts.GraphPoint{Timestamp: ts, Value: displayRound(value)}
 }
 
 func mustTime(s string) time.Time {
@@ -1619,6 +1635,10 @@ func clamp(v, min, max float64) float64 {
 }
 
 func round(value float64) float64 {
+	return value
+}
+
+func displayRound(value float64) float64 {
 	abs := math.Abs(value)
 	switch {
 	case abs == 0:

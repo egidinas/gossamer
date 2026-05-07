@@ -362,7 +362,7 @@
         "target_deg_c": 75,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-01-hot_survival-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-01-hot_survival-stable"
       },
       {
         "id": "C01-HOT-OPERATIONAL-WINDOW",
@@ -374,7 +374,7 @@
         "target_deg_c": 65,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-01-hot_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-01-hot_operational-stable"
       },
       {
         "id": "C01-COLD-SURVIVAL-WINDOW",
@@ -386,7 +386,7 @@
         "target_deg_c": -45,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-01-cold_survival-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-01-cold_survival-stable"
       },
       {
         "id": "C01-COLD-OPERATIONAL-WINDOW",
@@ -398,7 +398,7 @@
         "target_deg_c": -35,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-01-cold_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-01-cold_operational-stable"
       },
       {
         "id": "C02-HOT-OPERATIONAL-WINDOW",
@@ -410,7 +410,7 @@
         "target_deg_c": 65,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-02-hot_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-02-hot_operational-stable"
       },
       {
         "id": "C02-COLD-OPERATIONAL-WINDOW",
@@ -422,7 +422,7 @@
         "target_deg_c": -35,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-02-cold_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-02-cold_operational-stable"
       },
       {
         "id": "C03-HOT-OPERATIONAL-WINDOW",
@@ -434,7 +434,7 @@
         "target_deg_c": 65,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-03-hot_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-03-hot_operational-stable"
       },
       {
         "id": "C03-COLD-OPERATIONAL-WINDOW",
@@ -446,7 +446,7 @@
         "target_deg_c": -35,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-03-cold_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-03-cold_operational-stable"
       },
       {
         "id": "C04-HOT-OPERATIONAL-WINDOW",
@@ -458,7 +458,7 @@
         "target_deg_c": 65,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-04-hot_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-04-hot_operational-stable"
       },
       {
         "id": "C04-COLD-OPERATIONAL-WINDOW",
@@ -470,7 +470,7 @@
         "target_deg_c": -35,
         "stability_band_c": 2,
         "minimum_minutes": 180,
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-04-cold_operational-stable"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-04-cold_operational-stable"
       }
     ],
     "functional_gates": [
@@ -482,7 +482,7 @@
         "phase_id": "ambient_precheck",
         "timestamp": "2026-01-15T21:30:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-pre"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-pre"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-POST",
@@ -492,7 +492,7 @@
         "phase_id": "ambient_postcheck",
         "timestamp": "2026-01-21T20:35:30Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-post"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-post"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C01-HOT",
@@ -502,7 +502,7 @@
         "phase_id": "C01-HOT-OPERATIONAL",
         "timestamp": "2026-01-16T18:20:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-hot"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C01-COLD",
@@ -512,7 +512,7 @@
         "phase_id": "C01-COLD-OPERATIONAL",
         "timestamp": "2026-01-17T18:18:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-cold"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C02-HOT",
@@ -522,7 +522,7 @@
         "phase_id": "C02-HOT-OPERATIONAL",
         "timestamp": "2026-01-18T08:38:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-hot"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C02-COLD",
@@ -532,7 +532,7 @@
         "phase_id": "C02-COLD-OPERATIONAL",
         "timestamp": "2026-01-18T22:54:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-cold"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C03-HOT",
@@ -542,7 +542,7 @@
         "phase_id": "C03-HOT-OPERATIONAL",
         "timestamp": "2026-01-19T12:38:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-hot"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C03-COLD",
@@ -552,7 +552,7 @@
         "phase_id": "C03-COLD-OPERATIONAL",
         "timestamp": "2026-01-20T02:52:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-cold"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C04-HOT",
@@ -562,7 +562,7 @@
         "phase_id": "C04-HOT-OPERATIONAL",
         "timestamp": "2026-01-20T17:06:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-hot"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C04-COLD",
@@ -572,7 +572,7 @@
         "phase_id": "C04-COLD-OPERATIONAL",
         "timestamp": "2026-01-21T07:20:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-cold"
       }
     ],
     "interlock_windows": [
@@ -583,7 +583,7 @@
         "end": "2026-01-21T21:05:30Z",
         "state": "closed",
         "severity": "info",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#interlocks"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#interlocks"
       }
     ],
     "evidence_markers": [
@@ -1419,7 +1419,7 @@
         "role": "event",
         "timestamp": "2026-01-15T21:30:00Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-pre"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-pre"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-POST",
@@ -1428,7 +1428,7 @@
         "role": "event",
         "timestamp": "2026-01-21T20:35:30Z",
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-post"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-post"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C01-HOT",
@@ -1438,7 +1438,7 @@
         "timestamp": "2026-01-16T18:20:00Z",
         "cycle_index": 1,
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-hot"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C01-COLD",
@@ -1448,7 +1448,7 @@
         "timestamp": "2026-01-17T18:18:00Z",
         "cycle_index": 1,
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-cold"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C02-HOT",
@@ -1458,7 +1458,7 @@
         "timestamp": "2026-01-18T08:38:00Z",
         "cycle_index": 2,
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-hot"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C02-COLD",
@@ -1468,7 +1468,7 @@
         "timestamp": "2026-01-18T22:54:00Z",
         "cycle_index": 2,
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-cold"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C03-HOT",
@@ -1478,7 +1478,7 @@
         "timestamp": "2026-01-19T12:38:00Z",
         "cycle_index": 3,
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-hot"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C03-COLD",
@@ -1488,7 +1488,7 @@
         "timestamp": "2026-01-20T02:52:00Z",
         "cycle_index": 3,
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-cold"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C04-HOT",
@@ -1498,7 +1498,7 @@
         "timestamp": "2026-01-20T17:06:00Z",
         "cycle_index": 4,
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-hot"
       },
       {
         "id": "thermal_acceptance_fat-FUNC-C04-COLD",
@@ -1508,7 +1508,7 @@
         "timestamp": "2026-01-21T07:20:00Z",
         "cycle_index": 4,
         "result": "pass",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#functional-cold"
       },
       {
         "id": "thermal_acceptance_fat-INTERLOCK-NOMINAL",
@@ -1518,7 +1518,7 @@
         "timestamp": "2026-01-15T10:00:00Z",
         "result": "closed",
         "severity": "info",
-        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#interlocks"
+        "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#interlocks"
       },
       {
         "id": "thermal_acceptance_fat-STABLE-C01-hot_survival",
@@ -2352,7 +2352,7 @@
     "id": "thermal_acceptance_fat_graph_wall",
     "title": "Thermal Chamber FAT - 4 cycle acceptance profile operator graph wall",
     "generated_at": "2026-01-15T10:00:00Z",
-    "source_mode": "fixture_backend_owned",
+    "source_mode": "arrow_backend_owned",
     "graph_version": "gossamer.graph_wall.v1",
     "owner": "gossamer_backend_fixture_generator",
     "provenance": "gossamer internal/environmentalsim deterministic fixture",
@@ -2421,7 +2421,7 @@
         "id": "thermal_environment",
         "title": "Thermal Environment",
         "group_id": "thermal_acceptance_fat_operator_wall",
-        "transport": "fixture_json",
+        "transport": "arrow_ipc",
         "direction": "derived",
         "status": "fresh",
         "unplotted_count": 0,
@@ -2440,14 +2440,14 @@
               "pinned": true,
               "resize_policy": "fixed_plot_area"
             },
-            "transport": "fixture_json",
+            "transport": "arrow_ipc",
             "direction": "derived",
             "unit": "degC",
             "axis_policy": "temperature_c",
             "source_family": "facility_thermal",
             "render_kind": "line",
-            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=thermal_program",
-            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=thermal_program",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/telemetry",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/telemetry",
             "collapsible": true,
             "default_expanded": true,
             "supports_time_zoom": true,
@@ -2560,14 +2560,14 @@
               "pinned": false,
               "resize_policy": "fixed_plot_area"
             },
-            "transport": "fixture_json",
+            "transport": "arrow_ipc",
             "direction": "derived",
             "unit": "degC",
             "axis_policy": "temperature_c",
             "source_family": "dut_thermal",
             "render_kind": "line",
-            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=dut_temperature",
-            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=dut_temperature",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/telemetry",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/telemetry",
             "collapsible": true,
             "default_expanded": true,
             "supports_time_zoom": true,
@@ -2633,7 +2633,7 @@
         "id": "facility_response",
         "title": "Facility Response",
         "group_id": "thermal_acceptance_fat_operator_wall",
-        "transport": "fixture_json",
+        "transport": "arrow_ipc",
         "direction": "derived",
         "status": "fresh",
         "unplotted_count": 0,
@@ -2652,14 +2652,14 @@
               "pinned": false,
               "resize_policy": "fixed_plot_area"
             },
-            "transport": "fixture_json",
+            "transport": "arrow_ipc",
             "direction": "derived",
             "unit": "%",
             "axis_policy": "percent",
             "source_family": "facility_thermal",
             "render_kind": "line",
-            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=facility_actuation",
-            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=facility_actuation",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/telemetry",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/telemetry",
             "collapsible": true,
             "default_expanded": true,
             "supports_time_zoom": true,
@@ -2694,14 +2694,14 @@
               "pinned": false,
               "resize_policy": "fixed_plot_area"
             },
-            "transport": "fixture_json",
+            "transport": "arrow_ipc",
             "direction": "derived",
             "unit": "mixed",
             "axis_policy": "facility_infra",
             "source_family": "facility_infrastructure",
             "render_kind": "line",
-            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=building_infrastructure",
-            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=building_infrastructure",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/telemetry",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/telemetry",
             "collapsible": true,
             "default_expanded": true,
             "supports_time_zoom": true,
@@ -2754,7 +2754,7 @@
         "id": "dut_response",
         "title": "DUT Response",
         "group_id": "thermal_acceptance_fat_operator_wall",
-        "transport": "fixture_json",
+        "transport": "arrow_ipc",
         "direction": "derived",
         "status": "fresh",
         "unplotted_count": 0,
@@ -2773,14 +2773,14 @@
               "pinned": false,
               "resize_policy": "fixed_plot_area"
             },
-            "transport": "fixture_json",
+            "transport": "arrow_ipc",
             "direction": "derived",
             "unit": "W",
             "axis_policy": "power_w",
             "source_family": "dut_power",
             "render_kind": "line",
-            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=dut_power",
-            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=dut_power",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/telemetry",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/telemetry",
             "collapsible": true,
             "default_expanded": true,
             "supports_time_zoom": true,
@@ -2859,7 +2859,7 @@
         "id": "tmtc_response",
         "title": "Telecommand/Telemetry Response",
         "group_id": "thermal_acceptance_fat_operator_wall",
-        "transport": "fixture_json",
+        "transport": "arrow_ipc",
         "direction": "derived",
         "status": "fresh",
         "unplotted_count": 0,
@@ -2878,14 +2878,14 @@
               "pinned": false,
               "resize_policy": "fixed_plot_area"
             },
-            "transport": "fixture_json",
+            "transport": "arrow_ipc",
             "direction": "derived",
             "unit": "ms",
             "axis_policy": "bus_ms",
             "source_family": "demo_bus_virtualization",
             "render_kind": "line",
-            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=tmtc_health",
-            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=tmtc_health",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/telemetry",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/telemetry",
             "collapsible": true,
             "default_expanded": true,
             "supports_time_zoom": true,
@@ -2933,14 +2933,14 @@
               "pinned": false,
               "resize_policy": "fixed_plot_area"
             },
-            "transport": "fixture_json",
+            "transport": "arrow_ipc",
             "direction": "derived",
             "unit": "count",
             "axis_policy": "counter",
             "source_family": "demo_bus_virtualization",
             "render_kind": "counter",
-            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=tmtc_counters",
-            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=tmtc_counters",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/telemetry",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/telemetry",
             "collapsible": true,
             "default_expanded": true,
             "supports_time_zoom": true,
@@ -3014,14 +3014,14 @@
               "pinned": false,
               "resize_policy": "fixed_plot_area"
             },
-            "transport": "fixture_json",
+            "transport": "arrow_ipc",
             "direction": "derived",
             "unit": "ms",
             "axis_policy": "bus_ms",
             "source_family": "demo_quality",
             "render_kind": "line",
-            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=source_quality",
-            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=source_quality",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/telemetry",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/telemetry",
             "collapsible": true,
             "default_expanded": true,
             "supports_time_zoom": true,
@@ -3048,7 +3048,7 @@
         "id": "testbed_dynamics",
         "title": "Testbed Dynamics",
         "group_id": "thermal_acceptance_fat_operator_wall",
-        "transport": "fixture_json",
+        "transport": "arrow_ipc",
         "direction": "derived",
         "status": "fresh",
         "unplotted_count": 0,
@@ -3067,14 +3067,14 @@
               "pinned": false,
               "resize_policy": "fixed_plot_area"
             },
-            "transport": "fixture_json",
+            "transport": "arrow_ipc",
             "direction": "derived",
             "unit": "state",
             "axis_policy": "state_lane",
             "source_family": "thermal_program",
             "render_kind": "swimlane",
-            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=state_change_swimlane",
-            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=state_change_swimlane",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/telemetry",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/telemetry",
             "collapsible": true,
             "default_expanded": true,
             "supports_time_zoom": true,
@@ -3323,14 +3323,14 @@
               "pinned": false,
               "resize_policy": "fixed_plot_area"
             },
-            "transport": "fixture_json",
+            "transport": "arrow_ipc",
             "direction": "derived",
             "unit": "event",
             "axis_policy": "event",
             "source_family": "test_conductor",
             "render_kind": "event_rail",
-            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=functional_events",
-            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=functional_events",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/telemetry",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/telemetry",
             "collapsible": true,
             "default_expanded": true,
             "supports_time_zoom": true,
@@ -3386,7 +3386,7 @@
     "campaign_id": "thermal_acceptance_fat",
     "graph_wall_id": "thermal_acceptance_fat_graph_wall",
     "generated_at": "2026-01-15T10:00:00Z",
-    "source_mode": "fixture_tile_backend",
+    "source_mode": "arrow_telemetry_backend",
     "time_range": {
       "start": "2026-01-15T10:00:00Z",
       "end": "2026-01-21T21:05:00Z",
@@ -3503,7 +3503,7 @@
         "id": "legacy_csv_environment",
         "label": "Legacy CSV environment import",
         "source_format": "legacy_csv",
-        "target_schema": "gossamer.graph_tile.v1",
+        "target_schema": "gossamer.telemetry.arrow.v2",
         "mode": "translated_fixture",
         "confidence": "high",
         "provenance": "synthetic DataLens translation demo"
@@ -3512,7 +3512,7 @@
         "id": "binary_tmtc_log",
         "label": "Binary TM/TC log import",
         "source_format": "binary_log",
-        "target_schema": "gossamer.graph_tile.v1",
+        "target_schema": "gossamer.telemetry.arrow.v2",
         "mode": "translated_fixture",
         "confidence": "medium",
         "provenance": "synthetic DataLens translation demo"
@@ -3521,7 +3521,7 @@
         "id": "hdf5_evidence_archive",
         "label": "HDF5-like evidence archive",
         "source_format": "hdf5",
-        "target_schema": "gossamer.graph_tile.v1",
+        "target_schema": "gossamer.telemetry.arrow.v2",
         "mode": "translated_fixture",
         "confidence": "high",
         "provenance": "synthetic DataLens translation demo"
@@ -3534,8 +3534,8 @@
         "render_kind": "line",
         "unit": "degC",
         "axis_policy": "temperature_c",
-        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=thermal_program",
-        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=thermal_program",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
         "collapsible": true,
         "default_expanded": true,
         "supports_time_zoom": true,
@@ -3640,8 +3640,8 @@
         "render_kind": "line",
         "unit": "degC",
         "axis_policy": "temperature_c",
-        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=dut_temperature",
-        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=dut_temperature",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
         "collapsible": true,
         "default_expanded": true,
         "supports_time_zoom": true,
@@ -3707,8 +3707,8 @@
         "render_kind": "line",
         "unit": "%",
         "axis_policy": "percent",
-        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=facility_actuation",
-        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=facility_actuation",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
         "collapsible": true,
         "default_expanded": true,
         "supports_time_zoom": true,
@@ -3735,8 +3735,8 @@
         "render_kind": "line",
         "unit": "mixed",
         "axis_policy": "facility_infra",
-        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=building_infrastructure",
-        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=building_infrastructure",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
         "collapsible": true,
         "default_expanded": true,
         "supports_time_zoom": true,
@@ -3789,8 +3789,8 @@
         "render_kind": "line",
         "unit": "W",
         "axis_policy": "power_w",
-        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=dut_power",
-        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=dut_power",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
         "collapsible": true,
         "default_expanded": true,
         "supports_time_zoom": true,
@@ -3869,8 +3869,8 @@
         "render_kind": "line",
         "unit": "ms",
         "axis_policy": "bus_ms",
-        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=tmtc_health",
-        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=tmtc_health",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
         "collapsible": true,
         "default_expanded": true,
         "supports_time_zoom": true,
@@ -3910,8 +3910,8 @@
         "render_kind": "counter",
         "unit": "count",
         "axis_policy": "counter",
-        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=tmtc_counters",
-        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=tmtc_counters",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
         "collapsible": true,
         "default_expanded": true,
         "supports_time_zoom": true,
@@ -3977,8 +3977,8 @@
         "render_kind": "line",
         "unit": "ms",
         "axis_policy": "bus_ms",
-        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=source_quality",
-        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=source_quality",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
         "collapsible": true,
         "default_expanded": true,
         "supports_time_zoom": true,
@@ -4005,8 +4005,8 @@
         "render_kind": "swimlane",
         "unit": "state",
         "axis_policy": "state_lane",
-        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=state_change_swimlane",
-        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=state_change_swimlane",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
         "collapsible": true,
         "default_expanded": true,
         "supports_time_zoom": true,
@@ -4248,8 +4248,8 @@
         "render_kind": "event_rail",
         "unit": "event",
         "axis_policy": "event",
-        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=functional_events",
-        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=functional_events",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/telemetry",
         "collapsible": true,
         "default_expanded": true,
         "supports_time_zoom": true,

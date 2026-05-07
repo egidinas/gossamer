@@ -1,6 +1,8 @@
 package api
 
 import (
+	"bufio"
+	"compress/gzip"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -153,6 +155,39 @@ func TestGraphShellEndpointOmitsRawTraceValues(t *testing.T) {
 		if len(trace.Values) != 0 {
 			t.Fatalf("shell trace %s retained %d raw values", trace.ID, len(trace.Values))
 		}
+	}
+}
+
+func TestLiveCampaignStreamsCursorEvents(t *testing.T) {
+	server := httptest.NewServer(newTestServer(t))
+	defer server.Close()
+
+	resp, err := server.Client().Get(server.URL + "/api/campaigns/thermal_acceptance_fat/live")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("status = %d", resp.StatusCode)
+	}
+	if got := resp.Header.Get("Content-Type"); !strings.HasPrefix(got, "text/event-stream") {
+		t.Fatalf("content type = %q", got)
+	}
+	scanner := bufio.NewScanner(resp.Body)
+	foundEvent := false
+	foundPayload := false
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "event: cursor" {
+			foundEvent = true
+		}
+		if strings.HasPrefix(line, "data: ") && strings.Contains(line, `"source":"simulated_live_replay"`) {
+			foundPayload = true
+			break
+		}
+	}
+	if !foundEvent || !foundPayload {
+		t.Fatalf("stream missing cursor event or payload")
 	}
 }
 
@@ -325,6 +360,42 @@ func TestStaticDataBundleServedWhenConfigured(t *testing.T) {
 	}
 	if !strings.Contains(rec.Body.String(), `"data_version":"test"`) {
 		t.Fatalf("body = %s", rec.Body.String())
+	}
+}
+
+func TestStaticArrowServesGzipOnlyBundle(t *testing.T) {
+	server := newTestServerWithStatic(t)
+	dataDir := filepath.Join(server.root, "fixtures", "public_tiles", "current", "campaigns", "thermal_acceptance_fat")
+	if err := os.MkdirAll(dataDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	file, err := os.Create(filepath.Join(dataDir, "telemetry.arrow.gz"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	gz := gzip.NewWriter(file)
+	if _, err := gz.Write([]byte("arrow-ipc")); err != nil {
+		t.Fatal(err)
+	}
+	if err := gz.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := file.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	req := httptest.NewRequest(http.MethodGet, "/data/current/campaigns/thermal_acceptance_fat/telemetry.arrow", nil)
+	req.Header.Set("Accept-Encoding", "gzip")
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d", rec.Code)
+	}
+	if got := rec.Header().Get("Content-Encoding"); got != "gzip" {
+		t.Fatalf("content encoding = %q", got)
+	}
+	if got := rec.Header().Get("Content-Type"); !strings.HasPrefix(got, "application/vnd.apache.arrow.stream") {
+		t.Fatalf("content type = %q", got)
 	}
 }
 

@@ -15,7 +15,11 @@ import (
 	"github.com/egidinas/gossamer/internal/contracts"
 )
 
-const generatorVersion = "static-tile-bundle-v1"
+const (
+	generatorVersion        = "static-tile-bundle-v1"
+	materializedMaxPoints   = 900
+	materializedPointDigits = 4
+)
 
 type Options struct {
 	DataVersion  string
@@ -108,49 +112,11 @@ func writeCampaignBundle(model contracts.GraphModel, opts Options) (contracts.Ti
 		return contracts.TileCampaignManifest{}, err
 	}
 	cardRefs := append([]contracts.GraphTileCardRef{}, model.TileManifest.Cards...)
-	var totalBytes, totalCompressed int64
 	for i := range cardRefs {
 		card := &cardRefs[i]
 		card.TileEndpoint = ""
 		card.LatestEndpoint = ""
 		card.TileFiles = nil
-		for _, level := range levelsForModel(model, opts.Levels) {
-			windows := tileWindows(model.GraphWall.TimeRange, level)
-			for _, win := range windows {
-				tile, err := BuildTile(model, card.CardID, level.ID, win.Start.Format(time.RFC3339), win.End.Format(time.RFC3339), false)
-				if err != nil {
-					return contracts.TileCampaignManifest{}, err
-				}
-				tileID := tileFileID(card.CardID, level.ID, win.Start)
-				relPath := filepath.Join("cards", safePath(card.CardID), safePath(level.ID), tileID+".json")
-				fullPath := filepath.Join(campaignDir, relPath)
-				if err := writeJSON(fullPath, tile); err != nil {
-					return contracts.TileCampaignManifest{}, err
-				}
-				gzBytes, err := gzipJSON(fullPath)
-				if err != nil {
-					return contracts.TileCampaignManifest{}, err
-				}
-				info, err := os.Stat(fullPath)
-				if err != nil {
-					return contracts.TileCampaignManifest{}, err
-				}
-				totalBytes += info.Size()
-				totalCompressed += gzBytes
-				card.TileFiles = append(card.TileFiles, contracts.TileFile{
-					ID: tileID, Level: level.ID,
-					Path:            joinURL(opts.TileBasePath, "campaigns", model.CampaignID, filepath.ToSlash(relPath)),
-					CompressedPath:  joinURL(opts.TileBasePath, "campaigns", model.CampaignID, filepath.ToSlash(relPath)+".gz"),
-					T0:              tile.T0,
-					T1:              tile.T1,
-					RenderKind:      card.RenderKind,
-					PointCount:      tile.Diagnostics.PointCount,
-					RawPointCount:   tile.Diagnostics.RawPointCount,
-					Bytes:           info.Size(),
-					CompressedBytes: gzBytes,
-				})
-			}
-		}
 	}
 	campaignManifest := contracts.TileCampaignManifest{
 		CampaignID:        model.CampaignID,
@@ -162,8 +128,8 @@ func writeCampaignBundle(model contracts.GraphModel, opts Options) (contracts.Ti
 		Levels:            levelsForModel(model, opts.Levels),
 		Cards:             cardRefs,
 		EvidenceLinks:     model.TileManifest.EvidenceLinks,
-		CompressedBytes:   totalCompressed,
-		UncompressedBytes: totalBytes,
+		CompressedBytes:   0,
+		UncompressedBytes: 0,
 	}
 	if err := writeJSON(filepath.Join(campaignDir, "manifest.json"), campaignManifest); err != nil {
 		return contracts.TileCampaignManifest{}, err
@@ -200,7 +166,7 @@ func BuildTile(model contracts.GraphModel, cardID, levelID, t0s, t1s string, lat
 	if !end.After(start) {
 		return contracts.GraphTile{}, fmt.Errorf("t1 must be after t0")
 	}
-	maxPoints := maxPointsForLevel(*model.TileManifest, levelID)
+	maxPoints := min(maxPointsForLevel(*model.TileManifest, levelID), materializedMaxPoints)
 	perSeriesMax := max(1, maxPoints)
 	traceIndex := traceIndex(model.HeroGraph)
 	series := make([]contracts.TileSeries, 0, len(card.Signals))
@@ -439,13 +405,14 @@ func decimate(points []contracts.GraphPoint, maxPoints int) []contracts.GraphPoi
 
 func normalizePoints(points []contracts.GraphPoint) []contracts.GraphPoint {
 	if len(points) < 2 {
-		return points
+		return roundPoints(points)
 	}
 	sort.SliceStable(points, func(i, j int) bool {
 		return points[i].Timestamp < points[j].Timestamp
 	})
 	out := make([]contracts.GraphPoint, 0, len(points))
 	for _, p := range points {
+		p.Value = roundFloat(p.Value, materializedPointDigits)
 		if len(out) > 0 && out[len(out)-1].Timestamp == p.Timestamp {
 			out[len(out)-1] = p
 			continue
@@ -453,6 +420,22 @@ func normalizePoints(points []contracts.GraphPoint) []contracts.GraphPoint {
 		out = append(out, p)
 	}
 	return out
+}
+
+func roundPoints(points []contracts.GraphPoint) []contracts.GraphPoint {
+	out := append([]contracts.GraphPoint(nil), points...)
+	for i := range out {
+		out[i].Value = roundFloat(out[i].Value, materializedPointDigits)
+	}
+	return out
+}
+
+func roundFloat(value float64, digits int) float64 {
+	if value == 0 || math.IsNaN(value) || math.IsInf(value, 0) {
+		return value
+	}
+	scale := math.Pow10(digits)
+	return math.Round(value*scale) / scale
 }
 
 func appendUniquePoints(out []contracts.GraphPoint, points ...contracts.GraphPoint) []contracts.GraphPoint {

@@ -31,21 +31,6 @@
       "axis_policy": "temperature_c",
       "tile_endpoint": "",
       "latest_endpoint": "",
-      "tile_files": [
-        {
-          "id": "thermal_program_minute_20260115T100000Z",
-          "level": "minute",
-          "path": "/data/current/campaigns/tvac_qualification/cards/thermal_program/minute/thermal_program_minute_20260115T100000Z.json",
-          "compressed_path": "/data/current/campaigns/tvac_qualification/cards/thermal_program/minute/thermal_program_minute_20260115T100000Z.json.gz",
-          "t0": "2026-01-15T10:00:00Z",
-          "t1": "2026-01-31T23:57:00Z",
-          "render_kind": "line",
-          "point_count": 24663,
-          "raw_point_count": 47850,
-          "compressed_bytes": 146779,
-          "bytes": 2374853
-        }
-      ],
       "collapsible": true,
       "default_expanded": true,
       "supports_time_zoom": true,
@@ -191,21 +176,6 @@
       "axis_policy": "temperature_c",
       "tile_endpoint": "",
       "latest_endpoint": "",
-      "tile_files": [
-        {
-          "id": "dut_temperature_minute_20260115T100000Z",
-          "level": "minute",
-          "path": "/data/current/campaigns/tvac_qualification/cards/dut_temperature/minute/dut_temperature_minute_20260115T100000Z.json",
-          "compressed_path": "/data/current/campaigns/tvac_qualification/cards/dut_temperature/minute/dut_temperature_minute_20260115T100000Z.json.gz",
-          "t0": "2026-01-15T10:00:00Z",
-          "t1": "2026-01-31T23:57:00Z",
-          "render_kind": "line",
-          "point_count": 16974,
-          "raw_point_count": 28710,
-          "compressed_bytes": 118629,
-          "bytes": 1612948
-        }
-      ],
       "collapsible": true,
       "default_expanded": true,
       "supports_time_zoom": true,
@@ -299,21 +269,6 @@
       "axis_policy": "log_pressure_mbar",
       "tile_endpoint": "",
       "latest_endpoint": "",
-      "tile_files": [
-        {
-          "id": "tvac_pressure_minute_20260115T100000Z",
-          "level": "minute",
-          "path": "/data/current/campaigns/tvac_qualification/cards/tvac_pressure/minute/tvac_pressure_minute_20260115T100000Z.json",
-          "compressed_path": "/data/current/campaigns/tvac_qualification/cards/tvac_pressure/minute/tvac_pressure_minute_20260115T100000Z.json.gz",
-          "t0": "2026-01-15T10:00:00Z",
-          "t1": "2026-01-31T23:57:00Z",
-          "render_kind": "line",
-          "point_count": 4336,
-          "raw_point_count": 9570,
-          "compressed_bytes": 21679,
-          "bytes": 434736
-        }
-      ],
       "collapsible": true,
       "default_expanded": true,
       "supports_time_zoom": true,
@@ -355,21 +310,6 @@
       "axis_policy": "pressure_balance",
       "tile_endpoint": "",
       "latest_endpoint": "",
-      "tile_files": [
-        {
-          "id": "tvac_pressure_sources_minute_20260115T100000Z",
-          "level": "minute",
-          "path": "/data/current/campaigns/tvac_qualification/cards/tvac_pressure_sources/minute/tvac_pressure_sources_minute_20260115T100000Z.json",
-          "compressed_path": "/data/current/campaigns/tvac_qualification/cards/tvac_pressure_sources/minute/tvac_pressure_sources_minute_20260115T100000Z.json.gz",
-          "t0": "2026-01-15T10:00:00Z",
-          "t1": "2026-01-31T23:57:00Z",
-          "render_kind": "line",
-          "point_count": 13136,
-          "raw_point_count": 28710,
-          "compressed_bytes": 66916,
-          "bytes": 1269137
-        }
-      ],
       "collapsible": true,
       "default_expanded": true,
       "supports_time_zoom": true,
@@ -463,21 +403,6 @@
       "axis_policy": "percent",
       "tile_endpoint": "",
       "latest_endpoint": "",
-      "tile_files": [
-        {
-          "id": "facility_actuation_minute_20260115T100000Z",
-          "level": "minute",
-          "path": "/data/current/campaigns/tvac_qualification/cards/facility_actuation/minute/facility_actuation_minute_20260115T100000Z.json",
-          "compressed_path": "/data/current/campaigns/tvac_qualification/cards/facility_actuation/minute/facility_actuation_minute_20260115T100000Z.json.gz",
-          "t0": "2026-01-15T10:00:00Z",
-          "t1": "2026-01-31T23:57:00Z",
-          "render_kind": "line",
-          "point_count": 2484,
-          "raw_point_count": 4785,
-          "compressed_bytes": 16012,
-          "bytes": 242720
-        }
-      ],
       "collapsible": true,
       "default_expanded": true,
       "supports_time_zoom": true,
@@ -506,21 +431,6 @@
       "axis_policy": "temperature_c",
       "tile_endpoint": "",
       "latest_endpoint": "",
-      "tile_files": [
-        {
-          "id": "facility_temperature_safety_minute_20260115T100000Z",
-          "level": "minute",
-          "path": "/data/current/campaigns/tvac_qualification/cards/facility_temperature_safety/minute/facility_temperature_safety_minute_20260115T100000Z.json",
-          "compressed_path": "/data/current/campaigns/tvac_qualification/cards/facility_temperature_safety/minute/facility_temperature_safety_minute_20260115T100000Z.json.gz",
-          "t0": "2026-01-15T10:00:00Z",
-          "t1": "2026-01-31T23:57:00Z",
-          "render_kind": "line",
-          "point_count": 3021,
-          "raw_point_count": 4785,
-          "compressed_bytes": 20020,
-          "bytes": 295430
-        }
-      ],
       "collapsible": true,
       "default_expanded": true,
       "supports_time_zoom": true,
@@ -549,21 +459,6 @@
       "axis_policy": "facility_exhaust_scavenger",
       "tile_endpoint": "",
       "latest_endpoint": "",
-      "tile_files": [
-        {
-          "id": "tvac_exhaust_scavenger_minute_20260115T100000Z",
-          "level": "minute",
-          "path": "/data/current/campaigns/tvac_qualification/cards/tvac_exhaust_scavenger/minute/tvac_exhaust_scavenger_minute_20260115T100000Z.json",
-          "compressed_path": "/data/current/campaigns/tvac_qualification/cards/tvac_exhaust_scavenger/minute/tvac_exhaust_scavenger_minute_20260115T100000Z.json.gz",
-          "t0": "2026-01-15T10:00:00Z",
-          "t1": "2026-01-31T23:57:00Z",
-          "render_kind": "line",
-          "point_count": 9591,
-          "raw_point_count": 19140,
-          "compressed_bytes": 62525,
-          "bytes": 912967
-        }
-      ],
       "collapsible": true,
       "default_expanded": true,
       "supports_time_zoom": true,
@@ -631,21 +526,6 @@
       "axis_policy": "facility_infra",
       "tile_endpoint": "",
       "latest_endpoint": "",
-      "tile_files": [
-        {
-          "id": "building_infrastructure_minute_20260115T100000Z",
-          "level": "minute",
-          "path": "/data/current/campaigns/tvac_qualification/cards/building_infrastructure/minute/building_infrastructure_minute_20260115T100000Z.json",
-          "compressed_path": "/data/current/campaigns/tvac_qualification/cards/building_infrastructure/minute/building_infrastructure_minute_20260115T100000Z.json.gz",
-          "t0": "2026-01-15T10:00:00Z",
-          "t1": "2026-01-31T23:57:00Z",
-          "render_kind": "line",
-          "point_count": 9657,
-          "raw_point_count": 14355,
-          "compressed_bytes": 56489,
-          "bytes": 922172
-        }
-      ],
       "collapsible": true,
       "default_expanded": true,
       "supports_time_zoom": true,
@@ -700,21 +580,6 @@
       "axis_policy": "power_w",
       "tile_endpoint": "",
       "latest_endpoint": "",
-      "tile_files": [
-        {
-          "id": "dut_power_minute_20260115T100000Z",
-          "level": "minute",
-          "path": "/data/current/campaigns/tvac_qualification/cards/dut_power/minute/dut_power_minute_20260115T100000Z.json",
-          "compressed_path": "/data/current/campaigns/tvac_qualification/cards/dut_power/minute/dut_power_minute_20260115T100000Z.json.gz",
-          "t0": "2026-01-15T10:00:00Z",
-          "t1": "2026-01-31T23:57:00Z",
-          "render_kind": "line",
-          "point_count": 12614,
-          "raw_point_count": 23925,
-          "compressed_bytes": 69223,
-          "bytes": 1190898
-        }
-      ],
       "collapsible": true,
       "default_expanded": true,
       "supports_time_zoom": true,
@@ -795,21 +660,6 @@
       "axis_policy": "bus_ms",
       "tile_endpoint": "",
       "latest_endpoint": "",
-      "tile_files": [
-        {
-          "id": "tmtc_health_minute_20260115T100000Z",
-          "level": "minute",
-          "path": "/data/current/campaigns/tvac_qualification/cards/tmtc_health/minute/tmtc_health_minute_20260115T100000Z.json",
-          "compressed_path": "/data/current/campaigns/tvac_qualification/cards/tmtc_health/minute/tmtc_health_minute_20260115T100000Z.json.gz",
-          "t0": "2026-01-15T10:00:00Z",
-          "t1": "2026-01-31T23:57:00Z",
-          "render_kind": "line",
-          "point_count": 5422,
-          "raw_point_count": 9570,
-          "compressed_bytes": 42659,
-          "bytes": 526911
-        }
-      ],
       "collapsible": true,
       "default_expanded": true,
       "supports_time_zoom": true,
@@ -851,21 +701,6 @@
       "axis_policy": "counter",
       "tile_endpoint": "",
       "latest_endpoint": "",
-      "tile_files": [
-        {
-          "id": "tmtc_counters_minute_20260115T100000Z",
-          "level": "minute",
-          "path": "/data/current/campaigns/tvac_qualification/cards/tmtc_counters/minute/tmtc_counters_minute_20260115T100000Z.json",
-          "compressed_path": "/data/current/campaigns/tvac_qualification/cards/tmtc_counters/minute/tmtc_counters_minute_20260115T100000Z.json.gz",
-          "t0": "2026-01-15T10:00:00Z",
-          "t1": "2026-01-31T23:57:00Z",
-          "render_kind": "counter",
-          "point_count": 8400,
-          "raw_point_count": 19140,
-          "compressed_bytes": 50689,
-          "bytes": 801676
-        }
-      ],
       "collapsible": true,
       "default_expanded": true,
       "supports_time_zoom": true,
@@ -933,21 +768,6 @@
       "axis_policy": "bus_ms",
       "tile_endpoint": "",
       "latest_endpoint": "",
-      "tile_files": [
-        {
-          "id": "source_quality_minute_20260115T100000Z",
-          "level": "minute",
-          "path": "/data/current/campaigns/tvac_qualification/cards/source_quality/minute/source_quality_minute_20260115T100000Z.json",
-          "compressed_path": "/data/current/campaigns/tvac_qualification/cards/source_quality/minute/source_quality_minute_20260115T100000Z.json.gz",
-          "t0": "2026-01-15T10:00:00Z",
-          "t1": "2026-01-31T23:57:00Z",
-          "render_kind": "line",
-          "point_count": 3220,
-          "raw_point_count": 4785,
-          "compressed_bytes": 26486,
-          "bytes": 320111
-        }
-      ],
       "collapsible": true,
       "default_expanded": true,
       "supports_time_zoom": true,
@@ -976,21 +796,6 @@
       "axis_policy": "state_lane",
       "tile_endpoint": "",
       "latest_endpoint": "",
-      "tile_files": [
-        {
-          "id": "state_change_swimlane_minute_20260115T100000Z",
-          "level": "minute",
-          "path": "/data/current/campaigns/tvac_qualification/cards/state_change_swimlane/minute/state_change_swimlane_minute_20260115T100000Z.json",
-          "compressed_path": "/data/current/campaigns/tvac_qualification/cards/state_change_swimlane/minute/state_change_swimlane_minute_20260115T100000Z.json.gz",
-          "t0": "2026-01-15T10:00:00Z",
-          "t1": "2026-01-31T23:57:00Z",
-          "render_kind": "swimlane",
-          "point_count": 338,
-          "raw_point_count": 76560,
-          "compressed_bytes": 7627,
-          "bytes": 119849
-        }
-      ],
       "collapsible": true,
       "default_expanded": true,
       "supports_time_zoom": true,
@@ -1287,21 +1092,6 @@
       "axis_policy": "event",
       "tile_endpoint": "",
       "latest_endpoint": "",
-      "tile_files": [
-        {
-          "id": "functional_events_minute_20260115T100000Z",
-          "level": "minute",
-          "path": "/data/current/campaigns/tvac_qualification/cards/functional_events/minute/functional_events_minute_20260115T100000Z.json",
-          "compressed_path": "/data/current/campaigns/tvac_qualification/cards/functional_events/minute/functional_events_minute_20260115T100000Z.json.gz",
-          "t0": "2026-01-15T10:00:00Z",
-          "t1": "2026-01-31T23:57:00Z",
-          "render_kind": "event_rail",
-          "point_count": 0,
-          "raw_point_count": 0,
-          "compressed_bytes": 3794,
-          "bytes": 57069
-        }
-      ],
       "collapsible": true,
       "default_expanded": true,
       "supports_time_zoom": true,
@@ -1908,7 +1698,5 @@
       "status": "pass",
       "label": "Cycle 8 cold dwell functional test"
     }
-  ],
-  "compressed_bytes": 709527,
-  "uncompressed_bytes": 11081477
+  ]
 }

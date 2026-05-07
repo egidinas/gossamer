@@ -8,10 +8,12 @@ import (
 	"path"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/egidinas/gossamer/internal/arrowtelemetry"
 	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/tilebundle"
 )
@@ -130,7 +132,9 @@ func (s *Server) campaignDetail(w http.ResponseWriter, r *http.Request) {
 	}
 	switch parts[1] {
 	case "telemetry":
-		serveFile(w, filepath.Join(s.root, "fixtures", "public", "telemetry", id+".jsonl"))
+		serveArrowFile(w, r, filepath.Join(s.root, "fixtures", "public", "telemetry", id+".arrow"), "no-store")
+	case "live":
+		s.liveCampaign(w, r, id)
 	case "graph-model":
 		serveFile(w, filepath.Join(s.root, "fixtures", "public", "graph_models", id+".json"))
 	case "graph-shell":
@@ -224,6 +228,87 @@ func (s *Server) readGraphModel(id string) (contracts.GraphModel, error) {
 
 func buildTile(model contracts.GraphModel, cardID, levelID, t0s, t1s string, latest bool) (contracts.GraphTile, error) {
 	return tilebundle.BuildTile(model, cardID, levelID, t0s, t1s, latest)
+}
+
+func (s *Server) liveCampaign(w http.ResponseWriter, r *http.Request, id string) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	model, err := s.readGraphModel(id)
+	if err != nil || model.HeroGraph == nil {
+		http.NotFound(w, r)
+		return
+	}
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		http.Error(w, "streaming unsupported", http.StatusInternalServerError)
+		return
+	}
+	start := mustParseTime(model.HeroGraph.TimeAxis.Start)
+	end := mustParseTime(model.HeroGraph.TimeAxis.End)
+	base := replayCursor(model.HeroGraph)
+	if start.IsZero() || end.IsZero() || base.IsZero() {
+		http.Error(w, "campaign clock unavailable", http.StatusBadRequest)
+		return
+	}
+	acceleration := replayAcceleration(model.HeroGraph)
+	connectedAt := time.Now()
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-store")
+	w.Header().Set("Connection", "keep-alive")
+	w.Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:5179")
+
+	ticker := time.NewTicker(time.Second)
+	defer ticker.Stop()
+	for {
+		now := base.Add(time.Duration(float64(time.Since(connectedAt)) * acceleration))
+		if now.Before(start) {
+			now = start
+		}
+		if now.After(end) {
+			now = end
+		}
+		payload := map[string]any{
+			"schema_version": 1,
+			"campaign_id":    id,
+			"now":            now.UTC().Format(time.RFC3339Nano),
+			"start":          start.UTC().Format(time.RFC3339Nano),
+			"end":            end.UTC().Format(time.RFC3339Nano),
+			"acceleration":   acceleration,
+			"complete":       !now.Before(end),
+			"source":         "simulated_live_replay",
+		}
+		data, _ := json.Marshal(payload)
+		_, _ = w.Write([]byte("event: cursor\n"))
+		_, _ = w.Write([]byte("data: "))
+		_, _ = w.Write(data)
+		_, _ = w.Write([]byte("\n\n"))
+		flusher.Flush()
+		if !now.Before(end) {
+			return
+		}
+		select {
+		case <-r.Context().Done():
+			return
+		case <-ticker.C:
+		}
+	}
+}
+
+func replayAcceleration(hero *contracts.HeroGraphModel) float64 {
+	if hero == nil || hero.Execution == nil || hero.Execution.Acceleration == "" {
+		return 60
+	}
+	fields := strings.Fields(hero.Execution.Acceleration)
+	if len(fields) == 0 {
+		return 60
+	}
+	value, err := strconv.ParseFloat(fields[0], 64)
+	if err != nil || value <= 0 {
+		return 60
+	}
+	return value * 60
 }
 
 func replayCursor(hero *contracts.HeroGraphModel) time.Time {
@@ -511,6 +596,14 @@ func (s *Server) static(w http.ResponseWriter, r *http.Request) {
 	if strings.HasPrefix(r.URL.Path, "/data/") {
 		rel := strings.TrimPrefix(path.Clean("/"+r.URL.Path), "/data/")
 		candidate := filepath.Join(s.root, "fixtures", "public_tiles", filepath.FromSlash(rel))
+		if strings.HasSuffix(candidate, ".arrow") {
+			if arrowStaticExists(candidate) {
+				serveArrowFile(w, r, candidate, "public, max-age=31536000, immutable")
+				return
+			}
+			http.NotFound(w, r)
+			return
+		}
 		if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
 			if strings.HasSuffix(candidate, "manifest.json") {
 				w.Header().Set("Cache-Control", "no-cache")
@@ -549,12 +642,41 @@ func serveFile(w http.ResponseWriter, path string) {
 		return
 	}
 	headers(w)
-	if strings.HasSuffix(path, ".jsonl") {
-		w.Header().Set("Content-Type", "application/x-ndjson")
+	if strings.HasSuffix(path, ".arrow") {
+		w.Header().Set("Content-Type", arrowtelemetry.TransportMIME)
 	} else {
 		w.Header().Set("Content-Type", "application/json")
 	}
 	_, _ = w.Write(data)
+}
+
+func serveArrowFile(w http.ResponseWriter, r *http.Request, filePath, cacheControl string) {
+	pathToServe := filePath
+	if strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {
+		gzipPath := filePath + ".gz"
+		if info, err := os.Stat(gzipPath); err == nil && !info.IsDir() {
+			pathToServe = gzipPath
+			w.Header().Set("Content-Encoding", "gzip")
+			w.Header().Add("Vary", "Accept-Encoding")
+		}
+	}
+	if _, err := os.Stat(pathToServe); err != nil {
+		http.NotFound(w, r)
+		return
+	}
+	w.Header().Set("Cache-Control", cacheControl)
+	w.Header().Set("Content-Type", arrowtelemetry.TransportMIME)
+	http.ServeFile(w, r, pathToServe)
+}
+
+func arrowStaticExists(filePath string) bool {
+	if info, err := os.Stat(filePath); err == nil && !info.IsDir() {
+		return true
+	}
+	if info, err := os.Stat(filePath + ".gz"); err == nil && !info.IsDir() {
+		return true
+	}
+	return false
 }
 
 func writeJSON(w http.ResponseWriter, v any) {

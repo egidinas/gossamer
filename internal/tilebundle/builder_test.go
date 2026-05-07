@@ -1,8 +1,7 @@
 package tilebundle
 
 import (
-	"compress/gzip"
-	"encoding/json"
+	"math"
 	"os"
 	"path/filepath"
 	"testing"
@@ -58,6 +57,35 @@ func TestBuildTilePreservesMinMaxEnvelopeSpike(t *testing.T) {
 	}
 }
 
+func TestBuildTileCapsMaterializedPointsAndRoundsValues(t *testing.T) {
+	model := smallModel()
+	model.TileManifest.Levels[0].MaxPoints = materializedMaxPoints * 3
+	trace := &model.HeroGraph.Traces[0]
+	trace.Values = nil
+	start := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
+	for i := 0; i < materializedMaxPoints*3; i++ {
+		trace.Values = append(trace.Values, contracts.GraphPoint{
+			Timestamp: start.Add(time.Duration(i) * time.Second).Format(time.RFC3339),
+			Value:     10 + float64(i)/3.0 + 0.000009,
+		})
+	}
+
+	tile, err := BuildTile(model, "thermal_program", "minute", "", "", false)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	actual := seriesByID(tile, "trace.actual.chamber_air")
+	if len(actual.Points) > materializedMaxPoints {
+		t.Fatalf("materialized tile has %d points, want <= %d", len(actual.Points), materializedMaxPoints)
+	}
+	for _, point := range actual.Points {
+		if point.Value != math.Round(point.Value*1e4)/1e4 {
+			t.Fatalf("point value was not rounded to display precision: %.12f", point.Value)
+		}
+	}
+}
+
 func TestSwimlaneTileEncodesSpans(t *testing.T) {
 	tile, err := BuildTile(smallModel(), "state_change_swimlane", "minute", "", "", false)
 	if err != nil {
@@ -97,30 +125,15 @@ func TestWriteBundleCreatesStaticManifestAndCompressedTiles(t *testing.T) {
 	if campaign.ManifestPath != "/data/current/campaigns/thermal_acceptance_fat/manifest.json" {
 		t.Fatalf("manifest path = %q", campaign.ManifestPath)
 	}
-	if len(campaign.Cards[0].TileFiles) == 0 {
-		t.Fatalf("card has no tile files: %+v", campaign.Cards[0])
+	if len(campaign.Cards[0].TileFiles) != 0 {
+		t.Fatalf("card should not advertise legacy JSON tile files: %+v", campaign.Cards[0].TileFiles)
 	}
-	tilePath := filepath.Join(out, "campaigns", "thermal_acceptance_fat", campaign.Cards[0].TileFiles[0].Path[len("/data/current/campaigns/thermal_acceptance_fat/"):])
-	if _, err := os.Stat(tilePath); err != nil {
-		t.Fatalf("tile file missing: %v", err)
+	cardsDir := filepath.Join(out, "campaigns", "thermal_acceptance_fat", "cards")
+	if _, err := os.Stat(cardsDir); !os.IsNotExist(err) {
+		t.Fatalf("legacy JSON cards dir should not be generated, stat err=%v", err)
 	}
-	gzPath := tilePath + ".gz"
-	file, err := os.Open(gzPath)
-	if err != nil {
-		t.Fatalf("compressed tile missing: %v", err)
-	}
-	defer file.Close()
-	reader, err := gzip.NewReader(file)
-	if err != nil {
-		t.Fatalf("compressed tile is not gzip: %v", err)
-	}
-	defer reader.Close()
-	var tile contracts.GraphTile
-	if err := json.NewDecoder(reader).Decode(&tile); err != nil {
-		t.Fatalf("decode compressed tile: %v", err)
-	}
-	if tile.CardID == "" || tile.Diagnostics.PointCount == 0 {
-		t.Fatalf("bad compressed tile: %+v", tile)
+	if campaign.CompressedBytes != 0 || campaign.UncompressedBytes != 0 {
+		t.Fatalf("legacy tile byte counts should be zero: compressed=%d uncompressed=%d", campaign.CompressedBytes, campaign.UncompressedBytes)
 	}
 }
 

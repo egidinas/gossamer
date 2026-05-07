@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/egidinas/gossamer/internal/arrowtelemetry"
 	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/environmentalsim"
 )
@@ -126,7 +127,7 @@ func WritePublicFixtures(root string) error {
 		if err := writeJSON(filepath.Join(base, "campaigns", id+".json"), set.Campaigns[id]); err != nil {
 			return err
 		}
-		if err := writeJSONL(filepath.Join(base, "telemetry", id+".jsonl"), set.Telemetry[id]); err != nil {
+		if err := arrowtelemetry.WriteCampaign(filepath.Join(base, "telemetry", id+".arrow"), id, set.Telemetry[id], arrowtelemetry.MetadataFromGraph(set.GraphModels[id])); err != nil {
 			return err
 		}
 		if err := writeJSON(filepath.Join(base, "graph_models", id+".json"), set.GraphModels[id]); err != nil {
@@ -168,7 +169,7 @@ func buildCampaign(env contracts.Envelope, id string) contracts.Campaign {
 		c.ThermalProgram = buildThermalProgram(id, c.Facility, 4, -35, 65)
 	case "tvac_qualification":
 		c.Name, c.Level, c.State, c.Result, c.Facility = "TVac Qualification", "qualification", "review", "inconclusive", "tvac_chamber_q1"
-		c.Anomalies = []contracts.Anomaly{{ID: "ANOM-TVAC-001", Title: "Pressure-source degradation during cold dwell", Severity: "medium", Status: "needs_disposition", EvidenceRef: "telemetry/tvac_qualification.jsonl#sample-32", Disposition: "Review required before closure."}}
+		c.Anomalies = []contracts.Anomaly{{ID: "ANOM-TVAC-001", Title: "Pressure-source degradation during cold dwell", Severity: "medium", Status: "needs_disposition", EvidenceRef: "telemetry/tvac_qualification.arrow#sample-32", Disposition: "Review required before closure."}}
 		c.ThermalProgram = buildThermalProgram(id, c.Facility, 8, -40, 70)
 	case "integrated_system_fat":
 		c.Name, c.Level, c.State, c.Result, c.Facility = "Integrated System FAT", "system", "complete", "pass", "thermal_chamber_a"
@@ -347,7 +348,7 @@ func buildThermalProgram(campaignID, facility string, cycleCount int, coldTarget
 		for _, phase := range phases {
 			if isThermalDwellPhase(phase.Kind) {
 				timing := dwellByPhase[phase.ID]
-				program.DwellWindows = append(program.DwellWindows, contracts.DwellWindow{ID: phase.ID + "-WINDOW", Label: phase.Label, CycleIndex: cycle, Kind: phase.Kind, Start: timing.stableAt.Format(time.RFC3339), End: timing.dwellEnd.Format(time.RFC3339), TargetDegC: phase.TargetDegC, StabilityBandC: 2.0, MinimumMinutes: timing.minimumMinutes, EvidenceRef: fmt.Sprintf("telemetry/%s.jsonl#cycle-%02d-%s-stable", campaignID, cycle, phase.Kind)})
+				program.DwellWindows = append(program.DwellWindows, contracts.DwellWindow{ID: phase.ID + "-WINDOW", Label: phase.Label, CycleIndex: cycle, Kind: phase.Kind, Start: timing.stableAt.Format(time.RFC3339), End: timing.dwellEnd.Format(time.RFC3339), TargetDegC: phase.TargetDegC, StabilityBandC: 2.0, MinimumMinutes: timing.minimumMinutes, EvidenceRef: fmt.Sprintf("telemetry/%s.arrow#cycle-%02d-%s-stable", campaignID, cycle, phase.Kind)})
 				program.EvidenceMarkers = append(program.EvidenceMarkers, contracts.EvidenceMarker{ID: fmt.Sprintf("%s-STABLE-C%02d-%s", campaignID, cycle, phase.Kind), Label: fmt.Sprintf("Stable %s confirmed", phase.Label), Timestamp: timing.stableAt.Format(time.RFC3339), Kind: "stability_achieved", Result: "pass", EvidenceRef: fmt.Sprintf("reports/%s.json#stable-c%02d-%s", campaignID, cycle, phase.Kind)})
 			}
 		}
@@ -423,14 +424,14 @@ func buildThermalProgram(campaignID, facility string, cycleCount int, coldTarget
 		if campaignID == "tvac_qualification" && gate.gate == "hot" {
 			result = "inconclusive"
 		}
-		program.FunctionalGates = append(program.FunctionalGates, contracts.FunctionalGate{ID: fmt.Sprintf("%s-FUNC-%s", campaignID, gate.id), Label: gate.label, Gate: gate.gate, CycleIndex: gate.cycle, PhaseID: gate.phaseID, Timestamp: gate.timestamp.Format(time.RFC3339), Result: result, EvidenceRef: fmt.Sprintf("telemetry/%s.jsonl#functional-%s", campaignID, gate.gate)})
+		program.FunctionalGates = append(program.FunctionalGates, contracts.FunctionalGate{ID: fmt.Sprintf("%s-FUNC-%s", campaignID, gate.id), Label: gate.label, Gate: gate.gate, CycleIndex: gate.cycle, PhaseID: gate.phaseID, Timestamp: gate.timestamp.Format(time.RFC3339), Result: result, EvidenceRef: fmt.Sprintf("telemetry/%s.arrow#functional-%s", campaignID, gate.gate)})
 		program.EvidenceMarkers = append(program.EvidenceMarkers, contracts.EvidenceMarker{ID: fmt.Sprintf("%s-EVID-%s", campaignID, gate.id), Label: gate.label, Timestamp: gate.timestamp.Format(time.RFC3339), Kind: "functional_gate", Result: result, EvidenceRef: fmt.Sprintf("reports/%s.json#functional-%s", campaignID, gate.gate)})
 	}
-	program.InterlockWindows = []contracts.InterlockWindow{{ID: campaignID + "-INTERLOCK-NOMINAL", Label: "Facility interlocks closed", Start: FixedTime.Format(time.RFC3339), End: mustTime(lastCycle.End).Add(thermalContextDuration(program)).Format(time.RFC3339), State: "closed", Severity: "info", EvidenceRef: fmt.Sprintf("telemetry/%s.jsonl#interlocks", campaignID)}}
+	program.InterlockWindows = []contracts.InterlockWindow{{ID: campaignID + "-INTERLOCK-NOMINAL", Label: "Facility interlocks closed", Start: FixedTime.Format(time.RFC3339), End: mustTime(lastCycle.End).Add(thermalContextDuration(program)).Format(time.RFC3339), State: "closed", Severity: "info", EvidenceRef: fmt.Sprintf("telemetry/%s.arrow#interlocks", campaignID)}}
 	if campaignID == "tvac_qualification" {
 		reviewPhase := phaseByKind(program.Cycles[5], "cold_operational")
 		reviewStart := mustTime(reviewPhase.Start).Add(3 * time.Hour)
-		program.InterlockWindows = append(program.InterlockWindows, contracts.InterlockWindow{ID: "TVAC-LN2-VALVE-REVIEW", Label: "LN2 valve duty review window", Start: reviewStart.Format(time.RFC3339), End: reviewStart.Add(50 * time.Minute).Format(time.RFC3339), State: "review", Severity: "medium", EvidenceRef: "telemetry/tvac_qualification.jsonl#ln2-review"})
+		program.InterlockWindows = append(program.InterlockWindows, contracts.InterlockWindow{ID: "TVAC-LN2-VALVE-REVIEW", Label: "LN2 valve duty review window", Start: reviewStart.Format(time.RFC3339), End: reviewStart.Add(50 * time.Minute).Format(time.RFC3339), State: "review", Severity: "medium", EvidenceRef: "telemetry/tvac_qualification.arrow#ln2-review"})
 	}
 	return program
 }
@@ -606,7 +607,7 @@ func buildGraphWall(env contracts.Envelope, campaignID string, hero contracts.He
 		ID:           campaignID + "_graph_wall",
 		Title:        hero.Title + " operator graph wall",
 		GeneratedAt:  env.GeneratedAt,
-		SourceMode:   "fixture_backend_owned",
+		SourceMode:   "arrow_backend_owned",
 		GraphVersion: "gossamer.graph_wall.v1",
 		Owner:        "gossamer_backend_fixture_generator",
 		Provenance:   provenance.Source,
@@ -656,7 +657,7 @@ func buildGraphWall(env contracts.Envelope, campaignID string, hero contracts.He
 	sections := map[string]*contracts.GraphSection{}
 	wall.Sections = make([]contracts.GraphSection, len(sectionIDs))
 	for i, id := range sectionIDs {
-		wall.Sections[i] = contracts.GraphSection{ID: id, Title: graphSectionTitle(id), GroupID: groupID, Transport: "fixture_json", Direction: "derived", Status: "fresh"}
+		wall.Sections[i] = contracts.GraphSection{ID: id, Title: graphSectionTitle(id), GroupID: groupID, Transport: "arrow_ipc", Direction: "derived", Status: "fresh"}
 		sections[id] = &wall.Sections[i]
 	}
 	add := func(sectionID string, card contracts.GraphWallCard) {
@@ -811,9 +812,9 @@ func buildGraphWall(env contracts.Envelope, campaignID string, hero contracts.He
 
 func graphCard(id, title, kind, role, unit, axisPolicy, source string, signals []contracts.GraphWallSignal) contracts.GraphWallCard {
 	return contracts.GraphWallCard{
-		ID: id, Title: title, Kind: kind, Role: role, Transport: "fixture_json", Direction: "derived",
+		ID: id, Title: title, Kind: kind, Role: role, Transport: "arrow_ipc", Direction: "derived",
 		Unit: unit, AxisPolicy: axisPolicy, SourceFamily: source, Signals: signals,
-		RenderKind: renderKind(kind), TileEndpoint: fmt.Sprintf("/api/campaigns/{campaign_id}/tiles?card_id=%s", id), LatestEndpoint: fmt.Sprintf("/api/campaigns/{campaign_id}/latest-tile?card_id=%s", id),
+		RenderKind: renderKind(kind), TileEndpoint: "/api/campaigns/{campaign_id}/telemetry", LatestEndpoint: "/api/campaigns/{campaign_id}/telemetry",
 		Collapsible: true, DefaultExpanded: true, SupportsTimeZoom: true, SupportsYZoom: kind == "line" || kind == "counter",
 		Placement: contracts.GraphCardPlacement{Pinned: role == "primary_hero", HeightWeight: heightWeight(kind, role)},
 	}
@@ -839,15 +840,15 @@ func buildTileManifest(env contracts.Envelope, campaignID string, wall contracts
 		CampaignID:  campaignID,
 		GraphWallID: wall.ID,
 		GeneratedAt: env.GeneratedAt,
-		SourceMode:  "fixture_tile_backend",
+		SourceMode:  "arrow_telemetry_backend",
 		TimeRange:   wall.TimeRange,
 		TilePolicy:  wall.TilePolicy,
 		Levels:      tileLevels(),
 		SourceNodes: sourceNodes(),
 		DataLensTranslations: []contracts.DataLensTranslation{
-			{ID: "legacy_csv_environment", Label: "Legacy CSV environment import", SourceFormat: "legacy_csv", TargetSchema: "gossamer.graph_tile.v1", Mode: "translated_fixture", Confidence: "high", Provenance: "synthetic DataLens translation demo"},
-			{ID: "binary_tmtc_log", Label: "Binary TM/TC log import", SourceFormat: "binary_log", TargetSchema: "gossamer.graph_tile.v1", Mode: "translated_fixture", Confidence: "medium", Provenance: "synthetic DataLens translation demo"},
-			{ID: "hdf5_evidence_archive", Label: "HDF5-like evidence archive", SourceFormat: "hdf5", TargetSchema: "gossamer.graph_tile.v1", Mode: "translated_fixture", Confidence: "high", Provenance: "synthetic DataLens translation demo"},
+			{ID: "legacy_csv_environment", Label: "Legacy CSV environment import", SourceFormat: "legacy_csv", TargetSchema: arrowtelemetry.SchemaName, Mode: "translated_fixture", Confidence: "high", Provenance: "synthetic DataLens translation demo"},
+			{ID: "binary_tmtc_log", Label: "Binary TM/TC log import", SourceFormat: "binary_log", TargetSchema: arrowtelemetry.SchemaName, Mode: "translated_fixture", Confidence: "medium", Provenance: "synthetic DataLens translation demo"},
+			{ID: "hdf5_evidence_archive", Label: "HDF5-like evidence archive", SourceFormat: "hdf5", TargetSchema: arrowtelemetry.SchemaName, Mode: "translated_fixture", Confidence: "high", Provenance: "synthetic DataLens translation demo"},
 		},
 	}
 	for _, section := range wall.Sections {
@@ -1109,19 +1110,4 @@ func writeJSON(path string, v any) error {
 		return err
 	}
 	return os.WriteFile(path, append(data, '\n'), 0o644)
-}
-
-func writeJSONL(path string, samples []contracts.TelemetrySample) error {
-	f, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-	enc := json.NewEncoder(f)
-	for i, sample := range samples {
-		if err := enc.Encode(sample); err != nil {
-			return fmt.Errorf("sample %d: %w", i, err)
-		}
-	}
-	return nil
 }
