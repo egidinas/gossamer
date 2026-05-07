@@ -17,7 +17,7 @@ type TimeRange = {
   end: number;
 };
 
-const TIME_GRID_TICK_COUNT = 9;
+const TIME_GRID_TICK_COUNT = 14;
 
 const roleColors: Record<string, string> = {
   command: "#ffd85f",
@@ -187,8 +187,10 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
   const [cardHeights, setCardHeights] = useState<Record<string, number>>({});
   const [hoverTimeMs, setHoverTimeMs] = useState<number | undefined>(undefined);
   const [peekTimeMs, setPeekTimeMs] = useState<number | undefined>(undefined);
+  const [timeAxisBounds, setTimeAxisBounds] = useState<{ left: number; right: number } | undefined>(undefined);
   const fullTimeRange = useMemo(() => graphTimeRange(heroGraph), [heroGraph]);
   const [viewRange, setViewRange] = useState<TimeRange>(fullTimeRange);
+  const scrollFrameRef = useRef<HTMLDivElement | null>(null);
   const requestedTiles = useRef<Set<string>>(new Set());
   const loadGeneration = useRef(0);
   const execution = heroGraph.execution;
@@ -246,6 +248,39 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
     cardsToFetch.forEach(fetchCard);
   }, [campaignId, collapsed, manifest, tiles]);
 
+  useEffect(() => {
+    const frame = scrollFrameRef.current;
+    if (!frame) return;
+    let raf = 0;
+    const measure = () => {
+      window.cancelAnimationFrame(raf);
+      raf = window.requestAnimationFrame(() => {
+        const plot = frame.querySelector(".u-over, .tile-time-plane") as HTMLElement | null;
+        const rect = plot?.getBoundingClientRect();
+        if (!rect || rect.width <= 0) return;
+        const next = {
+          left: Math.round(rect.left),
+          right: Math.round(window.innerWidth - rect.right),
+        };
+        setTimeAxisBounds((existing) => {
+          if (existing && Math.abs(existing.left - next.left) < 1 && Math.abs(existing.right - next.right) < 1) return existing;
+          return next;
+        });
+      });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(frame);
+    window.addEventListener("resize", measure);
+    frame.addEventListener("scroll", measure, { passive: true });
+    return () => {
+      window.cancelAnimationFrame(raf);
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+      frame.removeEventListener("scroll", measure);
+    };
+  }, [collapsed, manifest, tiles, viewRange]);
+
   return (
     <div className="operator-graph-wall" data-graph-wall-version={wall.graph_version} data-tile-backed="true">
       <SharedTimeAxis
@@ -254,9 +289,10 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
         currentTimeMs={currentTimeMs}
         hoverTimeMs={hoverTimeMs}
         peekTimeMs={peekTimeMs}
+        plotBounds={timeAxisBounds}
         onTimeRange={setViewRange}
       />
-      <div className="operator-wall-scrollframe">
+      <div className="operator-wall-scrollframe" ref={scrollFrameRef}>
         {[...wall.sections].sort(graphSectionPriority).map((section) => (
           <section className="operator-wall-section" key={section.id} data-section-id={section.id}>
             {!(section.id === firstSectionID && primaryCardID) && <div className="operator-wall-section-title">
@@ -514,6 +550,7 @@ function GraphWallCardView({
             {tile && renderKind === "event_rail" && <EventRailTile tile={tile} heroGraph={heroGraph} currentTimeMs={currentTimeMs} hoverTimeMs={hoverTimeMs} readoutTimeMs={readoutTimeMs} timeRange={timeRange} />}
             {tile && renderKind !== "swimlane" && renderKind !== "event_rail" && (
               <>
+                {card.id === "thermal_program" && <HeroTopTimeAxis timeRange={timeRange} currentTimeMs={currentTimeMs} hoverTimeMs={hoverTimeMs} readoutTimeMs={readoutTimeMs} />}
                 <UPlotTile
                   tile={tile}
                   heroGraph={heroGraph}
@@ -822,6 +859,7 @@ function SharedTimeAxis({
   currentTimeMs,
   hoverTimeMs,
   peekTimeMs,
+  plotBounds,
   onTimeRange
 }: {
   fullRange: TimeRange;
@@ -829,6 +867,7 @@ function SharedTimeAxis({
   currentTimeMs?: number;
   hoverTimeMs?: number;
   peekTimeMs?: number;
+  plotBounds?: { left: number; right: number };
   onTimeRange: (range: TimeRange) => void;
 }) {
   const ticks = timeTicks(new Date(timeRange.start).toISOString(), new Date(timeRange.end).toISOString(), TIME_GRID_TICK_COUNT);
@@ -841,6 +880,10 @@ function SharedTimeAxis({
   const viewSpan = Math.max(1, timeRange.end - timeRange.start);
   const isZoomed = viewSpan < fullSpan * 0.995;
   const minSpan = Math.max(60_000, fullSpan / 600);
+  const axisStyle = plotBounds ? ({
+    "--time-axis-left": `${plotBounds.left}px`,
+    "--time-axis-right": `${plotBounds.right}px`,
+  } as CSSProperties) : undefined;
   const zoomBy = (factor: number) => {
     const nextSpan = Math.max(minSpan, Math.min(fullSpan, viewSpan * factor));
     const center = (timeRange.start + timeRange.end) / 2;
@@ -853,20 +896,9 @@ function SharedTimeAxis({
   };
   const scrollValue = Math.round(((timeRange.start - fullRange.start) / Math.max(1, fullSpan - viewSpan)) * 1000);
   return (
-    <div className="operator-shared-time-axis" aria-label="Shared graph time axis">
+    <div className="operator-shared-time-axis" aria-label="Shared graph time axis" style={axisStyle}>
       <span className="time-axis-label">TIME</span>
-      <div className="time-axis-track">
-        {nowRatio !== undefined && <i className="time-axis-elapsed" style={{ width: `${nowRatio * 100}%` }} />}
-        {nowRatio !== undefined && <b className="time-axis-now" style={{ left: `${nowRatio * 100}%` }} title="Current replay time" />}
-        {peekTimeMs !== undefined && <b className="time-axis-peek" style={{ left: `${Math.max(0, Math.min(100, ((peekTimeMs - start) / Math.max(1, end - start)) * 100))}%` }} title="Drag peek time" />}
-        {hoverTimeMs !== undefined && <b className="time-axis-hover" style={{ left: `${Math.max(0, Math.min(100, ((hoverTimeMs - start) / Math.max(1, end - start)) * 100))}%` }} />}
-        {ticks.map((tick) => (
-          <span className="time-axis-tick" style={{ left: `${tick.ratio * 100}%` }} key={tick.iso}>
-            <i />
-            <em>{tick.label}</em>
-          </span>
-        ))}
-      </div>
+      <TimeAxisTrack ticks={ticks} start={start} end={end} nowRatio={nowRatio} hoverTimeMs={hoverTimeMs} peekTimeMs={peekTimeMs} />
       <div className="time-axis-controls">
         <span>{spanHours.toFixed(spanHours >= 24 ? 0 : 1)} h</span>
         <small>zoom</small>
@@ -878,6 +910,35 @@ function SharedTimeAxis({
         <small>scroll</small>
         <input type="range" min="0" max="1000" step="1" disabled={!isZoomed} value={Math.max(0, Math.min(1000, scrollValue))} onChange={(event) => setScroll(Number(event.currentTarget.value))} />
       </label>
+    </div>
+  );
+}
+
+function HeroTopTimeAxis({ timeRange, currentTimeMs, hoverTimeMs, readoutTimeMs }: { timeRange: TimeRange; currentTimeMs?: number; hoverTimeMs?: number; readoutTimeMs?: number }) {
+  const start = timeRange.start;
+  const end = timeRange.end;
+  const nowRatio = typeof currentTimeMs === "number" && Number.isFinite(currentTimeMs) ? Math.max(0, Math.min(1, (currentTimeMs - start) / Math.max(1, end - start))) : undefined;
+  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), TIME_GRID_TICK_COUNT);
+  return (
+    <div className="hero-top-time-axis" aria-label="Hero graph top time axis">
+      <TimeAxisTrack ticks={ticks} start={start} end={end} nowRatio={nowRatio} hoverTimeMs={hoverTimeMs} peekTimeMs={readoutTimeMs !== hoverTimeMs ? readoutTimeMs : undefined} compact />
+    </div>
+  );
+}
+
+function TimeAxisTrack({ ticks, start, end, nowRatio, hoverTimeMs, peekTimeMs, compact }: { ticks: ReturnType<typeof timeTicks>; start: number; end: number; nowRatio?: number; hoverTimeMs?: number; peekTimeMs?: number; compact?: boolean }) {
+  return (
+    <div className={`time-axis-track ${compact ? "time-axis-track-compact" : ""}`}>
+      {nowRatio !== undefined && <i className="time-axis-elapsed" style={{ width: `${nowRatio * 100}%` }} />}
+      {nowRatio !== undefined && <b className="time-axis-now" style={{ left: `${nowRatio * 100}%` }} title="Current replay time" />}
+      {peekTimeMs !== undefined && <b className="time-axis-peek" style={{ left: `${Math.max(0, Math.min(100, ((peekTimeMs - start) / Math.max(1, end - start)) * 100))}%` }} title="Drag peek time" />}
+      {hoverTimeMs !== undefined && <b className="time-axis-hover" style={{ left: `${Math.max(0, Math.min(100, ((hoverTimeMs - start) / Math.max(1, end - start)) * 100))}%` }} />}
+      {ticks.map((tick) => (
+        <span className="time-axis-tick" style={{ left: `${tick.ratio * 100}%` }} key={tick.iso}>
+          <i />
+          <em>{tick.label}</em>
+        </span>
+      ))}
     </div>
   );
 }
@@ -1216,39 +1277,47 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
     const x = left + ((markerTime - start) / span) * width;
     if (x < left || x > left + width) return;
     const color = markerColor(marker);
-    const anchor = marker.kind === "functional_gate" ? markerAnchor(plot, tile, markerTime, top, height) : null;
+    const attachedMarker = marker.kind === "functional_gate" || marker.kind === "stability" || marker.kind === "stability_achieved";
+    const anchor = attachedMarker ? markerAnchor(plot, tile, markerTime, top, height) : null;
     const anchorY = anchor?.y ?? top + 10;
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
-    ctx.lineWidth = marker.kind === "functional_gate" ? 1.6 : 1.1;
+    ctx.lineWidth = attachedMarker ? 1.6 : 1.1;
     ctx.setLineDash(marker.role === "interlock" ? [5, 4] : []);
     ctx.beginPath();
-    ctx.moveTo(x, marker.kind === "functional_gate" ? Math.max(top + 2, anchorY - 38) : top + 2);
+    ctx.moveTo(x, attachedMarker ? Math.max(top + 2, anchorY - 42) : top + 2);
     ctx.lineTo(x, top + height - 2);
     ctx.stroke();
     ctx.setLineDash([]);
-    if (marker.kind === "functional_gate") {
+    if (attachedMarker) {
       ctx.beginPath();
-      ctx.moveTo(x, anchorY);
-      ctx.lineTo(x - 5, anchorY - 9);
-      ctx.lineTo(x + 5, anchorY - 9);
-      ctx.closePath();
+      if (marker.kind === "functional_gate") {
+        ctx.moveTo(x, anchorY);
+        ctx.lineTo(x - 5, anchorY - 9);
+        ctx.lineTo(x + 5, anchorY - 9);
+        ctx.closePath();
+      } else {
+        ctx.arc(x, anchorY, 4.2, 0, Math.PI * 2);
+      }
       ctx.fill();
       const label = shortGateLabel(marker.label);
       ctx.save();
-      ctx.font = "700 12px system-ui, sans-serif";
+      ctx.font = "850 14px system-ui, sans-serif";
       const metrics = ctx.measureText(label);
-      const labelWidth = Math.max(34, metrics.width + 8);
-      const labelX = Math.max(left + 8, Math.min(left + width - labelWidth - 8, x + 7));
-      const labelY = Math.max(top + 18, Math.min(top + height - 14, anchorY - 12));
+      const labelWidth = Math.max(42, metrics.width + 11);
+      const labelX = Math.max(left + 8, Math.min(left + width - labelWidth - 8, x + 8));
+      const labelY = Math.max(top + 24, Math.min(top + height - 16, anchorY - 14));
       ctx.translate(labelX, labelY);
       const nearRightEdge = x > left + width - 72;
-      ctx.rotate(nearRightEdge ? -Math.PI / 9 : -Math.PI / 5.2);
-      ctx.fillStyle = "rgba(3,7,12,0.74)";
-      ctx.fillRect(-4, -13, labelWidth, 16);
-      ctx.fillStyle = "#fff6c2";
+      ctx.rotate(nearRightEdge ? -Math.PI / 12 : -Math.PI / 6);
+      ctx.fillStyle = "rgba(2,6,11,0.92)";
+      ctx.fillRect(-5, -16, labelWidth, 20);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(-5, -16, labelWidth, 20);
+      ctx.fillStyle = marker.kind === "functional_gate" ? "#fff0a8" : "#c9ffef";
       ctx.shadowColor = "rgba(0,0,0,0.88)";
-      ctx.shadowBlur = 4;
+      ctx.shadowBlur = 5;
       ctx.fillText(label, 0, 0);
       ctx.restore();
     } else {
@@ -1300,13 +1369,15 @@ function markerAnchor(plot: uPlot, tile: GraphTile, timeMs: number, top: number,
 function markerColor(marker: { role?: string; result?: string; kind?: string }) {
   if (marker.role === "interlock" || marker.result === "fail") return "rgba(255,49,95,0.96)";
   if (marker.role === "evidence") return "rgba(176,121,255,0.96)";
-  if (marker.kind === "stability" || marker.result === "pass") return "rgba(0,214,163,0.96)";
   if (marker.kind === "functional_gate") return "rgba(255,176,0,0.98)";
+  if (marker.kind === "stability" || marker.kind === "stability_achieved" || marker.result === "pass") return "rgba(0,214,163,0.96)";
   return "rgba(49,214,255,0.95)";
 }
 
 function shortGateLabel(label: string) {
   return label
+    .replace(/^Stable\s+/i, "STABLE ")
+    .replace(/\s+confirmed$/i, "")
     .replace(/^Cycle\s+/i, "C")
     .replace(/\s+dwell\s+functional\s+test/i, " FT")
     .replace(/\s+functional\s+test/i, " FT")
@@ -1468,11 +1539,45 @@ function timeTicks(startISO: string, endISO: string, count: number) {
   const start = Date.parse(startISO);
   const end = Date.parse(endISO);
   const span = Math.max(1, end - start);
-  return Array.from({ length: count }, (_, index) => {
-    const ratio = count === 1 ? 0 : index / (count - 1);
-    const d = new Date(start + span * ratio);
-    return { iso: d.toISOString(), ratio, label: `${d.toLocaleDateString(undefined, { month: "short", day: "2-digit" })} ${d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}` };
-  });
+  const target = Math.max(10, Math.min(20, count || TIME_GRID_TICK_COUNT));
+  const step = chooseTickStep(span, target);
+  const first = Math.ceil(start / step) * step;
+  const ticks: Array<{ iso: string; ratio: number; label: string }> = [];
+  for (let t = first; t <= end && ticks.length < 24; t += step) {
+    if (t < start) continue;
+    const d = new Date(t);
+    ticks.push({ iso: d.toISOString(), ratio: (t - start) / span, label: tickLabel(d, step) });
+  }
+  if (!ticks.length || ticks[0].ratio > 0.02) ticks.unshift({ iso: new Date(start).toISOString(), ratio: 0, label: tickLabel(new Date(start), step) });
+  const last = ticks[ticks.length - 1];
+  if (last && last.ratio < 0.98) ticks.push({ iso: new Date(end).toISOString(), ratio: 1, label: tickLabel(new Date(end), step) });
+  return ticks.filter((tick, index, all) => index === 0 || tick.iso !== all[index - 1].iso);
+}
+
+function chooseTickStep(spanMs: number, targetCount: number) {
+  const targetStep = spanMs / Math.max(1, targetCount - 1);
+  const steps = [
+    5 * 60_000,
+    10 * 60_000,
+    15 * 60_000,
+    30 * 60_000,
+    60 * 60_000,
+    3 * 60 * 60_000,
+    6 * 60 * 60_000,
+    12 * 60 * 60_000,
+    24 * 60 * 60_000,
+    2 * 24 * 60 * 60_000,
+    7 * 24 * 60 * 60_000,
+    14 * 24 * 60 * 60_000,
+    30 * 24 * 60 * 60_000,
+  ];
+  return steps.find((step) => step >= targetStep) ?? steps[steps.length - 1];
+}
+
+function tickLabel(date: Date, stepMs: number) {
+  const time = date.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+  if (stepMs < 24 * 60 * 60_000) return time;
+  return `${date.toLocaleDateString(undefined, { month: "short", day: "2-digit" })} ${time}`;
 }
 
 function scheduleTileWork(work: () => void, delayMs: number) {
