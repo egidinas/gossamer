@@ -865,7 +865,7 @@
     "model": "multi_path_dut_thermal_rc_v2",
     "model_version": "2026.05.3",
     "seed": 42017,
-    "step_seconds": 300,
+    "step_seconds": 60,
     "source": "gossamer internal/environmentalsim deterministic fixture",
     "parameters": {
       "chamber_air_tau_min": 18,
@@ -3452,8 +3452,8 @@
         "label": "Minute",
         "resolution": "minute",
         "duration_ms": 60000,
-        "max_points": 900,
-        "decimation_mode": "min_max_envelope"
+        "max_points": 4200,
+        "decimation_mode": "viewport_lttb_seed"
       },
       {
         "id": "second",

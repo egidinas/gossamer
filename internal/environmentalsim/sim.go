@@ -86,7 +86,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 		seed = 84031
 	}
 	rng := rand.New(rand.NewSource(seed))
-	dt := 5 * time.Minute
+	dt := time.Minute
 	st := state{chamberAir: 22, table: 22, shroud: 22.4, shroudInlet: 22.2, shroudOutlet: 22.7, exhaustCryoTemp: 20, exhaustScavengedTemp: 20, scavengerWaterReturn: 15.8, fastComponent: 21.2, lazyComponent: 22.6, pressure: 101325, volatilePool: 1, tmPackets: 6000, tcPackets: 120}
 	fastNode := componentParams{
 		capacitanceJPerK: 3200, airConductanceWPerK: 0.34, tableConductanceWPerK: 0.52,

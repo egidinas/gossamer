@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-07T07:21:27Z",
+  "generated_at": "2026-05-07T08:58:23Z",
   "id": "tvac_qualification_state_change_swimlane_minute_1768471200",
   "manifest_id": "tvac_qualification_tile_manifest",
   "campaign_id": "tvac_qualification",
   "card_id": "state_change_swimlane",
   "level": "minute",
   "t0": "2026-01-15T10:00:00Z",
-  "t1": "2026-01-31T23:57:00Z",
+  "t1": "2026-02-01T00:01:00Z",
   "diagnostics": {
     "source": "fixture_graph_model",
     "mode": "offline_static_tile",
-    "point_count": 561,
-    "raw_point_count": 45936,
+    "point_count": 334,
+    "raw_point_count": 382112,
     "decimated": true,
     "decimation": "min_max_envelope",
-    "time_span_ms": 1432620000,
+    "time_span_ms": 1432860000,
     "freshness_ms": 250
   },
   "provenance": {
@@ -50,294 +50,275 @@
       "spans": [
         {
           "start": "2026-01-15T10:00:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-16T12:01:00Z",
           "state": "0",
           "label": "ambient pre"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "state": "0",
-          "label": "ambient pre"
+          "start": "2026-01-16T12:01:00Z",
+          "end": "2026-01-16T12:59:00Z",
+          "value": 3,
+          "state": "3",
+          "label": "ramp hot"
         },
         {
-          "start": "2026-01-16T03:05:00Z",
-          "end": "2026-01-16T12:58:00Z",
-          "state": "0",
-          "label": "ambient pre"
-        },
-        {
-          "start": "2026-01-16T12:58:00Z",
-          "end": "2026-01-16T20:03:00Z",
+          "start": "2026-01-16T12:59:00Z",
+          "end": "2026-01-17T08:31:00Z",
           "value": 5,
           "state": "5",
           "label": "hot survival"
         },
         {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
-          "value": 5,
-          "state": "5",
-          "label": "hot survival"
-        },
-        {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T08:30:00Z",
-          "value": 5,
-          "state": "5",
-          "label": "hot survival"
-        },
-        {
-          "start": "2026-01-17T08:30:00Z",
-          "end": "2026-01-17T13:05:00Z",
+          "start": "2026-01-17T08:31:00Z",
+          "end": "2026-01-17T08:41:00Z",
           "value": 3,
           "state": "3",
           "label": "ramp hot"
         },
         {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
+          "start": "2026-01-17T08:41:00Z",
+          "end": "2026-01-17T18:11:00Z",
           "value": 4,
           "state": "4",
           "label": "hot op"
         },
         {
-          "start": "2026-01-17T13:10:00Z",
-          "end": "2026-01-17T18:15:00Z",
-          "value": 4,
-          "state": "4",
-          "label": "hot op"
-        },
-        {
-          "start": "2026-01-17T18:15:00Z",
-          "end": "2026-01-17T20:15:00Z",
+          "start": "2026-01-17T18:11:00Z",
+          "end": "2026-01-17T20:11:00Z",
           "value": 1,
           "state": "1",
           "label": "ramp cold"
         },
         {
-          "start": "2026-01-17T20:15:00Z",
-          "end": "2026-01-18T06:10:00Z",
+          "start": "2026-01-17T20:11:00Z",
+          "end": "2026-01-18T19:05:00Z",
           "value": 6,
           "state": "6",
           "label": "cold survival"
         },
         {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
-          "value": 6,
-          "state": "6",
-          "label": "cold survival"
-        },
-        {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T19:04:00Z",
-          "value": 6,
-          "state": "6",
-          "label": "cold survival"
-        },
-        {
-          "start": "2026-01-18T19:04:00Z",
-          "end": "2026-01-18T23:14:00Z",
+          "start": "2026-01-18T19:05:00Z",
+          "end": "2026-01-18T19:15:00Z",
           "value": 1,
           "state": "1",
           "label": "ramp cold"
         },
         {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
+          "start": "2026-01-18T19:15:00Z",
+          "end": "2026-01-19T04:45:00Z",
           "value": 2,
           "state": "2",
           "label": "cold op"
         },
         {
-          "start": "2026-01-18T23:19:00Z",
-          "end": "2026-01-19T06:39:00Z",
-          "value": 2,
-          "state": "2",
-          "label": "cold op"
-        },
-        {
-          "start": "2026-01-19T06:39:00Z",
-          "end": "2026-01-19T16:19:00Z",
-          "value": 4,
-          "state": "4",
-          "label": "hot op"
-        },
-        {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
-          "value": 4,
-          "state": "4",
-          "label": "hot op"
-        },
-        {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-20T00:16:00Z",
-          "value": 4,
-          "state": "4",
-          "label": "hot op"
-        },
-        {
-          "start": "2026-01-20T00:16:00Z",
-          "end": "2026-01-20T09:21:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ramp cold"
-        },
-        {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
-          "value": 2,
-          "state": "2",
-          "label": "cold op"
-        },
-        {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-20T21:43:00Z",
-          "value": 2,
-          "state": "2",
-          "label": "cold op"
-        },
-        {
-          "start": "2026-01-20T21:43:00Z",
-          "end": "2026-01-21T02:23:00Z",
-          "value": 4,
-          "state": "4",
-          "label": "hot op"
-        },
-        {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
-          "value": 4,
-          "state": "4",
-          "label": "hot op"
-        },
-        {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T15:20:00Z",
-          "value": 4,
-          "state": "4",
-          "label": "hot op"
-        },
-        {
-          "start": "2026-01-21T15:20:00Z",
-          "end": "2026-01-21T19:25:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ramp cold"
-        },
-        {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
-          "value": 2,
-          "state": "2",
-          "label": "cold op"
-        },
-        {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T10:52:00Z",
-          "value": 2,
-          "state": "2",
-          "label": "cold op"
-        },
-        {
-          "start": "2026-01-22T10:52:00Z",
-          "end": "2026-01-22T12:27:00Z",
+          "start": "2026-01-19T04:45:00Z",
+          "end": "2026-01-19T06:35:00Z",
           "value": 3,
           "state": "3",
           "label": "ramp hot"
         },
         {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "ramp hot"
-        },
-        {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-22T12:47:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "ramp hot"
-        },
-        {
-          "start": "2026-01-22T12:47:00Z",
-          "end": "2026-01-23T05:32:00Z",
+          "start": "2026-01-19T06:35:00Z",
+          "end": "2026-01-20T00:17:00Z",
           "value": 4,
           "state": "4",
           "label": "hot op"
         },
         {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
-          "value": 4,
-          "state": "4",
-          "label": "hot op"
-        },
-        {
-          "start": "2026-01-23T05:37:00Z",
-          "end": "2026-01-23T06:24:00Z",
-          "value": 4,
-          "state": "4",
-          "label": "hot op"
-        },
-        {
-          "start": "2026-01-23T06:24:00Z",
-          "end": "2026-01-23T22:34:00Z",
+          "start": "2026-01-20T00:17:00Z",
+          "end": "2026-01-20T02:07:00Z",
           "value": 1,
           "state": "1",
           "label": "ramp cold"
         },
         {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
+          "start": "2026-01-20T02:07:00Z",
+          "end": "2026-01-20T19:49:00Z",
           "value": 2,
           "state": "2",
           "label": "cold op"
         },
         {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T03:51:00Z",
-          "value": 2,
-          "state": "2",
-          "label": "cold op"
+          "start": "2026-01-20T19:49:00Z",
+          "end": "2026-01-20T21:39:00Z",
+          "value": 3,
+          "state": "3",
+          "label": "ramp hot"
         },
         {
-          "start": "2026-01-24T03:51:00Z",
-          "end": "2026-01-24T15:36:00Z",
+          "start": "2026-01-20T21:39:00Z",
+          "end": "2026-01-21T15:21:00Z",
           "value": 4,
           "state": "4",
           "label": "hot op"
         },
         {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
-          "value": 4,
-          "state": "4",
-          "label": "hot op"
-        },
-        {
-          "start": "2026-01-24T15:41:00Z",
-          "end": "2026-01-24T21:28:00Z",
-          "value": 4,
-          "state": "4",
-          "label": "hot op"
-        },
-        {
-          "start": "2026-01-24T21:28:00Z",
-          "end": "2026-01-25T08:43:00Z",
+          "start": "2026-01-21T15:21:00Z",
+          "end": "2026-01-21T17:11:00Z",
           "value": 1,
           "state": "1",
           "label": "ramp cold"
         },
         {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
+          "start": "2026-01-21T17:11:00Z",
+          "end": "2026-01-22T10:53:00Z",
           "value": 2,
           "state": "2",
           "label": "cold op"
+        },
+        {
+          "start": "2026-01-22T10:53:00Z",
+          "end": "2026-01-22T12:43:00Z",
+          "value": 3,
+          "state": "3",
+          "label": "ramp hot"
+        },
+        {
+          "start": "2026-01-22T12:43:00Z",
+          "end": "2026-01-23T06:25:00Z",
+          "value": 4,
+          "state": "4",
+          "label": "hot op"
+        },
+        {
+          "start": "2026-01-23T06:25:00Z",
+          "end": "2026-01-23T08:15:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "ramp cold"
+        },
+        {
+          "start": "2026-01-23T08:15:00Z",
+          "end": "2026-01-24T01:57:00Z",
+          "value": 2,
+          "state": "2",
+          "label": "cold op"
+        },
+        {
+          "start": "2026-01-24T01:57:00Z",
+          "end": "2026-01-24T03:47:00Z",
+          "value": 3,
+          "state": "3",
+          "label": "ramp hot"
+        },
+        {
+          "start": "2026-01-24T03:47:00Z",
+          "end": "2026-01-24T21:29:00Z",
+          "value": 4,
+          "state": "4",
+          "label": "hot op"
+        },
+        {
+          "start": "2026-01-24T21:29:00Z",
+          "end": "2026-01-24T23:19:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "ramp cold"
+        },
+        {
+          "start": "2026-01-24T23:19:00Z",
+          "end": "2026-01-25T17:01:00Z",
+          "value": 2,
+          "state": "2",
+          "label": "cold op"
+        },
+        {
+          "start": "2026-01-25T17:01:00Z",
+          "end": "2026-01-25T18:51:00Z",
+          "value": 3,
+          "state": "3",
+          "label": "ramp hot"
+        },
+        {
+          "start": "2026-01-25T18:51:00Z",
+          "end": "2026-01-26T12:33:00Z",
+          "value": 4,
+          "state": "4",
+          "label": "hot op"
+        },
+        {
+          "start": "2026-01-26T12:33:00Z",
+          "end": "2026-01-26T14:23:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "ramp cold"
+        },
+        {
+          "start": "2026-01-26T14:23:00Z",
+          "end": "2026-01-27T08:05:00Z",
+          "value": 2,
+          "state": "2",
+          "label": "cold op"
+        },
+        {
+          "start": "2026-01-27T08:05:00Z",
+          "end": "2026-01-27T09:55:00Z",
+          "value": 3,
+          "state": "3",
+          "label": "ramp hot"
+        },
+        {
+          "start": "2026-01-27T09:55:00Z",
+          "end": "2026-01-28T03:37:00Z",
+          "value": 4,
+          "state": "4",
+          "label": "hot op"
+        },
+        {
+          "start": "2026-01-28T03:37:00Z",
+          "end": "2026-01-28T05:27:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "ramp cold"
+        },
+        {
+          "start": "2026-01-28T05:27:00Z",
+          "end": "2026-01-28T23:09:00Z",
+          "value": 2,
+          "state": "2",
+          "label": "cold op"
+        },
+        {
+          "start": "2026-01-28T23:09:00Z",
+          "end": "2026-01-29T00:59:00Z",
+          "value": 3,
+          "state": "3",
+          "label": "ramp hot"
+        },
+        {
+          "start": "2026-01-29T00:59:00Z",
+          "end": "2026-01-29T18:41:00Z",
+          "value": 4,
+          "state": "4",
+          "label": "hot op"
+        },
+        {
+          "start": "2026-01-29T18:41:00Z",
+          "end": "2026-01-29T20:31:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "ramp cold"
+        },
+        {
+          "start": "2026-01-29T20:31:00Z",
+          "end": "2026-01-30T14:13:00Z",
+          "value": 2,
+          "state": "2",
+          "label": "cold op"
+        },
+        {
+          "start": "2026-01-30T14:13:00Z",
+          "end": "2026-01-30T16:13:00Z",
+          "value": 7,
+          "state": "7",
+          "label": "vacuum ambient"
+        },
+        {
+          "start": "2026-01-30T16:13:00Z",
+          "end": "2026-02-01T00:01:00Z",
+          "value": 8,
+          "state": "8",
+          "label": "ambient post"
         }
       ]
     },
@@ -364,240 +345,261 @@
         },
         {
           "start": "2026-01-15T11:15:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-15T11:46:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-16T03:05:00Z",
+          "start": "2026-01-15T11:46:00Z",
           "end": "2026-01-16T11:15:00Z",
           "state": "0",
           "label": "inactive"
         },
         {
           "start": "2026-01-16T11:15:00Z",
-          "end": "2026-01-16T20:03:00Z",
+          "end": "2026-01-16T11:46:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
+          "start": "2026-01-16T11:46:00Z",
+          "end": "2026-01-17T17:29:00Z",
           "state": "0",
           "label": "inactive"
         },
         {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T13:05:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-17T13:10:00Z",
-          "end": "2026-01-17T17:30:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-17T17:30:00Z",
-          "end": "2026-01-18T06:10:00Z",
+          "start": "2026-01-17T17:29:00Z",
+          "end": "2026-01-17T18:00:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T23:14:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
+          "start": "2026-01-17T18:00:00Z",
           "end": "2026-01-19T04:14:00Z",
           "state": "0",
           "label": "inactive"
         },
         {
           "start": "2026-01-19T04:14:00Z",
-          "end": "2026-01-19T16:19:00Z",
+          "end": "2026-01-19T04:45:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
+          "start": "2026-01-19T04:45:00Z",
+          "end": "2026-01-19T23:46:00Z",
           "state": "0",
           "label": "inactive"
         },
         {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-19T23:49:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-19T23:49:00Z",
-          "end": "2026-01-20T09:21:00Z",
+          "start": "2026-01-19T23:46:00Z",
+          "end": "2026-01-20T00:17:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
+          "start": "2026-01-20T00:17:00Z",
+          "end": "2026-01-20T18:48:00Z",
           "state": "0",
           "label": "inactive"
         },
         {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-20T18:51:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-20T18:51:00Z",
-          "end": "2026-01-21T02:23:00Z",
+          "start": "2026-01-20T18:48:00Z",
+          "end": "2026-01-20T19:19:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
+          "start": "2026-01-20T19:19:00Z",
+          "end": "2026-01-21T14:26:00Z",
           "state": "0",
           "label": "inactive"
         },
         {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T14:28:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-21T14:28:00Z",
-          "end": "2026-01-21T19:25:00Z",
+          "start": "2026-01-21T14:26:00Z",
+          "end": "2026-01-21T14:57:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
+          "start": "2026-01-21T14:57:00Z",
+          "end": "2026-01-22T10:09:00Z",
           "state": "0",
           "label": "inactive"
         },
         {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T10:10:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-22T10:10:00Z",
-          "end": "2026-01-22T12:27:00Z",
+          "start": "2026-01-22T10:09:00Z",
+          "end": "2026-01-22T10:40:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-23T05:32:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-23T05:37:00Z",
+          "start": "2026-01-22T10:40:00Z",
           "end": "2026-01-23T05:47:00Z",
           "state": "0",
           "label": "inactive"
         },
         {
           "start": "2026-01-23T05:47:00Z",
-          "end": "2026-01-23T22:34:00Z",
+          "end": "2026-01-23T06:18:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
+          "start": "2026-01-23T06:18:00Z",
+          "end": "2026-01-24T01:26:00Z",
           "state": "0",
           "label": "inactive"
         },
         {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T01:29:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-24T01:29:00Z",
-          "end": "2026-01-24T15:36:00Z",
+          "start": "2026-01-24T01:26:00Z",
+          "end": "2026-01-24T01:57:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
-          "state": "0",
-          "label": "inactive"
-        },
-        {
-          "start": "2026-01-24T15:41:00Z",
+          "start": "2026-01-24T01:57:00Z",
           "end": "2026-01-24T20:21:00Z",
           "state": "0",
           "label": "inactive"
         },
         {
           "start": "2026-01-24T20:21:00Z",
-          "end": "2026-01-25T08:43:00Z",
+          "end": "2026-01-24T20:52:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
+          "start": "2026-01-24T20:52:00Z",
+          "end": "2026-01-25T15:45:00Z",
+          "state": "0",
+          "label": "inactive"
+        },
+        {
+          "start": "2026-01-25T15:45:00Z",
+          "end": "2026-01-25T16:16:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-25T16:16:00Z",
+          "end": "2026-01-26T11:17:00Z",
+          "state": "0",
+          "label": "inactive"
+        },
+        {
+          "start": "2026-01-26T11:17:00Z",
+          "end": "2026-01-26T11:48:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-26T11:48:00Z",
+          "end": "2026-01-27T06:49:00Z",
+          "state": "0",
+          "label": "inactive"
+        },
+        {
+          "start": "2026-01-27T06:49:00Z",
+          "end": "2026-01-27T07:20:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-27T07:20:00Z",
+          "end": "2026-01-28T02:21:00Z",
+          "state": "0",
+          "label": "inactive"
+        },
+        {
+          "start": "2026-01-28T02:21:00Z",
+          "end": "2026-01-28T02:52:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-28T02:52:00Z",
+          "end": "2026-01-28T21:53:00Z",
+          "state": "0",
+          "label": "inactive"
+        },
+        {
+          "start": "2026-01-28T21:53:00Z",
+          "end": "2026-01-28T22:24:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-28T22:24:00Z",
+          "end": "2026-01-29T17:25:00Z",
+          "state": "0",
+          "label": "inactive"
+        },
+        {
+          "start": "2026-01-29T17:25:00Z",
+          "end": "2026-01-29T17:56:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-29T17:56:00Z",
+          "end": "2026-01-30T12:57:00Z",
+          "state": "0",
+          "label": "inactive"
+        },
+        {
+          "start": "2026-01-30T12:57:00Z",
+          "end": "2026-01-30T13:28:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-30T13:28:00Z",
+          "end": "2026-01-30T14:57:00Z",
+          "state": "0",
+          "label": "inactive"
+        },
+        {
+          "start": "2026-01-30T14:57:00Z",
+          "end": "2026-01-30T15:28:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-30T15:28:00Z",
+          "end": "2026-01-31T23:17:00Z",
+          "state": "0",
+          "label": "inactive"
+        },
+        {
+          "start": "2026-01-31T23:17:00Z",
+          "end": "2026-01-31T23:47:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-31T23:47:00Z",
+          "end": "2026-02-01T00:01:00Z",
           "state": "0",
           "label": "inactive"
         }
@@ -620,255 +622,241 @@
       "spans": [
         {
           "start": "2026-01-15T10:00:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-17T04:30:00Z",
           "state": "0",
           "label": "stabilizing"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "state": "0",
-          "label": "stabilizing"
-        },
-        {
-          "start": "2026-01-16T03:05:00Z",
-          "end": "2026-01-16T20:03:00Z",
-          "state": "0",
-          "label": "stabilizing"
-        },
-        {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
-          "state": "0",
-          "label": "stabilizing"
-        },
-        {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T04:33:00Z",
-          "state": "0",
-          "label": "stabilizing"
-        },
-        {
-          "start": "2026-01-17T04:33:00Z",
-          "end": "2026-01-17T13:05:00Z",
+          "start": "2026-01-17T04:30:00Z",
+          "end": "2026-01-17T08:31:00Z",
           "value": 1,
           "state": "1",
           "label": "stable"
         },
         {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
-          "state": "0",
-          "label": "stabilizing"
-        },
-        {
-          "start": "2026-01-17T13:10:00Z",
+          "start": "2026-01-17T08:31:00Z",
           "end": "2026-01-17T14:10:00Z",
           "state": "0",
           "label": "stabilizing"
         },
         {
           "start": "2026-01-17T14:10:00Z",
-          "end": "2026-01-18T06:10:00Z",
+          "end": "2026-01-17T18:11:00Z",
           "value": 1,
           "state": "1",
           "label": "stable"
         },
         {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
+          "start": "2026-01-17T18:11:00Z",
+          "end": "2026-01-18T15:04:00Z",
           "state": "0",
           "label": "stabilizing"
         },
         {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T15:05:00Z",
-          "state": "0",
-          "label": "stabilizing"
-        },
-        {
-          "start": "2026-01-18T15:05:00Z",
-          "end": "2026-01-18T23:14:00Z",
+          "start": "2026-01-18T15:04:00Z",
+          "end": "2026-01-18T19:05:00Z",
           "value": 1,
           "state": "1",
           "label": "stable"
         },
         {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "state": "0",
-          "label": "stabilizing"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
+          "start": "2026-01-18T19:05:00Z",
           "end": "2026-01-19T00:44:00Z",
           "state": "0",
           "label": "stabilizing"
         },
         {
           "start": "2026-01-19T00:44:00Z",
-          "end": "2026-01-19T16:19:00Z",
+          "end": "2026-01-19T04:45:00Z",
           "value": 1,
           "state": "1",
           "label": "stable"
         },
         {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
+          "start": "2026-01-19T04:45:00Z",
+          "end": "2026-01-19T20:16:00Z",
           "state": "0",
           "label": "stabilizing"
         },
         {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-19T20:19:00Z",
-          "state": "0",
-          "label": "stabilizing"
-        },
-        {
-          "start": "2026-01-19T20:19:00Z",
-          "end": "2026-01-20T09:21:00Z",
+          "start": "2026-01-19T20:16:00Z",
+          "end": "2026-01-20T00:17:00Z",
           "value": 1,
           "state": "1",
           "label": "stable"
         },
         {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
+          "start": "2026-01-20T00:17:00Z",
+          "end": "2026-01-20T15:48:00Z",
           "state": "0",
           "label": "stabilizing"
         },
         {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-20T15:51:00Z",
-          "state": "0",
-          "label": "stabilizing"
-        },
-        {
-          "start": "2026-01-20T15:51:00Z",
-          "end": "2026-01-21T02:23:00Z",
+          "start": "2026-01-20T15:48:00Z",
+          "end": "2026-01-20T19:49:00Z",
           "value": 1,
           "state": "1",
           "label": "stable"
         },
         {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
+          "start": "2026-01-20T19:49:00Z",
+          "end": "2026-01-21T11:20:00Z",
           "state": "0",
           "label": "stabilizing"
         },
         {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T11:23:00Z",
-          "state": "0",
-          "label": "stabilizing"
-        },
-        {
-          "start": "2026-01-21T11:23:00Z",
-          "end": "2026-01-21T19:25:00Z",
+          "start": "2026-01-21T11:20:00Z",
+          "end": "2026-01-21T15:21:00Z",
           "value": 1,
           "state": "1",
           "label": "stable"
         },
         {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
+          "start": "2026-01-21T15:21:00Z",
+          "end": "2026-01-22T06:52:00Z",
           "state": "0",
           "label": "stabilizing"
         },
         {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T06:55:00Z",
-          "state": "0",
-          "label": "stabilizing"
-        },
-        {
-          "start": "2026-01-22T06:55:00Z",
-          "end": "2026-01-22T12:27:00Z",
+          "start": "2026-01-22T06:52:00Z",
+          "end": "2026-01-22T10:53:00Z",
           "value": 1,
           "state": "1",
           "label": "stable"
         },
         {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
+          "start": "2026-01-22T10:53:00Z",
+          "end": "2026-01-23T02:24:00Z",
           "state": "0",
           "label": "stabilizing"
         },
         {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-23T02:27:00Z",
-          "state": "0",
-          "label": "stabilizing"
-        },
-        {
-          "start": "2026-01-23T02:27:00Z",
-          "end": "2026-01-23T05:32:00Z",
+          "start": "2026-01-23T02:24:00Z",
+          "end": "2026-01-23T06:25:00Z",
           "value": 1,
           "state": "1",
           "label": "stable"
         },
         {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "stable"
-        },
-        {
-          "start": "2026-01-23T05:37:00Z",
-          "end": "2026-01-23T06:24:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "stable"
-        },
-        {
-          "start": "2026-01-23T06:24:00Z",
-          "end": "2026-01-23T22:34:00Z",
+          "start": "2026-01-23T06:25:00Z",
+          "end": "2026-01-23T21:56:00Z",
           "state": "0",
           "label": "stabilizing"
         },
         {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
+          "start": "2026-01-23T21:56:00Z",
+          "end": "2026-01-24T01:57:00Z",
           "value": 1,
           "state": "1",
           "label": "stable"
         },
         {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T01:56:00Z",
+          "start": "2026-01-24T01:57:00Z",
+          "end": "2026-01-24T17:28:00Z",
+          "state": "0",
+          "label": "stabilizing"
+        },
+        {
+          "start": "2026-01-24T17:28:00Z",
+          "end": "2026-01-24T21:29:00Z",
           "value": 1,
           "state": "1",
           "label": "stable"
         },
         {
-          "start": "2026-01-24T01:56:00Z",
-          "end": "2026-01-24T15:36:00Z",
+          "start": "2026-01-24T21:29:00Z",
+          "end": "2026-01-25T13:00:00Z",
           "state": "0",
           "label": "stabilizing"
         },
         {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
-          "state": "0",
-          "label": "stabilizing"
-        },
-        {
-          "start": "2026-01-24T15:41:00Z",
-          "end": "2026-01-24T17:31:00Z",
-          "state": "0",
-          "label": "stabilizing"
-        },
-        {
-          "start": "2026-01-24T17:31:00Z",
-          "end": "2026-01-25T08:43:00Z",
+          "start": "2026-01-25T13:00:00Z",
+          "end": "2026-01-25T17:01:00Z",
           "value": 1,
           "state": "1",
           "label": "stable"
         },
         {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
+          "start": "2026-01-25T17:01:00Z",
+          "end": "2026-01-26T08:32:00Z",
+          "state": "0",
+          "label": "stabilizing"
+        },
+        {
+          "start": "2026-01-26T08:32:00Z",
+          "end": "2026-01-26T12:33:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "stable"
+        },
+        {
+          "start": "2026-01-26T12:33:00Z",
+          "end": "2026-01-27T04:04:00Z",
+          "state": "0",
+          "label": "stabilizing"
+        },
+        {
+          "start": "2026-01-27T04:04:00Z",
+          "end": "2026-01-27T08:05:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "stable"
+        },
+        {
+          "start": "2026-01-27T08:05:00Z",
+          "end": "2026-01-27T23:36:00Z",
+          "state": "0",
+          "label": "stabilizing"
+        },
+        {
+          "start": "2026-01-27T23:36:00Z",
+          "end": "2026-01-28T03:37:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "stable"
+        },
+        {
+          "start": "2026-01-28T03:37:00Z",
+          "end": "2026-01-28T19:08:00Z",
+          "state": "0",
+          "label": "stabilizing"
+        },
+        {
+          "start": "2026-01-28T19:08:00Z",
+          "end": "2026-01-28T23:09:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "stable"
+        },
+        {
+          "start": "2026-01-28T23:09:00Z",
+          "end": "2026-01-29T14:40:00Z",
+          "state": "0",
+          "label": "stabilizing"
+        },
+        {
+          "start": "2026-01-29T14:40:00Z",
+          "end": "2026-01-29T18:41:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "stable"
+        },
+        {
+          "start": "2026-01-29T18:41:00Z",
+          "end": "2026-01-30T10:12:00Z",
+          "state": "0",
+          "label": "stabilizing"
+        },
+        {
+          "start": "2026-01-30T10:12:00Z",
+          "end": "2026-01-30T14:13:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "stable"
+        },
+        {
+          "start": "2026-01-30T14:13:00Z",
+          "end": "2026-02-01T00:01:00Z",
           "state": "0",
           "label": "stabilizing"
         }
@@ -891,254 +879,241 @@
       "spans": [
         {
           "start": "2026-01-15T10:00:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-17T04:30:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-16T03:05:00Z",
-          "end": "2026-01-16T20:03:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T04:33:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-17T04:33:00Z",
-          "end": "2026-01-17T13:05:00Z",
+          "start": "2026-01-17T04:30:00Z",
+          "end": "2026-01-17T07:30:00Z",
           "value": 1,
           "state": "1",
           "label": "dwelling"
         },
         {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-17T13:10:00Z",
+          "start": "2026-01-17T07:30:00Z",
           "end": "2026-01-17T14:10:00Z",
           "state": "0",
           "label": "idle"
         },
         {
           "start": "2026-01-17T14:10:00Z",
-          "end": "2026-01-18T06:10:00Z",
+          "end": "2026-01-17T17:10:00Z",
           "value": 1,
           "state": "1",
           "label": "dwelling"
         },
         {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
+          "start": "2026-01-17T17:10:00Z",
+          "end": "2026-01-18T15:04:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T15:05:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-18T15:05:00Z",
-          "end": "2026-01-18T23:14:00Z",
+          "start": "2026-01-18T15:04:00Z",
+          "end": "2026-01-18T18:04:00Z",
           "value": 1,
           "state": "1",
           "label": "dwelling"
         },
         {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
+          "start": "2026-01-18T18:04:00Z",
           "end": "2026-01-19T00:44:00Z",
           "state": "0",
           "label": "idle"
         },
         {
           "start": "2026-01-19T00:44:00Z",
-          "end": "2026-01-19T16:19:00Z",
+          "end": "2026-01-19T03:44:00Z",
           "value": 1,
           "state": "1",
           "label": "dwelling"
         },
         {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
+          "start": "2026-01-19T03:44:00Z",
+          "end": "2026-01-19T20:16:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-19T20:19:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-19T20:19:00Z",
-          "end": "2026-01-20T09:21:00Z",
+          "start": "2026-01-19T20:16:00Z",
+          "end": "2026-01-19T23:16:00Z",
           "value": 1,
           "state": "1",
           "label": "dwelling"
         },
         {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
+          "start": "2026-01-19T23:16:00Z",
+          "end": "2026-01-20T15:48:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-20T15:51:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-20T15:51:00Z",
-          "end": "2026-01-21T02:23:00Z",
+          "start": "2026-01-20T15:48:00Z",
+          "end": "2026-01-20T18:48:00Z",
           "value": 1,
           "state": "1",
           "label": "dwelling"
         },
         {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
+          "start": "2026-01-20T18:48:00Z",
+          "end": "2026-01-21T11:20:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T11:23:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-21T11:23:00Z",
-          "end": "2026-01-21T19:25:00Z",
+          "start": "2026-01-21T11:20:00Z",
+          "end": "2026-01-21T14:20:00Z",
           "value": 1,
           "state": "1",
           "label": "dwelling"
         },
         {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
+          "start": "2026-01-21T14:20:00Z",
+          "end": "2026-01-22T06:52:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T06:55:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-22T06:55:00Z",
-          "end": "2026-01-22T12:27:00Z",
+          "start": "2026-01-22T06:52:00Z",
+          "end": "2026-01-22T09:52:00Z",
           "value": 1,
           "state": "1",
           "label": "dwelling"
         },
         {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
+          "start": "2026-01-22T09:52:00Z",
+          "end": "2026-01-23T02:24:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-23T02:27:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-23T02:27:00Z",
-          "end": "2026-01-23T05:32:00Z",
+          "start": "2026-01-23T02:24:00Z",
+          "end": "2026-01-23T05:24:00Z",
           "value": 1,
           "state": "1",
           "label": "dwelling"
         },
         {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
+          "start": "2026-01-23T05:24:00Z",
+          "end": "2026-01-23T21:56:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-23T05:37:00Z",
-          "end": "2026-01-23T21:59:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-23T21:59:00Z",
-          "end": "2026-01-23T22:34:00Z",
+          "start": "2026-01-23T21:56:00Z",
+          "end": "2026-01-24T00:56:00Z",
           "value": 1,
           "state": "1",
           "label": "dwelling"
         },
         {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
+          "start": "2026-01-24T00:56:00Z",
+          "end": "2026-01-24T17:28:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-24T17:28:00Z",
+          "end": "2026-01-24T20:28:00Z",
           "value": 1,
           "state": "1",
           "label": "dwelling"
         },
         {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T00:59:00Z",
+          "start": "2026-01-24T20:28:00Z",
+          "end": "2026-01-25T13:00:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-25T13:00:00Z",
+          "end": "2026-01-25T16:00:00Z",
           "value": 1,
           "state": "1",
           "label": "dwelling"
         },
         {
-          "start": "2026-01-24T00:59:00Z",
-          "end": "2026-01-24T15:36:00Z",
+          "start": "2026-01-25T16:00:00Z",
+          "end": "2026-01-26T08:32:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-24T15:41:00Z",
-          "end": "2026-01-24T17:31:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-24T17:31:00Z",
-          "end": "2026-01-25T08:43:00Z",
+          "start": "2026-01-26T08:32:00Z",
+          "end": "2026-01-26T11:32:00Z",
           "value": 1,
           "state": "1",
           "label": "dwelling"
         },
         {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
+          "start": "2026-01-26T11:32:00Z",
+          "end": "2026-01-27T04:04:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-27T04:04:00Z",
+          "end": "2026-01-27T07:04:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "dwelling"
+        },
+        {
+          "start": "2026-01-27T07:04:00Z",
+          "end": "2026-01-27T23:36:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-27T23:36:00Z",
+          "end": "2026-01-28T02:36:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "dwelling"
+        },
+        {
+          "start": "2026-01-28T02:36:00Z",
+          "end": "2026-01-28T19:08:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-28T19:08:00Z",
+          "end": "2026-01-28T22:08:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "dwelling"
+        },
+        {
+          "start": "2026-01-28T22:08:00Z",
+          "end": "2026-01-29T14:40:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-29T14:40:00Z",
+          "end": "2026-01-29T17:40:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "dwelling"
+        },
+        {
+          "start": "2026-01-29T17:40:00Z",
+          "end": "2026-01-30T10:12:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-30T10:12:00Z",
+          "end": "2026-01-30T13:12:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "dwelling"
+        },
+        {
+          "start": "2026-01-30T13:12:00Z",
+          "end": "2026-02-01T00:01:00Z",
           "state": "0",
           "label": "idle"
         }
@@ -1161,254 +1136,241 @@
       "spans": [
         {
           "start": "2026-01-15T10:00:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-17T07:30:00Z",
           "state": "0",
           "label": "open"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-16T03:05:00Z",
-          "end": "2026-01-16T20:03:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T07:33:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-17T07:33:00Z",
-          "end": "2026-01-17T13:05:00Z",
+          "start": "2026-01-17T07:30:00Z",
+          "end": "2026-01-17T08:31:00Z",
           "value": 1,
           "state": "1",
           "label": "complete"
         },
         {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-17T13:10:00Z",
+          "start": "2026-01-17T08:31:00Z",
           "end": "2026-01-17T17:10:00Z",
           "state": "0",
           "label": "open"
         },
         {
           "start": "2026-01-17T17:10:00Z",
-          "end": "2026-01-18T06:10:00Z",
+          "end": "2026-01-17T18:11:00Z",
           "value": 1,
           "state": "1",
           "label": "complete"
         },
         {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
+          "start": "2026-01-17T18:11:00Z",
+          "end": "2026-01-18T18:04:00Z",
           "state": "0",
           "label": "open"
         },
         {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T18:05:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-18T18:05:00Z",
-          "end": "2026-01-18T23:14:00Z",
+          "start": "2026-01-18T18:04:00Z",
+          "end": "2026-01-18T19:05:00Z",
           "value": 1,
           "state": "1",
           "label": "complete"
         },
         {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
+          "start": "2026-01-18T19:05:00Z",
           "end": "2026-01-19T03:44:00Z",
           "state": "0",
           "label": "open"
         },
         {
           "start": "2026-01-19T03:44:00Z",
-          "end": "2026-01-19T16:19:00Z",
+          "end": "2026-01-19T04:45:00Z",
           "value": 1,
           "state": "1",
           "label": "complete"
         },
         {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
+          "start": "2026-01-19T04:45:00Z",
+          "end": "2026-01-19T23:16:00Z",
           "state": "0",
           "label": "open"
         },
         {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-19T23:19:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-19T23:19:00Z",
-          "end": "2026-01-20T09:21:00Z",
+          "start": "2026-01-19T23:16:00Z",
+          "end": "2026-01-20T00:17:00Z",
           "value": 1,
           "state": "1",
           "label": "complete"
         },
         {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
+          "start": "2026-01-20T00:17:00Z",
+          "end": "2026-01-20T18:48:00Z",
           "state": "0",
           "label": "open"
         },
         {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-20T18:51:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-20T18:51:00Z",
-          "end": "2026-01-21T02:23:00Z",
+          "start": "2026-01-20T18:48:00Z",
+          "end": "2026-01-20T19:49:00Z",
           "value": 1,
           "state": "1",
           "label": "complete"
         },
         {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
+          "start": "2026-01-20T19:49:00Z",
+          "end": "2026-01-21T14:20:00Z",
           "state": "0",
           "label": "open"
         },
         {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T14:23:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-21T14:23:00Z",
-          "end": "2026-01-21T19:25:00Z",
+          "start": "2026-01-21T14:20:00Z",
+          "end": "2026-01-21T15:21:00Z",
           "value": 1,
           "state": "1",
           "label": "complete"
         },
         {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
+          "start": "2026-01-21T15:21:00Z",
+          "end": "2026-01-22T09:52:00Z",
           "state": "0",
           "label": "open"
         },
         {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T09:55:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-22T09:55:00Z",
-          "end": "2026-01-22T12:27:00Z",
+          "start": "2026-01-22T09:52:00Z",
+          "end": "2026-01-22T10:53:00Z",
           "value": 1,
           "state": "1",
           "label": "complete"
         },
         {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
+          "start": "2026-01-22T10:53:00Z",
+          "end": "2026-01-23T05:24:00Z",
           "state": "0",
           "label": "open"
         },
         {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-23T05:27:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-23T05:27:00Z",
-          "end": "2026-01-23T05:32:00Z",
+          "start": "2026-01-23T05:24:00Z",
+          "end": "2026-01-23T06:25:00Z",
           "value": 1,
           "state": "1",
           "label": "complete"
         },
         {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
+          "start": "2026-01-23T06:25:00Z",
+          "end": "2026-01-24T00:56:00Z",
+          "state": "0",
+          "label": "open"
+        },
+        {
+          "start": "2026-01-24T00:56:00Z",
+          "end": "2026-01-24T01:57:00Z",
           "value": 1,
           "state": "1",
           "label": "complete"
         },
         {
-          "start": "2026-01-23T05:37:00Z",
-          "end": "2026-01-23T06:24:00Z",
+          "start": "2026-01-24T01:57:00Z",
+          "end": "2026-01-24T20:28:00Z",
+          "state": "0",
+          "label": "open"
+        },
+        {
+          "start": "2026-01-24T20:28:00Z",
+          "end": "2026-01-24T21:29:00Z",
           "value": 1,
           "state": "1",
           "label": "complete"
         },
         {
-          "start": "2026-01-23T06:24:00Z",
-          "end": "2026-01-23T22:34:00Z",
+          "start": "2026-01-24T21:29:00Z",
+          "end": "2026-01-25T16:00:00Z",
           "state": "0",
           "label": "open"
         },
         {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T00:59:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-24T00:59:00Z",
-          "end": "2026-01-24T15:36:00Z",
+          "start": "2026-01-25T16:00:00Z",
+          "end": "2026-01-25T17:01:00Z",
           "value": 1,
           "state": "1",
           "label": "complete"
         },
         {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
+          "start": "2026-01-25T17:01:00Z",
+          "end": "2026-01-26T11:32:00Z",
           "state": "0",
           "label": "open"
         },
         {
-          "start": "2026-01-24T15:41:00Z",
-          "end": "2026-01-24T20:31:00Z",
-          "state": "0",
-          "label": "open"
-        },
-        {
-          "start": "2026-01-24T20:31:00Z",
-          "end": "2026-01-25T08:43:00Z",
+          "start": "2026-01-26T11:32:00Z",
+          "end": "2026-01-26T12:33:00Z",
           "value": 1,
           "state": "1",
           "label": "complete"
         },
         {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
+          "start": "2026-01-26T12:33:00Z",
+          "end": "2026-01-27T07:04:00Z",
+          "state": "0",
+          "label": "open"
+        },
+        {
+          "start": "2026-01-27T07:04:00Z",
+          "end": "2026-01-27T08:05:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "complete"
+        },
+        {
+          "start": "2026-01-27T08:05:00Z",
+          "end": "2026-01-28T02:36:00Z",
+          "state": "0",
+          "label": "open"
+        },
+        {
+          "start": "2026-01-28T02:36:00Z",
+          "end": "2026-01-28T03:37:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "complete"
+        },
+        {
+          "start": "2026-01-28T03:37:00Z",
+          "end": "2026-01-28T22:08:00Z",
+          "state": "0",
+          "label": "open"
+        },
+        {
+          "start": "2026-01-28T22:08:00Z",
+          "end": "2026-01-28T23:09:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "complete"
+        },
+        {
+          "start": "2026-01-28T23:09:00Z",
+          "end": "2026-01-29T17:40:00Z",
+          "state": "0",
+          "label": "open"
+        },
+        {
+          "start": "2026-01-29T17:40:00Z",
+          "end": "2026-01-29T18:41:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "complete"
+        },
+        {
+          "start": "2026-01-29T18:41:00Z",
+          "end": "2026-01-30T13:12:00Z",
+          "state": "0",
+          "label": "open"
+        },
+        {
+          "start": "2026-01-30T13:12:00Z",
+          "end": "2026-01-30T14:13:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "complete"
+        },
+        {
+          "start": "2026-01-30T14:13:00Z",
+          "end": "2026-02-01T00:01:00Z",
           "state": "0",
           "label": "open"
         }
@@ -1431,211 +1393,22 @@
       "spans": [
         {
           "start": "2026-01-15T10:00:00Z",
-          "end": "2026-01-15T12:45:00Z",
+          "end": "2026-01-15T12:54:00Z",
           "state": "0",
           "label": "waiting"
         },
         {
-          "start": "2026-01-15T12:45:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "start": "2026-01-15T12:54:00Z",
+          "end": "2026-01-30T16:13:00Z",
           "value": 1,
           "state": "1",
           "label": "reached"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-16T03:05:00Z",
-          "end": "2026-01-16T12:55:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-16T12:55:00Z",
-          "end": "2026-01-16T20:03:00Z",
+          "start": "2026-01-30T16:13:00Z",
+          "end": "2026-02-01T00:01:00Z",
           "state": "0",
           "label": "waiting"
-        },
-        {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T13:05:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-17T13:10:00Z",
-          "end": "2026-01-18T06:10:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T23:14:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
-          "end": "2026-01-19T16:19:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-20T09:21:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-21T02:23:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T19:25:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T12:27:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-23T05:32:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-23T05:37:00Z",
-          "end": "2026-01-23T22:34:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T15:36:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-24T15:41:00Z",
-          "end": "2026-01-25T08:43:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
-        },
-        {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "reached"
         }
       ]
     },
@@ -1664,199 +1437,16 @@
         },
         {
           "start": "2026-01-15T12:15:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-30T16:26:00Z",
           "value": 3,
           "state": "3",
           "label": "turbo"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-16T03:05:00Z",
-          "end": "2026-01-16T20:03:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T13:05:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-17T13:10:00Z",
-          "end": "2026-01-18T06:10:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T23:14:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
-          "end": "2026-01-19T16:19:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-20T09:21:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-21T02:23:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T19:25:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T12:27:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-23T05:32:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-23T05:37:00Z",
-          "end": "2026-01-23T22:34:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T15:36:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-24T15:41:00Z",
-          "end": "2026-01-25T08:43:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
-        },
-        {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
-          "value": 3,
-          "state": "3",
-          "label": "turbo"
+          "start": "2026-01-30T16:26:00Z",
+          "end": "2026-02-01T00:01:00Z",
+          "state": "0",
+          "label": "ambient"
         }
       ]
     },
@@ -1877,248 +1467,113 @@
       "spans": [
         {
           "start": "2026-01-15T10:00:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-17T18:41:00Z",
           "state": "0",
           "label": "scavenger warming"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-16T03:05:00Z",
-          "end": "2026-01-16T20:03:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T08:55:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-17T08:55:00Z",
-          "end": "2026-01-17T13:05:00Z",
+          "start": "2026-01-17T18:41:00Z",
+          "end": "2026-01-19T05:41:00Z",
           "value": 1,
           "state": "1",
           "label": "duct safe"
         },
         {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
+          "start": "2026-01-19T05:41:00Z",
+          "end": "2026-01-20T00:45:00Z",
           "state": "0",
           "label": "scavenger warming"
         },
         {
-          "start": "2026-01-17T13:10:00Z",
-          "end": "2026-01-17T18:40:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-17T18:40:00Z",
-          "end": "2026-01-18T06:10:00Z",
+          "start": "2026-01-20T00:45:00Z",
+          "end": "2026-01-20T20:45:00Z",
           "value": 1,
           "state": "1",
           "label": "duct safe"
         },
         {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "duct safe"
-        },
-        {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T23:14:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "duct safe"
-        },
-        {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "duct safe"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
-          "end": "2026-01-19T05:44:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "duct safe"
-        },
-        {
-          "start": "2026-01-19T05:44:00Z",
-          "end": "2026-01-19T16:19:00Z",
+          "start": "2026-01-20T20:45:00Z",
+          "end": "2026-01-21T15:47:00Z",
           "state": "0",
           "label": "scavenger warming"
         },
         {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-20T00:41:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-20T00:41:00Z",
-          "end": "2026-01-20T09:21:00Z",
+          "start": "2026-01-21T15:47:00Z",
+          "end": "2026-01-22T11:48:00Z",
           "value": 1,
           "state": "1",
           "label": "duct safe"
         },
         {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
+          "start": "2026-01-22T11:48:00Z",
+          "end": "2026-01-23T06:52:00Z",
+          "state": "0",
+          "label": "scavenger warming"
+        },
+        {
+          "start": "2026-01-23T06:52:00Z",
+          "end": "2026-01-24T02:52:00Z",
           "value": 1,
           "state": "1",
           "label": "duct safe"
         },
         {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-20T20:43:00Z",
+          "start": "2026-01-24T02:52:00Z",
+          "end": "2026-01-24T21:56:00Z",
+          "state": "0",
+          "label": "scavenger warming"
+        },
+        {
+          "start": "2026-01-24T21:56:00Z",
+          "end": "2026-01-25T17:56:00Z",
           "value": 1,
           "state": "1",
           "label": "duct safe"
         },
         {
-          "start": "2026-01-20T20:43:00Z",
-          "end": "2026-01-21T02:23:00Z",
+          "start": "2026-01-25T17:56:00Z",
+          "end": "2026-01-26T13:02:00Z",
           "state": "0",
           "label": "scavenger warming"
         },
         {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T15:50:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-21T15:50:00Z",
-          "end": "2026-01-21T19:25:00Z",
+          "start": "2026-01-26T13:02:00Z",
+          "end": "2026-01-27T09:01:00Z",
           "value": 1,
           "state": "1",
           "label": "duct safe"
         },
         {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
+          "start": "2026-01-27T09:01:00Z",
+          "end": "2026-01-28T04:06:00Z",
+          "state": "0",
+          "label": "scavenger warming"
+        },
+        {
+          "start": "2026-01-28T04:06:00Z",
+          "end": "2026-01-29T00:05:00Z",
           "value": 1,
           "state": "1",
           "label": "duct safe"
         },
         {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T11:52:00Z",
+          "start": "2026-01-29T00:05:00Z",
+          "end": "2026-01-29T19:10:00Z",
+          "state": "0",
+          "label": "scavenger warming"
+        },
+        {
+          "start": "2026-01-29T19:10:00Z",
+          "end": "2026-01-31T08:47:00Z",
           "value": 1,
           "state": "1",
           "label": "duct safe"
         },
         {
-          "start": "2026-01-22T11:52:00Z",
-          "end": "2026-01-22T12:27:00Z",
+          "start": "2026-01-31T08:47:00Z",
+          "end": "2026-02-01T00:01:00Z",
           "state": "0",
           "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-23T05:32:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-23T05:37:00Z",
-          "end": "2026-01-23T06:54:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-23T06:54:00Z",
-          "end": "2026-01-23T22:34:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "duct safe"
-        },
-        {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "duct safe"
-        },
-        {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T02:51:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "duct safe"
-        },
-        {
-          "start": "2026-01-24T02:51:00Z",
-          "end": "2026-01-24T15:36:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-24T15:41:00Z",
-          "end": "2026-01-24T21:58:00Z",
-          "state": "0",
-          "label": "scavenger warming"
-        },
-        {
-          "start": "2026-01-24T21:58:00Z",
-          "end": "2026-01-25T08:43:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "duct safe"
-        },
-        {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "duct safe"
         }
       ]
     },
@@ -2139,142 +1594,19 @@
       "spans": [
         {
           "start": "2026-01-15T10:00:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-26T14:23:00Z",
           "state": "0"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "state": "0"
+          "start": "2026-01-26T14:23:00Z",
+          "end": "2026-01-27T08:05:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "closed"
         },
         {
-          "start": "2026-01-16T03:05:00Z",
-          "end": "2026-01-16T20:03:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T13:05:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-17T13:10:00Z",
-          "end": "2026-01-18T06:10:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T23:14:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
-          "end": "2026-01-19T16:19:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-20T09:21:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-21T02:23:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T19:25:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T12:27:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-23T05:32:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-23T05:37:00Z",
-          "end": "2026-01-23T22:34:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T15:36:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-24T15:41:00Z",
-          "end": "2026-01-25T08:43:00Z",
-          "state": "0"
-        },
-        {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
+          "start": "2026-01-27T08:05:00Z",
+          "end": "2026-02-01T00:01:00Z",
           "state": "0"
         }
       ]
@@ -2296,169 +1628,20 @@
       "spans": [
         {
           "start": "2026-01-15T10:00:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-26T14:23:00Z",
           "state": "0",
           "label": "fresh"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "state": "0",
-          "label": "fresh"
+          "start": "2026-01-26T14:23:00Z",
+          "end": "2026-01-27T08:05:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "degraded"
         },
         {
-          "start": "2026-01-16T03:05:00Z",
-          "end": "2026-01-16T20:03:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T13:05:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-17T13:10:00Z",
-          "end": "2026-01-18T06:10:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T23:14:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
-          "end": "2026-01-19T16:19:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-20T09:21:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-21T02:23:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T19:25:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T12:27:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-23T05:32:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-23T05:37:00Z",
-          "end": "2026-01-23T22:34:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T15:36:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-24T15:41:00Z",
-          "end": "2026-01-25T08:43:00Z",
-          "state": "0",
-          "label": "fresh"
-        },
-        {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
+          "start": "2026-01-27T08:05:00Z",
+          "end": "2026-02-01T00:01:00Z",
           "state": "0",
           "label": "fresh"
         }
@@ -2487,240 +1670,261 @@
         },
         {
           "start": "2026-01-15T11:15:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-15T11:46:00Z",
           "value": 1,
           "state": "1",
           "label": "capture"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-16T03:05:00Z",
+          "start": "2026-01-15T11:46:00Z",
           "end": "2026-01-16T11:15:00Z",
           "state": "0",
           "label": "idle"
         },
         {
           "start": "2026-01-16T11:15:00Z",
-          "end": "2026-01-16T20:03:00Z",
+          "end": "2026-01-16T11:46:00Z",
           "value": 1,
           "state": "1",
           "label": "capture"
         },
         {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
+          "start": "2026-01-16T11:46:00Z",
+          "end": "2026-01-17T17:29:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T13:05:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-17T13:10:00Z",
-          "end": "2026-01-17T17:30:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-17T17:30:00Z",
-          "end": "2026-01-18T06:10:00Z",
+          "start": "2026-01-17T17:29:00Z",
+          "end": "2026-01-17T18:00:00Z",
           "value": 1,
           "state": "1",
           "label": "capture"
         },
         {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T23:14:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
+          "start": "2026-01-17T18:00:00Z",
           "end": "2026-01-19T04:14:00Z",
           "state": "0",
           "label": "idle"
         },
         {
           "start": "2026-01-19T04:14:00Z",
-          "end": "2026-01-19T16:19:00Z",
+          "end": "2026-01-19T04:45:00Z",
           "value": 1,
           "state": "1",
           "label": "capture"
         },
         {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
+          "start": "2026-01-19T04:45:00Z",
+          "end": "2026-01-19T23:46:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-19T23:49:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-19T23:49:00Z",
-          "end": "2026-01-20T09:21:00Z",
+          "start": "2026-01-19T23:46:00Z",
+          "end": "2026-01-20T00:17:00Z",
           "value": 1,
           "state": "1",
           "label": "capture"
         },
         {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
+          "start": "2026-01-20T00:17:00Z",
+          "end": "2026-01-20T18:48:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-20T18:51:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-20T18:51:00Z",
-          "end": "2026-01-21T02:23:00Z",
+          "start": "2026-01-20T18:48:00Z",
+          "end": "2026-01-20T19:19:00Z",
           "value": 1,
           "state": "1",
           "label": "capture"
         },
         {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
+          "start": "2026-01-20T19:19:00Z",
+          "end": "2026-01-21T14:26:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T14:28:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-21T14:28:00Z",
-          "end": "2026-01-21T19:25:00Z",
+          "start": "2026-01-21T14:26:00Z",
+          "end": "2026-01-21T14:57:00Z",
           "value": 1,
           "state": "1",
           "label": "capture"
         },
         {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
+          "start": "2026-01-21T14:57:00Z",
+          "end": "2026-01-22T10:09:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T10:10:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-22T10:10:00Z",
-          "end": "2026-01-22T12:27:00Z",
+          "start": "2026-01-22T10:09:00Z",
+          "end": "2026-01-22T10:40:00Z",
           "value": 1,
           "state": "1",
           "label": "capture"
         },
         {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-23T05:32:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-23T05:37:00Z",
+          "start": "2026-01-22T10:40:00Z",
           "end": "2026-01-23T05:47:00Z",
           "state": "0",
           "label": "idle"
         },
         {
           "start": "2026-01-23T05:47:00Z",
-          "end": "2026-01-23T22:34:00Z",
+          "end": "2026-01-23T06:18:00Z",
           "value": 1,
           "state": "1",
           "label": "capture"
         },
         {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
+          "start": "2026-01-23T06:18:00Z",
+          "end": "2026-01-24T01:26:00Z",
           "state": "0",
           "label": "idle"
         },
         {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T01:29:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-24T01:29:00Z",
-          "end": "2026-01-24T15:36:00Z",
+          "start": "2026-01-24T01:26:00Z",
+          "end": "2026-01-24T01:57:00Z",
           "value": 1,
           "state": "1",
           "label": "capture"
         },
         {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
-          "state": "0",
-          "label": "idle"
-        },
-        {
-          "start": "2026-01-24T15:41:00Z",
+          "start": "2026-01-24T01:57:00Z",
           "end": "2026-01-24T20:21:00Z",
           "state": "0",
           "label": "idle"
         },
         {
           "start": "2026-01-24T20:21:00Z",
-          "end": "2026-01-25T08:43:00Z",
+          "end": "2026-01-24T20:52:00Z",
           "value": 1,
           "state": "1",
           "label": "capture"
         },
         {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
+          "start": "2026-01-24T20:52:00Z",
+          "end": "2026-01-25T15:45:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-25T15:45:00Z",
+          "end": "2026-01-25T16:16:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "capture"
+        },
+        {
+          "start": "2026-01-25T16:16:00Z",
+          "end": "2026-01-26T11:17:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-26T11:17:00Z",
+          "end": "2026-01-26T11:48:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "capture"
+        },
+        {
+          "start": "2026-01-26T11:48:00Z",
+          "end": "2026-01-26T14:23:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-26T14:23:00Z",
+          "end": "2026-01-27T08:05:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "capture"
+        },
+        {
+          "start": "2026-01-27T08:05:00Z",
+          "end": "2026-01-28T02:21:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-28T02:21:00Z",
+          "end": "2026-01-28T02:52:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "capture"
+        },
+        {
+          "start": "2026-01-28T02:52:00Z",
+          "end": "2026-01-28T21:53:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-28T21:53:00Z",
+          "end": "2026-01-28T22:24:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "capture"
+        },
+        {
+          "start": "2026-01-28T22:24:00Z",
+          "end": "2026-01-29T17:25:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-29T17:25:00Z",
+          "end": "2026-01-29T17:56:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "capture"
+        },
+        {
+          "start": "2026-01-29T17:56:00Z",
+          "end": "2026-01-30T12:57:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-30T12:57:00Z",
+          "end": "2026-01-30T13:28:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "capture"
+        },
+        {
+          "start": "2026-01-30T13:28:00Z",
+          "end": "2026-01-30T14:57:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-30T14:57:00Z",
+          "end": "2026-01-30T15:28:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "capture"
+        },
+        {
+          "start": "2026-01-30T15:28:00Z",
+          "end": "2026-01-31T23:17:00Z",
+          "state": "0",
+          "label": "idle"
+        },
+        {
+          "start": "2026-01-31T23:17:00Z",
+          "end": "2026-01-31T23:47:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "capture"
+        },
+        {
+          "start": "2026-01-31T23:47:00Z",
+          "end": "2026-02-01T00:01:00Z",
           "state": "0",
           "label": "idle"
         }
@@ -2749,217 +1953,59 @@
         },
         {
           "start": "2026-01-15T11:15:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-15T11:46:00Z",
           "value": 1,
           "state": "1",
           "label": "ready"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "state": "0",
-          "label": "not ready"
-        },
-        {
-          "start": "2026-01-16T03:05:00Z",
+          "start": "2026-01-15T11:46:00Z",
           "end": "2026-01-16T11:15:00Z",
           "state": "0",
           "label": "not ready"
         },
         {
           "start": "2026-01-16T11:15:00Z",
-          "end": "2026-01-16T20:03:00Z",
+          "end": "2026-01-16T11:46:00Z",
           "value": 1,
           "state": "1",
           "label": "ready"
         },
         {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
+          "start": "2026-01-16T11:46:00Z",
+          "end": "2026-01-16T12:01:00Z",
           "state": "0",
           "label": "not ready"
         },
         {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T08:30:00Z",
+          "start": "2026-01-16T12:01:00Z",
+          "end": "2026-01-16T12:59:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "ready"
+        },
+        {
+          "start": "2026-01-16T12:59:00Z",
+          "end": "2026-01-17T08:31:00Z",
           "state": "0",
           "label": "not ready"
         },
         {
-          "start": "2026-01-17T08:30:00Z",
-          "end": "2026-01-17T13:05:00Z",
+          "start": "2026-01-17T08:31:00Z",
+          "end": "2026-01-17T20:11:00Z",
           "value": 1,
           "state": "1",
           "label": "ready"
         },
         {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-17T13:10:00Z",
-          "end": "2026-01-17T20:15:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-17T20:15:00Z",
-          "end": "2026-01-18T06:10:00Z",
+          "start": "2026-01-17T20:11:00Z",
+          "end": "2026-01-18T19:05:00Z",
           "state": "0",
           "label": "not ready"
         },
         {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
-          "state": "0",
-          "label": "not ready"
-        },
-        {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T19:04:00Z",
-          "state": "0",
-          "label": "not ready"
-        },
-        {
-          "start": "2026-01-18T19:04:00Z",
-          "end": "2026-01-18T23:14:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
-          "end": "2026-01-19T16:19:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-20T09:21:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-21T02:23:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T19:25:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T12:27:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-23T05:32:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-23T05:37:00Z",
-          "end": "2026-01-23T22:34:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T15:36:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-24T15:41:00Z",
-          "end": "2026-01-25T08:43:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "ready"
-        },
-        {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
+          "start": "2026-01-18T19:05:00Z",
+          "end": "2026-02-01T00:01:00Z",
           "value": 1,
           "state": "1",
           "label": "ready"
@@ -2989,217 +2035,72 @@
         },
         {
           "start": "2026-01-15T11:15:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-15T11:46:00Z",
           "value": 1,
           "state": "1",
           "label": "operative"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "state": "0",
-          "label": "inhibited"
-        },
-        {
-          "start": "2026-01-16T03:05:00Z",
+          "start": "2026-01-15T11:46:00Z",
           "end": "2026-01-16T11:15:00Z",
           "state": "0",
           "label": "inhibited"
         },
         {
           "start": "2026-01-16T11:15:00Z",
-          "end": "2026-01-16T20:03:00Z",
+          "end": "2026-01-16T11:46:00Z",
           "value": 1,
           "state": "1",
           "label": "operative"
         },
         {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
+          "start": "2026-01-16T11:46:00Z",
+          "end": "2026-01-16T12:01:00Z",
           "state": "0",
           "label": "inhibited"
         },
         {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T08:30:00Z",
+          "start": "2026-01-16T12:01:00Z",
+          "end": "2026-01-16T12:59:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "operative"
+        },
+        {
+          "start": "2026-01-16T12:59:00Z",
+          "end": "2026-01-17T08:31:00Z",
           "state": "0",
           "label": "inhibited"
         },
         {
-          "start": "2026-01-17T08:30:00Z",
-          "end": "2026-01-17T13:05:00Z",
+          "start": "2026-01-17T08:31:00Z",
+          "end": "2026-01-17T20:11:00Z",
           "value": 1,
           "state": "1",
           "label": "operative"
         },
         {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-17T13:10:00Z",
-          "end": "2026-01-17T20:15:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-17T20:15:00Z",
-          "end": "2026-01-18T06:10:00Z",
+          "start": "2026-01-17T20:11:00Z",
+          "end": "2026-01-18T19:05:00Z",
           "state": "0",
           "label": "inhibited"
         },
         {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
+          "start": "2026-01-18T19:05:00Z",
+          "end": "2026-01-26T14:23:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "operative"
+        },
+        {
+          "start": "2026-01-26T14:23:00Z",
+          "end": "2026-01-27T08:05:00Z",
           "state": "0",
           "label": "inhibited"
         },
         {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T19:04:00Z",
-          "state": "0",
-          "label": "inhibited"
-        },
-        {
-          "start": "2026-01-18T19:04:00Z",
-          "end": "2026-01-18T23:14:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
-          "end": "2026-01-19T16:19:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-20T09:21:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-21T02:23:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T19:25:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T12:27:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-23T05:32:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-23T05:37:00Z",
-          "end": "2026-01-23T22:34:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T15:36:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-24T15:41:00Z",
-          "end": "2026-01-25T08:43:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "operative"
-        },
-        {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
+          "start": "2026-01-27T08:05:00Z",
+          "end": "2026-02-01T00:01:00Z",
           "value": 1,
           "state": "1",
           "label": "operative"
@@ -3229,273 +2130,263 @@
         },
         {
           "start": "2026-01-15T11:15:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-15T11:46:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "state": "0",
-          "label": "standby"
-        },
-        {
-          "start": "2026-01-16T03:05:00Z",
+          "start": "2026-01-15T11:46:00Z",
           "end": "2026-01-16T11:15:00Z",
           "state": "0",
           "label": "standby"
         },
         {
           "start": "2026-01-16T11:15:00Z",
-          "end": "2026-01-16T20:03:00Z",
+          "end": "2026-01-16T11:46:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
+          "start": "2026-01-16T11:46:00Z",
+          "end": "2026-01-17T08:41:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T08:45:00Z",
+          "start": "2026-01-17T08:41:00Z",
+          "end": "2026-01-17T18:11:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-17T18:11:00Z",
+          "end": "2026-01-18T19:15:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-17T08:45:00Z",
-          "end": "2026-01-17T13:05:00Z",
+          "start": "2026-01-18T19:15:00Z",
+          "end": "2026-01-19T04:45:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "active"
-        },
-        {
-          "start": "2026-01-17T13:10:00Z",
-          "end": "2026-01-17T18:15:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "active"
-        },
-        {
-          "start": "2026-01-17T18:15:00Z",
-          "end": "2026-01-18T06:10:00Z",
+          "start": "2026-01-19T04:45:00Z",
+          "end": "2026-01-19T06:35:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
+          "start": "2026-01-19T06:35:00Z",
+          "end": "2026-01-20T00:17:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-20T00:17:00Z",
+          "end": "2026-01-20T02:07:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T19:19:00Z",
+          "start": "2026-01-20T02:07:00Z",
+          "end": "2026-01-20T19:49:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-20T19:49:00Z",
+          "end": "2026-01-20T21:39:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-18T19:19:00Z",
-          "end": "2026-01-18T23:14:00Z",
+          "start": "2026-01-20T21:39:00Z",
+          "end": "2026-01-21T15:21:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "active"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
-          "end": "2026-01-19T04:49:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "active"
-        },
-        {
-          "start": "2026-01-19T04:49:00Z",
-          "end": "2026-01-19T16:19:00Z",
+          "start": "2026-01-21T15:21:00Z",
+          "end": "2026-01-21T17:11:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
+          "start": "2026-01-21T17:11:00Z",
+          "end": "2026-01-22T10:53:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-20T00:16:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "active"
-        },
-        {
-          "start": "2026-01-20T00:16:00Z",
-          "end": "2026-01-20T09:21:00Z",
+          "start": "2026-01-22T10:53:00Z",
+          "end": "2026-01-22T12:43:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
+          "start": "2026-01-22T12:43:00Z",
+          "end": "2026-01-23T06:25:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-20T19:48:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "active"
-        },
-        {
-          "start": "2026-01-20T19:48:00Z",
-          "end": "2026-01-21T02:23:00Z",
+          "start": "2026-01-23T06:25:00Z",
+          "end": "2026-01-23T08:15:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
+          "start": "2026-01-23T08:15:00Z",
+          "end": "2026-01-24T01:57:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T15:20:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "active"
-        },
-        {
-          "start": "2026-01-21T15:20:00Z",
-          "end": "2026-01-21T19:25:00Z",
+          "start": "2026-01-24T01:57:00Z",
+          "end": "2026-01-24T03:47:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
+          "start": "2026-01-24T03:47:00Z",
+          "end": "2026-01-24T21:29:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T10:52:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "active"
-        },
-        {
-          "start": "2026-01-22T10:52:00Z",
-          "end": "2026-01-22T12:27:00Z",
+          "start": "2026-01-24T21:29:00Z",
+          "end": "2026-01-24T23:19:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
+          "start": "2026-01-24T23:19:00Z",
+          "end": "2026-01-25T17:01:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-25T17:01:00Z",
+          "end": "2026-01-25T18:51:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-22T12:47:00Z",
+          "start": "2026-01-25T18:51:00Z",
+          "end": "2026-01-26T12:33:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-26T12:33:00Z",
+          "end": "2026-01-26T14:23:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-22T12:47:00Z",
-          "end": "2026-01-23T05:32:00Z",
+          "start": "2026-01-26T14:23:00Z",
+          "end": "2026-01-27T08:05:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "active"
-        },
-        {
-          "start": "2026-01-23T05:37:00Z",
-          "end": "2026-01-23T06:24:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "active"
-        },
-        {
-          "start": "2026-01-23T06:24:00Z",
-          "end": "2026-01-23T22:34:00Z",
+          "start": "2026-01-27T08:05:00Z",
+          "end": "2026-01-27T09:55:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
+          "start": "2026-01-27T09:55:00Z",
+          "end": "2026-01-28T03:37:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T01:56:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "active"
-        },
-        {
-          "start": "2026-01-24T01:56:00Z",
-          "end": "2026-01-24T15:36:00Z",
+          "start": "2026-01-28T03:37:00Z",
+          "end": "2026-01-28T05:27:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
+          "start": "2026-01-28T05:27:00Z",
+          "end": "2026-01-28T23:09:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
         },
         {
-          "start": "2026-01-24T15:41:00Z",
-          "end": "2026-01-24T21:28:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "active"
-        },
-        {
-          "start": "2026-01-24T21:28:00Z",
-          "end": "2026-01-25T08:43:00Z",
+          "start": "2026-01-28T23:09:00Z",
+          "end": "2026-01-29T00:59:00Z",
           "state": "0",
           "label": "standby"
         },
         {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
+          "start": "2026-01-29T00:59:00Z",
+          "end": "2026-01-29T18:41:00Z",
           "value": 1,
           "state": "1",
           "label": "active"
+        },
+        {
+          "start": "2026-01-29T18:41:00Z",
+          "end": "2026-01-29T20:31:00Z",
+          "state": "0",
+          "label": "standby"
+        },
+        {
+          "start": "2026-01-29T20:31:00Z",
+          "end": "2026-01-30T14:13:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-30T14:13:00Z",
+          "end": "2026-01-30T14:57:00Z",
+          "state": "0",
+          "label": "standby"
+        },
+        {
+          "start": "2026-01-30T14:57:00Z",
+          "end": "2026-01-30T15:28:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-30T15:28:00Z",
+          "end": "2026-01-31T23:17:00Z",
+          "state": "0",
+          "label": "standby"
+        },
+        {
+          "start": "2026-01-31T23:17:00Z",
+          "end": "2026-01-31T23:47:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "active"
+        },
+        {
+          "start": "2026-01-31T23:47:00Z",
+          "end": "2026-02-01T00:01:00Z",
+          "state": "0",
+          "label": "standby"
         }
       ]
     },
@@ -3516,218 +2407,46 @@
       "spans": [
         {
           "start": "2026-01-15T10:00:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-16T12:59:00Z",
           "value": 1,
           "state": "1",
           "label": "locked"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-16T03:05:00Z",
-          "end": "2026-01-16T12:58:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-16T12:58:00Z",
-          "end": "2026-01-16T20:03:00Z",
+          "start": "2026-01-16T12:59:00Z",
+          "end": "2026-01-17T08:31:00Z",
           "state": "0",
           "label": "searching"
         },
         {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
+          "start": "2026-01-17T08:31:00Z",
+          "end": "2026-01-17T20:11:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "locked"
+        },
+        {
+          "start": "2026-01-17T20:11:00Z",
+          "end": "2026-01-18T19:05:00Z",
           "state": "0",
           "label": "searching"
         },
         {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T08:30:00Z",
+          "start": "2026-01-18T19:05:00Z",
+          "end": "2026-01-26T14:23:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "locked"
+        },
+        {
+          "start": "2026-01-26T14:23:00Z",
+          "end": "2026-01-27T08:05:00Z",
           "state": "0",
           "label": "searching"
         },
         {
-          "start": "2026-01-17T08:30:00Z",
-          "end": "2026-01-17T13:05:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-17T13:10:00Z",
-          "end": "2026-01-17T20:15:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-17T20:15:00Z",
-          "end": "2026-01-18T06:10:00Z",
-          "state": "0",
-          "label": "searching"
-        },
-        {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
-          "state": "0",
-          "label": "searching"
-        },
-        {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T19:04:00Z",
-          "state": "0",
-          "label": "searching"
-        },
-        {
-          "start": "2026-01-18T19:04:00Z",
-          "end": "2026-01-18T23:14:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
-          "end": "2026-01-19T16:19:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-20T09:21:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-21T02:23:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T19:25:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T12:27:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-23T05:32:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-23T05:37:00Z",
-          "end": "2026-01-23T22:34:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T15:36:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-24T15:41:00Z",
-          "end": "2026-01-25T08:43:00Z",
-          "value": 1,
-          "state": "1",
-          "label": "locked"
-        },
-        {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
+          "start": "2026-01-27T08:05:00Z",
+          "end": "2026-02-01T00:01:00Z",
           "value": 1,
           "state": "1",
           "label": "locked"
@@ -3751,169 +2470,20 @@
       "spans": [
         {
           "start": "2026-01-15T10:00:00Z",
-          "end": "2026-01-16T03:00:00Z",
+          "end": "2026-01-26T14:23:00Z",
           "state": "0",
           "label": "nominal"
         },
         {
-          "start": "2026-01-16T03:00:00Z",
-          "end": "2026-01-16T03:05:00Z",
-          "state": "0",
-          "label": "nominal"
+          "start": "2026-01-26T14:23:00Z",
+          "end": "2026-01-27T08:05:00Z",
+          "value": 1,
+          "state": "1",
+          "label": "fault"
         },
         {
-          "start": "2026-01-16T03:05:00Z",
-          "end": "2026-01-16T20:03:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-16T20:03:00Z",
-          "end": "2026-01-16T20:08:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-16T20:08:00Z",
-          "end": "2026-01-17T13:05:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-17T13:05:00Z",
-          "end": "2026-01-17T13:10:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-17T13:10:00Z",
-          "end": "2026-01-18T06:10:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-18T06:10:00Z",
-          "end": "2026-01-18T06:15:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-18T06:15:00Z",
-          "end": "2026-01-18T23:14:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-18T23:14:00Z",
-          "end": "2026-01-18T23:19:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-18T23:19:00Z",
-          "end": "2026-01-19T16:19:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-19T16:19:00Z",
-          "end": "2026-01-19T16:24:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-19T16:24:00Z",
-          "end": "2026-01-20T09:21:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-20T09:21:00Z",
-          "end": "2026-01-20T09:26:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-20T09:26:00Z",
-          "end": "2026-01-21T02:23:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-21T02:23:00Z",
-          "end": "2026-01-21T02:28:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-21T02:28:00Z",
-          "end": "2026-01-21T19:25:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-21T19:25:00Z",
-          "end": "2026-01-21T19:30:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-21T19:30:00Z",
-          "end": "2026-01-22T12:27:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-22T12:27:00Z",
-          "end": "2026-01-22T12:32:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-22T12:32:00Z",
-          "end": "2026-01-23T05:32:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-23T05:32:00Z",
-          "end": "2026-01-23T05:37:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-23T05:37:00Z",
-          "end": "2026-01-23T22:34:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-23T22:34:00Z",
-          "end": "2026-01-23T22:39:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-23T22:39:00Z",
-          "end": "2026-01-24T15:36:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-24T15:36:00Z",
-          "end": "2026-01-24T15:41:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-24T15:41:00Z",
-          "end": "2026-01-25T08:43:00Z",
-          "state": "0",
-          "label": "nominal"
-        },
-        {
-          "start": "2026-01-25T08:43:00Z",
-          "end": "2026-01-31T23:57:00Z",
+          "start": "2026-01-27T08:05:00Z",
+          "end": "2026-02-01T00:01:00Z",
           "state": "0",
           "label": "nominal"
         }
@@ -4133,8 +2703,116 @@
       "label": "Cold operational dwell",
       "kind": "cold_operational",
       "start": "2026-01-24T23:18:00Z",
-      "end": "2026-01-25T08:46:12Z",
+      "end": "2026-01-25T17:00:00Z",
       "cycle_index": 5,
+      "target_deg_c": -40
+    },
+    {
+      "id": "C06-RAMP-HOT",
+      "label": "Ramp to hot operational",
+      "kind": "ramp_hot",
+      "start": "2026-01-25T17:00:00Z",
+      "end": "2026-01-25T18:50:00Z",
+      "cycle_index": 6,
+      "target_deg_c": 70
+    },
+    {
+      "id": "C06-HOT-OPERATIONAL",
+      "label": "Hot operational dwell",
+      "kind": "hot_operational",
+      "start": "2026-01-25T18:50:00Z",
+      "end": "2026-01-26T12:32:00Z",
+      "cycle_index": 6,
+      "target_deg_c": 70
+    },
+    {
+      "id": "C06-RAMP-COLD",
+      "label": "Ramp to cold operational",
+      "kind": "ramp_cold",
+      "start": "2026-01-26T12:32:00Z",
+      "end": "2026-01-26T14:22:00Z",
+      "cycle_index": 6,
+      "target_deg_c": -40
+    },
+    {
+      "id": "C06-COLD-OPERATIONAL",
+      "label": "Cold operational dwell",
+      "kind": "cold_operational",
+      "start": "2026-01-26T14:22:00Z",
+      "end": "2026-01-27T08:04:00Z",
+      "cycle_index": 6,
+      "target_deg_c": -40
+    },
+    {
+      "id": "C07-RAMP-HOT",
+      "label": "Ramp to hot operational",
+      "kind": "ramp_hot",
+      "start": "2026-01-27T08:04:00Z",
+      "end": "2026-01-27T09:54:00Z",
+      "cycle_index": 7,
+      "target_deg_c": 70
+    },
+    {
+      "id": "C07-HOT-OPERATIONAL",
+      "label": "Hot operational dwell",
+      "kind": "hot_operational",
+      "start": "2026-01-27T09:54:00Z",
+      "end": "2026-01-28T03:36:00Z",
+      "cycle_index": 7,
+      "target_deg_c": 70
+    },
+    {
+      "id": "C07-RAMP-COLD",
+      "label": "Ramp to cold operational",
+      "kind": "ramp_cold",
+      "start": "2026-01-28T03:36:00Z",
+      "end": "2026-01-28T05:26:00Z",
+      "cycle_index": 7,
+      "target_deg_c": -40
+    },
+    {
+      "id": "C07-COLD-OPERATIONAL",
+      "label": "Cold operational dwell",
+      "kind": "cold_operational",
+      "start": "2026-01-28T05:26:00Z",
+      "end": "2026-01-28T23:08:00Z",
+      "cycle_index": 7,
+      "target_deg_c": -40
+    },
+    {
+      "id": "C08-RAMP-HOT",
+      "label": "Ramp to hot operational",
+      "kind": "ramp_hot",
+      "start": "2026-01-28T23:08:00Z",
+      "end": "2026-01-29T00:58:00Z",
+      "cycle_index": 8,
+      "target_deg_c": 70
+    },
+    {
+      "id": "C08-HOT-OPERATIONAL",
+      "label": "Hot operational dwell",
+      "kind": "hot_operational",
+      "start": "2026-01-29T00:58:00Z",
+      "end": "2026-01-29T18:40:00Z",
+      "cycle_index": 8,
+      "target_deg_c": 70
+    },
+    {
+      "id": "C08-RAMP-COLD",
+      "label": "Ramp to cold operational",
+      "kind": "ramp_cold",
+      "start": "2026-01-29T18:40:00Z",
+      "end": "2026-01-29T20:30:00Z",
+      "cycle_index": 8,
+      "target_deg_c": -40
+    },
+    {
+      "id": "C08-COLD-OPERATIONAL",
+      "label": "Cold operational dwell",
+      "kind": "cold_operational",
+      "start": "2026-01-29T20:30:00Z",
+      "end": "2026-01-30T14:12:00Z",
+      "cycle_index": 8,
       "target_deg_c": -40
     },
     {
@@ -4246,6 +2924,76 @@
       "cycle_index": 5,
       "target_deg_c": 70,
       "result": "pass"
+    },
+    {
+      "id": "C05-COLD-OPERATIONAL-WINDOW",
+      "label": "Cold operational dwell",
+      "kind": "cold_operational",
+      "start": "2026-01-25T13:00:00Z",
+      "end": "2026-01-25T16:00:00Z",
+      "cycle_index": 5,
+      "target_deg_c": -40,
+      "result": "pass"
+    },
+    {
+      "id": "C06-HOT-OPERATIONAL-WINDOW",
+      "label": "Hot operational dwell",
+      "kind": "hot_operational",
+      "start": "2026-01-26T08:32:00Z",
+      "end": "2026-01-26T11:32:00Z",
+      "cycle_index": 6,
+      "target_deg_c": 70,
+      "result": "pass"
+    },
+    {
+      "id": "C06-COLD-OPERATIONAL-WINDOW",
+      "label": "Cold operational dwell",
+      "kind": "cold_operational",
+      "start": "2026-01-27T04:04:00Z",
+      "end": "2026-01-27T07:04:00Z",
+      "cycle_index": 6,
+      "target_deg_c": -40,
+      "result": "pass"
+    },
+    {
+      "id": "C07-HOT-OPERATIONAL-WINDOW",
+      "label": "Hot operational dwell",
+      "kind": "hot_operational",
+      "start": "2026-01-27T23:36:00Z",
+      "end": "2026-01-28T02:36:00Z",
+      "cycle_index": 7,
+      "target_deg_c": 70,
+      "result": "pass"
+    },
+    {
+      "id": "C07-COLD-OPERATIONAL-WINDOW",
+      "label": "Cold operational dwell",
+      "kind": "cold_operational",
+      "start": "2026-01-28T19:08:00Z",
+      "end": "2026-01-28T22:08:00Z",
+      "cycle_index": 7,
+      "target_deg_c": -40,
+      "result": "pass"
+    },
+    {
+      "id": "C08-HOT-OPERATIONAL-WINDOW",
+      "label": "Hot operational dwell",
+      "kind": "hot_operational",
+      "start": "2026-01-29T14:40:00Z",
+      "end": "2026-01-29T17:40:00Z",
+      "cycle_index": 8,
+      "target_deg_c": 70,
+      "result": "pass"
+    },
+    {
+      "id": "C08-COLD-OPERATIONAL-WINDOW",
+      "label": "Cold operational dwell",
+      "kind": "cold_operational",
+      "start": "2026-01-30T10:12:00Z",
+      "end": "2026-01-30T13:12:00Z",
+      "cycle_index": 8,
+      "target_deg_c": -40,
+      "result": "pass"
     }
   ],
   "markers": [
@@ -4266,6 +3014,24 @@
       "timestamp": "2026-01-16T11:30:00Z",
       "result": "pass",
       "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-vacuum_pre"
+    },
+    {
+      "id": "tvac_qualification-FUNC-VACUUM-POST",
+      "label": "Final ambient-temperature functional test under vacuum",
+      "kind": "functional_gate",
+      "role": "event",
+      "timestamp": "2026-01-30T15:12:00Z",
+      "result": "pass",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-vacuum_post"
+    },
+    {
+      "id": "tvac_qualification-FUNC-POST",
+      "label": "Ambient-pressure functional test after vent",
+      "kind": "functional_gate",
+      "role": "event",
+      "timestamp": "2026-01-31T23:31:12Z",
+      "result": "pass",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-post"
     },
     {
       "id": "tvac_qualification-FUNC-C01-HOT",
@@ -4358,6 +3124,76 @@
       "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot"
     },
     {
+      "id": "tvac_qualification-FUNC-C05-COLD",
+      "label": "Cycle 5 cold dwell functional test",
+      "kind": "functional_gate",
+      "role": "event",
+      "timestamp": "2026-01-25T16:00:00Z",
+      "cycle_index": 5,
+      "result": "pass",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold"
+    },
+    {
+      "id": "tvac_qualification-FUNC-C06-HOT",
+      "label": "Cycle 6 hot dwell functional test",
+      "kind": "functional_gate",
+      "role": "event",
+      "timestamp": "2026-01-26T11:32:00Z",
+      "cycle_index": 6,
+      "result": "inconclusive",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot"
+    },
+    {
+      "id": "tvac_qualification-FUNC-C06-COLD",
+      "label": "Cycle 6 cold dwell functional test",
+      "kind": "functional_gate",
+      "role": "event",
+      "timestamp": "2026-01-27T07:04:00Z",
+      "cycle_index": 6,
+      "result": "pass",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold"
+    },
+    {
+      "id": "tvac_qualification-FUNC-C07-HOT",
+      "label": "Cycle 7 hot dwell functional test",
+      "kind": "functional_gate",
+      "role": "event",
+      "timestamp": "2026-01-28T02:36:00Z",
+      "cycle_index": 7,
+      "result": "inconclusive",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot"
+    },
+    {
+      "id": "tvac_qualification-FUNC-C07-COLD",
+      "label": "Cycle 7 cold dwell functional test",
+      "kind": "functional_gate",
+      "role": "event",
+      "timestamp": "2026-01-28T22:08:00Z",
+      "cycle_index": 7,
+      "result": "pass",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold"
+    },
+    {
+      "id": "tvac_qualification-FUNC-C08-HOT",
+      "label": "Cycle 8 hot dwell functional test",
+      "kind": "functional_gate",
+      "role": "event",
+      "timestamp": "2026-01-29T17:40:00Z",
+      "cycle_index": 8,
+      "result": "inconclusive",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot"
+    },
+    {
+      "id": "tvac_qualification-FUNC-C08-COLD",
+      "label": "Cycle 8 cold dwell functional test",
+      "kind": "functional_gate",
+      "role": "event",
+      "timestamp": "2026-01-30T13:12:00Z",
+      "cycle_index": 8,
+      "result": "pass",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold"
+    },
+    {
       "id": "tvac_qualification-INTERLOCK-NOMINAL",
       "label": "Facility interlocks closed",
       "kind": "interlock",
@@ -4366,6 +3202,16 @@
       "result": "closed",
       "severity": "info",
       "evidence_ref": "telemetry/tvac_qualification.jsonl#interlocks"
+    },
+    {
+      "id": "TVAC-LN2-VALVE-REVIEW",
+      "label": "LN2 valve duty review window",
+      "kind": "interlock",
+      "role": "interlock",
+      "timestamp": "2026-01-26T17:22:00Z",
+      "result": "review",
+      "severity": "medium",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#ln2-review"
     },
     {
       "id": "tvac_qualification-STABLE-C01-hot_survival",
@@ -4467,6 +3313,69 @@
       "evidence_ref": "reports/tvac_qualification.json#stable-c05-hot_operational"
     },
     {
+      "id": "tvac_qualification-STABLE-C05-cold_operational",
+      "label": "Stable Cold operational dwell confirmed",
+      "kind": "stability_achieved",
+      "role": "evidence",
+      "timestamp": "2026-01-25T13:00:00Z",
+      "result": "pass",
+      "evidence_ref": "reports/tvac_qualification.json#stable-c05-cold_operational"
+    },
+    {
+      "id": "tvac_qualification-STABLE-C06-hot_operational",
+      "label": "Stable Hot operational dwell confirmed",
+      "kind": "stability_achieved",
+      "role": "evidence",
+      "timestamp": "2026-01-26T08:32:00Z",
+      "result": "pass",
+      "evidence_ref": "reports/tvac_qualification.json#stable-c06-hot_operational"
+    },
+    {
+      "id": "tvac_qualification-STABLE-C06-cold_operational",
+      "label": "Stable Cold operational dwell confirmed",
+      "kind": "stability_achieved",
+      "role": "evidence",
+      "timestamp": "2026-01-27T04:04:00Z",
+      "result": "pass",
+      "evidence_ref": "reports/tvac_qualification.json#stable-c06-cold_operational"
+    },
+    {
+      "id": "tvac_qualification-STABLE-C07-hot_operational",
+      "label": "Stable Hot operational dwell confirmed",
+      "kind": "stability_achieved",
+      "role": "evidence",
+      "timestamp": "2026-01-27T23:36:00Z",
+      "result": "pass",
+      "evidence_ref": "reports/tvac_qualification.json#stable-c07-hot_operational"
+    },
+    {
+      "id": "tvac_qualification-STABLE-C07-cold_operational",
+      "label": "Stable Cold operational dwell confirmed",
+      "kind": "stability_achieved",
+      "role": "evidence",
+      "timestamp": "2026-01-28T19:08:00Z",
+      "result": "pass",
+      "evidence_ref": "reports/tvac_qualification.json#stable-c07-cold_operational"
+    },
+    {
+      "id": "tvac_qualification-STABLE-C08-hot_operational",
+      "label": "Stable Hot operational dwell confirmed",
+      "kind": "stability_achieved",
+      "role": "evidence",
+      "timestamp": "2026-01-29T14:40:00Z",
+      "result": "pass",
+      "evidence_ref": "reports/tvac_qualification.json#stable-c08-hot_operational"
+    },
+    {
+      "id": "tvac_qualification-STABLE-C08-cold_operational",
+      "label": "Stable Cold operational dwell confirmed",
+      "kind": "stability_achieved",
+      "role": "evidence",
+      "timestamp": "2026-01-30T10:12:00Z",
+      "result": "pass",
+      "evidence_ref": "reports/tvac_qualification.json#stable-c08-cold_operational"
+    },
+    {
       "id": "tvac_qualification-PRESSURE-GATE-PRE",
       "label": "Vacuum pressure gate reached",
       "kind": "pressure_gate",
@@ -4474,6 +3383,15 @@
       "timestamp": "2026-01-16T11:00:00Z",
       "result": "pass",
       "evidence_ref": "reports/tvac_qualification.json#pressure-gate-pre"
+    },
+    {
+      "id": "tvac_qualification-PRESSURE-GATE-POST",
+      "label": "Vacuum pressure gate held for final test",
+      "kind": "pressure_gate",
+      "role": "evidence",
+      "timestamp": "2026-01-30T14:42:00Z",
+      "result": "pass",
+      "evidence_ref": "reports/tvac_qualification.json#pressure-gate-post"
     },
     {
       "id": "tvac_qualification-EVID-AMBIENT-PRE",
@@ -4492,6 +3410,24 @@
       "timestamp": "2026-01-16T11:30:00Z",
       "result": "pass",
       "evidence_ref": "reports/tvac_qualification.json#functional-vacuum_pre"
+    },
+    {
+      "id": "tvac_qualification-EVID-VACUUM-POST",
+      "label": "Final ambient-temperature functional test under vacuum",
+      "kind": "functional_gate",
+      "role": "evidence",
+      "timestamp": "2026-01-30T15:12:00Z",
+      "result": "pass",
+      "evidence_ref": "reports/tvac_qualification.json#functional-vacuum_post"
+    },
+    {
+      "id": "tvac_qualification-EVID-POST",
+      "label": "Ambient-pressure functional test after vent",
+      "kind": "functional_gate",
+      "role": "evidence",
+      "timestamp": "2026-01-31T23:31:12Z",
+      "result": "pass",
+      "evidence_ref": "reports/tvac_qualification.json#functional-post"
     },
     {
       "id": "tvac_qualification-EVID-C01-HOT",
@@ -4573,6 +3509,69 @@
       "timestamp": "2026-01-24T20:36:00Z",
       "result": "inconclusive",
       "evidence_ref": "reports/tvac_qualification.json#functional-hot"
+    },
+    {
+      "id": "tvac_qualification-EVID-C05-COLD",
+      "label": "Cycle 5 cold dwell functional test",
+      "kind": "functional_gate",
+      "role": "evidence",
+      "timestamp": "2026-01-25T16:00:00Z",
+      "result": "pass",
+      "evidence_ref": "reports/tvac_qualification.json#functional-cold"
+    },
+    {
+      "id": "tvac_qualification-EVID-C06-HOT",
+      "label": "Cycle 6 hot dwell functional test",
+      "kind": "functional_gate",
+      "role": "evidence",
+      "timestamp": "2026-01-26T11:32:00Z",
+      "result": "inconclusive",
+      "evidence_ref": "reports/tvac_qualification.json#functional-hot"
+    },
+    {
+      "id": "tvac_qualification-EVID-C06-COLD",
+      "label": "Cycle 6 cold dwell functional test",
+      "kind": "functional_gate",
+      "role": "evidence",
+      "timestamp": "2026-01-27T07:04:00Z",
+      "result": "pass",
+      "evidence_ref": "reports/tvac_qualification.json#functional-cold"
+    },
+    {
+      "id": "tvac_qualification-EVID-C07-HOT",
+      "label": "Cycle 7 hot dwell functional test",
+      "kind": "functional_gate",
+      "role": "evidence",
+      "timestamp": "2026-01-28T02:36:00Z",
+      "result": "inconclusive",
+      "evidence_ref": "reports/tvac_qualification.json#functional-hot"
+    },
+    {
+      "id": "tvac_qualification-EVID-C07-COLD",
+      "label": "Cycle 7 cold dwell functional test",
+      "kind": "functional_gate",
+      "role": "evidence",
+      "timestamp": "2026-01-28T22:08:00Z",
+      "result": "pass",
+      "evidence_ref": "reports/tvac_qualification.json#functional-cold"
+    },
+    {
+      "id": "tvac_qualification-EVID-C08-HOT",
+      "label": "Cycle 8 hot dwell functional test",
+      "kind": "functional_gate",
+      "role": "evidence",
+      "timestamp": "2026-01-29T17:40:00Z",
+      "result": "inconclusive",
+      "evidence_ref": "reports/tvac_qualification.json#functional-hot"
+    },
+    {
+      "id": "tvac_qualification-EVID-C08-COLD",
+      "label": "Cycle 8 cold dwell functional test",
+      "kind": "functional_gate",
+      "role": "evidence",
+      "timestamp": "2026-01-30T13:12:00Z",
+      "result": "pass",
+      "evidence_ref": "reports/tvac_qualification.json#functional-cold"
     }
   ],
   "events": [
@@ -4592,6 +3591,24 @@
       "timestamp": "2026-01-16T11:30:00Z",
       "requirement_id": "REQ-FUNC-GATE",
       "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-vacuum_pre",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-FUNC-VACUUM-POST",
+      "kind": "functional_gate",
+      "label": "Final ambient-temperature functional test under vacuum",
+      "timestamp": "2026-01-30T15:12:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-vacuum_post",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-FUNC-POST",
+      "kind": "functional_gate",
+      "label": "Ambient-pressure functional test after vent",
+      "timestamp": "2026-01-31T23:31:12Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-post",
       "result": "pass"
     },
     {
@@ -4676,6 +3693,69 @@
       "result": "inconclusive"
     },
     {
+      "id": "tvac_qualification-FUNC-C05-COLD",
+      "kind": "functional_gate",
+      "label": "Cycle 5 cold dwell functional test",
+      "timestamp": "2026-01-25T16:00:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-FUNC-C06-HOT",
+      "kind": "functional_gate",
+      "label": "Cycle 6 hot dwell functional test",
+      "timestamp": "2026-01-26T11:32:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot",
+      "result": "inconclusive"
+    },
+    {
+      "id": "tvac_qualification-FUNC-C06-COLD",
+      "kind": "functional_gate",
+      "label": "Cycle 6 cold dwell functional test",
+      "timestamp": "2026-01-27T07:04:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-FUNC-C07-HOT",
+      "kind": "functional_gate",
+      "label": "Cycle 7 hot dwell functional test",
+      "timestamp": "2026-01-28T02:36:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot",
+      "result": "inconclusive"
+    },
+    {
+      "id": "tvac_qualification-FUNC-C07-COLD",
+      "kind": "functional_gate",
+      "label": "Cycle 7 cold dwell functional test",
+      "timestamp": "2026-01-28T22:08:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-FUNC-C08-HOT",
+      "kind": "functional_gate",
+      "label": "Cycle 8 hot dwell functional test",
+      "timestamp": "2026-01-29T17:40:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot",
+      "result": "inconclusive"
+    },
+    {
+      "id": "tvac_qualification-FUNC-C08-COLD",
+      "kind": "functional_gate",
+      "label": "Cycle 8 cold dwell functional test",
+      "timestamp": "2026-01-30T13:12:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold",
+      "result": "pass"
+    },
+    {
       "id": "tvac_qualification-INTERLOCK-NOMINAL",
       "kind": "interlock",
       "label": "Facility interlocks closed",
@@ -4683,6 +3763,15 @@
       "requirement_id": "REQ-ANOMALY-REVIEW",
       "evidence_ref": "telemetry/tvac_qualification.jsonl#interlocks",
       "result": "closed"
+    },
+    {
+      "id": "TVAC-LN2-VALVE-REVIEW",
+      "kind": "interlock",
+      "label": "LN2 valve duty review window",
+      "timestamp": "2026-01-26T17:22:00Z",
+      "requirement_id": "REQ-ANOMALY-REVIEW",
+      "evidence_ref": "telemetry/tvac_qualification.jsonl#ln2-review",
+      "result": "review"
     },
     {
       "id": "tvac_qualification-STABLE-C01-hot_survival",
@@ -4784,12 +3873,84 @@
       "result": "pass"
     },
     {
+      "id": "tvac_qualification-STABLE-C05-cold_operational",
+      "kind": "stability_achieved",
+      "label": "Stable Cold operational dwell confirmed",
+      "timestamp": "2026-01-25T13:00:00Z",
+      "requirement_id": "REQ-STABILITY",
+      "evidence_ref": "reports/tvac_qualification.json#stable-c05-cold_operational",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-STABLE-C06-hot_operational",
+      "kind": "stability_achieved",
+      "label": "Stable Hot operational dwell confirmed",
+      "timestamp": "2026-01-26T08:32:00Z",
+      "requirement_id": "REQ-STABILITY",
+      "evidence_ref": "reports/tvac_qualification.json#stable-c06-hot_operational",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-STABLE-C06-cold_operational",
+      "kind": "stability_achieved",
+      "label": "Stable Cold operational dwell confirmed",
+      "timestamp": "2026-01-27T04:04:00Z",
+      "requirement_id": "REQ-STABILITY",
+      "evidence_ref": "reports/tvac_qualification.json#stable-c06-cold_operational",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-STABLE-C07-hot_operational",
+      "kind": "stability_achieved",
+      "label": "Stable Hot operational dwell confirmed",
+      "timestamp": "2026-01-27T23:36:00Z",
+      "requirement_id": "REQ-STABILITY",
+      "evidence_ref": "reports/tvac_qualification.json#stable-c07-hot_operational",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-STABLE-C07-cold_operational",
+      "kind": "stability_achieved",
+      "label": "Stable Cold operational dwell confirmed",
+      "timestamp": "2026-01-28T19:08:00Z",
+      "requirement_id": "REQ-STABILITY",
+      "evidence_ref": "reports/tvac_qualification.json#stable-c07-cold_operational",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-STABLE-C08-hot_operational",
+      "kind": "stability_achieved",
+      "label": "Stable Hot operational dwell confirmed",
+      "timestamp": "2026-01-29T14:40:00Z",
+      "requirement_id": "REQ-STABILITY",
+      "evidence_ref": "reports/tvac_qualification.json#stable-c08-hot_operational",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-STABLE-C08-cold_operational",
+      "kind": "stability_achieved",
+      "label": "Stable Cold operational dwell confirmed",
+      "timestamp": "2026-01-30T10:12:00Z",
+      "requirement_id": "REQ-STABILITY",
+      "evidence_ref": "reports/tvac_qualification.json#stable-c08-cold_operational",
+      "result": "pass"
+    },
+    {
       "id": "tvac_qualification-PRESSURE-GATE-PRE",
       "kind": "pressure_gate",
       "label": "Vacuum pressure gate reached",
       "timestamp": "2026-01-16T11:00:00Z",
       "requirement_id": "REQ-DATA-QUALITY",
       "evidence_ref": "reports/tvac_qualification.json#pressure-gate-pre",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-PRESSURE-GATE-POST",
+      "kind": "pressure_gate",
+      "label": "Vacuum pressure gate held for final test",
+      "timestamp": "2026-01-30T14:42:00Z",
+      "requirement_id": "REQ-DATA-QUALITY",
+      "evidence_ref": "reports/tvac_qualification.json#pressure-gate-post",
       "result": "pass"
     },
     {
@@ -4808,6 +3969,24 @@
       "timestamp": "2026-01-16T11:30:00Z",
       "requirement_id": "REQ-FUNC-GATE",
       "evidence_ref": "reports/tvac_qualification.json#functional-vacuum_pre",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-EVID-VACUUM-POST",
+      "kind": "functional_gate",
+      "label": "Final ambient-temperature functional test under vacuum",
+      "timestamp": "2026-01-30T15:12:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "reports/tvac_qualification.json#functional-vacuum_post",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-EVID-POST",
+      "kind": "functional_gate",
+      "label": "Ambient-pressure functional test after vent",
+      "timestamp": "2026-01-31T23:31:12Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "reports/tvac_qualification.json#functional-post",
       "result": "pass"
     },
     {
@@ -4890,6 +4069,69 @@
       "requirement_id": "REQ-FUNC-GATE",
       "evidence_ref": "reports/tvac_qualification.json#functional-hot",
       "result": "inconclusive"
+    },
+    {
+      "id": "tvac_qualification-EVID-C05-COLD",
+      "kind": "functional_gate",
+      "label": "Cycle 5 cold dwell functional test",
+      "timestamp": "2026-01-25T16:00:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "reports/tvac_qualification.json#functional-cold",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-EVID-C06-HOT",
+      "kind": "functional_gate",
+      "label": "Cycle 6 hot dwell functional test",
+      "timestamp": "2026-01-26T11:32:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "reports/tvac_qualification.json#functional-hot",
+      "result": "inconclusive"
+    },
+    {
+      "id": "tvac_qualification-EVID-C06-COLD",
+      "kind": "functional_gate",
+      "label": "Cycle 6 cold dwell functional test",
+      "timestamp": "2026-01-27T07:04:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "reports/tvac_qualification.json#functional-cold",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-EVID-C07-HOT",
+      "kind": "functional_gate",
+      "label": "Cycle 7 hot dwell functional test",
+      "timestamp": "2026-01-28T02:36:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "reports/tvac_qualification.json#functional-hot",
+      "result": "inconclusive"
+    },
+    {
+      "id": "tvac_qualification-EVID-C07-COLD",
+      "kind": "functional_gate",
+      "label": "Cycle 7 cold dwell functional test",
+      "timestamp": "2026-01-28T22:08:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "reports/tvac_qualification.json#functional-cold",
+      "result": "pass"
+    },
+    {
+      "id": "tvac_qualification-EVID-C08-HOT",
+      "kind": "functional_gate",
+      "label": "Cycle 8 hot dwell functional test",
+      "timestamp": "2026-01-29T17:40:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "reports/tvac_qualification.json#functional-hot",
+      "result": "inconclusive"
+    },
+    {
+      "id": "tvac_qualification-EVID-C08-COLD",
+      "kind": "functional_gate",
+      "label": "Cycle 8 cold dwell functional test",
+      "timestamp": "2026-01-30T13:12:00Z",
+      "requirement_id": "REQ-FUNC-GATE",
+      "evidence_ref": "reports/tvac_qualification.json#functional-cold",
+      "result": "pass"
     }
   ]
 }

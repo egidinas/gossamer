@@ -1508,7 +1508,7 @@
     "model": "multi_path_dut_thermal_rc_v2",
     "model_version": "2026.05.3",
     "seed": 84031,
-    "step_seconds": 300,
+    "step_seconds": 60,
     "source": "gossamer internal/environmentalsim deterministic fixture",
     "parameters": {
       "chamber_air_tau_min": 18,
@@ -1548,16 +1548,16 @@
     "provenance": "gossamer internal/environmentalsim deterministic fixture",
     "time_axis": {
       "start": "2026-01-15T10:00:00Z",
-      "end": "2026-01-31T23:57:00Z",
+      "end": "2026-02-01T00:01:00Z",
       "anchor": "2026-01-15T10:00:00Z",
-      "now": "2026-01-25T08:46:12Z",
-      "range_seconds": 1432620,
+      "now": "2026-01-25T08:48:36Z",
+      "range_seconds": 1432860,
       "clamp": true,
       "latest_policy": "accelerated_fixture_cursor"
     },
     "execution": {
       "mode": "accelerated_live_replay",
-      "now": "2026-01-25T08:46:12Z",
+      "now": "2026-01-25T08:48:36Z",
       "percent_complete": 60,
       "acceleration": "1 simulated hour per wall-clock minute",
       "past_data_policy": "real simulated telemetry up to cursor",
@@ -3816,9 +3816,9 @@
     "provenance": "gossamer internal/environmentalsim deterministic fixture",
     "time_range": {
       "start": "2026-01-15T10:00:00Z",
-      "end": "2026-01-31T23:57:00Z",
+      "end": "2026-02-01T00:01:00Z",
       "anchor": "2026-01-15T10:00:00Z",
-      "range_seconds": 1432620,
+      "range_seconds": 1432860,
       "mode": "absolute_fixture",
       "source": "thermal_program"
     },
@@ -5276,9 +5276,9 @@
     "source_mode": "fixture_tile_backend",
     "time_range": {
       "start": "2026-01-15T10:00:00Z",
-      "end": "2026-01-31T23:57:00Z",
+      "end": "2026-02-01T00:01:00Z",
       "anchor": "2026-01-15T10:00:00Z",
-      "range_seconds": 1432620,
+      "range_seconds": 1432860,
       "mode": "absolute_fixture",
       "source": "thermal_program"
     },
@@ -5339,8 +5339,8 @@
         "label": "Minute",
         "resolution": "minute",
         "duration_ms": 60000,
-        "max_points": 900,
-        "decimation_mode": "min_max_envelope"
+        "max_points": 4200,
+        "decimation_mode": "viewport_lttb_seed"
       },
       {
         "id": "second",

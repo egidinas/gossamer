@@ -18,8 +18,8 @@
       "label": "Minute",
       "resolution": "minute",
       "duration_ms": 60000,
-      "max_points": 900,
-      "decimation_mode": "min_max_envelope"
+      "max_points": 4200,
+      "decimation_mode": "viewport_lttb_seed"
     }
   ],
   "cards": [
@@ -40,10 +40,10 @@
           "t0": "2026-01-15T10:00:00Z",
           "t1": "2026-01-21T21:05:00Z",
           "render_kind": "line",
-          "point_count": 621,
-          "raw_point_count": 10068,
-          "compressed_bytes": 6056,
-          "bytes": 77205
+          "point_count": 18965,
+          "raw_point_count": 65142,
+          "compressed_bytes": 121574,
+          "bytes": 1803633
         }
       ],
       "collapsible": true,
@@ -161,10 +161,10 @@
           "t0": "2026-01-15T10:00:00Z",
           "t1": "2026-01-21T21:05:00Z",
           "render_kind": "line",
-          "point_count": 680,
-          "raw_point_count": 4476,
-          "compressed_bytes": 6383,
-          "bytes": 71044
+          "point_count": 12615,
+          "raw_point_count": 37224,
+          "compressed_bytes": 89033,
+          "bytes": 1199247
         }
       ],
       "collapsible": true,
@@ -243,10 +243,10 @@
           "t0": "2026-01-15T10:00:00Z",
           "t1": "2026-01-21T21:05:00Z",
           "render_kind": "line",
-          "point_count": 528,
-          "raw_point_count": 1119,
-          "compressed_bytes": 4209,
-          "bytes": 54448
+          "point_count": 2939,
+          "raw_point_count": 9306,
+          "compressed_bytes": 18376,
+          "bytes": 279228
         }
       ],
       "collapsible": true,
@@ -286,10 +286,10 @@
           "t0": "2026-01-15T10:00:00Z",
           "t1": "2026-01-21T21:05:00Z",
           "render_kind": "line",
-          "point_count": 831,
-          "raw_point_count": 3357,
-          "compressed_bytes": 6687,
-          "bytes": 84758
+          "point_count": 11077,
+          "raw_point_count": 27918,
+          "compressed_bytes": 62415,
+          "bytes": 1049274
         }
       ],
       "collapsible": true,
@@ -355,10 +355,10 @@
           "t0": "2026-01-15T10:00:00Z",
           "t1": "2026-01-21T21:05:00Z",
           "render_kind": "line",
-          "point_count": 604,
-          "raw_point_count": 5595,
-          "compressed_bytes": 4983,
-          "bytes": 63267
+          "point_count": 12400,
+          "raw_point_count": 46530,
+          "compressed_bytes": 67957,
+          "bytes": 1164281
         }
       ],
       "collapsible": true,
@@ -450,10 +450,10 @@
           "t0": "2026-01-15T10:00:00Z",
           "t1": "2026-01-21T21:05:00Z",
           "render_kind": "line",
-          "point_count": 662,
-          "raw_point_count": 2238,
-          "compressed_bytes": 6584,
-          "bytes": 68942
+          "point_count": 6044,
+          "raw_point_count": 18612,
+          "compressed_bytes": 45729,
+          "bytes": 579926
         }
       ],
       "collapsible": true,
@@ -506,10 +506,10 @@
           "t0": "2026-01-15T10:00:00Z",
           "t1": "2026-01-21T21:05:00Z",
           "render_kind": "counter",
-          "point_count": 448,
-          "raw_point_count": 4476,
-          "compressed_bytes": 3863,
-          "bytes": 48575
+          "point_count": 8400,
+          "raw_point_count": 37224,
+          "compressed_bytes": 51259,
+          "bytes": 795081
         }
       ],
       "collapsible": true,
@@ -588,10 +588,10 @@
           "t0": "2026-01-15T10:00:00Z",
           "t1": "2026-01-21T21:05:00Z",
           "render_kind": "line",
-          "point_count": 724,
-          "raw_point_count": 1119,
-          "compressed_bytes": 7075,
-          "bytes": 74871
+          "point_count": 3747,
+          "raw_point_count": 9306,
+          "compressed_bytes": 29619,
+          "bytes": 364331
         }
       ],
       "collapsible": true,
@@ -631,10 +631,10 @@
           "t0": "2026-01-15T10:00:00Z",
           "t1": "2026-01-21T21:05:00Z",
           "render_kind": "swimlane",
-          "point_count": 504,
-          "raw_point_count": 14547,
-          "compressed_bytes": 5663,
-          "bytes": 104811
+          "point_count": 172,
+          "raw_point_count": 120978,
+          "compressed_bytes": 4412,
+          "bytes": 63659
         }
       ],
       "collapsible": true,
@@ -891,8 +891,8 @@
           "render_kind": "event_rail",
           "point_count": 0,
           "raw_point_count": 0,
-          "compressed_bytes": 1913,
-          "bytes": 18242
+          "compressed_bytes": 2460,
+          "bytes": 30307
         }
       ],
       "collapsible": true,
@@ -1223,6 +1223,6 @@
       "label": "Cycle 4 cold dwell functional test"
     }
   ],
-  "compressed_bytes": 53416,
-  "uncompressed_bytes": 666163
+  "compressed_bytes": 492834,
+  "uncompressed_bytes": 7328967
 }

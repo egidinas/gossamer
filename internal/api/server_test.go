@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/report"
@@ -183,7 +182,7 @@ func TestTileEndpointUsesCachedGraphModelAfterManifestLoad(t *testing.T) {
 	}
 }
 
-func TestTileEndpointRespectsTimeRangePointBudgetAndEvidence(t *testing.T) {
+func TestTileEndpointRespectsTimeRangeAndEvidence(t *testing.T) {
 	server := newTestServer(t)
 	req := httptest.NewRequest(http.MethodGet, "/api/campaigns/thermal_acceptance_fat/tiles?card_id=thermal_program&level=minute&t0=2026-01-15T10:30:00Z&t1=2026-01-15T22:30:00Z", nil)
 	rec := httptest.NewRecorder()
@@ -198,8 +197,8 @@ func TestTileEndpointRespectsTimeRangePointBudgetAndEvidence(t *testing.T) {
 	if tile.CardID != "thermal_program" {
 		t.Fatalf("card_id = %q", tile.CardID)
 	}
-	if tile.Diagnostics.PointCount <= 0 || tile.Diagnostics.PointCount > 900 {
-		t.Fatalf("point_count = %d, want 1..900", tile.Diagnostics.PointCount)
+	if tile.Diagnostics.PointCount <= 0 {
+		t.Fatalf("point_count = %d, want positive", tile.Diagnostics.PointCount)
 	}
 	for _, series := range tile.Series {
 		for _, point := range series.Points {
@@ -213,7 +212,7 @@ func TestTileEndpointRespectsTimeRangePointBudgetAndEvidence(t *testing.T) {
 	}
 }
 
-func TestTileEndpointClipsPhaseBandsToAsRunCursor(t *testing.T) {
+func TestTileEndpointKeepsFullReplayPhaseBandsForClientSideReveal(t *testing.T) {
 	server := newTestServer(t)
 	req := httptest.NewRequest(http.MethodGet, "/api/campaigns/tvac_qualification/tiles?card_id=thermal_program&level=minute", nil)
 	rec := httptest.NewRecorder()
@@ -228,17 +227,20 @@ func TestTileEndpointClipsPhaseBandsToAsRunCursor(t *testing.T) {
 	if len(tile.Bands) == 0 {
 		t.Fatal("tile missing phase/dwell bands")
 	}
-	model, err := server.readGraphModel("tvac_qualification")
-	if err != nil {
-		t.Fatal(err)
-	}
-	cursor := mustParseTime(model.HeroGraph.TimeAxis.Now)
+	tileEnd := mustParseTime(tile.T1)
+	foundFutureBand := false
 	for _, band := range tile.Bands {
 		start := mustParseTime(band.Start)
 		end := mustParseTime(band.End)
-		if start.After(cursor) || end.After(cursor) {
-			t.Fatalf("band %s extends beyond as-run cursor: %s..%s > %s", band.ID, band.Start, band.End, cursor.Format(time.RFC3339))
+		if start.Before(mustParseTime(tile.T0)) || end.After(tileEnd) {
+			t.Fatalf("band %s outside tile range: %s..%s not within %s..%s", band.ID, band.Start, band.End, tile.T0, tile.T1)
 		}
+		if end.After(mustParseTime("2026-01-25T08:48:36Z")) {
+			foundFutureBand = true
+		}
+	}
+	if !foundFutureBand {
+		t.Fatalf("expected full replay bands beyond the initial as-run cursor for frontend masking")
 	}
 }
 

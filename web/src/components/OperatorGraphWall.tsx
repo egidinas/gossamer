@@ -12,6 +12,11 @@ type Props = {
   afterProgress?: ReactNode;
 };
 
+type TimeRange = {
+  start: number;
+  end: number;
+};
+
 const roleColors: Record<string, string> = {
   command: "#ffd85f",
   ghost: "#8aa7c4",
@@ -74,6 +79,8 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [hoverTimeMs, setHoverTimeMs] = useState<number | undefined>(undefined);
   const [peekTimeMs, setPeekTimeMs] = useState<number | undefined>(undefined);
+  const fullTimeRange = useMemo(() => graphTimeRange(heroGraph), [heroGraph]);
+  const [viewRange, setViewRange] = useState<TimeRange>(fullTimeRange);
   const requestedTiles = useRef<Set<string>>(new Set());
   const loadGeneration = useRef(0);
   const execution = heroGraph.execution;
@@ -84,6 +91,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
   useEffect(() => {
     let cancelled = false;
     loadGeneration.current += 1;
+    setViewRange(fullTimeRange);
     setManifest(null);
     setTiles({});
     requestedTiles.current.clear();
@@ -99,7 +107,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
     return () => {
       cancelled = true;
     };
-  }, [campaignId]);
+  }, [campaignId, fullTimeRange]);
 
   const manifestCards = useMemo(() => new Map((manifest?.cards ?? []).map((card) => [card.card_id, card])), [manifest]);
   const firstSectionID = wall.sections[0]?.id;
@@ -154,30 +162,46 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
                     onPeekTime={setPeekTimeMs}
                     readoutMode={readoutMode}
                     readoutTimeMs={readoutTimeMs}
+                    timeRange={viewRange}
+                    onTimeRange={setViewRange}
                     tile={tiles[card.id]}
                     onToggle={() => setCollapsed((existing) => ({ ...existing, [card.id]: !isCollapsed }))}
                   />
                   {isPrimary && execution && <ExecutionProgress execution={execution} heroGraph={heroGraph} currentTimeMs={currentTimeMs} />}
-                  {isPrimary && afterProgress}
-                  {isPrimary && (
-                    <div className="operator-wall-meta">
-                      <span>{manifest ? "tile manifest ready" : "loading tile manifest"}</span>
-                      <span>{wall.graph_version}</span>
-                      <span>{wall.source_mode}</span>
-                      <span>{wall.time_range.mode}</span>
-                      <span>{wall.tile_policy.shared_timebase_required ? "shared timebase" : "local timebase"}</span>
-                      {execution && <span>{execution.acceleration}</span>}
-                    </div>
-                  )}
                 </Fragment>
               );
             })}
           </div>
         </section>
       ))}
-      <SharedTimeAxis heroGraph={heroGraph} currentTimeMs={currentTimeMs} hoverTimeMs={hoverTimeMs} peekTimeMs={peekTimeMs} />
+      {afterProgress}
+      <div className="operator-wall-meta">
+        <span>{manifest ? "tile manifest ready" : "loading tile manifest"}</span>
+        <span>{wall.graph_version}</span>
+        <span>{wall.source_mode}</span>
+        <span>{wall.time_range.mode}</span>
+        <span>{wall.tile_policy.shared_timebase_required ? "shared timebase" : "local timebase"}</span>
+        {execution && <span>{execution.acceleration}</span>}
+      </div>
+      <SharedTimeAxis
+        fullRange={fullTimeRange}
+        timeRange={viewRange}
+        currentTimeMs={currentTimeMs}
+        hoverTimeMs={hoverTimeMs}
+        peekTimeMs={peekTimeMs}
+        onTimeRange={setViewRange}
+      />
     </div>
   );
+}
+
+function graphTimeRange(heroGraph: HeroGraphModel): TimeRange {
+  const start = Date.parse(heroGraph.time_axis.start);
+  const end = Date.parse(heroGraph.time_axis.end);
+  return {
+    start: Number.isFinite(start) ? start : 0,
+    end: Number.isFinite(end) && end > start ? end : start + 1,
+  };
 }
 
 function tileCardPriority(a: GraphTileCardRef, b: GraphTileCardRef) {
@@ -287,6 +311,8 @@ function GraphWallCardView({
   onPeekTime,
   readoutMode,
   readoutTimeMs,
+  timeRange,
+  onTimeRange,
   tile,
   onToggle
 }: {
@@ -300,6 +326,8 @@ function GraphWallCardView({
   onPeekTime: (timeMs: number | undefined) => void;
   readoutMode: "live" | "crosshair" | "peek";
   readoutTimeMs?: number;
+  timeRange: TimeRange;
+  onTimeRange: (range: TimeRange) => void;
   tile?: GraphTile;
   onToggle: () => void;
 }) {
@@ -326,19 +354,28 @@ function GraphWallCardView({
       {!collapsed && (
         <>
           <div className="graph-card-plot-shell">
+            <div className="graph-card-inline-title">
+              <strong>{card.title}</strong>
+              <span>{renderKind} / {card.unit ?? card.axis_policy}</span>
+            </div>
             {!tile && <div className="graph-card-loading">Loading decimated tile...</div>}
-            {tile && renderKind === "swimlane" && <SwimlaneTile tile={tile} heroGraph={heroGraph} currentTimeMs={currentTimeMs} />}
-            {tile && renderKind === "event_rail" && <EventRailTile tile={tile} heroGraph={heroGraph} currentTimeMs={currentTimeMs} />}
+            {tile && renderKind === "swimlane" && <SwimlaneTile tile={tile} heroGraph={heroGraph} currentTimeMs={currentTimeMs} hoverTimeMs={hoverTimeMs} readoutTimeMs={readoutTimeMs} timeRange={timeRange} />}
+            {tile && renderKind === "event_rail" && <EventRailTile tile={tile} heroGraph={heroGraph} currentTimeMs={currentTimeMs} hoverTimeMs={hoverTimeMs} readoutTimeMs={readoutTimeMs} timeRange={timeRange} />}
             {tile && renderKind !== "swimlane" && renderKind !== "event_rail" && (
-              <UPlotTile
-                tile={tile}
-                heroGraph={heroGraph}
-                renderKind={renderKind}
-                currentTimeMs={currentTimeMs}
-                hoverTimeMs={hoverTimeMs}
-                onHoverTime={onHoverTime}
-                onPeekTime={onPeekTime}
-              />
+              <>
+                <UPlotTile
+                  tile={tile}
+                  heroGraph={heroGraph}
+                  renderKind={renderKind}
+                  currentTimeMs={currentTimeMs}
+                  hoverTimeMs={hoverTimeMs}
+                  onHoverTime={onHoverTime}
+                  onPeekTime={onPeekTime}
+                  timeRange={timeRange}
+                  onTimeRange={onTimeRange}
+                />
+                {card.id === "thermal_program" && <HeroStateFooter tile={tile} heroGraph={heroGraph} currentTimeMs={currentTimeMs} timeRange={timeRange} />}
+              </>
             )}
           </div>
           <div className="graph-card-legend-rail">
@@ -358,6 +395,34 @@ function GraphWallCardView({
   );
 }
 
+function HeroStateFooter({ tile, heroGraph, currentTimeMs, timeRange }: { tile: GraphTile; heroGraph: HeroGraphModel; currentTimeMs?: number; timeRange: TimeRange }) {
+  const start = timeRange.start;
+  const end = timeRange.end;
+  const now = currentTimeMs ?? Date.parse(heroGraph.time_axis.now ?? heroGraph.execution?.now ?? "");
+  const span = Math.max(1, end - start);
+  const stateIDs = new Set(["trace.phase_enum", "trace.stability_reached", "trace.dwell_active", "trace.functional_gate_active"]);
+  const states = tile.series.filter((series) => stateIDs.has(series.id));
+  if (!states.length) return null;
+  return (
+    <div className="hero-state-footer" aria-label="Integrated test stage status">
+      {states.map((series) => (
+        <div className="hero-state-row" key={series.id}>
+          <span>{series.label}</span>
+          <div>
+            {stateBlocks(series, start, span).map((block) => {
+              const blockStart = start + (block.left / 100) * span;
+              const blockEnd = blockStart + (block.width / 100) * span;
+              if (Number.isFinite(now) && blockStart > now) return null;
+              const clippedWidth = Number.isFinite(now) && blockEnd > now ? ((now - blockStart) / span) * 100 : block.width;
+              return <i key={block.key} style={{ left: `${block.left}%`, width: `${Math.max(0.1, clippedWidth)}%`, background: block.value > 0 ? colorForSignal(series) : "rgba(64,82,99,0.45)" }} />;
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function UPlotTile({
   tile,
   heroGraph,
@@ -365,7 +430,9 @@ function UPlotTile({
   currentTimeMs,
   hoverTimeMs,
   onHoverTime,
-  onPeekTime
+  onPeekTime,
+  timeRange,
+  onTimeRange
 }: {
   tile: GraphTile;
   heroGraph: HeroGraphModel;
@@ -374,12 +441,15 @@ function UPlotTile({
   hoverTimeMs?: number;
   onHoverTime: (timeMs: number | undefined) => void;
   onPeekTime: (timeMs: number | undefined) => void;
+  timeRange: TimeRange;
+  onTimeRange: (range: TimeRange) => void;
 }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const onHoverTimeRef = useRef(onHoverTime);
   const hoverTimeRef = useRef(hoverTimeMs);
   const pointerInsideRef = useRef(false);
   const draggingRef = useRef(false);
+  const onTimeRangeRef = useRef(onTimeRange);
 
   useEffect(() => {
     onHoverTimeRef.current = onHoverTime;
@@ -390,6 +460,10 @@ function UPlotTile({
   }, [hoverTimeMs]);
 
   useEffect(() => {
+    onTimeRangeRef.current = onTimeRange;
+  }, [onTimeRange]);
+
+  useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
     const build = () => {
@@ -397,7 +471,7 @@ function UPlotTile({
       const rect = host.getBoundingClientRect();
       const width = Math.max(240, Math.floor(rect.width));
       const height = Math.max(42, Math.floor(rect.height));
-      const { data, series, scales, axes } = uplotData(tile, currentTimeMs);
+      const { data, series, scales, axes } = uplotData(tile, currentTimeMs, width);
       let u: uPlot;
       const timeFromPointer = (event: PointerEvent | MouseEvent) => {
         const over = host.querySelector(".u-over");
@@ -412,10 +486,20 @@ function UPlotTile({
         sync: { key: `${tile.campaign_id}-shared-timebase` },
         cursor: { drag: { x: true, y: true } },
         legend: { show: false },
-        scales: { x: { time: true }, ...scales },
+        scales: { x: { time: true, range: () => [timeRange.start, timeRange.end] as [number, number] }, ...scales },
         axes,
         series,
         hooks: {
+          setScale: [
+            (plot, scaleKey) => {
+              if (scaleKey !== "x") return;
+              const min = plot.scales.x.min;
+              const max = plot.scales.x.max;
+              if (typeof min !== "number" || typeof max !== "number" || !Number.isFinite(min) || !Number.isFinite(max) || max <= min) return;
+              if (Math.abs(min - timeRange.start) < 2 && Math.abs(max - timeRange.end) < 2) return;
+              onTimeRangeRef.current({ start: Math.round(min), end: Math.round(max) });
+            }
+          ],
           setCursor: [
             (plot) => {
               if (!pointerInsideRef.current) return;
@@ -427,7 +511,7 @@ function UPlotTile({
           ],
           drawClear: [
             (plot) => {
-              drawTileOverlays(plot, tile, heroGraph, currentTimeMs, hoverTimeRef.current);
+              drawTileOverlays(plot, tile, heroGraph, currentTimeMs, hoverTimeRef.current, timeRange);
             }
           ]
         }
@@ -486,18 +570,20 @@ function UPlotTile({
       resize.disconnect();
       plot?.destroy();
     };
-  }, [currentTimeMs, heroGraph, renderKind, tile]);
+  }, [currentTimeMs, heroGraph, renderKind, tile, timeRange]);
 
   return <div className="graph-card-uplot" ref={hostRef} data-uplot-card={tile.card_id} />;
 }
 
-function SwimlaneTile({ tile, heroGraph, currentTimeMs }: { tile: GraphTile; heroGraph: HeroGraphModel; currentTimeMs?: number }) {
-  const start = Date.parse(tile.t0);
-  const end = Date.parse(tile.t1);
+function SwimlaneTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTimeMs, timeRange }: { tile: GraphTile; heroGraph: HeroGraphModel; currentTimeMs?: number; hoverTimeMs?: number; readoutTimeMs?: number; timeRange: TimeRange }) {
+  const start = timeRange.start;
+  const end = timeRange.end;
   const span = Math.max(1, end - start);
   const now = currentTimeMs ?? Date.parse(heroGraph.time_axis.now ?? heroGraph.execution?.now ?? "");
+  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), 9);
   return (
     <div className="tile-swimlane" data-swimlane-card={tile.card_id}>
+      {ticks.map((tick) => <i className="tile-shared-gridline" key={tick.iso} style={{ left: `${tick.ratio * 100}%` }} />)}
       {tile.series.map((series) => (
         <div className="tile-swimlane-row" key={series.id}>
           <span>{series.label}</span>
@@ -506,6 +592,8 @@ function SwimlaneTile({ tile, heroGraph, currentTimeMs }: { tile: GraphTile; her
               <i key={block.key} style={{ left: `${block.left}%`, width: `${block.width}%`, background: block.value > 0 ? colorForSignal(series) : "rgba(64,82,99,0.35)" }} />
             ))}
             {Number.isFinite(now) && <b style={{ left: `${Math.max(0, Math.min(100, ((now - start) / span) * 100))}%` }} />}
+            {Number.isFinite(hoverTimeMs) && <em style={{ left: `${Math.max(0, Math.min(100, (((hoverTimeMs as number) - start) / span) * 100))}%` }} />}
+            {Number.isFinite(readoutTimeMs) && readoutTimeMs !== hoverTimeMs && <em className="peek" style={{ left: `${Math.max(0, Math.min(100, (((readoutTimeMs as number) - start) / span) * 100))}%` }} />}
           </div>
         </div>
       ))}
@@ -513,14 +601,16 @@ function SwimlaneTile({ tile, heroGraph, currentTimeMs }: { tile: GraphTile; her
   );
 }
 
-function EventRailTile({ tile, heroGraph, currentTimeMs }: { tile: GraphTile; heroGraph: HeroGraphModel; currentTimeMs?: number }) {
-  const start = Date.parse(tile.t0);
-  const end = Date.parse(tile.t1);
+function EventRailTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTimeMs, timeRange }: { tile: GraphTile; heroGraph: HeroGraphModel; currentTimeMs?: number; hoverTimeMs?: number; readoutTimeMs?: number; timeRange: TimeRange }) {
+  const start = timeRange.start;
+  const end = timeRange.end;
   const span = Math.max(1, end - start);
   const now = currentTimeMs ?? Date.parse(heroGraph.time_axis.now ?? heroGraph.execution?.now ?? "");
+  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), 9);
   return (
     <div className="tile-event-rail" data-event-card={tile.card_id}>
-      {(tile.markers ?? []).map((marker) => (
+      {ticks.map((tick) => <span className="tile-shared-gridline" key={tick.iso} style={{ left: `${tick.ratio * 100}%` }} />)}
+      {(tile.markers ?? []).filter((marker) => inTimeRange(marker.timestamp, timeRange)).map((marker) => (
         <i
           className={`event-marker event-${marker.result ?? marker.kind}`}
           key={marker.id}
@@ -528,7 +618,7 @@ function EventRailTile({ tile, heroGraph, currentTimeMs }: { tile: GraphTile; he
           title={`${marker.label} ${marker.timestamp}`}
         />
       ))}
-      {(tile.events ?? []).map((event) => (
+      {(tile.events ?? []).filter((event) => inTimeRange(event.timestamp, timeRange)).map((event) => (
         <b
           className={`event-chip event-${event.kind}`}
           key={event.id}
@@ -537,17 +627,50 @@ function EventRailTile({ tile, heroGraph, currentTimeMs }: { tile: GraphTile; he
         />
       ))}
       {Number.isFinite(now) && <em style={{ left: `${Math.max(0, Math.min(100, ((now - start) / span) * 100))}%` }} />}
+      {Number.isFinite(hoverTimeMs) && <em className="hover" style={{ left: `${Math.max(0, Math.min(100, (((hoverTimeMs as number) - start) / span) * 100))}%` }} />}
+      {Number.isFinite(readoutTimeMs) && readoutTimeMs !== hoverTimeMs && <em className="peek" style={{ left: `${Math.max(0, Math.min(100, (((readoutTimeMs as number) - start) / span) * 100))}%` }} />}
     </div>
   );
 }
 
-function SharedTimeAxis({ heroGraph, currentTimeMs, hoverTimeMs, peekTimeMs }: { heroGraph: HeroGraphModel; currentTimeMs?: number; hoverTimeMs?: number; peekTimeMs?: number }) {
-  const ticks = timeTicks(heroGraph.time_axis.start, heroGraph.time_axis.end, 7);
-  const start = Date.parse(heroGraph.time_axis.start);
-  const end = Date.parse(heroGraph.time_axis.end);
-  const now = currentTimeMs ?? Date.parse(heroGraph.time_axis.now ?? heroGraph.execution?.now ?? "");
-  const nowRatio = Number.isFinite(now) ? Math.max(0, Math.min(1, (now - start) / Math.max(1, end - start))) : undefined;
+function SharedTimeAxis({
+  fullRange,
+  timeRange,
+  currentTimeMs,
+  hoverTimeMs,
+  peekTimeMs,
+  onTimeRange
+}: {
+  fullRange: TimeRange;
+  timeRange: TimeRange;
+  currentTimeMs?: number;
+  hoverTimeMs?: number;
+  peekTimeMs?: number;
+  onTimeRange: (range: TimeRange) => void;
+}) {
+  const ticks = timeTicks(new Date(timeRange.start).toISOString(), new Date(timeRange.end).toISOString(), 7);
+  const start = timeRange.start;
+  const end = timeRange.end;
+  const now = currentTimeMs;
+  const nowRatio = typeof now === "number" && Number.isFinite(now) ? Math.max(0, Math.min(1, (now - start) / Math.max(1, end - start))) : undefined;
   const spanHours = Math.max(0, (end - start) / 3_600_000);
+  const fullSpan = Math.max(1, fullRange.end - fullRange.start);
+  const viewSpan = Math.max(1, timeRange.end - timeRange.start);
+  const isZoomed = viewSpan < fullSpan * 0.995;
+  const zoomPercent = Math.round((fullSpan / viewSpan) * 100);
+  const minSpan = Math.max(60_000, fullSpan / 600);
+  const setZoom = (value: number) => {
+    const ratio = Number(value) / 100;
+    const nextSpan = Math.max(minSpan, Math.min(fullSpan, fullSpan / Math.max(1, ratio)));
+    const center = (timeRange.start + timeRange.end) / 2;
+    onTimeRange(clampRange({ start: Math.round(center - nextSpan / 2), end: Math.round(center + nextSpan / 2) }, fullRange, minSpan));
+  };
+  const setScroll = (value: number) => {
+    const maxOffset = Math.max(0, fullSpan - viewSpan);
+    const offset = (Number(value) / 1000) * maxOffset;
+    onTimeRange({ start: Math.round(fullRange.start + offset), end: Math.round(fullRange.start + offset + viewSpan) });
+  };
+  const scrollValue = Math.round(((timeRange.start - fullRange.start) / Math.max(1, fullSpan - viewSpan)) * 1000);
   return (
     <div className="operator-shared-time-axis" aria-label="Shared graph time axis">
       <span className="time-axis-label">TIME</span>
@@ -563,9 +686,38 @@ function SharedTimeAxis({ heroGraph, currentTimeMs, hoverTimeMs, peekTimeMs }: {
           </span>
         ))}
       </div>
-      <span className="time-axis-range">{spanHours.toFixed(spanHours >= 24 ? 0 : 1)} h</span>
+      <div className="time-axis-controls">
+        <span>{spanHours.toFixed(spanHours >= 24 ? 0 : 1)} h</span>
+        <label>
+          <small>zoom</small>
+          <input type="range" min="100" max="60000" step="25" value={Math.max(100, Math.min(60000, zoomPercent))} onChange={(event) => setZoom(Number(event.currentTarget.value))} />
+        </label>
+        {isZoomed && (
+          <label className="time-axis-scroll">
+            <small>scroll</small>
+            <input type="range" min="0" max="1000" step="1" value={Math.max(0, Math.min(1000, scrollValue))} onChange={(event) => setScroll(Number(event.currentTarget.value))} />
+          </label>
+        )}
+        {isZoomed && <button type="button" onClick={() => onTimeRange(fullRange)}>full</button>}
+      </div>
     </div>
   );
+}
+
+function clampRange(range: TimeRange, fullRange: TimeRange, minSpan: number): TimeRange {
+  const fullSpan = Math.max(1, fullRange.end - fullRange.start);
+  const span = Math.max(minSpan, Math.min(fullSpan, range.end - range.start));
+  let start = range.start;
+  let end = range.start + span;
+  if (start < fullRange.start) {
+    start = fullRange.start;
+    end = start + span;
+  }
+  if (end > fullRange.end) {
+    end = fullRange.end;
+    start = end - span;
+  }
+  return { start: Math.round(start), end: Math.round(end) };
 }
 
 type UPlotBuild = {
@@ -575,13 +727,14 @@ type UPlotBuild = {
   axes: uPlot.Axis[];
 };
 
-function uplotData(tile: GraphTile, currentTimeMs?: number): UPlotBuild {
+function uplotData(tile: GraphTile, currentTimeMs?: number, viewportWidth = 900): UPlotBuild {
   const tileSeries = tile.series.filter((series) => (series.points ?? []).length > 0).sort(seriesDrawOrder);
-  const xValues = sharedTimeGrid(tile, tileSeries);
+  const plottedSeries = tileSeries.map((series) => viewportSeries(series, viewportWidth));
+  const xValues = sharedTimeGrid(tile, plottedSeries);
   const data: uPlot.AlignedData = [xValues];
   const series: uPlot.Series[] = [{}];
   const scaleKeys = new Set<string>();
-  tileSeries.forEach((seriesTile, index) => {
+  plottedSeries.forEach((seriesTile, index) => {
     const scale = scaleForSeries(tile, seriesTile);
     scaleKeys.add(scale);
     data.push(resampleSeries(tile, seriesTile, xValues, currentTimeMs));
@@ -631,10 +784,50 @@ function sharedTimeGrid(tile: GraphTile, tileSeries: TileSeries[]): number[] {
   if (!Number.isFinite(t0) || !Number.isFinite(t1) || t1 <= t0) {
     return Array.from(new Set(finiteTimes)).sort((a, b) => a - b);
   }
-  const referenceCount = Math.max(...tileSeries.map((series) => (series.points ?? []).length), 2);
-  const count = Math.max(160, Math.min(900, referenceCount));
-  const step = (t1 - t0) / (count - 1);
-  return Array.from({ length: count }, (_, index) => Math.round(t0 + index * step));
+  return Array.from(new Set([start, end, ...finiteTimes])).filter(Number.isFinite).sort((a, b) => a - b);
+}
+
+function viewportSeries(series: TileSeries, viewportWidth: number): TileSeries {
+  const points = series.points ?? [];
+  if (points.length < 4 || series.step || series.render_kind === "counter" || series.kind === "counter") return series;
+  const budget = Math.max(180, Math.min(points.length, Math.round(viewportWidth * 1.65)));
+  if (points.length <= budget) return series;
+  return { ...series, points: lttb(points, budget) };
+}
+
+function lttb(points: TileSeries["points"], threshold: number): TileSeries["points"] {
+  if (!points || threshold >= points.length || threshold < 3) return points;
+  const parsed = points
+    .map((point) => ({ point, x: Date.parse(point.timestamp), y: point.value }))
+    .filter((point) => Number.isFinite(point.x) && Number.isFinite(point.y));
+  if (parsed.length <= threshold) return points;
+  const sampled = [parsed[0].point];
+  const bucketSize = (parsed.length - 2) / (threshold - 2);
+  let a = 0;
+  for (let i = 0; i < threshold - 2; i++) {
+    const rangeStart = Math.floor((i + 0) * bucketSize) + 1;
+    const rangeEnd = Math.floor((i + 1) * bucketSize) + 1;
+    const nextRangeStart = Math.floor((i + 1) * bucketSize) + 1;
+    const nextRangeEnd = Math.floor((i + 2) * bucketSize) + 1;
+    const range = parsed.slice(rangeStart, Math.min(rangeEnd, parsed.length - 1));
+    const nextRange = parsed.slice(nextRangeStart, Math.min(nextRangeEnd, parsed.length));
+    const avgX = nextRange.reduce((sum, point) => sum + point.x, 0) / Math.max(1, nextRange.length);
+    const avgY = nextRange.reduce((sum, point) => sum + point.y, 0) / Math.max(1, nextRange.length);
+    const anchor = parsed[a];
+    let selected = range[0] ?? parsed[Math.min(rangeStart, parsed.length - 2)];
+    let maxArea = -1;
+    range.forEach((candidate) => {
+      const area = Math.abs((anchor.x - avgX) * (candidate.y - anchor.y) - (anchor.x - candidate.x) * (avgY - anchor.y));
+      if (area > maxArea) {
+        maxArea = area;
+        selected = candidate;
+      }
+    });
+    sampled.push(selected.point);
+    a = parsed.indexOf(selected);
+  }
+  sampled.push(parsed[parsed.length - 1].point);
+  return sampled;
 }
 
 function scaleForSeries(tile: GraphTile, series: TileSeries): string {
@@ -653,15 +846,27 @@ function scaleForSeries(tile: GraphTile, series: TileSeries): string {
 function buildScales(scaleKeys: Set<string>): Record<string, uPlot.Scale> {
   const scales: Record<string, uPlot.Scale> = {};
   scaleKeys.forEach((key) => {
-    if (key === "temperature_c") scales[key] = { range: (_u, _min, _max) => [-90, 90] };
+    if (key === "temperature_c") scales[key] = { range: paddedRange(12, [-92, 92]) };
     else if (key === "pressure_log") scales[key] = { range: (_u, _min, _max) => [-8.2, 3.2] };
     else if (key === "pressure_rate_log") scales[key] = { range: (_u, _min, _max) => [-8, 3] };
-    else if (key === "pressure_bar") scales[key] = { range: (_u, _min, _max) => [0, 12] };
+    else if (key === "pressure_bar") scales[key] = { range: paddedRange(0.08, [0, 12]) };
     else if (key === "percent") scales[key] = { range: (_u, _min, _max) => [0, 100] };
-    else if (key === "heat_flux_w") scales[key] = { range: (_u, _min, _max) => [-45, 45] };
+    else if (key === "heat_flux_w") scales[key] = { range: paddedRange(8, [-45, 45]) };
     else scales[key] = {};
   });
   return scales;
+}
+
+function paddedRange(minPad: number, clamp?: [number, number]): uPlot.Range.Function {
+  return (_u: uPlot, min: number, max: number) => {
+    if (!Number.isFinite(min) || !Number.isFinite(max)) return clamp ?? [0, 1] as [number, number];
+    if (max <= min) return [min - minPad, max + minPad] as [number, number];
+    const pad = Math.max(minPad, (max - min) * 0.08);
+    const low = min - pad;
+    const high = max + pad;
+    if (!clamp) return [low, high] as [number, number];
+    return [Math.max(clamp[0], low), Math.min(clamp[1], high)] as [number, number];
+  };
 }
 
 function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[] {
@@ -681,8 +886,10 @@ function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[] {
     show: true,
     scale: primary,
     stroke: "#7890a4",
-    grid: { stroke: "rgba(83,112,140,0.2)" },
-    size: 38,
+    grid: { stroke: "rgba(83,112,140,0.26)", width: 1 },
+    ticks: { stroke: "rgba(83,112,140,0.48)", width: 1, size: 4 },
+    splits: (_u, _axisIdx, scaleMin, scaleMax) => ySplits(scaleMin, scaleMax),
+    size: 46,
     label: axisLabel(primary, tile),
     labelSize: 12,
     labelGap: 0,
@@ -696,14 +903,29 @@ function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[] {
       stroke: key.includes("pressure") ? "#60a5fa" : "#8bd3a5",
       grid: { show: false },
       ticks: { show: false },
-      size: key.includes("pressure") ? 46 : 34,
+      size: 54,
       label: axisLabel(key, tile),
       labelSize: 12,
       labelGap: 0,
       values: key === "pressure_log" || key === "pressure_rate_log" ? (_u, vals) => vals.map((v) => `1e${Math.round(v)}`) : undefined,
     });
   });
+  if (!extra.length) {
+    axes.push({ show: false, side: 1, scale: primary, size: 54 });
+  }
   return axes;
+}
+
+function ySplits(min: number, max: number) {
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) return [];
+  const target = 8;
+  const rough = (max - min) / target;
+  const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+  const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((candidate) => rough <= candidate) ?? mag * 10;
+  const first = Math.ceil(min / step) * step;
+  const values: number[] = [];
+  for (let v = first; v <= max + step * 0.25; v += step) values.push(Number(v.toFixed(6)));
+  return values;
 }
 
 function axisLabel(scale: string, tile: GraphTile) {
@@ -759,17 +981,28 @@ function resampleSeries(tile: GraphTile, series: TileSeries, xValues: number[], 
   });
 }
 
-function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphModel, currentTimeMs?: number, hoverTimeMs?: number) {
+function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphModel, currentTimeMs?: number, hoverTimeMs?: number, timeRange?: TimeRange) {
   const ctx = plot.ctx;
   const bbox = plot.bbox;
   const left = bbox.left;
   const top = bbox.top;
   const width = bbox.width;
   const height = bbox.height;
-  const start = Date.parse(tile.t0);
-  const end = Date.parse(tile.t1);
+  const start = timeRange?.start ?? Date.parse(tile.t0);
+  const end = timeRange?.end ?? Date.parse(tile.t1);
   const span = Math.max(1, end - start);
   ctx.save();
+  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), 9);
+  ctx.strokeStyle = "rgba(83,112,140,0.16)";
+  ctx.lineWidth = 1;
+  ctx.setLineDash([]);
+  ticks.forEach((tick) => {
+    const x = left + tick.ratio * width;
+    ctx.beginPath();
+    ctx.moveTo(x, top);
+    ctx.lineTo(x, top + height);
+    ctx.stroke();
+  });
   (tile.bands ?? []).forEach((band) => {
     const x = left + ((Date.parse(band.start) - start) / span) * width;
     const x2 = left + ((Date.parse(band.end) - start) / span) * width;
@@ -800,6 +1033,12 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
       ctx.lineTo(x + 4, top + 12);
       ctx.closePath();
       ctx.fill();
+      ctx.save();
+      ctx.translate(x + 5, top + 30);
+      ctx.rotate(-Math.PI / 4.5);
+      ctx.font = "9px system-ui, sans-serif";
+      ctx.fillText(shortGateLabel(marker.label), 0, 0);
+      ctx.restore();
     } else {
       ctx.beginPath();
       ctx.arc(x, top + 10, 3.2, 0, Math.PI * 2);
@@ -831,6 +1070,14 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
     }
   }
   ctx.restore();
+}
+
+function shortGateLabel(label: string) {
+  return label
+    .replace(/^Cycle\s+/i, "C")
+    .replace(/\s+dwell\s+functional\s+test/i, " FT")
+    .replace(/\s+functional\s+test/i, " FT")
+    .slice(0, 18);
 }
 
 function legendReadouts(tile: GraphTile, visibleSignals: Array<{ id: string; label: string }>, timeMs?: number, currentTimeMs?: number) {
@@ -917,28 +1164,35 @@ function unitForAxis(axisID?: string) {
 
 function stateBlocks(series: TileSeries, start: number, span: number) {
   if (series.spans?.length) {
-    return series.spans.map((state, index) => {
+    return series.spans.flatMap((state, index) => {
       const stateStart = Date.parse(state.start);
       const stateEnd = Date.parse(state.end);
+      if (!Number.isFinite(stateStart) || !Number.isFinite(stateEnd) || stateEnd < start || stateStart > start + span) return [];
       const left = Math.max(0, Math.min(100, ((stateStart - start) / span) * 100));
       const right = Math.max(left + 0.15, Math.min(100, ((stateEnd - start) / span) * 100));
-      return {
+      return [{
         key: `${series.id}-span-${index}`,
         left,
         width: right - left,
         value: state.value ?? Number(state.state ?? 0),
         label: state.label ?? state.state ?? "",
-      };
+      }];
     });
   }
   const sorted = [...(series.points ?? [])].sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp));
-  return sorted.map((point, index) => {
+  return sorted.flatMap((point, index) => {
     const pointTime = Date.parse(point.timestamp);
     const nextTime = index + 1 < sorted.length ? Date.parse(sorted[index + 1].timestamp) : start + span;
+    if (!Number.isFinite(pointTime) || !Number.isFinite(nextTime) || nextTime < start || pointTime > start + span) return [];
     const left = Math.max(0, Math.min(100, ((pointTime - start) / span) * 100));
     const right = Math.max(left + 0.15, Math.min(100, ((nextTime - start) / span) * 100));
-    return { key: `${series.id}-${index}`, left, width: right - left, value: point.value, label: String(point.value) };
+    return [{ key: `${series.id}-${index}`, left, width: right - left, value: point.value, label: String(point.value) }];
   });
+}
+
+function inTimeRange(timestamp: string, range: TimeRange) {
+  const t = Date.parse(timestamp);
+  return Number.isFinite(t) && t >= range.start && t <= range.end;
 }
 
 function renderKindFor(kind: string) {

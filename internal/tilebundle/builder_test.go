@@ -11,17 +11,15 @@ import (
 	"github.com/egidinas/gossamer/internal/contracts"
 )
 
-func TestBuildTileOmitsFutureObservedButKeepsGhost(t *testing.T) {
+func TestBuildTileIncludesReplayDataForClientSideReveal(t *testing.T) {
 	model := smallModel()
 	tile, err := BuildTile(model, "thermal_program", "minute", "", "", false)
 	if err != nil {
 		t.Fatal(err)
 	}
 	observed := seriesByID(tile, "trace.actual.chamber_air")
-	for _, point := range observed.Points {
-		if point.Timestamp > "2026-01-01T02:00:00Z" {
-			t.Fatalf("observed point after cursor leaked into tile: %+v", point)
-		}
+	if len(observed.Points) == 0 || observed.Points[len(observed.Points)-1].Timestamp != "2026-01-01T04:00:00Z" {
+		t.Fatalf("observed replay trace should be available for frontend reveal masking: %+v", observed.Points)
 	}
 	ghost := seriesByID(tile, "trace.ghost.profile")
 	if len(ghost.Points) == 0 || ghost.Points[len(ghost.Points)-1].Timestamp != "2026-01-01T04:00:00Z" {

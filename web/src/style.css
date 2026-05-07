@@ -605,7 +605,7 @@ button {
 
 .operator-graph-wall {
   display: grid;
-  gap: 3px;
+  gap: 0;
   min-width: 0;
 }
 
@@ -638,13 +638,13 @@ button {
 
 .execution-progress-panel {
   display: grid;
-  grid-template-columns: minmax(170px, 230px) minmax(0, 1fr);
-  gap: 3px;
+  grid-template-columns: minmax(160px, 210px) minmax(0, 1fr);
+  gap: 2px;
   min-width: 0;
   border: 1px solid #1f3348;
   border-radius: 2px;
   background: #071019;
-  padding: 3px;
+  padding: 2px;
 }
 
 .thermal-diagram-panel {
@@ -1012,17 +1012,17 @@ button {
 
 .requirement-progress-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 3px;
+  grid-template-columns: repeat(5, minmax(132px, 1fr));
+  gap: 2px;
   min-width: 0;
 }
 
 .requirement-progress-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 2px 6px;
+  gap: 1px 6px;
   min-width: 0;
-  padding: 4px 6px;
+  padding: 3px 6px;
   background: #09131e;
   border-left: 1px solid #17283a;
 }
@@ -1049,7 +1049,7 @@ button {
 
 .operator-wall-section {
   display: grid;
-  gap: 2px;
+  gap: 0;
   min-width: 0;
 }
 
@@ -1070,33 +1070,33 @@ button {
 
 .operator-wall-cards {
   display: grid;
-  gap: 2px;
+  gap: 0;
   min-width: 0;
 }
 
 .graph-wall-card {
   --card-height-weight: 1;
-  --plot-height: 96px;
+  --plot-height: 240px;
   display: grid;
-  grid-template-columns: minmax(108px, 142px) minmax(0, 1fr) minmax(126px, 178px);
+  grid-template-columns: 92px minmax(0, 1fr) 164px;
   gap: 0;
   min-width: 0;
   height: var(--plot-height);
   min-height: var(--plot-height);
   border: 1px solid #1f3348;
-  border-radius: 2px;
+  border-radius: 0;
   background: #071019;
   overflow: hidden;
 }
 
 .graph-card-pinned {
-  --plot-height: 360px;
+  --plot-height: 760px;
 }
 
 .graph-card-state,
 .graph-card-event,
 .graph-card-counter {
-  --plot-height: 64px;
+  --plot-height: 180px;
 }
 
 .graph-card-collapsed {
@@ -1112,7 +1112,7 @@ button {
   gap: 2px;
   min-width: 0;
   background: #09131e;
-  padding: 5px 6px;
+  padding: 3px 5px;
 }
 
 .graph-card-label-rail {
@@ -1141,14 +1141,7 @@ button {
 }
 
 .graph-card-label-rail strong {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: #f0f6fb;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1.18;
+  display: none;
 }
 
 .graph-card-label-rail span,
@@ -1175,6 +1168,80 @@ button {
 .graph-card-plot-shell {
   position: relative;
   overflow: hidden;
+}
+
+.graph-card-inline-title {
+  position: absolute;
+  top: 5px;
+  left: 54px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  max-width: calc(100% - 120px);
+  border: 1px solid rgba(39, 60, 77, 0.7);
+  border-radius: 3px;
+  background: rgba(3, 7, 12, 0.78);
+  padding: 2px 6px;
+  pointer-events: none;
+}
+
+.hero-state-footer {
+  position: absolute;
+  left: 46px;
+  right: 54px;
+  bottom: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px 6px;
+  padding: 3px 6px 4px;
+  border-top: 1px solid rgba(31, 51, 72, 0.78);
+  background: rgba(3, 7, 12, 0.74);
+  pointer-events: none;
+}
+
+.hero-state-row {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.hero-state-row span {
+  overflow: hidden;
+  color: #91a7b8;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hero-state-row div {
+  position: relative;
+  height: 6px;
+  min-width: 0;
+  background: rgba(23, 40, 58, 0.5);
+}
+
+.hero-state-row i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  min-width: 1px;
+}
+
+.graph-card-inline-title strong {
+  color: #f2f7ff;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.graph-card-inline-title span {
+  color: #91a7b8;
+  font-size: 9px;
+  text-transform: uppercase;
 }
 
 .graph-card-uplot,
@@ -1264,6 +1331,16 @@ button {
   padding: 2px 0;
 }
 
+.tile-shared-gridline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(83, 112, 140, 0.16);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .tile-swimlane-row {
   display: grid;
   grid-template-columns: minmax(68px, 96px) minmax(0, 1fr);
@@ -1297,6 +1374,7 @@ button {
 }
 
 .tile-swimlane-row b,
+.tile-swimlane-row em,
 .tile-event-rail em {
   position: absolute;
   top: 0;
@@ -1304,6 +1382,16 @@ button {
   width: 1px;
   background: #f2f7ff;
   opacity: 0.9;
+}
+
+.tile-swimlane-row em,
+.tile-event-rail em.hover {
+  background: #ffd85f;
+}
+
+.tile-swimlane-row em.peek,
+.tile-event-rail em.peek {
+  background: #b8a6ff;
 }
 
 .tile-event-rail {
@@ -1334,10 +1422,11 @@ button {
 
 .operator-shared-time-axis {
   display: grid;
-  grid-template-columns: minmax(108px, 142px) minmax(0, 1fr) minmax(126px, 178px);
+  grid-template-columns: 92px 58px minmax(0, 1fr) 164px;
+  grid-template-rows: 28px 24px;
   align-items: end;
   min-width: 0;
-  height: 20px;
+  height: 52px;
   border: 1px solid #1f3348;
   border-radius: 2px;
   background: #071019;
@@ -1351,11 +1440,51 @@ button {
   padding: 0 6px 4px;
 }
 
-.time-axis-range {
+.time-axis-controls {
+  grid-column: 3 / 5;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: auto minmax(72px, 1fr) minmax(72px, 1fr) auto;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  padding: 0 5px 4px;
   text-align: right;
 }
 
+.time-axis-controls span,
+.time-axis-controls small,
+.time-axis-controls button {
+  color: #7890a4;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.time-axis-controls label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.time-axis-controls input {
+  width: 100%;
+  min-width: 0;
+  accent-color: #56d6df;
+}
+
+.time-axis-controls button {
+  border: 1px solid #1f3348;
+  border-radius: 2px;
+  background: #0b1722;
+  padding: 1px 5px;
+  cursor: pointer;
+}
+
 .time-axis-track {
+  grid-column: 3;
+  grid-row: 1;
   position: relative;
   height: 100%;
   min-width: 0;
@@ -1971,12 +2100,24 @@ code {
 
   .operator-shared-time-axis {
     grid-template-columns: minmax(0, 1fr);
-    height: 32px;
+    grid-template-rows: 28px 26px;
+    height: 56px;
   }
 
   .time-axis-label,
-  .time-axis-range {
+  .time-axis-controls span {
     display: none;
+  }
+
+  .time-axis-controls {
+    grid-column: 1;
+    grid-row: 2;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  }
+
+  .time-axis-track {
+    grid-column: 1;
+    grid-row: 1;
   }
 
   .companion-graph svg {

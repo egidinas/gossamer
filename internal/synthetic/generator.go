@@ -859,7 +859,7 @@ func tileLevels() []contracts.TileLevel {
 		{ID: "month", Label: "Month", Resolution: "month", DurationMS: int64((31 * 24 * time.Hour) / time.Millisecond), MaxPoints: 600, DecimationMode: "min_max_envelope"},
 		{ID: "day", Label: "Day", Resolution: "day", DurationMS: int64((24 * time.Hour) / time.Millisecond), MaxPoints: 720, DecimationMode: "min_max_envelope"},
 		{ID: "hour", Label: "Hour", Resolution: "hour", DurationMS: int64(time.Hour / time.Millisecond), MaxPoints: 900, DecimationMode: "min_max_envelope"},
-		{ID: "minute", Label: "Minute", Resolution: "minute", DurationMS: int64(time.Minute / time.Millisecond), MaxPoints: 900, DecimationMode: "min_max_envelope"},
+		{ID: "minute", Label: "Minute", Resolution: "minute", DurationMS: int64(time.Minute / time.Millisecond), MaxPoints: 4200, DecimationMode: "viewport_lttb_seed"},
 		{ID: "second", Label: "Second", Resolution: "second", DurationMS: int64(time.Second / time.Millisecond), MaxPoints: 1800, DecimationMode: "raw_or_envelope"},
 		{ID: "millisecond", Label: "Millisecond", Resolution: "millisecond", DurationMS: 1, MaxPoints: 3600, DecimationMode: "raw_or_envelope"},
 	}

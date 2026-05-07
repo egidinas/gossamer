@@ -201,9 +201,8 @@ func BuildTile(model contracts.GraphModel, cardID, levelID, t0s, t1s string, lat
 		return contracts.GraphTile{}, fmt.Errorf("t1 must be after t0")
 	}
 	maxPoints := maxPointsForLevel(*model.TileManifest, levelID)
-	perSeriesMax := max(1, maxPoints/max(1, len(card.Signals)))
+	perSeriesMax := max(1, maxPoints)
 	traceIndex := traceIndex(model.HeroGraph)
-	cursor := replayCursor(model.HeroGraph)
 	series := make([]contracts.TileSeries, 0, len(card.Signals))
 	rawCount := 0
 	for _, signal := range card.Signals {
@@ -212,7 +211,6 @@ func BuildTile(model contracts.GraphModel, cardID, levelID, t0s, t1s string, lat
 			continue
 		}
 		filtered := filterPoints(points, start, end)
-		filtered = filterFuturePoints(filtered, signal.Role, cursor)
 		rawCount += len(filtered)
 		decimated := normalizePoints(decimate(filtered, perSeriesMax))
 		tileSeries := contracts.TileSeries{
@@ -228,12 +226,10 @@ func BuildTile(model contracts.GraphModel, cardID, levelID, t0s, t1s string, lat
 	}
 	bands := intersectBands(model.HeroGraph.PhaseBands, start, end)
 	bands = append(bands, intersectBands(model.HeroGraph.DwellWindows, start, end)...)
-	bands = filterFutureBands(bands, cursor)
 	markers := []contracts.GraphMarker{}
 	events := []contracts.TileEvent{}
 	if card.CardID == "thermal_program" || card.RenderKind == "event_rail" || card.RenderKind == "swimlane" {
 		markers = intersectMarkers(model.HeroGraph.Markers, start, end)
-		markers = filterFutureMarkers(markers, cursor)
 		events = make([]contracts.TileEvent, 0, len(markers))
 		for _, marker := range markers {
 			events = append(events, contracts.TileEvent{ID: marker.ID, Kind: marker.Kind, Label: marker.Label, Timestamp: marker.Timestamp, RequirementID: requirementID(marker.Kind), EvidenceRef: marker.EvidenceRef, Result: marker.Result, Value: marker.Value})
@@ -291,6 +287,13 @@ func spansFromPoints(points []contracts.GraphPoint, table map[string]string, fal
 		}
 		key := strconv.FormatFloat(point.Value, 'f', -1, 64)
 		label := table[key]
+		if len(spans) > 0 {
+			last := &spans[len(spans)-1]
+			if last.State == key && last.Label == label && last.End == start.UTC().Format(time.RFC3339) {
+				last.End = end.UTC().Format(time.RFC3339)
+				continue
+			}
+		}
 		spans = append(spans, contracts.TileSpan{
 			Start: start.UTC().Format(time.RFC3339),
 			End:   end.UTC().Format(time.RFC3339),
