@@ -278,6 +278,7 @@ export function App() {
         <span>Dr. Jonathan Meyer · jonathan@jmeyer.space</span>
         <a href="#acceptance">Physical model and components: FAT</a>
         <a href="#qualification">Physical model and components: TVac</a>
+        <a href="https://github.com/egidinas/gossamer" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
       </footer>
     </main>
   );
