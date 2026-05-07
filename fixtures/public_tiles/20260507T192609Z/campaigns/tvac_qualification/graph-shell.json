@@ -2954,7 +2954,7 @@
             "min": 1e-8,
             "max": 1000,
             "side": "left",
-            "format": "0.000000"
+            "format": "scientific"
           },
           {
             "id": "percent",

@@ -90,7 +90,7 @@ async function cachedArrowTelemetry(campaignId: string) {
 
 async function fetchArrowTelemetry(campaignId: string): Promise<ArrowTelemetry> {
   const buffer = await fetchArrowBuffer(campaignId);
-  const table = tableFromIPC(new Uint8Array(buffer));
+  const table = tableFromIPC(new Uint8Array(await decodeArrowBuffer(buffer)));
   const timestamp = table.getChild("timestamp_ns");
   const sensor = table.getChild("sensor");
   const value = table.getChild("value");
@@ -122,11 +122,37 @@ async function fetchArrowTelemetry(campaignId: string): Promise<ArrowTelemetry> 
 }
 
 async function fetchArrowBuffer(campaignId: string) {
-  const staticResponse = await fetch(`/data/current/campaigns/${campaignId}/telemetry.arrow`);
-  if (staticResponse.ok) return staticResponse.arrayBuffer();
-  const response = await fetch(`/api/campaigns/${campaignId}/telemetry`);
-  if (!response.ok) throw new Error(`Arrow telemetry returned ${response.status}`);
-  return response.arrayBuffer();
+  const candidates = [
+    `/data/current/campaigns/${campaignId}/telemetry.arrow`,
+    `/data/current/campaigns/${campaignId}/telemetry.arrow.gz`,
+    `/api/campaigns/${campaignId}/telemetry`
+  ];
+  for (const url of candidates) {
+    const response = await fetch(url);
+    if (!response.ok) continue;
+    const buffer = await response.arrayBuffer();
+    if (!looksLikeHTML(buffer)) return buffer;
+  }
+  throw new Error(`Arrow telemetry unavailable for ${campaignId}`);
+}
+
+async function decodeArrowBuffer(buffer: ArrayBuffer) {
+  const bytes = new Uint8Array(buffer);
+  if (bytes.length >= 2 && bytes[0] === 0x1f && bytes[1] === 0x8b) {
+    if (!("DecompressionStream" in globalThis)) {
+      throw new Error("Gzip-compressed Arrow telemetry requires DecompressionStream support");
+    }
+    const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"));
+    return new Response(stream).arrayBuffer();
+  }
+  return buffer;
+}
+
+function looksLikeHTML(buffer: ArrayBuffer) {
+  const bytes = new Uint8Array(buffer);
+  let offset = 0;
+  while (offset < bytes.length && bytes[offset] <= 0x20) offset += 1;
+  return bytes[offset] === 0x3c;
 }
 
 function buildSeries(signal: GraphWallSignal, card: GraphTileCardRef, telemetry: ArrowTelemetry, t0: number, t1: number): BuiltSeries {

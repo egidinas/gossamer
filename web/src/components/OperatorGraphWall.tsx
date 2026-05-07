@@ -993,7 +993,7 @@ type UPlotBuild = {
 
 function uplotData(tile: GraphTile, currentTimeMs?: number, viewportWidth = 900): UPlotBuild {
   const tileSeries = tile.series.filter((series) => (series.points ?? []).length > 0).sort(seriesDrawOrder);
-  const plottedSeries = tileSeries.map((series) => viewportSeries(series, viewportWidth));
+  const plottedSeries = tileSeries.map((series) => viewportSeries(tile, series, viewportWidth));
   const xValues = sharedTimeGrid(tile, plottedSeries);
   const data: uPlot.AlignedData = [xValues];
   const series: uPlot.Series[] = [{}];
@@ -1053,18 +1053,18 @@ function sharedTimeGrid(tile: GraphTile, tileSeries: TileSeries[]): number[] {
   return Array.from(new Set([start, end, ...finiteTimes])).filter(Number.isFinite).sort((a, b) => a - b);
 }
 
-function viewportSeries(series: TileSeries, viewportWidth: number): TileSeries {
+function viewportSeries(tile: GraphTile, series: TileSeries, viewportWidth: number): TileSeries {
   const points = series.points ?? [];
   if (points.length < 4 || series.step || series.render_kind === "counter" || series.kind === "counter") return series;
   const budget = Math.max(180, Math.min(points.length, Math.round(viewportWidth * 1.65)));
   if (points.length <= budget) return series;
-  return { ...series, points: lttb(points, budget) };
+  return { ...series, points: lttb(points, budget, (value) => decimationValue(tile, series, value)) };
 }
 
-function lttb(points: TileSeries["points"], threshold: number): TileSeries["points"] {
+function lttb(points: TileSeries["points"], threshold: number, yValue: (value: number) => number): TileSeries["points"] {
   if (!points || threshold >= points.length || threshold < 3) return points;
   const parsed = points
-    .map((point) => ({ point, x: Date.parse(point.timestamp), y: point.value }))
+    .map((point) => ({ point, x: Date.parse(point.timestamp), y: yValue(point.value) }))
     .filter((point) => Number.isFinite(point.x) && Number.isFinite(point.y));
   if (parsed.length <= threshold) return points;
   const sampled = [parsed[0].point];
@@ -1096,6 +1096,12 @@ function lttb(points: TileSeries["points"], threshold: number): TileSeries["poin
   return sampled;
 }
 
+function decimationValue(tile: GraphTile, series: TileSeries, value: number) {
+  if (series.axis_id === "pressure_mbar" && tile.card_id === "thermal_program") return pressureHeroRailDegC(value);
+  if (series.axis_id === "pressure_mbar" || series.axis_id === "pressure_rate") return value > 0 ? Math.log10(value) : Number.NaN;
+  return value;
+}
+
 function scaleForSeries(tile: GraphTile, series: TileSeries): string {
   if (series.axis_id === "pressure_mbar" && tile.card_id === "thermal_program") return "temperature_c";
   if (series.axis_id === "pressure_mbar") return "pressure_log";
@@ -1113,8 +1119,8 @@ function buildScales(scaleKeys: Set<string>): Record<string, uPlot.Scale> {
   const scales: Record<string, uPlot.Scale> = {};
   scaleKeys.forEach((key) => {
     if (key === "temperature_c") scales[key] = { range: paddedRange(12, [-92, 92]) };
-    else if (key === "pressure_log") scales[key] = { range: (_u, _min, _max) => [-8.2, 3.2] };
-    else if (key === "pressure_rate_log") scales[key] = { range: (_u, _min, _max) => [-8, 3] };
+    else if (key === "pressure_log") scales[key] = { distr: 3, log: 10, range: () => [1e-8, 1.2e3] };
+    else if (key === "pressure_rate_log") scales[key] = { distr: 3, log: 10, range: () => [1e-8, 1e3] };
     else if (key === "pressure_bar") scales[key] = { range: paddedRange(0.08, [0, 12]) };
     else if (key === "percent") scales[key] = { range: (_u, _min, _max) => [0, 100] };
     else if (key === "heat_flux_w") scales[key] = { range: paddedRange(8, [-45, 45]) };
@@ -1162,11 +1168,12 @@ function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[] {
     stroke: "#7890a4",
     grid: { stroke: "rgba(83,112,140,0.26)", width: 1 },
     ticks: { stroke: "rgba(83,112,140,0.48)", width: 1, size: 4 },
-    splits: (_u, _axisIdx, scaleMin, scaleMax) => ySplits(scaleMin, scaleMax),
+    splits: (_u, _axisIdx, scaleMin, scaleMax) => logScale(primary) ? logSplits(scaleMin, scaleMax) : ySplits(scaleMin, scaleMax),
     size: leftAxisSize,
     label: axisLabel(primary, tile),
     labelSize: 12,
     labelGap: 0,
+    values: logScale(primary) ? (_u, vals) => vals.map((v) => formatScientific(v)) : undefined,
   });
   const extra = Array.from(scaleKeys).filter((key) => key !== primary);
   extra.forEach((key) => {
@@ -1181,7 +1188,8 @@ function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[] {
       label: axisLabel(key, tile),
       labelSize: 12,
       labelGap: 0,
-      values: key === "pressure_log" || key === "pressure_rate_log" ? (_u, vals) => vals.map((v) => `1e${Math.round(v)}`) : undefined,
+      splits: logScale(key) ? (_u, _axisIdx, scaleMin, scaleMax) => logSplits(scaleMin, scaleMax) : undefined,
+      values: logScale(key) ? (_u, vals) => vals.map((v) => formatScientific(v)) : undefined,
     });
   });
   if (!extra.length) {
@@ -1199,6 +1207,19 @@ function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[] {
     });
   }
   return axes;
+}
+
+function logScale(scale: string) {
+  return scale === "pressure_log" || scale === "pressure_rate_log";
+}
+
+function logSplits(min: number, max: number) {
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= 0 || max <= min) return [];
+  const first = Math.ceil(Math.log10(Math.max(min, 1e-12)));
+  const last = Math.floor(Math.log10(max));
+  const values: number[] = [];
+  for (let exp = first; exp <= last; exp += 1) values.push(Math.pow(10, exp));
+  return values;
 }
 
 function ySplits(min: number, max: number) {
@@ -1232,8 +1253,7 @@ function hasPressure(tile: GraphTile) {
 
 function displayValue(tile: GraphTile, series: TileSeries, value: number) {
   if (series.axis_id === "pressure_mbar" && tile.card_id === "thermal_program") return pressureHeroRailDegC(value);
-  if (series.axis_id === "pressure_mbar") return Math.log10(Math.max(0.00000001, value));
-  if (series.axis_id === "pressure_rate") return Math.log10(Math.max(0.00000001, value));
+  if (series.axis_id === "pressure_mbar" || series.axis_id === "pressure_rate") return value > 0 ? value : Number.NaN;
   return value;
 }
 
@@ -1465,6 +1485,7 @@ function stateAt(series: TileSeries, timeMs: number) {
 function formatLegendValue(series: TileSeries, value: number) {
   const unit = series.unit || unitForAxis(series.axis_id);
   if (series.axis_id === "pressure_mbar") return `${formatPressure(value)} mbar`;
+  if (series.axis_id === "pressure_rate") return `${formatScientific(value)} mbar/min`;
   if (series.axis_id === "counter") return `${Math.round(value).toLocaleString()}`;
   if (series.axis_id === "percent") return `${value.toFixed(0)}%`;
   if (unit === "degC") return `${value.toFixed(1)} degC`;
@@ -1472,6 +1493,12 @@ function formatLegendValue(series: TileSeries, value: number) {
   if (unit === "ms") return `${value.toFixed(1)} ms`;
   if (unit === "bar") return `${value.toFixed(2)} bar`;
   return `${Number.isInteger(value) ? value.toFixed(0) : value.toFixed(2)}${unit ? ` ${unit}` : ""}`;
+}
+
+function formatScientific(value: number) {
+  if (!Number.isFinite(value)) return "";
+  if (value === 0) return "0";
+  return value.toExponential(2).replace("e", "E");
 }
 
 function formatPressure(value: number) {
@@ -1487,6 +1514,7 @@ function unitForAxis(axisID?: string) {
   if (axisID === "power_w" || axisID === "heat_flux_w") return "W";
   if (axisID === "bus_ms") return "ms";
   if (axisID === "pressure_bar") return "bar";
+  if (axisID === "pressure_rate") return "mbar/min";
   if (axisID === "percent") return "%";
   return "";
 }

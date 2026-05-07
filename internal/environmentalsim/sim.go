@@ -1374,7 +1374,7 @@ func companionGroups(campaignID string, axes []contracts.GraphYAxis, trace sampl
 				ID:    "tvac_pressure_sources",
 				Label: "Pump, leak, and outgassing balance",
 				Axes: []contracts.GraphYAxis{
-					{ID: "pressure_rate", Label: "Pressure rate", Units: "mbar/min", Scale: "log10", Min: 0.00000001, Max: 1000, Side: "left", Format: "0.000000"},
+					{ID: "pressure_rate", Label: "Pressure rate", Units: "mbar/min", Scale: "log10", Min: 0.00000001, Max: 1000, Side: "left", Format: "scientific"},
 					{ID: "percent", Label: "Inventory", Units: "%", Scale: "linear", Min: 0, Max: 100, Side: "right", Format: "0"},
 				},
 				Traces: []contracts.GraphTrace{
