@@ -1,5 +1,5 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import uPlot from "uplot";
 import "uplot/dist/uPlot.min.css";
 import { api } from "../api";
@@ -82,6 +82,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
   const [tiles, setTiles] = useState<Record<string, GraphTile>>({});
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [pinOverrides, setPinOverrides] = useState<Record<string, boolean>>({});
+  const [cardHeights, setCardHeights] = useState<Record<string, number>>({});
   const [hoverTimeMs, setHoverTimeMs] = useState<number | undefined>(undefined);
   const [peekTimeMs, setPeekTimeMs] = useState<number | undefined>(undefined);
   const fullTimeRange = useMemo(() => graphTimeRange(heroGraph), [heroGraph]);
@@ -100,6 +101,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
     setManifest(null);
     setTiles({});
     setPinOverrides({});
+    setCardHeights({});
     requestedTiles.current.clear();
     api.tileManifest(campaignId).then((next) => {
       if (cancelled) return;
@@ -160,38 +162,38 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
           </div>}
           <div className="operator-wall-cards">
             {section.cards.map((card) => {
-              const isPrimary = card.id === primaryCardID;
               const cardRef = manifestCards.get(card.id);
               const isCollapsed = collapsed[card.id] ?? false;
               const isPinned = pinOverrides[card.id] ?? card.placement.pinned;
               return (
-                <Fragment key={card.id}>
-                  <GraphWallCardView
-                    card={card}
-                    cardRef={cardRef}
-                    collapsed={isCollapsed}
-                    pinned={isPinned}
-                    currentTimeMs={currentTimeMs}
-                    hoverTimeMs={hoverTimeMs}
-                    heroGraph={heroGraph}
-                    onHoverTime={setHoverTimeMs}
-                    onPeekTime={setPeekTimeMs}
-                    readoutMode={readoutMode}
-                    readoutTimeMs={readoutTimeMs}
-                    timeRange={viewRange}
-                    onTimeRange={setViewRange}
-                    tile={tiles[card.id]}
-                    onToggle={() => setCollapsed((existing) => ({ ...existing, [card.id]: !isCollapsed }))}
-                    onPinToggle={() => setPinOverrides((existing) => ({ ...existing, [card.id]: !isPinned }))}
-                  />
-                  {isPrimary && execution && <ExecutionProgress execution={execution} heroGraph={heroGraph} currentTimeMs={currentTimeMs} />}
-                </Fragment>
+                <GraphWallCardView
+                  key={card.id}
+                  card={card}
+                  cardRef={cardRef}
+                  collapsed={isCollapsed}
+                  pinned={isPinned}
+                  height={cardHeights[card.id]}
+                  currentTimeMs={currentTimeMs}
+                  hoverTimeMs={hoverTimeMs}
+                  heroGraph={heroGraph}
+                  onHoverTime={setHoverTimeMs}
+                  onPeekTime={setPeekTimeMs}
+                  readoutMode={readoutMode}
+                  readoutTimeMs={readoutTimeMs}
+                  timeRange={viewRange}
+                  onTimeRange={setViewRange}
+                  tile={tiles[card.id]}
+                  onToggle={() => setCollapsed((existing) => ({ ...existing, [card.id]: !isCollapsed }))}
+                  onPinToggle={() => setPinOverrides((existing) => ({ ...existing, [card.id]: !isPinned }))}
+                  onHeightChange={(height) => setCardHeights((existing) => ({ ...existing, [card.id]: height }))}
+                />
               );
             })}
           </div>
         </section>
       ))}
       {afterProgress}
+      {execution && <ExecutionProgress execution={execution} heroGraph={heroGraph} currentTimeMs={currentTimeMs} />}
       <div className="operator-wall-meta">
         <span>{manifest ? "tile manifest ready" : "loading tile manifest"}</span>
         <span>{wall.graph_version}</span>
@@ -314,6 +316,7 @@ function GraphWallCardView({
   cardRef,
   collapsed,
   pinned,
+  height,
   currentTimeMs,
   hoverTimeMs,
   heroGraph,
@@ -325,12 +328,14 @@ function GraphWallCardView({
   onTimeRange,
   tile,
   onToggle,
-  onPinToggle
+  onPinToggle,
+  onHeightChange
 }: {
   card: GraphWallCard;
   cardRef?: GraphTileCardRef;
   collapsed: boolean;
   pinned: boolean;
+  height?: number;
   currentTimeMs?: number;
   hoverTimeMs?: number;
   heroGraph: HeroGraphModel;
@@ -343,17 +348,44 @@ function GraphWallCardView({
   tile?: GraphTile;
   onToggle: () => void;
   onPinToggle: () => void;
+  onHeightChange: (height: number) => void;
 }) {
   const renderKind = cardRef?.render_kind ?? card.render_kind ?? renderKindFor(card.kind);
   const visibleSignals = (cardRef?.signals ?? card.signals).slice(0, renderKind === "swimlane" ? 10 : 7);
   const readouts = tile ? legendReadouts(tile, visibleSignals, readoutTimeMs, currentTimeMs) : new Map<string, string>();
+  const cardRefEl = useRef<HTMLElement | null>(null);
+  const minHeight = renderKind === "swimlane" || renderKind === "event_rail" ? 120 : 190;
+  const maxHeight = card.id === "thermal_program" ? 760 : 560;
+  const style = height ? ({ "--plot-height": `${height}px` } as CSSProperties) : undefined;
+  const startResize = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const startY = event.clientY;
+    const startHeight = cardRefEl.current?.getBoundingClientRect().height ?? height ?? (card.id === "thermal_program" ? 560 : 260);
+    const pointerID = event.pointerId;
+    event.currentTarget.setPointerCapture?.(pointerID);
+    const move = (moveEvent: PointerEvent) => {
+      const next = Math.round(Math.max(minHeight, Math.min(maxHeight, startHeight + moveEvent.clientY - startY)));
+      onHeightChange(next);
+    };
+    const stop = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", stop);
+      window.removeEventListener("pointercancel", stop);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", stop, { once: true });
+    window.addEventListener("pointercancel", stop, { once: true });
+  };
 
   return (
     <article
+      ref={cardRefEl}
       className={`graph-wall-card graph-card-${card.kind} graph-render-${renderKind} ${pinned ? "graph-card-pinned" : ""} ${collapsed ? "graph-card-collapsed" : ""}`}
       data-card-id={card.id}
       data-card-kind={card.kind}
       data-render-kind={renderKind}
+      style={style}
     >
       <div className="graph-card-label-rail">
         <div className="graph-card-actions">
@@ -403,6 +435,9 @@ function GraphWallCardView({
             {readoutTimeMs && <small>{readoutMode} {new Date(readoutTimeMs).toISOString().slice(5, 16).replace("T", " ")}</small>}
             {cardRef?.supports_y_zoom && <small>time + y zoom</small>}
           </div>
+          <button className="graph-card-resize" type="button" aria-label={`Resize ${card.title}`} onPointerDown={startResize}>
+            <span aria-hidden="true" />
+          </button>
         </>
       )}
     </article>
