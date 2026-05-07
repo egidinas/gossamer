@@ -120,7 +120,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 	}
 	rng := rand.New(rand.NewSource(seed))
 	driftRng := rand.New(rand.NewSource(seed ^ 0x5D1F7))
-	dt := time.Minute
+	dt := 5 * time.Minute
 	st := state{chamberAir: 22, table: 22, shroud: 22.4, shroudInlet: 22.2, shroudOutlet: 22.7, exhaustCryoTemp: 20, exhaustScavengedTemp: 20, scavengerWaterReturn: 15.8, fastComponent: 21.2, lazyComponent: 22.6, pressure: 101325, volatilePool: 1, tmPackets: 6000, tcPackets: 120}
 	fastNode := componentParams{
 		capacitanceJPerK: 3200, airConductanceWPerK: 0.34, tableConductanceWPerK: 0.52,
@@ -834,9 +834,9 @@ func firstOrderDelta(current, target, tauMin float64, dt time.Duration) float64 
 // command, where tauMin is the first-order time constant whose settling time
 // the oscillator's settling time should approximate. Returns the new (T, v).
 //
-// All time arithmetic is in seconds: tauMin is converted to seconds before
-// computing omega, and dt.Seconds() drives the integrator step. Mixing
-// minutes and seconds here is the easiest way to get a 60x error.
+// Substeps internally so the explicit integrator stays stable at the
+// caller's dt: semi-implicit Euler diverges when omega*dt is order unity,
+// and the simulator drives this with dt up to several minutes.
 func secondOrderStep(current, vel, command, tauMin float64, dt time.Duration) (float64, float64) {
 	if tauMin <= 0 {
 		return command, 0
@@ -844,10 +844,14 @@ func secondOrderStep(current, vel, command, tauMin float64, dt time.Duration) (f
 	tauSec := tauMin * 60.0
 	omega := secondOrderTauScale / tauSec // rad/s
 	dtSec := dt.Seconds()
-	accel := omega*omega*(command-current) - 2*secondOrderDampingZeta*omega*vel
-	newVel := vel + accel*dtSec
-	newT := current + newVel*dtSec
-	return newT, newVel
+	steps := int(math.Ceil(omega*dtSec/0.2)) + 1
+	subDt := dtSec / float64(steps)
+	for i := 0; i < steps; i++ {
+		accel := omega*omega*(command-current) - 2*secondOrderDampingZeta*omega*vel
+		vel += accel * subDt
+		current += vel * subDt
+	}
+	return current, vel
 }
 
 // updateSlowDrift advances a discrete Ornstein-Uhlenbeck process whose
