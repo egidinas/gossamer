@@ -138,6 +138,14 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
 
   return (
     <div className="operator-graph-wall" data-graph-wall-version={wall.graph_version} data-tile-backed="true">
+      <SharedTimeAxis
+        fullRange={fullTimeRange}
+        timeRange={viewRange}
+        currentTimeMs={currentTimeMs}
+        hoverTimeMs={hoverTimeMs}
+        peekTimeMs={peekTimeMs}
+        onTimeRange={setViewRange}
+      />
       {wall.sections.map((section) => (
         <section className="operator-wall-section" key={section.id} data-section-id={section.id}>
           {!(section.id === firstSectionID && primaryCardID) && <div className="operator-wall-section-title">
@@ -183,14 +191,6 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
         <span>{wall.tile_policy.shared_timebase_required ? "shared timebase" : "local timebase"}</span>
         {execution && <span>{execution.acceleration}</span>}
       </div>
-      <SharedTimeAxis
-        fullRange={fullTimeRange}
-        timeRange={viewRange}
-        currentTimeMs={currentTimeMs}
-        hoverTimeMs={hoverTimeMs}
-        peekTimeMs={peekTimeMs}
-        onTimeRange={setViewRange}
-      />
     </div>
   );
 }
@@ -333,7 +333,6 @@ function GraphWallCardView({
 }) {
   const renderKind = cardRef?.render_kind ?? card.render_kind ?? renderKindFor(card.kind);
   const visibleSignals = (cardRef?.signals ?? card.signals).slice(0, renderKind === "swimlane" ? 10 : 7);
-  const pointCount = tile?.diagnostics.point_count ?? 0;
   const readouts = tile ? legendReadouts(tile, visibleSignals, readoutTimeMs, currentTimeMs) : new Map<string, string>();
 
   return (
@@ -348,15 +347,12 @@ function GraphWallCardView({
           <span aria-hidden="true">{collapsed ? "+" : "-"}</span>
         </button>
         <strong>{card.title}</strong>
-        <span>{renderKind} / {card.unit ?? card.axis_policy}</span>
-        <small>{pointCount ? `${pointCount} tile points` : "backend tile pending"}</small>
       </div>
       {!collapsed && (
         <>
           <div className="graph-card-plot-shell">
             <div className="graph-card-inline-title">
               <strong>{card.title}</strong>
-              <span>{renderKind} / {card.unit ?? card.axis_policy}</span>
             </div>
             {!tile && <div className="graph-card-loading">Loading decimated tile...</div>}
             {tile && renderKind === "swimlane" && <SwimlaneTile tile={tile} heroGraph={heroGraph} currentTimeMs={currentTimeMs} hoverTimeMs={hoverTimeMs} readoutTimeMs={readoutTimeMs} timeRange={timeRange} />}
@@ -692,13 +688,11 @@ function SharedTimeAxis({
           <small>zoom</small>
           <input type="range" min="100" max="60000" step="25" value={Math.max(100, Math.min(60000, zoomPercent))} onChange={(event) => setZoom(Number(event.currentTarget.value))} />
         </label>
-        {isZoomed && (
-          <label className="time-axis-scroll">
-            <small>scroll</small>
-            <input type="range" min="0" max="1000" step="1" value={Math.max(0, Math.min(1000, scrollValue))} onChange={(event) => setScroll(Number(event.currentTarget.value))} />
-          </label>
-        )}
-        {isZoomed && <button type="button" onClick={() => onTimeRange(fullRange)}>full</button>}
+        <label className="time-axis-scroll">
+          <small>scroll</small>
+          <input type="range" min="0" max="1000" step="1" disabled={!isZoomed} value={Math.max(0, Math.min(1000, scrollValue))} onChange={(event) => setScroll(Number(event.currentTarget.value))} />
+        </label>
+        <button type="button" disabled={!isZoomed} onClick={() => onTimeRange(fullRange)}>full</button>
       </div>
     </div>
   );
@@ -870,6 +864,8 @@ function paddedRange(minPad: number, clamp?: [number, number]): uPlot.Range.Func
 }
 
 function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[] {
+  const leftAxisSize = 54;
+  const rightAxisSize = 58;
   const axes: uPlot.Axis[] = [{ show: false }];
   const primary = scaleKeys.has("temperature_c")
     ? "temperature_c"
@@ -881,6 +877,12 @@ function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[] {
           ? "bus_ms"
           : scaleKeys.has("counter")
             ? "counter"
+            : scaleKeys.has("pressure_log")
+              ? "pressure_log"
+              : scaleKeys.has("pressure_rate_log")
+                ? "pressure_rate_log"
+                : scaleKeys.has("pressure_bar")
+                  ? "pressure_bar"
             : "percent";
   axes.push({
     show: true,
@@ -889,7 +891,7 @@ function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[] {
     grid: { stroke: "rgba(83,112,140,0.26)", width: 1 },
     ticks: { stroke: "rgba(83,112,140,0.48)", width: 1, size: 4 },
     splits: (_u, _axisIdx, scaleMin, scaleMax) => ySplits(scaleMin, scaleMax),
-    size: 46,
+    size: leftAxisSize,
     label: axisLabel(primary, tile),
     labelSize: 12,
     labelGap: 0,
@@ -903,7 +905,7 @@ function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[] {
       stroke: key.includes("pressure") ? "#60a5fa" : "#8bd3a5",
       grid: { show: false },
       ticks: { show: false },
-      size: 54,
+      size: rightAxisSize,
       label: axisLabel(key, tile),
       labelSize: 12,
       labelGap: 0,
@@ -911,7 +913,18 @@ function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[] {
     });
   });
   if (!extra.length) {
-    axes.push({ show: false, side: 1, scale: primary, size: 54 });
+    axes.push({
+      show: true,
+      side: 1,
+      scale: primary,
+      size: rightAxisSize,
+      label: "",
+      labelSize: 12,
+      labelGap: 0,
+      grid: { show: false },
+      ticks: { show: false },
+      values: () => [],
+    });
   }
   return axes;
 }

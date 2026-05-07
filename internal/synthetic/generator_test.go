@@ -352,10 +352,16 @@ func TestTileManifestExposesBackendOwnedTileArchitecture(t *testing.T) {
 		for _, signal := range hero.Signals {
 			heroSignals[signal.ID] = true
 		}
-		for _, signalID := range []string{"trace.command.chamber", "trace.ghost.profile", "trace.actual.chamber_air", "trace.dut_temp_a", "trace.dut_temp_b", "trace.table_loop"} {
+		for _, signalID := range []string{"trace.command.chamber", "trace.ghost.profile", "trace.dut_temp_a", "trace.dut_temp_b", "trace.table_loop"} {
 			if !heroSignals[signalID] {
 				t.Fatalf("%s hero tile missing signal %s", campaignID, signalID)
 			}
+		}
+		if campaignID == "thermal_acceptance_fat" && !heroSignals["trace.actual.chamber_air"] {
+			t.Fatalf("%s hero tile missing chamber air signal", campaignID)
+		}
+		if campaignID == "tvac_qualification" && heroSignals["trace.actual.chamber_air"] {
+			t.Fatalf("%s hero tile should not expose chamber air as a plotted TVac unit", campaignID)
 		}
 		if campaignID == "tvac_qualification" && !heroSignals["trace.tvac_pressure"] {
 			t.Fatalf("%s hero tile missing pressure signal", campaignID)
@@ -506,7 +512,7 @@ func TestThermalGraphModelsExposeLoomGradeHeroContract(t *testing.T) {
 	}
 }
 
-func TestThermalGhostTraceIncludesStabilizationTime(t *testing.T) {
+func TestThermalGhostTraceFollowsNominalChamberCommand(t *testing.T) {
 	set := Build()
 	for _, campaignID := range []string{"thermal_acceptance_fat", "tvac_qualification"} {
 		model := set.GraphModels[campaignID]
@@ -517,42 +523,14 @@ func TestThermalGhostTraceIncludesStabilizationTime(t *testing.T) {
 		}
 		commandByTime := pointsByTimestamp(command)
 		ghostByTime := pointsByTimestamp(ghost)
-		foundSettlingGhost := false
-		for _, band := range model.HeroGraph.PhaseBands {
-			if band.CycleIndex == 0 || band.Kind != "hot_operational" {
-				continue
+		for timestamp, commandPoint := range commandByTime {
+			ghostPoint, okGhost := ghostByTime[timestamp]
+			if !okGhost {
+				t.Fatalf("%s ghost trace missing point at %s", campaignID, timestamp)
 			}
-			var dwellStart time.Time
-			for _, dwell := range model.HeroGraph.DwellWindows {
-				if dwell.CycleIndex == band.CycleIndex && dwell.Kind == band.Kind {
-					dwellStart = mustParseTime(t, dwell.Start)
-					break
-				}
+			if abs(commandPoint.Value-ghostPoint.Value) > 0.05 {
+				t.Fatalf("%s ghost trace should follow nominal command at %s: command=%.2f ghost=%.2f", campaignID, timestamp, commandPoint.Value, ghostPoint.Value)
 			}
-			if dwellStart.IsZero() {
-				continue
-			}
-			phaseStart := mustParseTime(t, band.Start)
-			if !dwellStart.After(phaseStart) {
-				continue
-			}
-			for timestamp, commandPoint := range commandByTime {
-				timestampTime := mustParseTime(t, timestamp)
-				if timestampTime.Before(phaseStart) || !timestampTime.Before(dwellStart) {
-					continue
-				}
-				ghostPoint, okGhost := ghostByTime[timestamp]
-				if okGhost && abs(commandPoint.Value-ghostPoint.Value) > 0.5 {
-					foundSettlingGhost = true
-					break
-				}
-			}
-			if foundSettlingGhost {
-				break
-			}
-		}
-		if !foundSettlingGhost {
-			t.Fatalf("%s ghost trace must include non-zero stabilization time before dwell starts", campaignID)
 		}
 	}
 }

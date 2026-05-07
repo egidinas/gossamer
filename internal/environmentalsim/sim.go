@@ -1304,27 +1304,7 @@ func isThermalDwellPhase(phase string) bool {
 }
 
 func thermalGhostCommand(program *contracts.ThermalProgram, phase contracts.CyclePhase, from, command float64, t time.Time) float64 {
-	if !isThermalDwellPhase(phase.Kind) {
-		return command
-	}
-	phaseStart := mustTime(phase.Start)
-	stableAt := dwellStartFor(program, phase.ID)
-	if stableAt.IsZero() || !stableAt.After(phaseStart) || !t.Before(stableAt) {
-		return phase.TargetDegC
-	}
-	elapsed := math.Max(0, t.Sub(phaseStart).Minutes())
-	stabilizeMin := math.Max(1, stableAt.Sub(phaseStart).Minutes())
-	tau := math.Max(8, stabilizeMin/4.6)
-	startEstimate := from
-	if math.Abs(startEstimate-phase.TargetDegC) < 0.2 {
-		offset := 4 + 0.08*math.Abs(phase.TargetDegC-22)
-		if phase.TargetDegC >= 22 {
-			startEstimate = phase.TargetDegC - offset
-		} else {
-			startEstimate = phase.TargetDegC + offset
-		}
-	}
-	return phase.TargetDegC - (phase.TargetDegC-startEstimate)*math.Exp(-elapsed/tau)
+	return command
 }
 
 func dwellStartFor(program *contracts.ThermalProgram, phaseID string) time.Time {

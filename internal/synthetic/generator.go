@@ -676,10 +676,14 @@ func buildGraphWall(env contracts.Envelope, campaignID string, hero contracts.He
 		graphSignal("trace.command.chamber", "Chamber command", "degC", "thermal_program", "command", "command", "facility", "temperature_c", "thermal_environment"),
 		graphSignal("trace.ghost.profile", "Cycle ghost profile", "degC", "thermal_program", "ghost", "ghost", "facility", "temperature_c", "thermal_environment"),
 		graphSignal("trace.acceptance.temperature", "Acceptance band center", "degC", "requirements", "acceptance_band", "acceptance", "requirements", "temperature_c", "thermal_environment"),
-		graphSignal("trace.actual.chamber_air", "Chamber air actual", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
 		graphSignal("trace.dut_temp_a", "High-dissipation DUT node", "degC", "dut_thermal", "actual", "measurement", "dut", "temperature_c", "thermal_environment"),
 		graphSignal("trace.dut_temp_b", "Vacuum-detached DUT node", "degC", "dut_thermal", "actual", "measurement", "dut", "temperature_c", "thermal_environment"),
 		graphSignal("trace.table_loop", "Fluid interface", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
+	}
+	if campaignID != "tvac_qualification" {
+		thermalProgramSignals = append(thermalProgramSignals[:3], append([]contracts.GraphWallSignal{
+			graphSignal("trace.actual.chamber_air", "Chamber air actual", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
+		}, thermalProgramSignals[3:]...)...)
 	}
 	if campaignID == "tvac_qualification" {
 		thermalProgramSignals = append(thermalProgramSignals,
@@ -689,13 +693,22 @@ func buildGraphWall(env contracts.Envelope, campaignID string, hero contracts.He
 			graphSignal("trace.shroud_outlet", "Shroud outlet", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
 		)
 	}
-	add("thermal_environment", graphCard("thermal_program", "Chamber command, ghost, acceptance, actual", "line", "primary_hero", "degC", "temperature_c", "facility_thermal", thermalProgramSignals))
-	dutTemperatureSignals := []contracts.GraphWallSignal{
-		graphSignal("trace.context.chamber_air", "Chamber air", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
+	thermalTitle := "Chamber command, ghost, acceptance, actual"
+	if campaignID == "tvac_qualification" {
+		thermalTitle = "TVac command, pressure, shroud, interface, DUT"
+	}
+	add("thermal_environment", graphCard("thermal_program", thermalTitle, "line", "primary_hero", "degC", "temperature_c", "facility_thermal", thermalProgramSignals))
+	dutTemperatureSignals := []contracts.GraphWallSignal{}
+	if campaignID != "tvac_qualification" {
+		dutTemperatureSignals = append(dutTemperatureSignals,
+			graphSignal("trace.context.chamber_air", "Chamber air", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
+		)
+	}
+	dutTemperatureSignals = append(dutTemperatureSignals,
 		graphSignal("trace.dut_temp_a", "High-dissipation DUT node", "degC", "dut_thermal", "actual", "measurement", "dut", "temperature_c", "thermal_environment"),
 		graphSignal("trace.dut_temp_b", "Vacuum-detached DUT node", "degC", "dut_thermal", "actual", "measurement", "dut", "temperature_c", "thermal_environment"),
 		graphSignal("trace.table_loop", "Fluid interface", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
-	}
+	)
 	if campaignID == "tvac_qualification" {
 		dutTemperatureSignals = append(dutTemperatureSignals,
 			graphSignal("trace.shroud_inlet", "Shroud inlet", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
@@ -703,7 +716,11 @@ func buildGraphWall(env contracts.Envelope, campaignID string, hero contracts.He
 			graphSignal("trace.shroud_gradient", "Shroud gradient", "degC", "facility_thermal", "source_quality", "measurement", "facility", "temperature_c", "thermal_environment"),
 		)
 	}
-	add("thermal_environment", graphCard("dut_temperature", "DUT temperatures in chamber context", "line", "companion", "degC", "temperature_c", "dut_thermal", dutTemperatureSignals))
+	dutTemperatureTitle := "DUT temperatures in chamber context"
+	if campaignID == "tvac_qualification" {
+		dutTemperatureTitle = "DUT temperatures in TVac context"
+	}
+	add("thermal_environment", graphCard("dut_temperature", dutTemperatureTitle, "line", "companion", "degC", "temperature_c", "dut_thermal", dutTemperatureSignals))
 	if campaignID == "tvac_qualification" {
 		add("facility_response", graphCard("tvac_pressure", "TVac pressure pumpdown and bursts", "line", "companion", "mbar", "log_pressure_mbar", "facility_pressure", []contracts.GraphWallSignal{
 			graphSignal("trace.tvac_pressure", "Pressure", "mbar", "facility_pressure", "actual", "measurement", "facility", "pressure_mbar", "facility_response"),

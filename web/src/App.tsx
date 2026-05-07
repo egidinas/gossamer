@@ -226,7 +226,6 @@ export function App() {
           </div>
         </div>
         <address className="topbar-owner" aria-label="Gossamer author and contact">
-          <span>Created by</span>
           <a className="owner-name" href="#profile">Dr. Jonathan Meyer</a>
           <a href="mailto:jonathan@jmeyer.space">jonathan@jmeyer.space</a>
         </address>
@@ -241,7 +240,7 @@ export function App() {
           })}
         </nav>
       </header>
-      {route === "landing" && <LandingView manifest={manifest} campaigns={campaigns} supervisor={supervisor} />}
+      {route === "landing" && <LandingView manifest={manifest} campaigns={campaigns} />}
       {(route === "acceptance" || route === "qualification" || route === "supervisor") && !routeReady && selectedCampaign && (
         <section className="instant-route-shell" aria-label={`${selectedCampaign.name} loading shell`}>
           <span className="eyebrow">test campaign</span>

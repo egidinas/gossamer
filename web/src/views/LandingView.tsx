@@ -1,11 +1,8 @@
 import { Activity, Archive, Database, GitBranch, MonitorUp, ShieldCheck } from "lucide-react";
-import type { Campaign, Manifest, SupervisorOverview } from "../types";
+import type { Campaign, Manifest } from "../types";
 import { OperatorPanel } from "../components/OperatorPanel";
-import { StatusBadge } from "../components/StatusBadge";
 
-export function LandingView({ manifest, campaigns, supervisor }: { manifest: Manifest; campaigns: Campaign[]; supervisor: SupervisorOverview }) {
-  const previewLanes = supervisor.lanes.filter((lane) => lane.campaign === "thermal_acceptance_fat" || lane.campaign === "tvac_qualification");
-
+export function LandingView({ manifest, campaigns }: { manifest: Manifest; campaigns: Campaign[] }) {
   return (
     <div className="landing-grid">
       <section className="landing-hero">
@@ -32,18 +29,6 @@ export function LandingView({ manifest, campaigns, supervisor }: { manifest: Man
           <a href="#acceptance"><Activity size={17} /> Acceptance FAT</a>
           <a href="#qualification"><Activity size={17} /> Qualification TVac</a>
         </div>
-        <div className="landing-preview" aria-label="supervisor preview">
-          <div className="landing-preview-head">
-            <strong>Test Campaign Snapshot</strong>
-            <span>{supervisor.test_article}</span>
-          </div>
-          {previewLanes.map((lane) => (
-            <div className="preview-row" key={lane.id}>
-              <span>{lane.label}</span>
-              <StatusBadge value={lane.result || lane.state} />
-            </div>
-          ))}
-        </div>
       </section>
       <OperatorPanel title="Shared Telemetry Pool" meta="live, historical, and legacy-translated">
         <div className="landing-architecture">
@@ -67,7 +52,7 @@ export function LandingView({ manifest, campaigns, supervisor }: { manifest: Man
           <div><span className="label">Acceptance FAT</span><strong>4 cycles</strong></div>
           <div><span className="label">TVac Qualification</span><strong>8 cycles</strong></div>
           <div><span className="label">Current campaigns</span><strong>{campaigns.length}</strong></div>
-          <div><span className="label">Evidence model</span><StatusBadge value={manifest.synthetic_only ? "traceable" : "live"} /></div>
+          <div><span className="label">Evidence model</span><strong>{manifest.synthetic_only ? "traceable" : "live"}</strong></div>
         </div>
       </OperatorPanel>
       <OperatorPanel title="What The Interface Makes Inspectable" meta="show the chain from source to evidence">

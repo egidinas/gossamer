@@ -35,7 +35,7 @@ select {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
   border-bottom: 1px solid #2c3942;
   padding-bottom: 10px;
 }
@@ -104,15 +104,19 @@ h3 {
 }
 
 .topbar-owner {
-  display: grid;
-  gap: 2px;
-  min-width: 190px;
-  padding: 6px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  min-width: 0;
+  padding: 0 8px;
+  min-height: 30px;
   border: 1px solid #294768;
   border-radius: 6px;
   background: #070d14;
   color: #d8e8f8;
   font-style: normal;
+  white-space: nowrap;
 }
 
 .topbar-owner span,
@@ -129,14 +133,14 @@ h3 {
 
 .topbar-owner a {
   color: #8bd0d8;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 650;
   text-decoration: none;
 }
 
 .topbar-owner a.owner-name {
   color: #e8f6ff;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 750;
 }
 
@@ -174,7 +178,7 @@ button {
   display: flex;
   flex-wrap: wrap;
   flex: 1 1 auto;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 5px;
   margin: 0;
 }
@@ -253,10 +257,10 @@ button {
 .landing-hero {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.48fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: stretch;
   gap: 18px;
-  min-height: 390px;
+  min-height: 310px;
   overflow: hidden;
   border: 1px solid #263d53;
   border-radius: 8px;
@@ -273,7 +277,7 @@ button {
 }
 
 .landing-hero-copy {
-  align-self: end;
+  align-self: center;
 }
 
 .profile-hero {
@@ -607,6 +611,7 @@ button {
   display: grid;
   gap: 0;
   min-width: 0;
+  padding-top: 56px;
 }
 
 .operator-wall-meta {
@@ -1421,6 +1426,12 @@ button {
 }
 
 .operator-shared-time-axis {
+  position: fixed;
+  top: 72px;
+  left: 35px;
+  right: 35px;
+  z-index: 30;
+  align-self: start;
   display: grid;
   grid-template-columns: 92px 58px minmax(0, 1fr) 164px;
   grid-template-rows: 28px 24px;
@@ -1430,6 +1441,7 @@ button {
   border: 1px solid #1f3348;
   border-radius: 2px;
   background: #071019;
+  box-shadow: 0 8px 24px rgba(3, 7, 12, 0.58);
 }
 
 .time-axis-label,
@@ -1480,6 +1492,12 @@ button {
   background: #0b1722;
   padding: 1px 5px;
   cursor: pointer;
+}
+
+.time-axis-controls input:disabled,
+.time-axis-controls button:disabled {
+  opacity: 0.42;
+  cursor: default;
 }
 
 .time-axis-track {
@@ -1856,7 +1874,7 @@ code {
 .campaign-visual {
   display: grid;
   grid-template-columns: minmax(220px, 0.34fr) minmax(0, 1fr);
-  align-items: center;
+  align-items: stretch;
   gap: 14px;
   min-width: 0;
 }
@@ -1872,10 +1890,10 @@ code {
 }
 
 .landing-architecture img {
-  align-self: start;
+  align-self: stretch;
   justify-self: center;
   width: min(100%, 260px);
-  height: auto;
+  height: 100%;
   max-height: none;
 }
 
@@ -2099,6 +2117,9 @@ code {
   }
 
   .operator-shared-time-axis {
+    top: 8px;
+    left: 27px;
+    right: 27px;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: 28px 26px;
     height: 56px;

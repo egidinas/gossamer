@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "id": "gossamer_tile_bundle_graph-align-compact-20260507T085820Z",
-  "data_version": "graph-align-compact-20260507T085820Z",
-  "generated_at": "2026-05-07T08:58:22Z",
+  "id": "gossamer_tile_bundle_current",
+  "data_version": "current",
+  "generated_at": "2026-05-07T09:32:55Z",
   "source_fixture_version": "graph_models",
   "time_range": {
     "start": "2026-01-15T10:00:00Z",
@@ -57,10 +57,10 @@
               "t0": "2026-01-15T10:00:00Z",
               "t1": "2026-01-21T21:05:00Z",
               "render_kind": "line",
-              "point_count": 18965,
+              "point_count": 18945,
               "raw_point_count": 65142,
-              "compressed_bytes": 121574,
-              "bytes": 1803633
+              "compressed_bytes": 116215,
+              "bytes": 1797574
             }
           ],
           "collapsible": true,
@@ -374,7 +374,7 @@
               "render_kind": "line",
               "point_count": 12400,
               "raw_point_count": 46530,
-              "compressed_bytes": 67957,
+              "compressed_bytes": 67958,
               "bytes": 1164281
             }
           ],
@@ -650,7 +650,7 @@
               "render_kind": "swimlane",
               "point_count": 172,
               "raw_point_count": 120978,
-              "compressed_bytes": 4412,
+              "compressed_bytes": 4414,
               "bytes": 63659
             }
           ],
@@ -908,7 +908,7 @@
               "render_kind": "event_rail",
               "point_count": 0,
               "raw_point_count": 0,
-              "compressed_bytes": 2460,
+              "compressed_bytes": 2459,
               "bytes": 30307
             }
           ],
@@ -1240,8 +1240,8 @@
           "label": "Cycle 4 cold dwell functional test"
         }
       ],
-      "compressed_bytes": 492834,
-      "uncompressed_bytes": 7328967
+      "compressed_bytes": 487477,
+      "uncompressed_bytes": 7322908
     },
     {
       "campaign_id": "tvac_qualification",
@@ -1270,7 +1270,7 @@
       "cards": [
         {
           "card_id": "thermal_program",
-          "title": "Chamber command, ghost, acceptance, actual",
+          "title": "TVac command, pressure, shroud, interface, DUT",
           "render_kind": "line",
           "unit": "degC",
           "axis_policy": "temperature_c",
@@ -1285,10 +1285,10 @@
               "t0": "2026-01-15T10:00:00Z",
               "t1": "2026-02-01T00:01:00Z",
               "render_kind": "line",
-              "point_count": 31835,
-              "raw_point_count": 262702,
-              "compressed_bytes": 211364,
-              "bytes": 3057224
+              "point_count": 28157,
+              "raw_point_count": 238820,
+              "compressed_bytes": 180488,
+              "bytes": 2705135
             }
           ],
           "collapsible": true,
@@ -1332,19 +1332,6 @@
               "category": "acceptance_band",
               "role": "acceptance_band",
               "subsystem": "requirements",
-              "axis_id": "temperature_c",
-              "section_id": "thermal_environment"
-            },
-            {
-              "id": "trace.actual.chamber_air",
-              "label": "Chamber air actual",
-              "unit": "degC",
-              "source": "facility_thermal",
-              "source_family": "facility_thermal",
-              "kind": "measurement",
-              "category": "actual",
-              "role": "actual",
-              "subsystem": "facility",
               "axis_id": "temperature_c",
               "section_id": "thermal_environment"
             },
@@ -1443,7 +1430,7 @@
         },
         {
           "card_id": "dut_temperature",
-          "title": "DUT temperatures in chamber context",
+          "title": "DUT temperatures in TVac context",
           "render_kind": "line",
           "unit": "degC",
           "axis_policy": "temperature_c",
@@ -1458,10 +1445,10 @@
               "t0": "2026-01-15T10:00:00Z",
               "t1": "2026-02-01T00:01:00Z",
               "render_kind": "line",
-              "point_count": 24689,
-              "raw_point_count": 167174,
-              "compressed_bytes": 176847,
-              "bytes": 2340355
+              "point_count": 21070,
+              "raw_point_count": 143292,
+              "compressed_bytes": 151752,
+              "bytes": 1998638
             }
           ],
           "collapsible": true,
@@ -1469,19 +1456,6 @@
           "supports_time_zoom": true,
           "supports_y_zoom": true,
           "signals": [
-            {
-              "id": "trace.context.chamber_air",
-              "label": "Chamber air",
-              "unit": "degC",
-              "source": "facility_thermal",
-              "source_family": "facility_thermal",
-              "kind": "measurement",
-              "category": "actual",
-              "role": "actual",
-              "subsystem": "facility",
-              "axis_id": "temperature_c",
-              "section_id": "thermal_environment"
-            },
             {
               "id": "trace.dut_temp_a",
               "label": "High-dissipation DUT node",
@@ -1637,7 +1611,7 @@
               "render_kind": "line",
               "point_count": 13686,
               "raw_point_count": 143292,
-              "compressed_bytes": 76183,
+              "compressed_bytes": 76181,
               "bytes": 1322214
             }
           ],
@@ -1745,7 +1719,7 @@
               "render_kind": "line",
               "point_count": 2996,
               "raw_point_count": 23882,
-              "compressed_bytes": 20338,
+              "compressed_bytes": 20337,
               "bytes": 290613
             }
           ],
@@ -1831,7 +1805,7 @@
               "render_kind": "line",
               "point_count": 9817,
               "raw_point_count": 95528,
-              "compressed_bytes": 66171,
+              "compressed_bytes": 66169,
               "bytes": 934718
             }
           ],
@@ -1913,7 +1887,7 @@
               "render_kind": "line",
               "point_count": 11784,
               "raw_point_count": 71646,
-              "compressed_bytes": 70603,
+              "compressed_bytes": 70604,
               "bytes": 1121830
             }
           ],
@@ -1982,7 +1956,7 @@
               "render_kind": "line",
               "point_count": 13261,
               "raw_point_count": 119410,
-              "compressed_bytes": 78127,
+              "compressed_bytes": 78125,
               "bytes": 1251956
             }
           ],
@@ -2077,7 +2051,7 @@
               "render_kind": "line",
               "point_count": 6589,
               "raw_point_count": 47764,
-              "compressed_bytes": 51010,
+              "compressed_bytes": 51008,
               "bytes": 636515
             }
           ],
@@ -2133,7 +2107,7 @@
               "render_kind": "counter",
               "point_count": 8401,
               "raw_point_count": 95528,
-              "compressed_bytes": 55367,
+              "compressed_bytes": 55366,
               "bytes": 808191
             }
           ],
@@ -2258,7 +2232,7 @@
               "render_kind": "swimlane",
               "point_count": 334,
               "raw_point_count": 382112,
-              "compressed_bytes": 7600,
+              "compressed_bytes": 7601,
               "bytes": 119149
             }
           ],
@@ -2569,7 +2543,7 @@
               "render_kind": "event_rail",
               "point_count": 0,
               "raw_point_count": 0,
-              "compressed_bytes": 3795,
+              "compressed_bytes": 3796,
               "bytes": 57069
             }
           ],
@@ -3180,8 +3154,8 @@
           "label": "Cycle 8 cold dwell functional test"
         }
       ],
-      "compressed_bytes": 901332,
-      "uncompressed_bytes": 13152326
+      "compressed_bytes": 845354,
+      "uncompressed_bytes": 12458520
     }
   ],
   "source_nodes": [

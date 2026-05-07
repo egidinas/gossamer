@@ -40,10 +40,10 @@
           "t0": "2026-01-15T10:00:00Z",
           "t1": "2026-01-21T21:05:00Z",
           "render_kind": "line",
-          "point_count": 18965,
+          "point_count": 18945,
           "raw_point_count": 65142,
-          "compressed_bytes": 121574,
-          "bytes": 1803633
+          "compressed_bytes": 116215,
+          "bytes": 1797574
         }
       ],
       "collapsible": true,
@@ -357,7 +357,7 @@
           "render_kind": "line",
           "point_count": 12400,
           "raw_point_count": 46530,
-          "compressed_bytes": 67957,
+          "compressed_bytes": 67958,
           "bytes": 1164281
         }
       ],
@@ -633,7 +633,7 @@
           "render_kind": "swimlane",
           "point_count": 172,
           "raw_point_count": 120978,
-          "compressed_bytes": 4412,
+          "compressed_bytes": 4414,
           "bytes": 63659
         }
       ],
@@ -891,7 +891,7 @@
           "render_kind": "event_rail",
           "point_count": 0,
           "raw_point_count": 0,
-          "compressed_bytes": 2460,
+          "compressed_bytes": 2459,
           "bytes": 30307
         }
       ],
@@ -1223,6 +1223,6 @@
       "label": "Cycle 4 cold dwell functional test"
     }
   ],
-  "compressed_bytes": 492834,
-  "uncompressed_bytes": 7328967
+  "compressed_bytes": 487477,
+  "uncompressed_bytes": 7322908
 }

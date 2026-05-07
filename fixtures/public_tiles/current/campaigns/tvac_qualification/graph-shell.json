@@ -3886,7 +3886,7 @@
         "cards": [
           {
             "id": "thermal_program",
-            "title": "Chamber command, ghost, acceptance, actual",
+            "title": "TVac command, pressure, shroud, interface, DUT",
             "kind": "line",
             "role": "primary_hero",
             "placement": {
@@ -3947,19 +3947,6 @@
                 "category": "acceptance_band",
                 "role": "acceptance_band",
                 "subsystem": "requirements",
-                "axis_id": "temperature_c",
-                "section_id": "thermal_environment"
-              },
-              {
-                "id": "trace.actual.chamber_air",
-                "label": "Chamber air actual",
-                "unit": "degC",
-                "source": "facility_thermal",
-                "source_family": "facility_thermal",
-                "kind": "measurement",
-                "category": "actual",
-                "role": "actual",
-                "subsystem": "facility",
                 "axis_id": "temperature_c",
                 "section_id": "thermal_environment"
               },
@@ -4058,7 +4045,7 @@
           },
           {
             "id": "dut_temperature",
-            "title": "DUT temperatures in chamber context",
+            "title": "DUT temperatures in TVac context",
             "kind": "line",
             "role": "companion",
             "placement": {
@@ -4083,19 +4070,6 @@
             "supports_time_zoom": true,
             "supports_y_zoom": true,
             "signals": [
-              {
-                "id": "trace.context.chamber_air",
-                "label": "Chamber air",
-                "unit": "degC",
-                "source": "facility_thermal",
-                "source_family": "facility_thermal",
-                "kind": "measurement",
-                "category": "actual",
-                "role": "actual",
-                "subsystem": "facility",
-                "axis_id": "temperature_c",
-                "section_id": "thermal_environment"
-              },
               {
                 "id": "trace.dut_temp_a",
                 "label": "High-dissipation DUT node",
@@ -5417,7 +5391,7 @@
     "cards": [
       {
         "card_id": "thermal_program",
-        "title": "Chamber command, ghost, acceptance, actual",
+        "title": "TVac command, pressure, shroud, interface, DUT",
         "render_kind": "line",
         "unit": "degC",
         "axis_policy": "temperature_c",
@@ -5464,19 +5438,6 @@
             "category": "acceptance_band",
             "role": "acceptance_band",
             "subsystem": "requirements",
-            "axis_id": "temperature_c",
-            "section_id": "thermal_environment"
-          },
-          {
-            "id": "trace.actual.chamber_air",
-            "label": "Chamber air actual",
-            "unit": "degC",
-            "source": "facility_thermal",
-            "source_family": "facility_thermal",
-            "kind": "measurement",
-            "category": "actual",
-            "role": "actual",
-            "subsystem": "facility",
             "axis_id": "temperature_c",
             "section_id": "thermal_environment"
           },
@@ -5575,7 +5536,7 @@
       },
       {
         "card_id": "dut_temperature",
-        "title": "DUT temperatures in chamber context",
+        "title": "DUT temperatures in TVac context",
         "render_kind": "line",
         "unit": "degC",
         "axis_policy": "temperature_c",
@@ -5586,19 +5547,6 @@
         "supports_time_zoom": true,
         "supports_y_zoom": true,
         "signals": [
-          {
-            "id": "trace.context.chamber_air",
-            "label": "Chamber air",
-            "unit": "degC",
-            "source": "facility_thermal",
-            "source_family": "facility_thermal",
-            "kind": "measurement",
-            "category": "actual",
-            "role": "actual",
-            "subsystem": "facility",
-            "axis_id": "temperature_c",
-            "section_id": "thermal_environment"
-          },
           {
             "id": "trace.dut_temp_a",
             "label": "High-dissipation DUT node",
