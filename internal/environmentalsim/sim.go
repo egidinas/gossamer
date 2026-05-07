@@ -2,6 +2,7 @@ package environmentalsim
 
 import (
 	"fmt"
+	"log"
 	"math"
 	"math/rand"
 	"strings"
@@ -11,8 +12,8 @@ import (
 )
 
 const (
-	ModelName    = "multi_path_dut_thermal_rc_v2"
-	ModelVersion = "2026.05.3"
+	ModelName    = "multi_path_dut_thermal_rc_v3"
+	ModelVersion = "2026.05.4"
 
 	absoluteZeroC                    = -273.15
 	standardAtmospherePa             = 101325.0
@@ -78,6 +79,11 @@ type heatFlux struct {
 	shroud  float64
 	coupled float64
 	self    float64
+}
+
+type nodeLinearization struct {
+	Gtotal float64 // W/K
+	Tss    float64 // °C
 }
 
 func Simulate(campaignID string, program *contracts.ThermalProgram, start time.Time) Result {
@@ -834,14 +840,44 @@ func advanceComponentPairStep(fastTemp, lazyTemp, chamberAir, table, shroud, pre
 	fastFlux.coupled = coupledFlux
 	lazyFlux.coupled = -coupledFlux
 
-	fastNext := advanceTemperature(fastTemp, fastParams.capacitanceJPerK, fastFlux, dt)
-	lazyNext := advanceTemperature(lazyTemp, lazyParams.capacitanceJPerK, lazyFlux, dt)
+	// Compute linearization for fast node
+	fastGAir := gasConductanceWPerK(campaignID, pressure, fastParams)
+	fastGIface := fastParams.tableConductanceWPerK
+	fastGShroudLin := radiativeLinearConductanceWPerK(fastTemp, shroud, fastParams.radiatingAreaM2, fastParams.emissivity, viewFactorOrFull(fastParams.shroudViewFactor))
+	fastGCoupledLin := radiativeLinearConductanceWPerK(fastTemp, lazyTemp, coupledArea, coupledEmissivity, coupledViewFactor)
+	fastGTotal := fastGAir + fastGIface + fastGShroudLin + fastGCoupledLin
+	fastS := fastGAir*chamberAir + fastGIface*table + fastGShroudLin*shroud + fastGCoupledLin*lazyTemp + fastFlux.self
+	fastTss := fastS / fastGTotal
+	fastLin := nodeLinearization{Gtotal: fastGTotal, Tss: fastTss}
+
+	// Compute linearization for lazy node
+	lazyGAir := gasConductanceWPerK(campaignID, pressure, lazyParams)
+	lazyGIface := lazyParams.tableConductanceWPerK
+	lazyGShroudLin := radiativeLinearConductanceWPerK(lazyTemp, shroud, lazyParams.radiatingAreaM2, lazyParams.emissivity, viewFactorOrFull(lazyParams.shroudViewFactor))
+	lazyGCoupledLin := radiativeLinearConductanceWPerK(lazyTemp, fastTemp, coupledArea, coupledEmissivity, coupledViewFactor)
+	lazyGTotal := lazyGAir + lazyGIface + lazyGShroudLin + lazyGCoupledLin
+	lazyS := lazyGAir*chamberAir + lazyGIface*table + lazyGShroudLin*shroud + lazyGCoupledLin*fastTemp + lazyFlux.self
+	lazyTss := lazyS / lazyGTotal
+	lazyLin := nodeLinearization{Gtotal: lazyGTotal, Tss: lazyTss}
+
+	fastNext := advanceTemperature(fastTemp, fastParams.capacitanceJPerK, fastLin, fastFlux.self, dt)
+	lazyNext := advanceTemperature(lazyTemp, lazyParams.capacitanceJPerK, lazyLin, lazyFlux.self, dt)
 	return fastNext, lazyNext, fastFlux, lazyFlux
 }
 
 func advanceComponentStep(temp, chamberAir, table, shroud, pressure float64, campaignID string, params componentParams, gateActive, payloadActive, survivalMode bool, dt time.Duration) (float64, heatFlux) {
 	flux := componentFlux(temp, chamberAir, table, shroud, pressure, campaignID, params, gateActive, payloadActive, survivalMode)
-	return advanceTemperature(temp, params.capacitanceJPerK, flux, dt), flux
+
+	// Compute linearization
+	gAir := gasConductanceWPerK(campaignID, pressure, params)
+	gIface := params.tableConductanceWPerK
+	gShroudLin := radiativeLinearConductanceWPerK(temp, shroud, params.radiatingAreaM2, params.emissivity, viewFactorOrFull(params.shroudViewFactor))
+	gTotal := gAir + gIface + gShroudLin
+	s := gAir*chamberAir + gIface*table + gShroudLin*shroud + flux.self
+	tss := s / gTotal
+	lin := nodeLinearization{Gtotal: gTotal, Tss: tss}
+
+	return advanceTemperature(temp, params.capacitanceJPerK, lin, flux.self, dt), flux
 }
 
 func componentFlux(temp, chamberAir, table, shroud, pressure float64, campaignID string, params componentParams, gateActive, payloadActive, survivalMode bool) heatFlux {
@@ -863,12 +899,47 @@ func componentFlux(temp, chamberAir, table, shroud, pressure float64, campaignID
 	}
 }
 
-func advanceTemperature(temp, capacitanceJPerK float64, flux heatFlux, dt time.Duration) float64 {
+// radiativeLinearConductanceWPerK returns the linearized radiative conductance (W/K) using the
+// average absolute temperature. This is exact when nodeDegC == sourceDegC; per-step error is O((ΔT/Tbar)²).
+// For dt <= 1 minute, this approximation is very accurate.
+func radiativeLinearConductanceWPerK(nodeDegC, sourceDegC, areaM2, emissivity, viewFactor float64) float64 {
+	if areaM2 <= 0 || emissivity <= 0 || viewFactor <= 0 {
+		return 0
+	}
+	nodeK := kelvin(nodeDegC)
+	sourceK := kelvin(sourceDegC)
+	tbarK := (nodeK + sourceK) / 2
+	return 4 * emissivity * areaM2 * viewFactor * stefanBoltzmannWPerM2K4 * math.Pow(tbarK, 3)
+}
+
+// plausibilityLog logs excessively out-of-range temperatures (< -200 °C or > 200 °C) once per offending sample.
+func plausibilityLog(label string, t float64) {
+	if t < -200 || t > 200 {
+		log.Printf("plausibility check: %s = %.2f °C (out of typical range)", label, t)
+	}
+}
+
+func advanceTemperature(temp, capacitanceJPerK float64, lin nodeLinearization, selfHeatW float64, dt time.Duration) float64 {
 	if capacitanceJPerK <= 0 {
 		return temp
 	}
-	next := temp + ((flux.air + flux.iface + flux.shroud + flux.coupled + flux.self) / capacitanceJPerK * dt.Seconds())
-	return clamp(next, -80, 100)
+	dtSeconds := dt.Seconds()
+
+	if lin.Gtotal <= 0 {
+		// Fallback: no forcing term, only self-heat
+		return temp + selfHeatW*dtSeconds/capacitanceJPerK
+	}
+
+	// Steady-state temperature: T_ss = S / G_total, where S = lin.Tss * lin.Gtotal
+	tss := lin.Tss
+
+	// Exponential integration: T_new = T_ss + (T - T_ss) * exp(-dt_s * G_total / C)
+	tau := capacitanceJPerK / lin.Gtotal
+	expTerm := math.Exp(-dtSeconds / tau)
+
+	tNew := tss + (temp-tss)*expTerm
+	plausibilityLog("advanceTemperature", tNew)
+	return tNew
 }
 
 func gasConductanceWPerK(campaignID string, pressure float64, params componentParams) float64 {
