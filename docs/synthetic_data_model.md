@@ -41,6 +41,20 @@ The tests assert broad bounds rather than private acceptance limits:
 
 These ranges are intentionally generic. They support conversation about system behavior, operator displays, and evidence flow without encoding a real test specification.
 
+## Environmental Simulation Model
+
+Thermal and vacuum campaigns use a deterministic, physics-inspired environmental model. The model is still tuned for bounded public demonstrations rather than validated prediction, but the core dynamics follow named physical relationships:
+
+- radiative heat exchange uses the Stefan-Boltzmann fourth-power relationship with named shroud view factors,
+- the two DUT thermal nodes exchange equal-and-opposite radiative heat through a small internal view factor, so hot electronics can warm the slower structural node without inventing heat,
+- residual air coupling in TVAC fades with pressure squared, adds a small molecular-conduction tail in transitional vacuum, and reaches zero in high vacuum,
+- DUT thermal nodes are integrated as a coupled pair with one-minute internal substeps while public telemetry remains on the five-minute campaign cadence,
+- chamber pressure advances with an explicit exponential pump/load solution using effective roughing, turbo, virtual-leak, and outgassing terms,
+- pump rates expose the roughing/turbo crossover and cold-shroud cryopumping multiplier as named helper behavior,
+- volatile inventory depletion uses a named normalized capacity scale instead of an unlabeled multiplier.
+
+The remaining simplifications are deliberate: the chamber is a single effective pressure volume, the DUT is represented by two lumped thermal nodes, and all physical constants are generic public-demo parameters rather than equipment-specific calibration values.
+
 ## Determinism
 
 `generated_at` is fixed in public fixtures, and every sample is computed from deterministic formulas. The fixture test suite verifies that repeated generation produces byte-identical outputs for representative contract files.

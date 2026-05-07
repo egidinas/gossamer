@@ -684,6 +684,7 @@ func buildGraphWall(env contracts.Envelope, campaignID string, hero contracts.He
 	if campaignID == "tvac_qualification" {
 		thermalProgramSignals = append(thermalProgramSignals,
 			graphSignal("trace.tvac_pressure", "TVac pressure", "mbar", "facility_pressure", "actual", "measurement", "facility", "pressure_mbar", "thermal_environment"),
+			graphSignal("trace.tvac_pressure_target", "Vacuum target", "mbar", "requirements", "ghost", "target", "requirements", "pressure_mbar", "thermal_environment"),
 			graphSignal("trace.shroud_inlet", "Shroud inlet", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
 			graphSignal("trace.shroud_outlet", "Shroud outlet", "degC", "facility_thermal", "actual", "measurement", "facility", "temperature_c", "thermal_environment"),
 		)
@@ -706,6 +707,7 @@ func buildGraphWall(env contracts.Envelope, campaignID string, hero contracts.He
 	if campaignID == "tvac_qualification" {
 		add("facility_response", graphCard("tvac_pressure", "TVac pressure pumpdown and bursts", "line", "companion", "mbar", "log_pressure_mbar", "facility_pressure", []contracts.GraphWallSignal{
 			graphSignal("trace.tvac_pressure", "Pressure", "mbar", "facility_pressure", "actual", "measurement", "facility", "pressure_mbar", "facility_response"),
+			graphSignal("trace.tvac_pressure_target", "Vacuum target", "mbar", "requirements", "ghost", "target", "requirements", "pressure_mbar", "facility_response"),
 		}))
 		add("facility_response", graphCard("tvac_pressure_sources", "Pump, leak, and outgassing balance", "line", "companion", "mixed", "pressure_balance", "facility_pressure", []contracts.GraphWallSignal{
 			graphSignal("trace.tvac_outgassing", "Temperature outgassing", "mbar/min", "facility_pressure", "actual", "measurement", "facility", "pressure_rate", "facility_response"),

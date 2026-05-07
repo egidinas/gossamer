@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/report"
@@ -212,6 +213,35 @@ func TestTileEndpointRespectsTimeRangePointBudgetAndEvidence(t *testing.T) {
 	}
 }
 
+func TestTileEndpointClipsPhaseBandsToAsRunCursor(t *testing.T) {
+	server := newTestServer(t)
+	req := httptest.NewRequest(http.MethodGet, "/api/campaigns/tvac_qualification/tiles?card_id=thermal_program&level=minute", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+	var tile contracts.GraphTile
+	if err := json.Unmarshal(rec.Body.Bytes(), &tile); err != nil {
+		t.Fatalf("decode tile: %v", err)
+	}
+	if len(tile.Bands) == 0 {
+		t.Fatal("tile missing phase/dwell bands")
+	}
+	model, err := server.readGraphModel("tvac_qualification")
+	if err != nil {
+		t.Fatal(err)
+	}
+	cursor := mustParseTime(model.HeroGraph.TimeAxis.Now)
+	for _, band := range tile.Bands {
+		start := mustParseTime(band.Start)
+		end := mustParseTime(band.End)
+		if start.After(cursor) || end.After(cursor) {
+			t.Fatalf("band %s extends beyond as-run cursor: %s..%s > %s", band.ID, band.Start, band.End, cursor.Format(time.RFC3339))
+		}
+	}
+}
+
 func TestSwimlaneTileCarriesStateSignals(t *testing.T) {
 	server := newTestServer(t)
 	req := httptest.NewRequest(http.MethodGet, "/api/campaigns/thermal_acceptance_fat/tiles?card_id=state_change_swimlane&level=minute", nil)
@@ -228,7 +258,7 @@ func TestSwimlaneTileCarriesStateSignals(t *testing.T) {
 		t.Fatalf("card_id = %q", tile.CardID)
 	}
 	if tile.Diagnostics.PointCount == 0 {
-		t.Fatalf("swimlane tile has no state points")
+		t.Fatalf("swimlane tile has no state spans")
 	}
 	series := map[string]contracts.TileSeries{}
 	for _, s := range tile.Series {
@@ -238,8 +268,11 @@ func TestSwimlaneTileCarriesStateSignals(t *testing.T) {
 		}
 	}
 	for _, id := range []string{"trace.phase_enum", "trace.functional_gate_active", "trace.dut_ready", "trace.payload_active", "trace.fault_flag"} {
-		if len(series[id].Points) == 0 {
-			t.Fatalf("swimlane missing populated series %s", id)
+		if len(series[id].Spans) == 0 {
+			t.Fatalf("swimlane missing populated span series %s", id)
+		}
+		if len(series[id].Points) != 0 {
+			t.Fatalf("swimlane series %s should not rely on fake analog points", id)
 		}
 	}
 }
@@ -267,6 +300,29 @@ func TestStaticAssetServedWhenConfigured(t *testing.T) {
 	}
 	if got := strings.TrimSpace(rec.Body.String()); got != `console.log("gossamer")` {
 		t.Fatalf("asset body = %q", got)
+	}
+}
+
+func TestStaticDataBundleServedWhenConfigured(t *testing.T) {
+	server := newTestServerWithStatic(t)
+	dataDir := filepath.Join(server.root, "fixtures", "public_tiles", "current")
+	if err := os.MkdirAll(dataDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dataDir, "manifest.json"), []byte(`{"schema_version":1,"data_version":"test"}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	req := httptest.NewRequest(http.MethodGet, "/data/current/manifest.json", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+	if got := rec.Header().Get("Cache-Control"); !strings.Contains(got, "no-cache") {
+		t.Fatalf("cache header = %q", got)
+	}
+	if !strings.Contains(rec.Body.String(), `"data_version":"test"`) {
+		t.Fatalf("body = %s", rec.Body.String())
 	}
 }
 

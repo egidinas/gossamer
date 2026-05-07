@@ -12,7 +12,16 @@ import (
 
 const (
 	ModelName    = "multi_path_dut_thermal_rc_v2"
-	ModelVersion = "2026.05.1"
+	ModelVersion = "2026.05.3"
+
+	absoluteZeroC                    = -273.15
+	standardAtmospherePa             = 101325.0
+	stefanBoltzmannWPerM2K4          = 5.670374419e-8
+	highVacuumAirCouplingCutoffPa    = 0.01
+	freeMolecularReferencePressurePa = 100.0
+	maxComponentIntegrationStep      = time.Minute
+	minimumVolatilePool              = 0.004
+	volatileCapacityPressureMinutes  = 0.5882352941176471
 )
 
 type Result struct {
@@ -46,23 +55,29 @@ type state struct {
 }
 
 type componentParams struct {
-	capacitanceJPerK      float64
-	airConductanceWPerK   float64
-	tableConductanceWPerK float64
-	radiatingAreaM2       float64
-	emissivity            float64
-	baseSelfHeatW         float64
-	payloadSelfHeatW      float64
-	gateSelfHeatW         float64
-	sensorBiasDegC        float64
-	sensorNoiseDegC       float64
+	capacitanceJPerK             float64
+	airConductanceWPerK          float64
+	tableConductanceWPerK        float64
+	radiatingAreaM2              float64
+	emissivity                   float64
+	shroudViewFactor             float64
+	molecularGasConductanceWPerK float64
+	coupledRadiatingAreaM2       float64
+	coupledRadiatingEmissivity   float64
+	coupledRadiatingViewFactor   float64
+	baseSelfHeatW                float64
+	payloadSelfHeatW             float64
+	gateSelfHeatW                float64
+	sensorBiasDegC               float64
+	sensorNoiseDegC              float64
 }
 
 type heatFlux struct {
-	air    float64
-	iface  float64
-	shroud float64
-	self   float64
+	air     float64
+	iface   float64
+	shroud  float64
+	coupled float64
+	self    float64
 }
 
 func Simulate(campaignID string, program *contracts.ThermalProgram, start time.Time) Result {
@@ -75,18 +90,22 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 	st := state{chamberAir: 22, table: 22, shroud: 22.4, shroudInlet: 22.2, shroudOutlet: 22.7, exhaustCryoTemp: 20, exhaustScavengedTemp: 20, scavengerWaterReturn: 15.8, fastComponent: 21.2, lazyComponent: 22.6, pressure: 101325, volatilePool: 1, tmPackets: 6000, tcPackets: 120}
 	fastNode := componentParams{
 		capacitanceJPerK: 3200, airConductanceWPerK: 0.34, tableConductanceWPerK: 0.52,
-		radiatingAreaM2: 0.045, emissivity: 0.78, baseSelfHeatW: 5.8, payloadSelfHeatW: 4.5, gateSelfHeatW: 15.0,
+		radiatingAreaM2: 0.045, emissivity: 0.78, shroudViewFactor: 0.72, molecularGasConductanceWPerK: 0.010,
+		coupledRadiatingAreaM2: 0.026, coupledRadiatingEmissivity: 0.74, coupledRadiatingViewFactor: 0.58,
+		baseSelfHeatW: 5.8, payloadSelfHeatW: 4.5, gateSelfHeatW: 15.0,
 		sensorBiasDegC: 0.14, sensorNoiseDegC: 0.08,
 	}
 	lazyNode := componentParams{
 		capacitanceJPerK: 10500, airConductanceWPerK: 0.42, tableConductanceWPerK: 0.23,
-		radiatingAreaM2: 0.13, emissivity: 0.84, baseSelfHeatW: 0.85, payloadSelfHeatW: 0.8, gateSelfHeatW: 2.4,
+		radiatingAreaM2: 0.13, emissivity: 0.84, shroudViewFactor: 0.88, molecularGasConductanceWPerK: 0.016,
+		coupledRadiatingAreaM2: 0.026, coupledRadiatingEmissivity: 0.74, coupledRadiatingViewFactor: 0.58,
+		baseSelfHeatW: 0.85, payloadSelfHeatW: 0.8, gateSelfHeatW: 2.4,
 		sensorBiasDegC: -0.20, sensorNoiseDegC: 0.10,
 	}
 	samples := []contracts.TelemetrySample{}
 	trace := sampleTrace{}
 
-	appendPoint := func(t time.Time, cycle int, phaseID string, phase string, phaseCode float64, command float64, gate string, gateCode float64, targetPressure float64) {
+	appendPoint := func(t time.Time, cycle int, phaseID string, phase string, phaseCode float64, command float64, ghost float64, gate string, gateCode float64, targetPressureMbar float64) {
 		gateActive := gate != "" && gate != "none"
 		survivalMode := isSurvivalPhase(phase)
 		coolingDemand := clamp((st.chamberAir-command)/38, 0, 1)
@@ -164,8 +183,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 
 		payloadActive := !survivalMode && (gateActive || isOperationalDwellPhase(phase))
 		var fastFlux, lazyFlux heatFlux
-		st.fastComponent, fastFlux = advanceComponent(st.fastComponent, st.chamberAir, st.table, st.shroud, st.pressure, campaignID, fastNode, gateActive, payloadActive, survivalMode, dt)
-		st.lazyComponent, lazyFlux = advanceComponent(st.lazyComponent, st.chamberAir, st.table, st.shroud, st.pressure, campaignID, lazyNode, gateActive, payloadActive, survivalMode, dt)
+		st.fastComponent, st.lazyComponent, fastFlux, lazyFlux = advanceComponentPair(st.fastComponent, st.lazyComponent, st.chamberAir, st.table, st.shroud, st.pressure, campaignID, fastNode, lazyNode, gateActive, payloadActive, survivalMode, dt)
 		fastMeasured := st.fastComponent + fastNode.sensorBiasDegC + noise(rng, fastNode.sensorNoiseDegC)
 		lazyMeasured := st.lazyComponent + lazyNode.sensorBiasDegC + noise(rng, lazyNode.sensorNoiseDegC)
 		shroudMeasured := st.shroud + noise(rng, 0.06)
@@ -369,7 +387,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 			},
 		}
 		samples = append(samples, sample)
-		trace.add(sample, command, acceptanceTarget(command, program), gateActive, interlock != "closed")
+		trace.add(sample, command, ghost, targetPressureMbar, acceptanceTarget(command, program), gateActive, interlock != "closed")
 	}
 
 	firstCycle := program.Cycles[0]
@@ -384,7 +402,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 			t = preEnd
 		}
 		gate, gateCode := gateFor(program, "ambient_precheck", t)
-		appendPoint(t, 0, "ambient_precheck", "ambient_precheck", thermalPhaseCode("ambient_precheck"), 22, gate, gateCode, 101325)
+		appendPoint(t, 0, "ambient_precheck", "ambient_precheck", thermalPhaseCode("ambient_precheck"), 22, 22, gate, gateCode, pressureTargetMbar(campaignID, "ambient_precheck", t.Sub(start)))
 	}
 	lastCommand := 22.0
 	for _, cycle := range program.Cycles {
@@ -407,8 +425,10 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 				if phase.Kind == "ramp_cold" || phase.Kind == "ramp_hot" {
 					command = from + (phase.TargetDegC-from)*smoothRamp(f)
 				}
+				ghost := thermalGhostCommand(program, phase, from, command, t)
+				targetPressureMbar := pressureTargetMbar(campaignID, phase.Kind, t.Sub(start))
 				gate, gateCode := gateFor(program, phase.ID, t)
-				appendPoint(t, cycle.Index, phase.ID, phase.Kind, thermalPhaseCode(phase.Kind), command, gate, gateCode, st.pressure)
+				appendPoint(t, cycle.Index, phase.ID, phase.Kind, thermalPhaseCode(phase.Kind), command, ghost, gate, gateCode, targetPressureMbar)
 			}
 			lastCommand = phase.TargetDegC
 		}
@@ -439,7 +459,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 			phaseID = "ambient_postcheck_vacuum"
 		}
 		gate, gateCode := gateFor(program, phaseID, t)
-		appendPoint(t, 0, phaseID, phaseID, thermalPhaseCode(phaseID), command, gate, gateCode, st.pressure)
+		appendPoint(t, 0, phaseID, phaseID, thermalPhaseCode(phaseID), command, command, gate, gateCode, pressureTargetMbar(campaignID, phaseID, t.Sub(start)))
 	}
 
 	provenance := contracts.SimulationProvenance{
@@ -450,27 +470,33 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 		Source:        "gossamer internal/environmentalsim deterministic fixture",
 		Deterministic: true,
 		Parameters: map[string]float64{
-			"chamber_air_tau_min":                18,
-			"interface_plate_tau_min":            33,
-			"tvac_shroud_nominal_tau_min":        28,
-			"fast_component_capacitance_j_per_k": fastNode.capacitanceJPerK,
-			"lazy_component_capacitance_j_per_k": lazyNode.capacitanceJPerK,
-			"fast_air_conductance_w_per_k":       fastNode.airConductanceWPerK,
-			"lazy_air_conductance_w_per_k":       lazyNode.airConductanceWPerK,
-			"fast_interface_conductance_w_per_k": fastNode.tableConductanceWPerK,
-			"lazy_interface_conductance_w_per_k": lazyNode.tableConductanceWPerK,
-			"lazy_radiating_area_m2":             lazyNode.radiatingAreaM2,
-			"tvac_min_air_coupling_factor":       0.015,
-			"tvac_effective_pump_rate_per_min":   0.185,
-			"tvac_nominal_pump_rate_per_min":     0.185,
-			"tvac_base_virtual_leak_pa_per_min":  0.0000051,
-			"tvac_baked_ultimate_pressure_pa":    0.0000051 * (0.35 + 0.65*0.018) / 0.185,
-			"tvac_baked_ultimate_pressure_mbar":  (0.0000051 * (0.35 + 0.65*0.018) / 0.185) * 0.01,
-			"tvac_cryo_pump_max_multiplier":      3.2,
-			"tvac_exhaust_scavenger_min_safe_c":  4,
-			"tvac_exhaust_water_flow_nominal":    1.0,
-			"functional_gate_fast_self_heat_w":   fastNode.gateSelfHeatW,
-			"functional_gate_lazy_self_heat_w":   lazyNode.gateSelfHeatW,
+			"chamber_air_tau_min":                    18,
+			"interface_plate_tau_min":                33,
+			"tvac_shroud_nominal_tau_min":            28,
+			"fast_component_capacitance_j_per_k":     fastNode.capacitanceJPerK,
+			"lazy_component_capacitance_j_per_k":     lazyNode.capacitanceJPerK,
+			"fast_air_conductance_w_per_k":           fastNode.airConductanceWPerK,
+			"lazy_air_conductance_w_per_k":           lazyNode.airConductanceWPerK,
+			"fast_molecular_gas_conductance_w_per_k": fastNode.molecularGasConductanceWPerK,
+			"lazy_molecular_gas_conductance_w_per_k": lazyNode.molecularGasConductanceWPerK,
+			"fast_interface_conductance_w_per_k":     fastNode.tableConductanceWPerK,
+			"lazy_interface_conductance_w_per_k":     lazyNode.tableConductanceWPerK,
+			"fast_shroud_view_factor":                fastNode.shroudViewFactor,
+			"lazy_shroud_view_factor":                lazyNode.shroudViewFactor,
+			"dut_node_coupled_radiating_area_m2":     fastNode.coupledRadiatingAreaM2,
+			"lazy_radiating_area_m2":                 lazyNode.radiatingAreaM2,
+			"tvac_high_vacuum_air_cutoff_pa":         highVacuumAirCouplingCutoffPa,
+			"tvac_free_molecular_reference_pa":       freeMolecularReferencePressurePa,
+			"tvac_effective_pump_rate_per_min":       0.185,
+			"tvac_nominal_pump_rate_per_min":         0.185,
+			"tvac_base_virtual_leak_pa_per_min":      0.0000051,
+			"tvac_baked_ultimate_pressure_pa":        0.0000051 * (0.18 + 0.82*0.004) / 0.185,
+			"tvac_baked_ultimate_pressure_mbar":      (0.0000051 * (0.18 + 0.82*0.004) / 0.185) * 0.01,
+			"tvac_cryo_pump_max_multiplier":          3.2,
+			"tvac_exhaust_scavenger_min_safe_c":      4,
+			"tvac_exhaust_water_flow_nominal":        1.0,
+			"functional_gate_fast_self_heat_w":       fastNode.gateSelfHeatW,
+			"functional_gate_lazy_self_heat_w":       lazyNode.gateSelfHeatW,
 		},
 	}
 	return Result{
@@ -481,76 +507,77 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 }
 
 type sampleTrace struct {
-	command       []contracts.GraphPoint
-	ghost         []contracts.GraphPoint
-	actual        []contracts.GraphPoint
-	zone1         []contracts.GraphPoint
-	zone2         []contracts.GraphPoint
-	table         []contracts.GraphPoint
-	shroud        []contracts.GraphPoint
-	shroudInlet   []contracts.GraphPoint
-	shroudOutlet  []contracts.GraphPoint
-	shroudDelta   []contracts.GraphPoint
-	gradient      []contracts.GraphPoint
-	fastAirFlux   []contracts.GraphPoint
-	fastIFace     []contracts.GraphPoint
-	fastShroud    []contracts.GraphPoint
-	lazyAirFlux   []contracts.GraphPoint
-	lazyIFace     []contracts.GraphPoint
-	lazyShroud    []contracts.GraphPoint
-	selfHeat      []contracts.GraphPoint
-	pressureMbar  []contracts.GraphPoint
-	outgasMbar    []contracts.GraphPoint
-	virtualLeak   []contracts.GraphPoint
-	roughingRate  []contracts.GraphPoint
-	turboRate     []contracts.GraphPoint
-	pumpRemoval   []contracts.GraphPoint
-	pumpMode      []contracts.GraphPoint
-	volatilePool  []contracts.GraphPoint
-	ln2           []contracts.GraphPoint
-	freeze        []contracts.GraphPoint
-	cryoExhaust   []contracts.GraphPoint
-	scavExhaust   []contracts.GraphPoint
-	scavWater     []contracts.GraphPoint
-	coldRecovery  []contracts.GraphPoint
-	load          []contracts.GraphPoint
-	powerTotal    []contracts.GraphPoint
-	powerSubsys   []contracts.GraphPoint
-	powerAvionics []contracts.GraphPoint
-	powerPayload  []contracts.GraphPoint
-	powerLink     []contracts.GraphPoint
-	powerThermal  []contracts.GraphPoint
-	busLatency    []contracts.GraphPoint
-	quality       []contracts.GraphPoint
-	overall       []contracts.GraphPoint
-	tmCounter     []contracts.GraphPoint
-	tcCounter     []contracts.GraphPoint
-	dropCount     []contracts.GraphPoint
-	coolingWater  []contracts.GraphPoint
-	airSupply     []contracts.GraphPoint
-	airDewpoint   []contracts.GraphPoint
-	phase         []contracts.GraphPoint
-	degraded      []contracts.GraphPoint
-	gates         []contracts.GraphPoint
-	interlocks    []contracts.GraphPoint
-	evidence      []contracts.GraphPoint
-	ready         []contracts.GraphPoint
-	operative     []contracts.GraphPoint
-	survival      []contracts.GraphPoint
-	stability     []contracts.GraphPoint
-	dwellActive   []contracts.GraphPoint
-	dwellComplete []contracts.GraphPoint
-	pressureGate  []contracts.GraphPoint
-	exhaustSafe   []contracts.GraphPoint
-	payload       []contracts.GraphPoint
-	rfLocked      []contracts.GraphPoint
-	fault         []contracts.GraphPoint
+	command        []contracts.GraphPoint
+	ghost          []contracts.GraphPoint
+	actual         []contracts.GraphPoint
+	zone1          []contracts.GraphPoint
+	zone2          []contracts.GraphPoint
+	table          []contracts.GraphPoint
+	shroud         []contracts.GraphPoint
+	shroudInlet    []contracts.GraphPoint
+	shroudOutlet   []contracts.GraphPoint
+	shroudDelta    []contracts.GraphPoint
+	gradient       []contracts.GraphPoint
+	fastAirFlux    []contracts.GraphPoint
+	fastIFace      []contracts.GraphPoint
+	fastShroud     []contracts.GraphPoint
+	lazyAirFlux    []contracts.GraphPoint
+	lazyIFace      []contracts.GraphPoint
+	lazyShroud     []contracts.GraphPoint
+	selfHeat       []contracts.GraphPoint
+	pressureMbar   []contracts.GraphPoint
+	pressureTarget []contracts.GraphPoint
+	outgasMbar     []contracts.GraphPoint
+	virtualLeak    []contracts.GraphPoint
+	roughingRate   []contracts.GraphPoint
+	turboRate      []contracts.GraphPoint
+	pumpRemoval    []contracts.GraphPoint
+	pumpMode       []contracts.GraphPoint
+	volatilePool   []contracts.GraphPoint
+	ln2            []contracts.GraphPoint
+	freeze         []contracts.GraphPoint
+	cryoExhaust    []contracts.GraphPoint
+	scavExhaust    []contracts.GraphPoint
+	scavWater      []contracts.GraphPoint
+	coldRecovery   []contracts.GraphPoint
+	load           []contracts.GraphPoint
+	powerTotal     []contracts.GraphPoint
+	powerSubsys    []contracts.GraphPoint
+	powerAvionics  []contracts.GraphPoint
+	powerPayload   []contracts.GraphPoint
+	powerLink      []contracts.GraphPoint
+	powerThermal   []contracts.GraphPoint
+	busLatency     []contracts.GraphPoint
+	quality        []contracts.GraphPoint
+	overall        []contracts.GraphPoint
+	tmCounter      []contracts.GraphPoint
+	tcCounter      []contracts.GraphPoint
+	dropCount      []contracts.GraphPoint
+	coolingWater   []contracts.GraphPoint
+	airSupply      []contracts.GraphPoint
+	airDewpoint    []contracts.GraphPoint
+	phase          []contracts.GraphPoint
+	degraded       []contracts.GraphPoint
+	gates          []contracts.GraphPoint
+	interlocks     []contracts.GraphPoint
+	evidence       []contracts.GraphPoint
+	ready          []contracts.GraphPoint
+	operative      []contracts.GraphPoint
+	survival       []contracts.GraphPoint
+	stability      []contracts.GraphPoint
+	dwellActive    []contracts.GraphPoint
+	dwellComplete  []contracts.GraphPoint
+	pressureGate   []contracts.GraphPoint
+	exhaustSafe    []contracts.GraphPoint
+	payload        []contracts.GraphPoint
+	rfLocked       []contracts.GraphPoint
+	fault          []contracts.GraphPoint
 }
 
-func (t *sampleTrace) add(sample contracts.TelemetrySample, command, acceptance float64, gate, interlock bool) {
+func (t *sampleTrace) add(sample contracts.TelemetrySample, command, ghost, pressureTargetMbar, acceptance float64, gate, interlock bool) {
 	ts := sample.Timestamp
 	t.command = append(t.command, point(ts, command))
-	t.ghost = append(t.ghost, point(ts, command))
+	t.ghost = append(t.ghost, point(ts, ghost))
 	t.actual = append(t.actual, point(ts, sample.Signals["chamber_air_deg_c"]))
 	t.zone1 = append(t.zone1, point(ts, sample.Signals["dut_fast_component_deg_c"]))
 	t.zone2 = append(t.zone2, point(ts, sample.Signals["dut_lazy_component_deg_c"]))
@@ -568,6 +595,7 @@ func (t *sampleTrace) add(sample contracts.TelemetrySample, command, acceptance 
 	t.lazyShroud = append(t.lazyShroud, point(ts, sample.Signals["dut_lazy_shroud_flux_w"]))
 	t.selfHeat = append(t.selfHeat, point(ts, sample.Signals["dut_self_heat_w"]))
 	t.pressureMbar = append(t.pressureMbar, point(ts, sample.Signals["tvac_pressure_mbar"]))
+	t.pressureTarget = append(t.pressureTarget, point(ts, pressureTargetMbar))
 	t.outgasMbar = append(t.outgasMbar, point(ts, sample.Signals["tvac_outgassing_mbar_per_min"]))
 	t.virtualLeak = append(t.virtualLeak, point(ts, sample.Signals["tvac_virtual_leak_mbar_per_min"]))
 	t.roughingRate = append(t.roughingRate, point(ts, sample.Signals["tvac_roughing_removal_mbar_per_min"]))
@@ -642,6 +670,7 @@ func buildHeroGraph(campaignID string, program *contracts.ThermalProgram, proven
 	if campaignID == "tvac_qualification" {
 		traces = append(traces,
 			contracts.GraphTrace{ID: "trace.actual.tvac_pressure", Label: "TVac pressure", Role: "actual", Units: "mbar", AxisID: "pressure_mbar", Source: "facility_pressure", Values: trace.pressureMbar},
+			contracts.GraphTrace{ID: "trace.tvac_pressure_target", Label: "Vacuum target", Role: "ghost", Units: "mbar", AxisID: "pressure_mbar", Source: "requirements", Values: trace.pressureTarget},
 			contracts.GraphTrace{ID: "trace.shroud_inlet", Label: "Shroud inlet", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: "facility_thermal", Values: trace.shroudInlet},
 			contracts.GraphTrace{ID: "trace.shroud_outlet", Label: "Shroud outlet", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: "facility_thermal", Values: trace.shroudOutlet},
 		)
@@ -766,7 +795,56 @@ func firstOrderDelta(current, target, tauMin float64, dt time.Duration) float64 
 }
 
 func advanceComponent(temp, chamberAir, table, shroud, pressure float64, campaignID string, params componentParams, gateActive, payloadActive, survivalMode bool, dt time.Duration) (float64, heatFlux) {
-	airScale := airCouplingScale(campaignID, pressure)
+	if dt > maxComponentIntegrationStep {
+		steps := int(math.Ceil(float64(dt) / float64(maxComponentIntegrationStep)))
+		step := dt / time.Duration(steps)
+		next := temp
+		var flux heatFlux
+		for i := 0; i < steps; i++ {
+			next, flux = advanceComponentStep(next, chamberAir, table, shroud, pressure, campaignID, params, gateActive, payloadActive, survivalMode, step)
+		}
+		return next, flux
+	}
+	return advanceComponentStep(temp, chamberAir, table, shroud, pressure, campaignID, params, gateActive, payloadActive, survivalMode, dt)
+}
+
+func advanceComponentPair(fastTemp, lazyTemp, chamberAir, table, shroud, pressure float64, campaignID string, fastParams, lazyParams componentParams, gateActive, payloadActive, survivalMode bool, dt time.Duration) (float64, float64, heatFlux, heatFlux) {
+	if dt > maxComponentIntegrationStep {
+		steps := int(math.Ceil(float64(dt) / float64(maxComponentIntegrationStep)))
+		step := dt / time.Duration(steps)
+		nextFast := fastTemp
+		nextLazy := lazyTemp
+		var fastFlux, lazyFlux heatFlux
+		for i := 0; i < steps; i++ {
+			nextFast, nextLazy, fastFlux, lazyFlux = advanceComponentPairStep(nextFast, nextLazy, chamberAir, table, shroud, pressure, campaignID, fastParams, lazyParams, gateActive, payloadActive, survivalMode, step)
+		}
+		return nextFast, nextLazy, fastFlux, lazyFlux
+	}
+	return advanceComponentPairStep(fastTemp, lazyTemp, chamberAir, table, shroud, pressure, campaignID, fastParams, lazyParams, gateActive, payloadActive, survivalMode, dt)
+}
+
+func advanceComponentPairStep(fastTemp, lazyTemp, chamberAir, table, shroud, pressure float64, campaignID string, fastParams, lazyParams componentParams, gateActive, payloadActive, survivalMode bool, dt time.Duration) (float64, float64, heatFlux, heatFlux) {
+	fastFlux := componentFlux(fastTemp, chamberAir, table, shroud, pressure, campaignID, fastParams, gateActive, payloadActive, survivalMode)
+	lazyFlux := componentFlux(lazyTemp, chamberAir, table, shroud, pressure, campaignID, lazyParams, gateActive, payloadActive, survivalMode)
+
+	coupledArea := math.Min(fastParams.coupledRadiatingAreaM2, lazyParams.coupledRadiatingAreaM2)
+	coupledEmissivity := 0.5 * (fastParams.coupledRadiatingEmissivity + lazyParams.coupledRadiatingEmissivity)
+	coupledViewFactor := 0.5 * (fastParams.coupledRadiatingViewFactor + lazyParams.coupledRadiatingViewFactor)
+	coupledFlux := radiativeFluxWithViewFactor(fastTemp, lazyTemp, coupledArea, coupledEmissivity, coupledViewFactor)
+	fastFlux.coupled = coupledFlux
+	lazyFlux.coupled = -coupledFlux
+
+	fastNext := advanceTemperature(fastTemp, fastParams.capacitanceJPerK, fastFlux, dt)
+	lazyNext := advanceTemperature(lazyTemp, lazyParams.capacitanceJPerK, lazyFlux, dt)
+	return fastNext, lazyNext, fastFlux, lazyFlux
+}
+
+func advanceComponentStep(temp, chamberAir, table, shroud, pressure float64, campaignID string, params componentParams, gateActive, payloadActive, survivalMode bool, dt time.Duration) (float64, heatFlux) {
+	flux := componentFlux(temp, chamberAir, table, shroud, pressure, campaignID, params, gateActive, payloadActive, survivalMode)
+	return advanceTemperature(temp, params.capacitanceJPerK, flux, dt), flux
+}
+
+func componentFlux(temp, chamberAir, table, shroud, pressure float64, campaignID string, params componentParams, gateActive, payloadActive, survivalMode bool) heatFlux {
 	selfHeat := params.baseSelfHeatW
 	if survivalMode {
 		selfHeat *= 0.18
@@ -777,88 +855,119 @@ func advanceComponent(temp, chamberAir, table, shroud, pressure float64, campaig
 	if gateActive {
 		selfHeat += params.gateSelfHeatW
 	}
-	flux := heatFlux{
-		air:    params.airConductanceWPerK * airScale * (chamberAir - temp),
+	return heatFlux{
+		air:    gasConductanceWPerK(campaignID, pressure, params) * (chamberAir - temp),
 		iface:  params.tableConductanceWPerK * (table - temp),
-		shroud: radiativeFlux(temp, shroud, params.radiatingAreaM2, params.emissivity),
+		shroud: radiativeFluxWithViewFactor(temp, shroud, params.radiatingAreaM2, params.emissivity, viewFactorOrFull(params.shroudViewFactor)),
 		self:   selfHeat,
 	}
-	next := temp + ((flux.air + flux.iface + flux.shroud + flux.self) / params.capacitanceJPerK * dt.Seconds())
-	return clamp(next, -80, 100), flux
+}
+
+func advanceTemperature(temp, capacitanceJPerK float64, flux heatFlux, dt time.Duration) float64 {
+	if capacitanceJPerK <= 0 {
+		return temp
+	}
+	next := temp + ((flux.air + flux.iface + flux.shroud + flux.coupled + flux.self) / capacitanceJPerK * dt.Seconds())
+	return clamp(next, -80, 100)
+}
+
+func gasConductanceWPerK(campaignID string, pressure float64, params componentParams) float64 {
+	if campaignID != "tvac_qualification" {
+		return params.airConductanceWPerK
+	}
+	if pressure <= highVacuumAirCouplingCutoffPa {
+		return 0
+	}
+	continuum := params.airConductanceWPerK * airCouplingScale(campaignID, pressure)
+	molecularScale := clamp(pressure/freeMolecularReferencePressurePa, 0, 1)
+	molecular := params.molecularGasConductanceWPerK * molecularScale
+	return math.Max(continuum, molecular)
 }
 
 func airCouplingScale(campaignID string, pressure float64) float64 {
 	if campaignID != "tvac_qualification" {
 		return 1
 	}
-	normalizedPressure := clamp(pressure/101325, 0, 1)
-	return clamp(math.Pow(normalizedPressure, 0.35), 0.015, 1)
+	if pressure <= highVacuumAirCouplingCutoffPa {
+		return 0
+	}
+	normalizedPressure := clamp(pressure/standardAtmospherePa, 0, 1)
+	return normalizedPressure * normalizedPressure
 }
 
 func radiativeFlux(nodeDegC, shroudDegC, areaM2, emissivity float64) float64 {
+	return radiativeFluxWithViewFactor(nodeDegC, shroudDegC, areaM2, emissivity, 1)
+}
+
+func radiativeFluxWithViewFactor(nodeDegC, shroudDegC, areaM2, emissivity, viewFactor float64) float64 {
 	if areaM2 <= 0 || emissivity <= 0 {
+		return 0
+	}
+	viewFactor = clamp(viewFactor, 0, 1)
+	if viewFactor <= 0 {
 		return 0
 	}
 	nodeK := kelvin(nodeDegC)
 	shroudK := kelvin(shroudDegC)
-	meanK := clamp((nodeK+shroudK)/2, 160, 380)
-	radiativeConductance := 4 * emissivity * areaM2 * 5.670374419e-8 * math.Pow(meanK, 3)
-	flux := radiativeConductance * (shroudK - nodeK)
-	return clamp(flux, -45, 45)
+	return emissivity * areaM2 * viewFactor * stefanBoltzmannWPerM2K4 * (math.Pow(shroudK, 4) - math.Pow(nodeK, 4))
+}
+
+func viewFactorOrFull(viewFactor float64) float64 {
+	if viewFactor <= 0 {
+		return 1
+	}
+	return viewFactor
 }
 
 func kelvin(degC float64) float64 {
-	return degC + 273.15
+	return degC - absoluteZeroC
+}
+
+func solvePressureStep(previous, pumpRatePerMin, virtualLeak, outgasRate, dtMin float64) float64 {
+	if pumpRatePerMin <= 0 {
+		return previous + (virtualLeak+outgasRate)*dtMin
+	}
+	equilibrium := (virtualLeak + outgasRate) / pumpRatePerMin
+	return equilibrium + (previous-equilibrium)*math.Exp(-pumpRatePerMin*dtMin)
 }
 
 func advancePressure(campaignID string, previous, volatilePool float64, elapsed time.Duration, phase string, cycle int, shroudDegC, fastComponentDegC, lazyComponentDegC float64, dt time.Duration) (pressure, nextPool, outgasRate, virtualLeak, roughingRemoval, turboRemoval, totalRemoval float64) {
 	if campaignID != "tvac_qualification" {
-		return 101325, volatilePool, 0, 0, 0, 0, 0
+		return standardAtmospherePa, volatilePool, 0, 0, 0, 0, 0
 	}
 	if volatilePool <= 0 {
-		volatilePool = 0.02
+		volatilePool = minimumVolatilePool
 	}
 	if phase == "ambient_postcheck" {
 		ventRatePerMin := 0.42
-		delta := (101325 - previous) * (1 - math.Exp(-ventRatePerMin*dt.Minutes()))
-		return math.Min(101325, previous+delta), volatilePool, 0, 0, 0, 0, 0
+		delta := (standardAtmospherePa - previous) * (1 - math.Exp(-ventRatePerMin*dt.Minutes()))
+		return math.Min(standardAtmospherePa, previous+delta), volatilePool, 0, 0, 0, 0, 0
 	}
 	h := elapsed.Hours()
 	if phase == "ambient_precheck" && h < 2.0 {
-		return 101325, volatilePool, 0, 0, 0, 0, 0
+		return standardAtmospherePa, volatilePool, 0, 0, 0, 0, 0
 	}
 	if phase == "ambient_precheck" && previous > 101000 {
-		previous = 101325
+		previous = standardAtmospherePa
 	}
 
 	// Pressure is modeled as a single effective volume with pump removal, a small
 	// virtual leak, and a finite volatile inventory that desorbs faster when hot.
 	dtMin := dt.Minutes()
-	cryoPump := clamp((-70-shroudDegC)/85, 0, 1)
-	roughingRatePerMin := 0.0
-	turboRatePerMin := 0.0
-	if previous > 120 {
-		roughingRatePerMin = 0.44
-	}
-	if previous < 260 {
-		crossover := 1 - clamp((previous-120)/140, 0, 1)
-		turboRatePerMin = 0.17 * crossover * (1 + 2.4*cryoPump)
-	}
-	if previous <= 120 {
-		roughingRatePerMin = 0.018
-	}
+	cryoPump := cryoPumpFactor(shroudDegC)
+	roughingRatePerMin, turboRatePerMin := pumpRatesPerMin(previous, shroudDegC)
 	pumpRatePerMin := roughingRatePerMin + turboRatePerMin
 	if pumpRatePerMin <= 0 {
 		pumpRatePerMin = 0.12
 	}
-	virtualLeak = 0.0000051 * (0.35 + 0.65*volatilePool)
+	virtualLeak = 0.0000051 * (0.18 + 0.82*volatilePool)
 	hotNode := math.Max(math.Max(fastComponentDegC, lazyComponentDegC), shroudDegC)
 	tempK := kelvin(hotNode)
 	referenceK := kelvin(22)
 	arrhenius := math.Exp(-3600.0/tempK + 3600.0/referenceK)
 	tempFactor := clamp((hotNode+35)/115, 0.02, 1.7)
 	hotWave := clamp((hotNode-35)/60, 0, 1)
-	cycleMemory := math.Exp(-0.28 * math.Max(0, float64(cycle-1)))
+	cycleMemory := math.Exp(-0.55 * math.Max(0, float64(cycle-1)))
 	if phase == "ramp_hot" || phase == "hot_survival" || phase == "hot_operational" {
 		outgasRate = (0.00007 + 0.036*hotWave*arrhenius*tempFactor) * volatilePool * cycleMemory
 	} else if phase == "ramp_cold" {
@@ -870,20 +979,35 @@ func advancePressure(campaignID string, previous, volatilePool float64, elapsed 
 	}
 	outgasRate *= 1 - 0.55*cryoPump
 	ultimatePressure := virtualLeak / pumpRatePerMin
-	equilibrium := (virtualLeak + outgasRate) / pumpRatePerMin
-	next := equilibrium + (previous-equilibrium)*math.Exp(-pumpRatePerMin*dtMin)
+	next := solvePressureStep(previous, pumpRatePerMin, virtualLeak, outgasRate, dtMin)
 	totalRemoval = math.Max(0, (previous-next)/dtMin+outgasRate+virtualLeak)
 	if pumpRatePerMin > 0 {
 		roughingRemoval = totalRemoval * roughingRatePerMin / pumpRatePerMin
 		turboRemoval = totalRemoval * turboRatePerMin / pumpRatePerMin
 	}
-	if h > 2.4 {
-		next = math.Min(next, previous*0.92+outgasRate*dtMin+virtualLeak*dtMin)
-	}
 	next = math.Max(ultimatePressure, next)
-	depletion := outgasRate * dtMin * 2.6
-	nextPool = clamp(volatilePool-depletion, 0.018, 1.0)
+	depletion := outgasRate * dtMin / volatileCapacityPressureMinutes
+	nextPool = clamp(volatilePool-depletion, minimumVolatilePool, 1.0)
 	return next, nextPool, outgasRate, virtualLeak, roughingRemoval, turboRemoval, totalRemoval
+}
+
+func pumpRatesPerMin(pressurePa, shroudDegC float64) (roughingRatePerMin, turboRatePerMin float64) {
+	cryoPump := cryoPumpFactor(shroudDegC)
+	if pressurePa > 120 {
+		roughingRatePerMin = 0.44
+	}
+	if pressurePa < 260 {
+		crossover := 1 - clamp((pressurePa-120)/140, 0, 1)
+		turboRatePerMin = 0.17 * crossover * (1 + 2.4*cryoPump)
+	}
+	if pressurePa <= 120 {
+		roughingRatePerMin = 0.018
+	}
+	return roughingRatePerMin, turboRatePerMin
+}
+
+func cryoPumpFactor(shroudDegC float64) float64 {
+	return clamp((-70-shroudDegC)/85, 0, 1)
 }
 
 func pumpModeCode(pressurePa float64) float64 {
@@ -1075,6 +1199,7 @@ func companionGroups(campaignID string, axes []contracts.GraphYAxis, trace sampl
 				Axes:  []contracts.GraphYAxis{pressureAxis},
 				Traces: []contracts.GraphTrace{
 					{ID: "trace.tvac_pressure", Label: "Pressure", Role: "actual", Units: "mbar", AxisID: "pressure_mbar", Source: "facility_pressure", Values: trace.pressureMbar},
+					{ID: "trace.tvac_pressure_target", Label: "Vacuum target", Role: "ghost", Units: "mbar", AxisID: "pressure_mbar", Source: "requirements", Values: trace.pressureTarget},
 				},
 			},
 			{
@@ -1176,6 +1301,52 @@ func isOperationalDwellPhase(phase string) bool {
 
 func isThermalDwellPhase(phase string) bool {
 	return isSurvivalPhase(phase) || isOperationalDwellPhase(phase)
+}
+
+func thermalGhostCommand(program *contracts.ThermalProgram, phase contracts.CyclePhase, from, command float64, t time.Time) float64 {
+	if !isThermalDwellPhase(phase.Kind) {
+		return command
+	}
+	phaseStart := mustTime(phase.Start)
+	stableAt := dwellStartFor(program, phase.ID)
+	if stableAt.IsZero() || !stableAt.After(phaseStart) || !t.Before(stableAt) {
+		return phase.TargetDegC
+	}
+	elapsed := math.Max(0, t.Sub(phaseStart).Minutes())
+	stabilizeMin := math.Max(1, stableAt.Sub(phaseStart).Minutes())
+	tau := math.Max(8, stabilizeMin/4.6)
+	startEstimate := from
+	if math.Abs(startEstimate-phase.TargetDegC) < 0.2 {
+		offset := 4 + 0.08*math.Abs(phase.TargetDegC-22)
+		if phase.TargetDegC >= 22 {
+			startEstimate = phase.TargetDegC - offset
+		} else {
+			startEstimate = phase.TargetDegC + offset
+		}
+	}
+	return phase.TargetDegC - (phase.TargetDegC-startEstimate)*math.Exp(-elapsed/tau)
+}
+
+func dwellStartFor(program *contracts.ThermalProgram, phaseID string) time.Time {
+	for _, dwell := range program.DwellWindows {
+		if strings.TrimSuffix(dwell.ID, "-WINDOW") == phaseID {
+			return mustTime(dwell.Start)
+		}
+	}
+	return time.Time{}
+}
+
+func pressureTargetMbar(campaignID, phase string, elapsed time.Duration) float64 {
+	if campaignID != "tvac_qualification" {
+		return 1013.25
+	}
+	if phase == "ambient_precheck" && elapsed.Hours() < 2 {
+		return 1013.25
+	}
+	if phase == "ambient_postcheck" {
+		return 1013.25
+	}
+	return 0.000001
 }
 
 func dwellStateFor(program *contracts.ThermalProgram, phaseID string, t time.Time) (stable bool, active bool, complete bool) {

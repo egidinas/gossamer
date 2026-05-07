@@ -357,18 +357,18 @@ type TestItemThermalDiagram struct {
 }
 
 type HeroGraphModel struct {
-	ID              string                `json:"id"`
-	Title           string                `json:"title"`
-	Owner           string                `json:"owner"`
-	Provenance      string                `json:"provenance"`
-	TimeAxis        GraphTimeAxis         `json:"time_axis"`
-	Execution       *ExecutionState       `json:"execution,omitempty"`
-	Axes            []GraphYAxis          `json:"axes"`
-	Traces          []GraphTrace          `json:"traces"`
-	PhaseBands      []GraphBand           `json:"phase_bands"`
-	DwellWindows    []GraphBand           `json:"dwell_windows"`
-	Markers         []GraphMarker         `json:"markers"`
-	CompanionGroups []CompanionGraphGroup `json:"companion_groups"`
+	ID              string                  `json:"id"`
+	Title           string                  `json:"title"`
+	Owner           string                  `json:"owner"`
+	Provenance      string                  `json:"provenance"`
+	TimeAxis        GraphTimeAxis           `json:"time_axis"`
+	Execution       *ExecutionState         `json:"execution,omitempty"`
+	Axes            []GraphYAxis            `json:"axes"`
+	Traces          []GraphTrace            `json:"traces"`
+	PhaseBands      []GraphBand             `json:"phase_bands"`
+	DwellWindows    []GraphBand             `json:"dwell_windows"`
+	Markers         []GraphMarker           `json:"markers"`
+	CompanionGroups []CompanionGraphGroup   `json:"companion_groups"`
 	ThermalDiagram  *TestItemThermalDiagram `json:"thermal_diagram,omitempty"`
 }
 
@@ -546,6 +546,7 @@ type GraphTileCardRef struct {
 	AxisPolicy       string            `json:"axis_policy"`
 	TileEndpoint     string            `json:"tile_endpoint"`
 	LatestEndpoint   string            `json:"latest_endpoint"`
+	TileFiles        []TileFile        `json:"tile_files,omitempty"`
 	Collapsible      bool              `json:"collapsible"`
 	DefaultExpanded  bool              `json:"default_expanded"`
 	SupportsTimeZoom bool              `json:"supports_time_zoom"`
@@ -587,6 +588,62 @@ type EvidenceLink struct {
 	Label         string `json:"label"`
 }
 
+type TileBundleManifest struct {
+	Envelope
+	ID                     string                 `json:"id"`
+	DataVersion            string                 `json:"data_version"`
+	UIVersion              string                 `json:"ui_version,omitempty"`
+	GeneratedAt            string                 `json:"generated_at"`
+	SimulationModelVersion string                 `json:"simulation_model_version,omitempty"`
+	SourceFixtureVersion   string                 `json:"source_fixture_version,omitempty"`
+	TimeRange              GraphWallTimeRange     `json:"time_range"`
+	ReplaySpeed            string                 `json:"replay_speed"`
+	PresentCursorPolicy    string                 `json:"present_cursor_policy"`
+	Campaigns              []TileCampaignManifest `json:"campaigns"`
+	SourceNodes            []SourceNode           `json:"source_nodes,omitempty"`
+	DataLensTranslations   []DataLensTranslation  `json:"datalens_translations,omitempty"`
+	EvidenceLinks          []EvidenceLink         `json:"evidence_links,omitempty"`
+	Provenance             TileBundleProvenance   `json:"provenance"`
+}
+
+type TileCampaignManifest struct {
+	CampaignID        string             `json:"campaign_id"`
+	Title             string             `json:"title"`
+	GraphShellPath    string             `json:"graph_shell_path"`
+	ManifestPath      string             `json:"manifest_path"`
+	TimeRange         GraphWallTimeRange `json:"time_range"`
+	ReplaySpeed       string             `json:"replay_speed"`
+	Levels            []TileLevel        `json:"levels"`
+	Cards             []GraphTileCardRef `json:"cards"`
+	EvidenceLinks     []EvidenceLink     `json:"evidence_links,omitempty"`
+	CompressedBytes   int64              `json:"compressed_bytes,omitempty"`
+	UncompressedBytes int64              `json:"uncompressed_bytes,omitempty"`
+}
+
+type TileFile struct {
+	ID              string `json:"id"`
+	Level           string `json:"level"`
+	Path            string `json:"path"`
+	CompressedPath  string `json:"compressed_path,omitempty"`
+	T0              string `json:"t0"`
+	T1              string `json:"t1"`
+	RenderKind      string `json:"render_kind"`
+	PointCount      int    `json:"point_count"`
+	RawPointCount   int    `json:"raw_point_count"`
+	CompressedBytes int64  `json:"compressed_bytes,omitempty"`
+	Bytes           int64  `json:"bytes,omitempty"`
+}
+
+type TileBundleProvenance struct {
+	Generator              string            `json:"generator"`
+	GeneratorVersion       string            `json:"generator_version"`
+	BuildHost              string            `json:"build_host,omitempty"`
+	GeneratedFrom          []string          `json:"generated_from"`
+	HeavyComputationPolicy string            `json:"heavy_computation_policy"`
+	RuntimePolicy          string            `json:"runtime_policy"`
+	Parameters             map[string]string `json:"parameters,omitempty"`
+}
+
 type GraphTile struct {
 	Envelope
 	ID          string          `json:"id"`
@@ -615,6 +672,16 @@ type TileSeries struct {
 	Step       bool              `json:"step,omitempty"`
 	ValueTable map[string]string `json:"value_table,omitempty"`
 	Points     []GraphPoint      `json:"points"`
+	Spans      []TileSpan        `json:"spans,omitempty"`
+}
+
+type TileSpan struct {
+	Start    string  `json:"start"`
+	End      string  `json:"end"`
+	Value    float64 `json:"value,omitempty"`
+	State    string  `json:"state,omitempty"`
+	Label    string  `json:"label,omitempty"`
+	Severity string  `json:"severity,omitempty"`
 }
 
 type TileDiagnostics struct {

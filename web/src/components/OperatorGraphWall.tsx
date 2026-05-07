@@ -38,7 +38,15 @@ const signalColors: Record<string, string> = {
   "trace.shroud_outlet": "#f0abfc",
   "trace.dut_temp_a": "#ff5f7e",
   "trace.dut_temp_b": "#2dd4bf",
-  "trace.tvac_pressure": "#facc15",
+  "trace.tvac_pressure": "#3b82f6",
+  "trace.actual.tvac_pressure": "#3b82f6",
+  "trace.tvac_pressure_target": "#93c5fd",
+  "trace.tvac_outgassing": "#38bdf8",
+  "trace.tvac_virtual_leak": "#60a5fa",
+  "trace.tvac_roughing_pump": "#2563eb",
+  "trace.tvac_turbo_pump": "#0ea5e9",
+  "trace.tvac_pump_removal": "#1d4ed8",
+  "trace.tvac_volatile_inventory": "#bae6fd",
   "trace.total_power": "#f97316",
   "trace.subsystem_power": "#60a5fa",
   "trace.bus_packets": "#a78bfa",
@@ -55,7 +63,7 @@ const signalColors: Record<string, string> = {
   "trace.fault_flag": "#fb7185",
 };
 
-function colorForSignal(signal: Pick<TileSeries, "id" | "role" | "render_kind"> | { id: string; role: string; kind?: string }, index = 0) {
+function colorForSignal(signal: Pick<TileSeries, "id" | "role" | "render_kind" | "kind"> | { id: string; role: string; kind?: string }, index = 0) {
   const kind = "kind" in signal ? signal.kind : ("render_kind" in signal ? signal.render_kind : undefined);
   return signalColors[signal.id] ?? roleColors[signal.role] ?? (kind ? roleColors[kind] : undefined) ?? palette(index);
 }
@@ -64,10 +72,14 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
   const [manifest, setManifest] = useState<GraphTileManifest | null>(null);
   const [tiles, setTiles] = useState<Record<string, GraphTile>>({});
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [hoverTimeMs, setHoverTimeMs] = useState<number | undefined>(undefined);
+  const [peekTimeMs, setPeekTimeMs] = useState<number | undefined>(undefined);
   const requestedTiles = useRef<Set<string>>(new Set());
   const loadGeneration = useRef(0);
   const execution = heroGraph.execution;
   const currentTimeMs = useAnimatedReplayTime(heroGraph);
+  const readoutTimeMs = peekTimeMs ?? hoverTimeMs ?? currentTimeMs;
+  const readoutMode = peekTimeMs !== undefined ? "peek" : hoverTimeMs !== undefined ? "crosshair" : "live";
 
   useEffect(() => {
     let cancelled = false;
@@ -136,11 +148,16 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
                     cardRef={cardRef}
                     collapsed={isCollapsed}
                     currentTimeMs={currentTimeMs}
+                    hoverTimeMs={hoverTimeMs}
                     heroGraph={heroGraph}
+                    onHoverTime={setHoverTimeMs}
+                    onPeekTime={setPeekTimeMs}
+                    readoutMode={readoutMode}
+                    readoutTimeMs={readoutTimeMs}
                     tile={tiles[card.id]}
                     onToggle={() => setCollapsed((existing) => ({ ...existing, [card.id]: !isCollapsed }))}
                   />
-                  {isPrimary && execution && <ExecutionProgress execution={execution} currentTimeMs={currentTimeMs} />}
+                  {isPrimary && execution && <ExecutionProgress execution={execution} heroGraph={heroGraph} currentTimeMs={currentTimeMs} />}
                   {isPrimary && afterProgress}
                   {isPrimary && (
                     <div className="operator-wall-meta">
@@ -158,7 +175,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
           </div>
         </section>
       ))}
-      <SharedTimeAxis heroGraph={heroGraph} currentTimeMs={currentTimeMs} />
+      <SharedTimeAxis heroGraph={heroGraph} currentTimeMs={currentTimeMs} hoverTimeMs={hoverTimeMs} peekTimeMs={peekTimeMs} />
     </div>
   );
 }
@@ -223,17 +240,18 @@ function replayAcceleration(value?: string) {
   return Number(match[1]) * 60;
 }
 
-function ExecutionProgress({ execution, currentTimeMs }: { execution: NonNullable<HeroGraphModel["execution"]>; currentTimeMs?: number }) {
+function ExecutionProgress({ execution, heroGraph, currentTimeMs }: { execution: NonNullable<HeroGraphModel["execution"]>; heroGraph: HeroGraphModel; currentTimeMs?: number }) {
+  const livePercent = replayPercent(heroGraph, currentTimeMs) ?? execution.percent_complete;
   return (
     <div className="execution-progress-panel" aria-label="Live accelerated campaign execution">
       <div className="execution-now-strip">
         <span>LIVE REPLAY</span>
-        <strong>{execution.percent_complete.toFixed(0)}%</strong>
+        <strong>{livePercent.toFixed(0)}%</strong>
         <em>{execution.current_phase.replaceAll("_", " ")} / cycle {execution.current_cycle || "-"}</em>
         {currentTimeMs && <small>{new Date(currentTimeMs).toISOString().slice(0, 16).replace("T", " ")}</small>}
       </div>
       <div className="execution-progress-track">
-        <i style={{ width: `${Math.max(0, Math.min(100, execution.percent_complete))}%` }} />
+        <i style={{ width: `${Math.max(0, Math.min(100, livePercent))}%` }} />
       </div>
       <div className="requirement-progress-grid">
         {execution.requirement_progress.map((req) => (
@@ -250,12 +268,25 @@ function ExecutionProgress({ execution, currentTimeMs }: { execution: NonNullabl
   );
 }
 
+function replayPercent(heroGraph: HeroGraphModel, currentTimeMs?: number) {
+  if (!currentTimeMs) return undefined;
+  const start = Date.parse(heroGraph.time_axis.start);
+  const end = Date.parse(heroGraph.time_axis.end);
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) return undefined;
+  return ((currentTimeMs - start) / (end - start)) * 100;
+}
+
 function GraphWallCardView({
   card,
   cardRef,
   collapsed,
   currentTimeMs,
+  hoverTimeMs,
   heroGraph,
+  onHoverTime,
+  onPeekTime,
+  readoutMode,
+  readoutTimeMs,
   tile,
   onToggle
 }: {
@@ -263,13 +294,19 @@ function GraphWallCardView({
   cardRef?: GraphTileCardRef;
   collapsed: boolean;
   currentTimeMs?: number;
+  hoverTimeMs?: number;
   heroGraph: HeroGraphModel;
+  onHoverTime: (timeMs: number | undefined) => void;
+  onPeekTime: (timeMs: number | undefined) => void;
+  readoutMode: "live" | "crosshair" | "peek";
+  readoutTimeMs?: number;
   tile?: GraphTile;
   onToggle: () => void;
 }) {
   const renderKind = cardRef?.render_kind ?? card.render_kind ?? renderKindFor(card.kind);
   const visibleSignals = (cardRef?.signals ?? card.signals).slice(0, renderKind === "swimlane" ? 10 : 7);
   const pointCount = tile?.diagnostics.point_count ?? 0;
+  const readouts = tile ? legendReadouts(tile, visibleSignals, readoutTimeMs, currentTimeMs) : new Map<string, string>();
 
   return (
     <article
@@ -292,15 +329,27 @@ function GraphWallCardView({
             {!tile && <div className="graph-card-loading">Loading decimated tile...</div>}
             {tile && renderKind === "swimlane" && <SwimlaneTile tile={tile} heroGraph={heroGraph} currentTimeMs={currentTimeMs} />}
             {tile && renderKind === "event_rail" && <EventRailTile tile={tile} heroGraph={heroGraph} currentTimeMs={currentTimeMs} />}
-            {tile && renderKind !== "swimlane" && renderKind !== "event_rail" && <UPlotTile tile={tile} heroGraph={heroGraph} renderKind={renderKind} currentTimeMs={currentTimeMs} />}
+            {tile && renderKind !== "swimlane" && renderKind !== "event_rail" && (
+              <UPlotTile
+                tile={tile}
+                heroGraph={heroGraph}
+                renderKind={renderKind}
+                currentTimeMs={currentTimeMs}
+                hoverTimeMs={hoverTimeMs}
+                onHoverTime={onHoverTime}
+                onPeekTime={onPeekTime}
+              />
+            )}
           </div>
           <div className="graph-card-legend-rail">
             {visibleSignals.map((signal) => (
               <span key={signal.id} title={`${signal.label} / ${signal.source_family}`}>
                 <i style={{ background: colorForSignal(signal) }} />
-                {signal.label}
+                <b>{signal.label}</b>
+                <em>{readouts.get(signal.id) ?? "-"}</em>
               </span>
             ))}
+            {readoutTimeMs && <small>{readoutMode} {new Date(readoutTimeMs).toISOString().slice(5, 16).replace("T", " ")}</small>}
             {cardRef?.supports_y_zoom && <small>time + y zoom</small>}
           </div>
         </>
@@ -309,8 +358,36 @@ function GraphWallCardView({
   );
 }
 
-function UPlotTile({ tile, heroGraph, renderKind, currentTimeMs }: { tile: GraphTile; heroGraph: HeroGraphModel; renderKind: string; currentTimeMs?: number }) {
+function UPlotTile({
+  tile,
+  heroGraph,
+  renderKind,
+  currentTimeMs,
+  hoverTimeMs,
+  onHoverTime,
+  onPeekTime
+}: {
+  tile: GraphTile;
+  heroGraph: HeroGraphModel;
+  renderKind: string;
+  currentTimeMs?: number;
+  hoverTimeMs?: number;
+  onHoverTime: (timeMs: number | undefined) => void;
+  onPeekTime: (timeMs: number | undefined) => void;
+}) {
   const hostRef = useRef<HTMLDivElement | null>(null);
+  const onHoverTimeRef = useRef(onHoverTime);
+  const hoverTimeRef = useRef(hoverTimeMs);
+  const pointerInsideRef = useRef(false);
+  const draggingRef = useRef(false);
+
+  useEffect(() => {
+    onHoverTimeRef.current = onHoverTime;
+  }, [onHoverTime]);
+
+  useEffect(() => {
+    hoverTimeRef.current = hoverTimeMs;
+  }, [hoverTimeMs]);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -320,7 +397,14 @@ function UPlotTile({ tile, heroGraph, renderKind, currentTimeMs }: { tile: Graph
       const rect = host.getBoundingClientRect();
       const width = Math.max(240, Math.floor(rect.width));
       const height = Math.max(42, Math.floor(rect.height));
-      const { data, series, scales, axes } = uplotData(tile);
+      const { data, series, scales, axes } = uplotData(tile, currentTimeMs);
+      let u: uPlot;
+      const timeFromPointer = (event: PointerEvent | MouseEvent) => {
+        const over = host.querySelector(".u-over");
+        const rect = (over ?? host).getBoundingClientRect();
+        const left = event.clientX - rect.left;
+        return clampTime(u.posToVal(left, "x"), data[0] as number[]);
+      };
       const opts = {
         width,
         height,
@@ -332,14 +416,64 @@ function UPlotTile({ tile, heroGraph, renderKind, currentTimeMs }: { tile: Graph
         axes,
         series,
         hooks: {
+          setCursor: [
+            (plot) => {
+              if (!pointerInsideRef.current) return;
+              const left = plot.cursor.left;
+              if (left == null) return;
+              const next = clampTime(plot.posToVal(left, "x"), data[0] as number[]);
+              if (Number.isFinite(next)) onHoverTimeRef.current(Math.round(next));
+            }
+          ],
           drawClear: [
             (plot) => {
-              drawTileOverlays(plot, tile, heroGraph, currentTimeMs);
+              drawTileOverlays(plot, tile, heroGraph, currentTimeMs, hoverTimeRef.current);
             }
           ]
         }
       } as uPlot.Options & { sync: { key: string } };
-      const u = new uPlot(opts as uPlot.Options, data, host);
+      u = new uPlot(opts as uPlot.Options, data, host);
+      const markHover = (event: MouseEvent) => {
+        pointerInsideRef.current = true;
+        const next = timeFromPointer(event);
+        if (draggingRef.current) {
+          if (Number.isFinite(next)) onPeekTime(Math.round(next));
+          return;
+        }
+        if (Number.isFinite(next)) onHoverTimeRef.current(Math.round(next));
+      };
+      const startDrag = (event: PointerEvent) => {
+        pointerInsideRef.current = true;
+        draggingRef.current = true;
+        host.setPointerCapture?.(event.pointerId);
+        const next = timeFromPointer(event);
+        if (Number.isFinite(next)) onPeekTime(Math.round(next));
+      };
+      const stopDrag = (event: PointerEvent) => {
+        draggingRef.current = false;
+        host.releasePointerCapture?.(event.pointerId);
+        pointerInsideRef.current = false;
+        onPeekTime(undefined);
+        onHoverTimeRef.current(undefined);
+      };
+      const clearHover = () => {
+        pointerInsideRef.current = false;
+        draggingRef.current = false;
+        onPeekTime(undefined);
+        onHoverTimeRef.current(undefined);
+      };
+      host.addEventListener("mousemove", markHover);
+      host.addEventListener("pointerdown", startDrag);
+      host.addEventListener("pointerup", stopDrag);
+      host.addEventListener("mouseleave", clearHover);
+      const originalDestroy = u.destroy.bind(u);
+      u.destroy = () => {
+        host.removeEventListener("mousemove", markHover);
+        host.removeEventListener("pointerdown", startDrag);
+        host.removeEventListener("pointerup", stopDrag);
+        host.removeEventListener("mouseleave", clearHover);
+        originalDestroy();
+      };
       return u;
     };
     let plot = build();
@@ -407,7 +541,7 @@ function EventRailTile({ tile, heroGraph, currentTimeMs }: { tile: GraphTile; he
   );
 }
 
-function SharedTimeAxis({ heroGraph, currentTimeMs }: { heroGraph: HeroGraphModel; currentTimeMs?: number }) {
+function SharedTimeAxis({ heroGraph, currentTimeMs, hoverTimeMs, peekTimeMs }: { heroGraph: HeroGraphModel; currentTimeMs?: number; hoverTimeMs?: number; peekTimeMs?: number }) {
   const ticks = timeTicks(heroGraph.time_axis.start, heroGraph.time_axis.end, 7);
   const start = Date.parse(heroGraph.time_axis.start);
   const end = Date.parse(heroGraph.time_axis.end);
@@ -419,7 +553,9 @@ function SharedTimeAxis({ heroGraph, currentTimeMs }: { heroGraph: HeroGraphMode
       <span className="time-axis-label">TIME</span>
       <div className="time-axis-track">
         {nowRatio !== undefined && <i className="time-axis-elapsed" style={{ width: `${nowRatio * 100}%` }} />}
-        {nowRatio !== undefined && <b className="time-axis-now" style={{ left: `${nowRatio * 100}%` }} />}
+        {nowRatio !== undefined && <b className="time-axis-now" style={{ left: `${nowRatio * 100}%` }} title="Current replay time" />}
+        {peekTimeMs !== undefined && <b className="time-axis-peek" style={{ left: `${Math.max(0, Math.min(100, ((peekTimeMs - start) / Math.max(1, end - start)) * 100))}%` }} title="Drag peek time" />}
+        {hoverTimeMs !== undefined && <b className="time-axis-hover" style={{ left: `${Math.max(0, Math.min(100, ((hoverTimeMs - start) / Math.max(1, end - start)) * 100))}%` }} />}
         {ticks.map((tick) => (
           <span className="time-axis-tick" style={{ left: `${tick.ratio * 100}%` }} key={tick.iso}>
             <i />
@@ -439,8 +575,8 @@ type UPlotBuild = {
   axes: uPlot.Axis[];
 };
 
-function uplotData(tile: GraphTile): UPlotBuild {
-  const tileSeries = tile.series.filter((series) => series.points.length > 0).sort(seriesDrawOrder);
+function uplotData(tile: GraphTile, currentTimeMs?: number): UPlotBuild {
+  const tileSeries = tile.series.filter((series) => (series.points ?? []).length > 0).sort(seriesDrawOrder);
   const xValues = sharedTimeGrid(tile, tileSeries);
   const data: uPlot.AlignedData = [xValues];
   const series: uPlot.Series[] = [{}];
@@ -448,7 +584,7 @@ function uplotData(tile: GraphTile): UPlotBuild {
   tileSeries.forEach((seriesTile, index) => {
     const scale = scaleForSeries(tile, seriesTile);
     scaleKeys.add(scale);
-    data.push(resampleSeries(tile, seriesTile, xValues));
+    data.push(resampleSeries(tile, seriesTile, xValues, currentTimeMs));
     series.push({
       label: seriesTile.label,
       scale,
@@ -488,14 +624,14 @@ function sharedTimeGrid(tile: GraphTile, tileSeries: TileSeries[]): number[] {
   const start = Date.parse(tile.t0);
   const end = Date.parse(tile.t1);
   const finiteTimes = tileSeries
-    .flatMap((series) => series.points.map((point) => Date.parse(point.timestamp)))
+    .flatMap((series) => (series.points ?? []).map((point) => Date.parse(point.timestamp)))
     .filter(Number.isFinite);
   const t0 = Number.isFinite(start) ? start : Math.min(...finiteTimes);
   const t1 = Number.isFinite(end) ? end : Math.max(...finiteTimes);
   if (!Number.isFinite(t0) || !Number.isFinite(t1) || t1 <= t0) {
     return Array.from(new Set(finiteTimes)).sort((a, b) => a - b);
   }
-  const referenceCount = Math.max(...tileSeries.map((series) => series.points.length), 2);
+  const referenceCount = Math.max(...tileSeries.map((series) => (series.points ?? []).length), 2);
   const count = Math.max(160, Math.min(900, referenceCount));
   const step = (t1 - t0) / (count - 1);
   return Array.from({ length: count }, (_, index) => Math.round(t0 + index * step));
@@ -557,7 +693,7 @@ function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[] {
       show: true,
       scale: key,
       side: 1,
-      stroke: key.includes("pressure") ? "#b8a6ff" : "#8bd3a5",
+      stroke: key.includes("pressure") ? "#60a5fa" : "#8bd3a5",
       grid: { show: false },
       ticks: { show: false },
       size: key.includes("pressure") ? 46 : 34,
@@ -601,16 +737,18 @@ function pressureHeroRailDegC(mbar: number) {
   return -82 + ratio * 104;
 }
 
-function resampleSeries(tile: GraphTile, series: TileSeries, xValues: number[]): Array<number | null> {
-  const points = [...series.points]
+function resampleSeries(tile: GraphTile, series: TileSeries, xValues: number[], currentTimeMs?: number): Array<number | null> {
+  const points = [...(series.points ?? [])]
     .map((point) => ({ t: Date.parse(point.timestamp), v: displayValue(tile, series, point.value) }))
     .filter((point) => Number.isFinite(point.t) && Number.isFinite(point.v))
     .sort((a, b) => a.t - b.t);
   if (!points.length) return xValues.map(() => null);
 
-  const stepped = series.step || series.render_kind === "counter" || series.render_kind === "swimlane";
+  const stepped = series.step || series.render_kind === "counter" || series.kind === "counter" || series.render_kind === "swimlane";
+  const isFutureVisible = series.role === "ghost";
   let cursor = 0;
   return xValues.map((x) => {
+    if (Number.isFinite(currentTimeMs) && x > (currentTimeMs as number) && !isFutureVisible) return null;
     while (cursor + 1 < points.length && points[cursor + 1].t <= x) cursor += 1;
     const current = points[cursor];
     const next = points[Math.min(cursor + 1, points.length - 1)];
@@ -621,7 +759,7 @@ function resampleSeries(tile: GraphTile, series: TileSeries, xValues: number[]):
   });
 }
 
-function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphModel, currentTimeMs?: number) {
+function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphModel, currentTimeMs?: number, hoverTimeMs?: number) {
   const ctx = plot.ctx;
   const bbox = plot.bbox;
   const left = bbox.left;
@@ -635,7 +773,9 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
   (tile.bands ?? []).forEach((band) => {
     const x = left + ((Date.parse(band.start) - start) / span) * width;
     const x2 = left + ((Date.parse(band.end) - start) / span) * width;
-    ctx.fillStyle = band.kind.includes("cold") ? "rgba(61,133,198,0.12)" : "rgba(198,119,61,0.11)";
+    const bandKind = band.kind.toLowerCase();
+    const vacuumBand = tile.campaign_id === "tvac_qualification" && (bandKind.includes("vacuum") || tile.card_id.includes("pressure"));
+    ctx.fillStyle = vacuumBand ? "rgba(59,130,246,0.09)" : bandKind.includes("cold") ? "rgba(61,133,198,0.12)" : "rgba(198,119,61,0.11)";
     ctx.fillRect(x, top, Math.max(1, x2 - x), height);
   });
   (tile.markers ?? []).forEach((marker) => {
@@ -678,17 +818,126 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
     ctx.lineTo(x, top + height);
     ctx.stroke();
   }
+  if (Number.isFinite(hoverTimeMs)) {
+    const x = left + (((hoverTimeMs as number) - start) / span) * width;
+    if (x >= left && x <= left + width) {
+      ctx.strokeStyle = "rgba(255,216,95,0.95)";
+      ctx.setLineDash([]);
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x, top);
+      ctx.lineTo(x, top + height);
+      ctx.stroke();
+    }
+  }
   ctx.restore();
 }
 
+function legendReadouts(tile: GraphTile, visibleSignals: Array<{ id: string; label: string }>, timeMs?: number, currentTimeMs?: number) {
+  const readouts = new Map<string, string>();
+  if (!timeMs) return readouts;
+  const visible = new Set(visibleSignals.map((signal) => signal.id));
+  tile.series.forEach((series) => {
+    if (!visible.has(series.id)) return;
+    if (Number.isFinite(timeMs) && Number.isFinite(currentTimeMs) && (timeMs as number) > (currentTimeMs as number) && series.role !== "ghost") return;
+    if (series.spans?.length) {
+      const state = stateAt(series, timeMs);
+      if (state) readouts.set(series.id, state);
+      return;
+    }
+    const value = rawValueAt(series, timeMs);
+    if (value === undefined) return;
+    readouts.set(series.id, formatLegendValue(series, value));
+  });
+  return readouts;
+}
+
+function clampTime(timeMs: number, domain: number[]) {
+  if (!Number.isFinite(timeMs) || !domain.length) return timeMs;
+  const first = domain[0];
+  const last = domain[domain.length - 1];
+  if (!Number.isFinite(first) || !Number.isFinite(last)) return timeMs;
+  return Math.max(first, Math.min(last, timeMs));
+}
+
+function rawValueAt(series: TileSeries, timeMs: number) {
+  const points = [...(series.points ?? [])]
+    .map((point) => ({ t: Date.parse(point.timestamp), v: point.value }))
+    .filter((point) => Number.isFinite(point.t) && Number.isFinite(point.v))
+    .sort((a, b) => a.t - b.t);
+  if (!points.length) return undefined;
+  if (timeMs <= points[0].t) return points[0].v;
+  if (timeMs >= points[points.length - 1].t) return points[points.length - 1].v;
+  let cursor = 0;
+  while (cursor + 1 < points.length && points[cursor + 1].t <= timeMs) cursor += 1;
+  const current = points[cursor];
+  const next = points[Math.min(cursor + 1, points.length - 1)];
+  if (series.step || series.render_kind === "counter" || series.kind === "counter" || next.t === current.t) return current.v;
+  const ratio = (timeMs - current.t) / (next.t - current.t);
+  return current.v + (next.v - current.v) * Math.max(0, Math.min(1, ratio));
+}
+
+function stateAt(series: TileSeries, timeMs: number) {
+  const span = series.spans?.find((candidate) => {
+    const start = Date.parse(candidate.start);
+    const end = Date.parse(candidate.end);
+    return Number.isFinite(start) && Number.isFinite(end) && timeMs >= start && timeMs <= end;
+  });
+  return span?.label ?? span?.state ?? (span?.value !== undefined ? String(span.value) : undefined);
+}
+
+function formatLegendValue(series: TileSeries, value: number) {
+  const unit = series.unit || unitForAxis(series.axis_id);
+  if (series.axis_id === "pressure_mbar") return `${formatPressure(value)} mbar`;
+  if (series.axis_id === "counter") return `${Math.round(value).toLocaleString()}`;
+  if (series.axis_id === "percent") return `${value.toFixed(0)}%`;
+  if (unit === "degC") return `${value.toFixed(1)} degC`;
+  if (unit === "W") return `${value.toFixed(1)} W`;
+  if (unit === "ms") return `${value.toFixed(1)} ms`;
+  if (unit === "bar") return `${value.toFixed(2)} bar`;
+  return `${Number.isInteger(value) ? value.toFixed(0) : value.toFixed(2)}${unit ? ` ${unit}` : ""}`;
+}
+
+function formatPressure(value: number) {
+  if (value <= 0) return "0";
+  if (value < 0.001 || value >= 1000) return value.toExponential(2);
+  if (value < 1) return value.toPrecision(3);
+  return value.toFixed(value < 10 ? 2 : 1);
+}
+
+function unitForAxis(axisID?: string) {
+  if (axisID === "temperature_c") return "degC";
+  if (axisID === "pressure_mbar") return "mbar";
+  if (axisID === "power_w" || axisID === "heat_flux_w") return "W";
+  if (axisID === "bus_ms") return "ms";
+  if (axisID === "pressure_bar") return "bar";
+  if (axisID === "percent") return "%";
+  return "";
+}
+
 function stateBlocks(series: TileSeries, start: number, span: number) {
-  const sorted = [...series.points].sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp));
+  if (series.spans?.length) {
+    return series.spans.map((state, index) => {
+      const stateStart = Date.parse(state.start);
+      const stateEnd = Date.parse(state.end);
+      const left = Math.max(0, Math.min(100, ((stateStart - start) / span) * 100));
+      const right = Math.max(left + 0.15, Math.min(100, ((stateEnd - start) / span) * 100));
+      return {
+        key: `${series.id}-span-${index}`,
+        left,
+        width: right - left,
+        value: state.value ?? Number(state.state ?? 0),
+        label: state.label ?? state.state ?? "",
+      };
+    });
+  }
+  const sorted = [...(series.points ?? [])].sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp));
   return sorted.map((point, index) => {
     const pointTime = Date.parse(point.timestamp);
     const nextTime = index + 1 < sorted.length ? Date.parse(sorted[index + 1].timestamp) : start + span;
     const left = Math.max(0, Math.min(100, ((pointTime - start) / span) * 100));
     const right = Math.max(left + 0.15, Math.min(100, ((nextTime - start) / span) * 100));
-    return { key: `${series.id}-${index}`, left, width: right - left, value: point.value };
+    return { key: `${series.id}-${index}`, left, width: right - left, value: point.value, label: String(point.value) };
   });
 }
 

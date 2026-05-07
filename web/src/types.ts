@@ -470,10 +470,13 @@ export type GraphModel = Envelope & {
 export type TileLevel = {
   id: string;
   label: string;
-  resolution_ms: number;
+  resolution?: string;
+  duration_ms?: number;
+  decimation_mode?: string;
+  resolution_ms?: number;
   max_points: number;
-  span_seconds: number;
-  decimation: string;
+  span_seconds?: number;
+  decimation?: string;
 };
 
 export type SourceNode = {
@@ -510,13 +513,14 @@ export type EvidenceLink = {
 
 export type GraphTileCardRef = {
   card_id: string;
-  section_id: string;
+  section_id?: string;
   title: string;
   render_kind: string;
   unit?: string;
   axis_policy: string;
   tile_endpoint: string;
   latest_endpoint: string;
+  tile_files?: TileFile[];
   default_expanded: boolean;
   collapsible: boolean;
   supports_time_zoom: boolean;
@@ -540,42 +544,118 @@ export type GraphTileManifest = Envelope & {
   evidence_links: EvidenceLink[];
 };
 
+export type TileBundleManifest = Envelope & {
+  id: string;
+  data_version: string;
+  ui_version?: string;
+  generated_at: string;
+  simulation_model_version?: string;
+  source_fixture_version?: string;
+  time_range: GraphWallTimeRange;
+  replay_speed: string;
+  present_cursor_policy: string;
+  campaigns: TileCampaignManifest[];
+  source_nodes?: SourceNode[];
+  datalens_translations?: DataLensTranslation[];
+  evidence_links?: EvidenceLink[];
+  provenance: TileBundleProvenance;
+};
+
+export type TileCampaignManifest = {
+  campaign_id: string;
+  title: string;
+  graph_shell_path: string;
+  manifest_path: string;
+  time_range: GraphWallTimeRange;
+  replay_speed: string;
+  levels: TileLevel[];
+  cards: GraphTileCardRef[];
+  evidence_links?: EvidenceLink[];
+  compressed_bytes?: number;
+  uncompressed_bytes?: number;
+};
+
+export type TileFile = {
+  id: string;
+  level: string;
+  path: string;
+  compressed_path?: string;
+  t0: string;
+  t1: string;
+  render_kind: string;
+  point_count: number;
+  raw_point_count: number;
+  compressed_bytes?: number;
+  bytes?: number;
+};
+
+export type TileBundleProvenance = {
+  generator: string;
+  generator_version: string;
+  build_host?: string;
+  generated_from: string[];
+  heavy_computation_policy: string;
+  runtime_policy: string;
+  parameters?: Record<string, string>;
+};
+
 export type TilePoint = {
   timestamp: string;
   value: number;
+};
+
+export type TileSpan = {
+  start: string;
+  end: string;
+  value?: number;
+  state?: string;
+  label?: string;
+  severity?: string;
 };
 
 export type TileSeries = {
   id: string;
   label: string;
   role: string;
-  units: string;
-  axis_id: string;
+  unit?: string;
+  units?: string;
+  kind?: string;
+  axis_id?: string;
   source: string;
-  source_family: string;
-  render_kind: string;
-  step: boolean;
-  points: TilePoint[];
+  source_family?: string;
+  render_kind?: string;
+  step?: boolean;
+  value_table?: Record<string, string>;
+  points?: TilePoint[];
+  spans?: TileSpan[];
 };
 
 export type TileDiagnostics = {
-  level: string;
-  requested_t0: string;
-  requested_t1: string;
+  source?: string;
+  mode?: string;
+  level?: string;
+  requested_t0?: string;
+  requested_t1?: string;
   raw_point_count: number;
   point_count: number;
+  decimated?: boolean;
   decimation: string;
+  time_span_ms?: number;
   freshness_ms: number;
-  source_quality: string;
+  source_quality?: string;
 };
 
 export type TileProvenance = {
-  source: string;
-  source_family: string;
-  mode: string;
-  point_count: number;
-  raw_point_count: number;
-  generated_at: string;
+  source?: string;
+  source_node?: string;
+  source_family?: string;
+  mode?: string;
+  generation_mode?: string;
+  fixture_version?: string;
+  point_count?: number;
+  raw_point_count?: number;
+  generated_at?: string;
+  synthetic?: boolean;
 };
 
 export type TileEvent = {
@@ -583,6 +663,9 @@ export type TileEvent = {
   label: string;
   timestamp: string;
   kind: string;
+  result?: string;
+  requirement_id?: string;
+  value?: number;
   severity?: string;
   evidence_ref?: string;
 };

@@ -1,0 +1,4582 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-01-15T10:00:00Z",
+  "campaign_id": "thermal_acceptance_fat",
+  "lanes": [
+    {
+      "id": "thermal",
+      "label": "Thermal",
+      "series": [
+        {
+          "id": "chamber_setpoint_deg_c",
+          "label": "Chamber Setpoint",
+          "role": "facility_setpoint",
+          "units": "degC",
+          "source": "facility_thermal",
+          "min": -45,
+          "max": 75
+        },
+        {
+          "id": "chamber_air_deg_c",
+          "label": "Chamber Air",
+          "role": "facility_environment",
+          "units": "degC",
+          "source": "facility_thermal",
+          "min": -45,
+          "max": 75
+        },
+        {
+          "id": "thermal_zone_1_deg_c",
+          "label": "Thermal Zone 1",
+          "role": "article_temperature",
+          "units": "degC",
+          "source": "facility_thermal",
+          "min": -45,
+          "max": 75
+        }
+      ]
+    },
+    {
+      "id": "pressure",
+      "label": "Pressure",
+      "series": [
+        {
+          "id": "tvac_pressure_mbar",
+          "label": "TVac pressure",
+          "role": "facility_environment",
+          "units": "mbar",
+          "source": "facility_pressure",
+          "min": 1e-8,
+          "max": 1013.25
+        }
+      ]
+    },
+    {
+      "id": "facility_safety",
+      "label": "Facility Safety",
+      "series": [
+        {
+          "id": "ln2_valve_duty_pct",
+          "label": "Cooling Actuator Duty",
+          "role": "facility_interlock",
+          "units": "%",
+          "source": "facility_thermal",
+          "min": 0,
+          "max": 100
+        },
+        {
+          "id": "cooling_water_freeze_margin_deg_c",
+          "label": "Water scavenger freeze margin",
+          "role": "facility_interlock",
+          "units": "degC",
+          "source": "facility_infrastructure",
+          "min": 0,
+          "max": 25
+        }
+      ]
+    },
+    {
+      "id": "power",
+      "label": "Power",
+      "series": [
+        {
+          "id": "eps_bus_voltage_v",
+          "label": "Bus Voltage",
+          "role": "dut_power",
+          "units": "V",
+          "source": "dut_power",
+          "min": 26,
+          "max": 30
+        },
+        {
+          "id": "eps_bus_current_a",
+          "label": "Bus Current",
+          "role": "dut_power",
+          "units": "A",
+          "source": "dut_power",
+          "min": 0,
+          "max": 8
+        }
+      ]
+    },
+    {
+      "id": "bus",
+      "label": "Virtual Bus",
+      "series": [
+        {
+          "id": "bus_latency_ms",
+          "label": "Bus Latency",
+          "role": "virtual_bus_health",
+          "units": "ms",
+          "source": "demo_bus_virtualization",
+          "min": 0,
+          "max": 250
+        },
+        {
+          "id": "tm_packet_counter",
+          "label": "TM Counter",
+          "role": "telemetry_counter",
+          "units": "count",
+          "source": "demo_bus_virtualization",
+          "min": 0,
+          "max": 8000
+        }
+      ]
+    },
+    {
+      "id": "quality",
+      "label": "Source Quality",
+      "series": [
+        {
+          "id": "source_freshness_ms",
+          "label": "Source Freshness",
+          "role": "data_quality",
+          "units": "ms",
+          "source": "demo_quality",
+          "min": 0,
+          "max": 6000
+        }
+      ]
+    }
+  ],
+  "thermal_program": {
+    "id": "thermal_acceptance_fat_program",
+    "kind": "thermal_chamber_fat",
+    "label": "Thermal Chamber FAT - 4 cycle acceptance profile",
+    "facility": "thermal_chamber_a",
+    "cycle_count": 4,
+    "cold_target_deg_c": -35,
+    "hot_target_deg_c": 65,
+    "ramp_rate_deg_c_min": 1,
+    "dwell_minutes": 180,
+    "cycles": [
+      {
+        "index": 1,
+        "label": "Cycle 1",
+        "start": "2026-01-15T22:00:00Z",
+        "end": "2026-01-17T18:41:00Z",
+        "cold_target_deg_c": -35,
+        "hot_target_deg_c": 65,
+        "phases": [
+          {
+            "id": "C01-RAMP-HOT-SURVIVAL",
+            "label": "Ramp to hot survival",
+            "kind": "ramp_hot",
+            "start": "2026-01-15T22:00:00Z",
+            "end": "2026-01-15T22:53:00Z",
+            "target_deg_c": 75
+          },
+          {
+            "id": "C01-HOT-SURVIVAL",
+            "label": "Hot survival dwell",
+            "kind": "hot_survival",
+            "start": "2026-01-15T22:53:00Z",
+            "end": "2026-01-16T11:21:00Z",
+            "target_deg_c": 75
+          },
+          {
+            "id": "C01-RAMP-HOT-OPERATIONAL",
+            "label": "Cool down to hot operational",
+            "kind": "ramp_hot",
+            "start": "2026-01-16T11:21:00Z",
+            "end": "2026-01-16T11:31:00Z",
+            "target_deg_c": 65
+          },
+          {
+            "id": "C01-HOT-OPERATIONAL",
+            "label": "Hot operational dwell",
+            "kind": "hot_operational",
+            "start": "2026-01-16T11:31:00Z",
+            "end": "2026-01-16T18:54:00Z",
+            "target_deg_c": 65
+          },
+          {
+            "id": "C01-RAMP-COLD-SURVIVAL",
+            "label": "Ramp to cold survival",
+            "kind": "ramp_cold",
+            "start": "2026-01-16T18:54:00Z",
+            "end": "2026-01-16T20:44:00Z",
+            "target_deg_c": -45
+          },
+          {
+            "id": "C01-COLD-SURVIVAL",
+            "label": "Cold survival dwell",
+            "kind": "cold_survival",
+            "start": "2026-01-16T20:44:00Z",
+            "end": "2026-01-17T11:08:00Z",
+            "target_deg_c": -45
+          },
+          {
+            "id": "C01-RAMP-COLD-OPERATIONAL",
+            "label": "Warm up to cold operational",
+            "kind": "ramp_cold",
+            "start": "2026-01-17T11:08:00Z",
+            "end": "2026-01-17T11:18:00Z",
+            "target_deg_c": -35
+          },
+          {
+            "id": "C01-COLD-OPERATIONAL",
+            "label": "Cold operational dwell",
+            "kind": "cold_operational",
+            "start": "2026-01-17T11:18:00Z",
+            "end": "2026-01-17T18:41:00Z",
+            "target_deg_c": -35
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "label": "Cycle 2",
+        "start": "2026-01-17T18:41:00Z",
+        "end": "2026-01-18T23:09:00Z",
+        "cold_target_deg_c": -35,
+        "hot_target_deg_c": 65,
+        "phases": [
+          {
+            "id": "C02-RAMP-HOT",
+            "label": "Ramp to hot operational",
+            "kind": "ramp_hot",
+            "start": "2026-01-17T18:41:00Z",
+            "end": "2026-01-17T20:21:00Z",
+            "target_deg_c": 65
+          },
+          {
+            "id": "C02-HOT-OPERATIONAL",
+            "label": "Hot operational dwell",
+            "kind": "hot_operational",
+            "start": "2026-01-17T20:21:00Z",
+            "end": "2026-01-18T08:55:00Z",
+            "target_deg_c": 65
+          },
+          {
+            "id": "C02-RAMP-COLD",
+            "label": "Ramp to cold operational",
+            "kind": "ramp_cold",
+            "start": "2026-01-18T08:55:00Z",
+            "end": "2026-01-18T10:35:00Z",
+            "target_deg_c": -35
+          },
+          {
+            "id": "C02-COLD-OPERATIONAL",
+            "label": "Cold operational dwell",
+            "kind": "cold_operational",
+            "start": "2026-01-18T10:35:00Z",
+            "end": "2026-01-18T23:09:00Z",
+            "target_deg_c": -35
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "label": "Cycle 3",
+        "start": "2026-01-18T23:09:00Z",
+        "end": "2026-01-20T03:37:00Z",
+        "cold_target_deg_c": -35,
+        "hot_target_deg_c": 65,
+        "phases": [
+          {
+            "id": "C03-RAMP-HOT",
+            "label": "Ramp to hot operational",
+            "kind": "ramp_hot",
+            "start": "2026-01-18T23:09:00Z",
+            "end": "2026-01-19T00:49:00Z",
+            "target_deg_c": 65
+          },
+          {
+            "id": "C03-HOT-OPERATIONAL",
+            "label": "Hot operational dwell",
+            "kind": "hot_operational",
+            "start": "2026-01-19T00:49:00Z",
+            "end": "2026-01-19T13:23:00Z",
+            "target_deg_c": 65
+          },
+          {
+            "id": "C03-RAMP-COLD",
+            "label": "Ramp to cold operational",
+            "kind": "ramp_cold",
+            "start": "2026-01-19T13:23:00Z",
+            "end": "2026-01-19T15:03:00Z",
+            "target_deg_c": -35
+          },
+          {
+            "id": "C03-COLD-OPERATIONAL",
+            "label": "Cold operational dwell",
+            "kind": "cold_operational",
+            "start": "2026-01-19T15:03:00Z",
+            "end": "2026-01-20T03:37:00Z",
+            "target_deg_c": -35
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "label": "Cycle 4",
+        "start": "2026-01-20T03:37:00Z",
+        "end": "2026-01-21T08:05:00Z",
+        "cold_target_deg_c": -35,
+        "hot_target_deg_c": 65,
+        "phases": [
+          {
+            "id": "C04-RAMP-HOT",
+            "label": "Ramp to hot operational",
+            "kind": "ramp_hot",
+            "start": "2026-01-20T03:37:00Z",
+            "end": "2026-01-20T05:17:00Z",
+            "target_deg_c": 65
+          },
+          {
+            "id": "C04-HOT-OPERATIONAL",
+            "label": "Hot operational dwell",
+            "kind": "hot_operational",
+            "start": "2026-01-20T05:17:00Z",
+            "end": "2026-01-20T17:51:00Z",
+            "target_deg_c": 65
+          },
+          {
+            "id": "C04-RAMP-COLD",
+            "label": "Ramp to cold operational",
+            "kind": "ramp_cold",
+            "start": "2026-01-20T17:51:00Z",
+            "end": "2026-01-20T19:31:00Z",
+            "target_deg_c": -35
+          },
+          {
+            "id": "C04-COLD-OPERATIONAL",
+            "label": "Cold operational dwell",
+            "kind": "cold_operational",
+            "start": "2026-01-20T19:31:00Z",
+            "end": "2026-01-21T08:05:00Z",
+            "target_deg_c": -35
+          }
+        ]
+      }
+    ],
+    "dwell_windows": [
+      {
+        "id": "C01-HOT-SURVIVAL-WINDOW",
+        "label": "Hot survival dwell",
+        "cycle_index": 1,
+        "kind": "hot_survival",
+        "start": "2026-01-16T07:36:00Z",
+        "end": "2026-01-16T10:36:00Z",
+        "target_deg_c": 75,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-01-hot_survival-stable"
+      },
+      {
+        "id": "C01-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "cycle_index": 1,
+        "kind": "hot_operational",
+        "start": "2026-01-16T15:09:00Z",
+        "end": "2026-01-16T18:09:00Z",
+        "target_deg_c": 65,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-01-hot_operational-stable"
+      },
+      {
+        "id": "C01-COLD-SURVIVAL-WINDOW",
+        "label": "Cold survival dwell",
+        "cycle_index": 1,
+        "kind": "cold_survival",
+        "start": "2026-01-17T07:23:00Z",
+        "end": "2026-01-17T10:23:00Z",
+        "target_deg_c": -45,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-01-cold_survival-stable"
+      },
+      {
+        "id": "C01-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "cycle_index": 1,
+        "kind": "cold_operational",
+        "start": "2026-01-17T14:56:00Z",
+        "end": "2026-01-17T17:56:00Z",
+        "target_deg_c": -35,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-01-cold_operational-stable"
+      },
+      {
+        "id": "C02-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "cycle_index": 2,
+        "kind": "hot_operational",
+        "start": "2026-01-18T05:10:00Z",
+        "end": "2026-01-18T08:10:00Z",
+        "target_deg_c": 65,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-02-hot_operational-stable"
+      },
+      {
+        "id": "C02-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "cycle_index": 2,
+        "kind": "cold_operational",
+        "start": "2026-01-18T19:24:00Z",
+        "end": "2026-01-18T22:24:00Z",
+        "target_deg_c": -35,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-02-cold_operational-stable"
+      },
+      {
+        "id": "C03-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "cycle_index": 3,
+        "kind": "hot_operational",
+        "start": "2026-01-19T09:38:00Z",
+        "end": "2026-01-19T12:38:00Z",
+        "target_deg_c": 65,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-03-hot_operational-stable"
+      },
+      {
+        "id": "C03-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "cycle_index": 3,
+        "kind": "cold_operational",
+        "start": "2026-01-19T23:52:00Z",
+        "end": "2026-01-20T02:52:00Z",
+        "target_deg_c": -35,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-03-cold_operational-stable"
+      },
+      {
+        "id": "C04-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "cycle_index": 4,
+        "kind": "hot_operational",
+        "start": "2026-01-20T14:06:00Z",
+        "end": "2026-01-20T17:06:00Z",
+        "target_deg_c": 65,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-04-hot_operational-stable"
+      },
+      {
+        "id": "C04-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "cycle_index": 4,
+        "kind": "cold_operational",
+        "start": "2026-01-21T04:20:00Z",
+        "end": "2026-01-21T07:20:00Z",
+        "target_deg_c": -35,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#cycle-04-cold_operational-stable"
+      }
+    ],
+    "functional_gates": [
+      {
+        "id": "thermal_acceptance_fat-FUNC-PRE",
+        "label": "Pre-environment functional test",
+        "gate": "pre",
+        "cycle_index": 0,
+        "phase_id": "ambient_precheck",
+        "timestamp": "2026-01-15T21:30:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-pre"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-POST",
+        "label": "Post-environment functional test",
+        "gate": "post",
+        "cycle_index": 0,
+        "phase_id": "ambient_postcheck",
+        "timestamp": "2026-01-21T20:35:30Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-post"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C01-HOT",
+        "label": "Hot survival recovery functional test",
+        "gate": "hot",
+        "cycle_index": 1,
+        "phase_id": "C01-HOT-OPERATIONAL",
+        "timestamp": "2026-01-16T18:20:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C01-COLD",
+        "label": "Cold survival recovery functional test",
+        "gate": "cold",
+        "cycle_index": 1,
+        "phase_id": "C01-COLD-OPERATIONAL",
+        "timestamp": "2026-01-17T18:18:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C02-HOT",
+        "label": "Cycle 2 hot dwell functional test",
+        "gate": "hot",
+        "cycle_index": 2,
+        "phase_id": "C02-HOT-OPERATIONAL",
+        "timestamp": "2026-01-18T08:38:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C02-COLD",
+        "label": "Cycle 2 cold dwell functional test",
+        "gate": "cold",
+        "cycle_index": 2,
+        "phase_id": "C02-COLD-OPERATIONAL",
+        "timestamp": "2026-01-18T22:54:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C03-HOT",
+        "label": "Cycle 3 hot dwell functional test",
+        "gate": "hot",
+        "cycle_index": 3,
+        "phase_id": "C03-HOT-OPERATIONAL",
+        "timestamp": "2026-01-19T12:38:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C03-COLD",
+        "label": "Cycle 3 cold dwell functional test",
+        "gate": "cold",
+        "cycle_index": 3,
+        "phase_id": "C03-COLD-OPERATIONAL",
+        "timestamp": "2026-01-20T02:52:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C04-HOT",
+        "label": "Cycle 4 hot dwell functional test",
+        "gate": "hot",
+        "cycle_index": 4,
+        "phase_id": "C04-HOT-OPERATIONAL",
+        "timestamp": "2026-01-20T17:06:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C04-COLD",
+        "label": "Cycle 4 cold dwell functional test",
+        "gate": "cold",
+        "cycle_index": 4,
+        "phase_id": "C04-COLD-OPERATIONAL",
+        "timestamp": "2026-01-21T07:20:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+      }
+    ],
+    "interlock_windows": [
+      {
+        "id": "thermal_acceptance_fat-INTERLOCK-NOMINAL",
+        "label": "Facility interlocks closed",
+        "start": "2026-01-15T10:00:00Z",
+        "end": "2026-01-21T21:05:30Z",
+        "state": "closed",
+        "severity": "info",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#interlocks"
+      }
+    ],
+    "evidence_markers": [
+      {
+        "id": "thermal_acceptance_fat-STABLE-C01-hot_survival",
+        "label": "Stable Hot survival dwell confirmed",
+        "timestamp": "2026-01-16T07:36:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c01-hot_survival"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C01-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "timestamp": "2026-01-16T15:09:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c01-hot_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C01-cold_survival",
+        "label": "Stable Cold survival dwell confirmed",
+        "timestamp": "2026-01-17T07:23:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c01-cold_survival"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C01-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "timestamp": "2026-01-17T14:56:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c01-cold_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C02-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "timestamp": "2026-01-18T05:10:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c02-hot_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C02-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "timestamp": "2026-01-18T19:24:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c02-cold_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C03-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "timestamp": "2026-01-19T09:38:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c03-hot_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C03-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "timestamp": "2026-01-19T23:52:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c03-cold_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C04-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "timestamp": "2026-01-20T14:06:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c04-hot_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C04-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "timestamp": "2026-01-21T04:20:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c04-cold_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-PRE",
+        "label": "Pre-environment functional test",
+        "timestamp": "2026-01-15T21:30:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-pre"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-POST",
+        "label": "Post-environment functional test",
+        "timestamp": "2026-01-21T20:35:30Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-post"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C01-HOT",
+        "label": "Hot survival recovery functional test",
+        "timestamp": "2026-01-16T18:20:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C01-COLD",
+        "label": "Cold survival recovery functional test",
+        "timestamp": "2026-01-17T18:18:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-cold"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C02-HOT",
+        "label": "Cycle 2 hot dwell functional test",
+        "timestamp": "2026-01-18T08:38:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C02-COLD",
+        "label": "Cycle 2 cold dwell functional test",
+        "timestamp": "2026-01-18T22:54:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-cold"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C03-HOT",
+        "label": "Cycle 3 hot dwell functional test",
+        "timestamp": "2026-01-19T12:38:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C03-COLD",
+        "label": "Cycle 3 cold dwell functional test",
+        "timestamp": "2026-01-20T02:52:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-cold"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C04-HOT",
+        "label": "Cycle 4 hot dwell functional test",
+        "timestamp": "2026-01-20T17:06:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C04-COLD",
+        "label": "Cycle 4 cold dwell functional test",
+        "timestamp": "2026-01-21T07:20:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-cold"
+      }
+    ]
+  },
+  "annotations": [
+    {
+      "id": "thermal_acceptance_fat-cycle-01",
+      "label": "Cycle 1",
+      "kind": "cycle",
+      "start": "2026-01-15T22:00:00Z",
+      "end": "2026-01-17T18:41:00Z",
+      "cycle_index": 1
+    },
+    {
+      "id": "thermal_acceptance_fat-cycle-02",
+      "label": "Cycle 2",
+      "kind": "cycle",
+      "start": "2026-01-17T18:41:00Z",
+      "end": "2026-01-18T23:09:00Z",
+      "cycle_index": 2
+    },
+    {
+      "id": "thermal_acceptance_fat-cycle-03",
+      "label": "Cycle 3",
+      "kind": "cycle",
+      "start": "2026-01-18T23:09:00Z",
+      "end": "2026-01-20T03:37:00Z",
+      "cycle_index": 3
+    },
+    {
+      "id": "thermal_acceptance_fat-cycle-04",
+      "label": "Cycle 4",
+      "kind": "cycle",
+      "start": "2026-01-20T03:37:00Z",
+      "end": "2026-01-21T08:05:00Z",
+      "cycle_index": 4
+    },
+    {
+      "id": "thermal_acceptance_fat-FUNC-PRE",
+      "label": "Pre-environment functional test",
+      "kind": "functional_gate",
+      "timestamp": "2026-01-15T21:30:00Z",
+      "result": "pass"
+    },
+    {
+      "id": "thermal_acceptance_fat-FUNC-POST",
+      "label": "Post-environment functional test",
+      "kind": "functional_gate",
+      "timestamp": "2026-01-21T20:35:30Z",
+      "result": "pass"
+    },
+    {
+      "id": "thermal_acceptance_fat-FUNC-C01-HOT",
+      "label": "Hot survival recovery functional test",
+      "kind": "functional_gate",
+      "timestamp": "2026-01-16T18:20:00Z",
+      "cycle_index": 1,
+      "result": "pass"
+    },
+    {
+      "id": "thermal_acceptance_fat-FUNC-C01-COLD",
+      "label": "Cold survival recovery functional test",
+      "kind": "functional_gate",
+      "timestamp": "2026-01-17T18:18:00Z",
+      "cycle_index": 1,
+      "result": "pass"
+    },
+    {
+      "id": "thermal_acceptance_fat-FUNC-C02-HOT",
+      "label": "Cycle 2 hot dwell functional test",
+      "kind": "functional_gate",
+      "timestamp": "2026-01-18T08:38:00Z",
+      "cycle_index": 2,
+      "result": "pass"
+    },
+    {
+      "id": "thermal_acceptance_fat-FUNC-C02-COLD",
+      "label": "Cycle 2 cold dwell functional test",
+      "kind": "functional_gate",
+      "timestamp": "2026-01-18T22:54:00Z",
+      "cycle_index": 2,
+      "result": "pass"
+    },
+    {
+      "id": "thermal_acceptance_fat-FUNC-C03-HOT",
+      "label": "Cycle 3 hot dwell functional test",
+      "kind": "functional_gate",
+      "timestamp": "2026-01-19T12:38:00Z",
+      "cycle_index": 3,
+      "result": "pass"
+    },
+    {
+      "id": "thermal_acceptance_fat-FUNC-C03-COLD",
+      "label": "Cycle 3 cold dwell functional test",
+      "kind": "functional_gate",
+      "timestamp": "2026-01-20T02:52:00Z",
+      "cycle_index": 3,
+      "result": "pass"
+    },
+    {
+      "id": "thermal_acceptance_fat-FUNC-C04-HOT",
+      "label": "Cycle 4 hot dwell functional test",
+      "kind": "functional_gate",
+      "timestamp": "2026-01-20T17:06:00Z",
+      "cycle_index": 4,
+      "result": "pass"
+    },
+    {
+      "id": "thermal_acceptance_fat-FUNC-C04-COLD",
+      "label": "Cycle 4 cold dwell functional test",
+      "kind": "functional_gate",
+      "timestamp": "2026-01-21T07:20:00Z",
+      "cycle_index": 4,
+      "result": "pass"
+    }
+  ],
+  "simulation_provenance": {
+    "model": "multi_path_dut_thermal_rc_v2",
+    "model_version": "2026.05.3",
+    "seed": 42017,
+    "step_seconds": 300,
+    "source": "gossamer internal/environmentalsim deterministic fixture",
+    "parameters": {
+      "chamber_air_tau_min": 18,
+      "dut_node_coupled_radiating_area_m2": 0.026,
+      "fast_air_conductance_w_per_k": 0.34,
+      "fast_component_capacitance_j_per_k": 3200,
+      "fast_interface_conductance_w_per_k": 0.52,
+      "fast_molecular_gas_conductance_w_per_k": 0.01,
+      "fast_shroud_view_factor": 0.72,
+      "functional_gate_fast_self_heat_w": 15,
+      "functional_gate_lazy_self_heat_w": 2.4,
+      "interface_plate_tau_min": 33,
+      "lazy_air_conductance_w_per_k": 0.42,
+      "lazy_component_capacitance_j_per_k": 10500,
+      "lazy_interface_conductance_w_per_k": 0.23,
+      "lazy_molecular_gas_conductance_w_per_k": 0.016,
+      "lazy_radiating_area_m2": 0.13,
+      "lazy_shroud_view_factor": 0.88,
+      "tvac_baked_ultimate_pressure_mbar": 5.052583783783784e-8,
+      "tvac_baked_ultimate_pressure_pa": 0.000005052583783783784,
+      "tvac_base_virtual_leak_pa_per_min": 0.0000051,
+      "tvac_cryo_pump_max_multiplier": 3.2,
+      "tvac_effective_pump_rate_per_min": 0.185,
+      "tvac_exhaust_scavenger_min_safe_c": 4,
+      "tvac_exhaust_water_flow_nominal": 1,
+      "tvac_free_molecular_reference_pa": 100,
+      "tvac_high_vacuum_air_cutoff_pa": 0.01,
+      "tvac_nominal_pump_rate_per_min": 0.185,
+      "tvac_shroud_nominal_tau_min": 28
+    },
+    "deterministic": true
+  },
+  "hero_graph": {
+    "id": "thermal_acceptance_fat_hero_graph",
+    "title": "Thermal Chamber FAT - 4 cycle acceptance profile",
+    "owner": "gossamer_backend_fixture_generator",
+    "provenance": "gossamer internal/environmentalsim deterministic fixture",
+    "time_axis": {
+      "start": "2026-01-15T10:00:00Z",
+      "end": "2026-01-21T21:05:00Z",
+      "anchor": "2026-01-15T10:00:00Z",
+      "now": "2026-01-19T07:03:00Z",
+      "range_seconds": 558300,
+      "clamp": true,
+      "latest_policy": "accelerated_fixture_cursor"
+    },
+    "execution": {
+      "mode": "accelerated_live_replay",
+      "now": "2026-01-19T07:03:00Z",
+      "percent_complete": 60,
+      "acceleration": "1 simulated hour per wall-clock minute",
+      "past_data_policy": "real simulated telemetry up to cursor",
+      "future_data_policy": "ghost trace and planned evidence only after cursor",
+      "completed_cycles": 2,
+      "target_cycles": 4,
+      "current_cycle": 3,
+      "current_phase": "hot_operational",
+      "requirement_progress": [
+        {
+          "id": "REQ-CYCLE-COUNT",
+          "label": "Thermal cycles completed",
+          "completed": 2,
+          "target": 4,
+          "percent": 50,
+          "state": "in_progress",
+          "contributors": [
+            "Cycle 1",
+            "Cycle 2"
+          ],
+          "next_milestone": "C03-HOT-OPERATIONAL complete",
+          "evidence_source": "thermal cycle phase timestamps"
+        },
+        {
+          "id": "REQ-STABILITY",
+          "label": "Stabilized dwell windows",
+          "completed": 6,
+          "target": 8,
+          "percent": 75,
+          "state": "in_progress",
+          "contributors": [
+            "C01-HOT-SURVIVAL-WINDOW",
+            "C01-HOT-OPERATIONAL-WINDOW",
+            "C01-COLD-SURVIVAL-WINDOW",
+            "C01-COLD-OPERATIONAL-WINDOW",
+            "C02-HOT-OPERATIONAL-WINDOW",
+            "C02-COLD-OPERATIONAL-WINDOW"
+          ],
+          "next_milestone": "C03-HOT-OPERATIONAL complete",
+          "evidence_source": "dwell window stability evidence"
+        },
+        {
+          "id": "REQ-FUNC-GATE",
+          "label": "Functional gates executed",
+          "completed": 5,
+          "target": 10,
+          "percent": 50,
+          "state": "in_progress",
+          "contributors": [
+            "thermal_acceptance_fat-FUNC-PRE",
+            "thermal_acceptance_fat-FUNC-C01-HOT",
+            "thermal_acceptance_fat-FUNC-C01-COLD",
+            "thermal_acceptance_fat-FUNC-C02-HOT",
+            "thermal_acceptance_fat-FUNC-C02-COLD"
+          ],
+          "evidence_source": "functional gate event markers"
+        }
+      ]
+    },
+    "axes": [
+      {
+        "id": "temperature_c",
+        "label": "Temperature",
+        "units": "degC",
+        "scale": "linear",
+        "min": -47,
+        "max": 77,
+        "side": "left",
+        "format": "0.0"
+      },
+      {
+        "id": "pressure_mbar",
+        "label": "Pressure",
+        "units": "mbar",
+        "scale": "log10",
+        "min": 1e-8,
+        "max": 1013.25,
+        "side": "right",
+        "format": "0.000000"
+      },
+      {
+        "id": "percent",
+        "label": "Duty",
+        "units": "%",
+        "scale": "linear",
+        "min": 0,
+        "max": 100,
+        "side": "right",
+        "format": "0"
+      },
+      {
+        "id": "bus_ms",
+        "label": "Bus latency",
+        "units": "ms",
+        "scale": "linear",
+        "min": 0,
+        "max": 80,
+        "side": "right",
+        "format": "0"
+      },
+      {
+        "id": "state",
+        "label": "State",
+        "units": "state",
+        "scale": "step",
+        "min": 0,
+        "max": 5,
+        "side": "left",
+        "format": "0"
+      }
+    ],
+    "traces": [
+      {
+        "id": "trace.command.chamber",
+        "label": "Chamber command",
+        "role": "command",
+        "units": "degC",
+        "axis_id": "temperature_c",
+        "source": "thermal_program",
+        "values": null
+      },
+      {
+        "id": "trace.ghost.profile",
+        "label": "4-cycle ghost profile",
+        "role": "ghost",
+        "units": "degC",
+        "axis_id": "temperature_c",
+        "source": "thermal_program",
+        "values": null
+      },
+      {
+        "id": "trace.actual.chamber_air",
+        "label": "Chamber air actual",
+        "role": "actual",
+        "units": "degC",
+        "axis_id": "temperature_c",
+        "source": "facility_thermal",
+        "values": null
+      },
+      {
+        "id": "trace.dut_temp_a",
+        "label": "High-dissipation DUT node",
+        "role": "actual",
+        "units": "degC",
+        "axis_id": "temperature_c",
+        "source": "dut_thermal",
+        "values": null
+      },
+      {
+        "id": "trace.dut_temp_b",
+        "label": "Vacuum-detached DUT node",
+        "role": "actual",
+        "units": "degC",
+        "axis_id": "temperature_c",
+        "source": "dut_thermal",
+        "values": null
+      },
+      {
+        "id": "trace.table_loop",
+        "label": "Interface plate",
+        "role": "actual",
+        "units": "degC",
+        "axis_id": "temperature_c",
+        "source": "facility_thermal",
+        "values": null
+      },
+      {
+        "id": "trace.shroud",
+        "label": "Thermal shroud",
+        "role": "actual",
+        "units": "degC",
+        "axis_id": "temperature_c",
+        "source": "facility_thermal",
+        "values": null
+      },
+      {
+        "id": "trace.acceptance.temperature",
+        "label": "Acceptance band center",
+        "role": "acceptance_band",
+        "units": "degC",
+        "axis_id": "temperature_c",
+        "source": "requirements",
+        "values": null
+      },
+      {
+        "id": "trace.event.functional",
+        "label": "Functional gate",
+        "role": "event",
+        "units": "state",
+        "axis_id": "state",
+        "source": "test_conductor",
+        "values": null
+      },
+      {
+        "id": "trace.interlock.facility",
+        "label": "Interlock review",
+        "role": "interlock",
+        "units": "state",
+        "axis_id": "state",
+        "source": "facility_safety",
+        "values": null
+      },
+      {
+        "id": "trace.evidence.markers",
+        "label": "Evidence capture",
+        "role": "evidence",
+        "units": "state",
+        "axis_id": "state",
+        "source": "evidence_report",
+        "values": null
+      }
+    ],
+    "phase_bands": [
+      {
+        "id": "C01-RAMP-HOT-SURVIVAL",
+        "label": "Ramp to hot survival",
+        "kind": "ramp_hot",
+        "start": "2026-01-15T22:00:00Z",
+        "end": "2026-01-15T22:53:00Z",
+        "cycle_index": 1,
+        "target_deg_c": 75
+      },
+      {
+        "id": "C01-HOT-SURVIVAL",
+        "label": "Hot survival dwell",
+        "kind": "hot_survival",
+        "start": "2026-01-15T22:53:00Z",
+        "end": "2026-01-16T11:21:00Z",
+        "cycle_index": 1,
+        "target_deg_c": 75
+      },
+      {
+        "id": "C01-RAMP-HOT-OPERATIONAL",
+        "label": "Cool down to hot operational",
+        "kind": "ramp_hot",
+        "start": "2026-01-16T11:21:00Z",
+        "end": "2026-01-16T11:31:00Z",
+        "cycle_index": 1,
+        "target_deg_c": 65
+      },
+      {
+        "id": "C01-HOT-OPERATIONAL",
+        "label": "Hot operational dwell",
+        "kind": "hot_operational",
+        "start": "2026-01-16T11:31:00Z",
+        "end": "2026-01-16T18:54:00Z",
+        "cycle_index": 1,
+        "target_deg_c": 65
+      },
+      {
+        "id": "C01-RAMP-COLD-SURVIVAL",
+        "label": "Ramp to cold survival",
+        "kind": "ramp_cold",
+        "start": "2026-01-16T18:54:00Z",
+        "end": "2026-01-16T20:44:00Z",
+        "cycle_index": 1,
+        "target_deg_c": -45
+      },
+      {
+        "id": "C01-COLD-SURVIVAL",
+        "label": "Cold survival dwell",
+        "kind": "cold_survival",
+        "start": "2026-01-16T20:44:00Z",
+        "end": "2026-01-17T11:08:00Z",
+        "cycle_index": 1,
+        "target_deg_c": -45
+      },
+      {
+        "id": "C01-RAMP-COLD-OPERATIONAL",
+        "label": "Warm up to cold operational",
+        "kind": "ramp_cold",
+        "start": "2026-01-17T11:08:00Z",
+        "end": "2026-01-17T11:18:00Z",
+        "cycle_index": 1,
+        "target_deg_c": -35
+      },
+      {
+        "id": "C01-COLD-OPERATIONAL",
+        "label": "Cold operational dwell",
+        "kind": "cold_operational",
+        "start": "2026-01-17T11:18:00Z",
+        "end": "2026-01-17T18:41:00Z",
+        "cycle_index": 1,
+        "target_deg_c": -35
+      },
+      {
+        "id": "C02-RAMP-HOT",
+        "label": "Ramp to hot operational",
+        "kind": "ramp_hot",
+        "start": "2026-01-17T18:41:00Z",
+        "end": "2026-01-17T20:21:00Z",
+        "cycle_index": 2,
+        "target_deg_c": 65
+      },
+      {
+        "id": "C02-HOT-OPERATIONAL",
+        "label": "Hot operational dwell",
+        "kind": "hot_operational",
+        "start": "2026-01-17T20:21:00Z",
+        "end": "2026-01-18T08:55:00Z",
+        "cycle_index": 2,
+        "target_deg_c": 65
+      },
+      {
+        "id": "C02-RAMP-COLD",
+        "label": "Ramp to cold operational",
+        "kind": "ramp_cold",
+        "start": "2026-01-18T08:55:00Z",
+        "end": "2026-01-18T10:35:00Z",
+        "cycle_index": 2,
+        "target_deg_c": -35
+      },
+      {
+        "id": "C02-COLD-OPERATIONAL",
+        "label": "Cold operational dwell",
+        "kind": "cold_operational",
+        "start": "2026-01-18T10:35:00Z",
+        "end": "2026-01-18T23:09:00Z",
+        "cycle_index": 2,
+        "target_deg_c": -35
+      },
+      {
+        "id": "C03-RAMP-HOT",
+        "label": "Ramp to hot operational",
+        "kind": "ramp_hot",
+        "start": "2026-01-18T23:09:00Z",
+        "end": "2026-01-19T00:49:00Z",
+        "cycle_index": 3,
+        "target_deg_c": 65
+      },
+      {
+        "id": "C03-HOT-OPERATIONAL",
+        "label": "Hot operational dwell",
+        "kind": "hot_operational",
+        "start": "2026-01-19T00:49:00Z",
+        "end": "2026-01-19T13:23:00Z",
+        "cycle_index": 3,
+        "target_deg_c": 65
+      },
+      {
+        "id": "C03-RAMP-COLD",
+        "label": "Ramp to cold operational",
+        "kind": "ramp_cold",
+        "start": "2026-01-19T13:23:00Z",
+        "end": "2026-01-19T15:03:00Z",
+        "cycle_index": 3,
+        "target_deg_c": -35
+      },
+      {
+        "id": "C03-COLD-OPERATIONAL",
+        "label": "Cold operational dwell",
+        "kind": "cold_operational",
+        "start": "2026-01-19T15:03:00Z",
+        "end": "2026-01-20T03:37:00Z",
+        "cycle_index": 3,
+        "target_deg_c": -35
+      },
+      {
+        "id": "C04-RAMP-HOT",
+        "label": "Ramp to hot operational",
+        "kind": "ramp_hot",
+        "start": "2026-01-20T03:37:00Z",
+        "end": "2026-01-20T05:17:00Z",
+        "cycle_index": 4,
+        "target_deg_c": 65
+      },
+      {
+        "id": "C04-HOT-OPERATIONAL",
+        "label": "Hot operational dwell",
+        "kind": "hot_operational",
+        "start": "2026-01-20T05:17:00Z",
+        "end": "2026-01-20T17:51:00Z",
+        "cycle_index": 4,
+        "target_deg_c": 65
+      },
+      {
+        "id": "C04-RAMP-COLD",
+        "label": "Ramp to cold operational",
+        "kind": "ramp_cold",
+        "start": "2026-01-20T17:51:00Z",
+        "end": "2026-01-20T19:31:00Z",
+        "cycle_index": 4,
+        "target_deg_c": -35
+      },
+      {
+        "id": "C04-COLD-OPERATIONAL",
+        "label": "Cold operational dwell",
+        "kind": "cold_operational",
+        "start": "2026-01-20T19:31:00Z",
+        "end": "2026-01-21T08:05:00Z",
+        "cycle_index": 4,
+        "target_deg_c": -35
+      }
+    ],
+    "dwell_windows": [
+      {
+        "id": "C01-HOT-SURVIVAL-WINDOW",
+        "label": "Hot survival dwell",
+        "kind": "hot_survival",
+        "start": "2026-01-16T07:36:00Z",
+        "end": "2026-01-16T10:36:00Z",
+        "cycle_index": 1,
+        "target_deg_c": 75,
+        "result": "pass"
+      },
+      {
+        "id": "C01-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "kind": "hot_operational",
+        "start": "2026-01-16T15:09:00Z",
+        "end": "2026-01-16T18:09:00Z",
+        "cycle_index": 1,
+        "target_deg_c": 65,
+        "result": "pass"
+      },
+      {
+        "id": "C01-COLD-SURVIVAL-WINDOW",
+        "label": "Cold survival dwell",
+        "kind": "cold_survival",
+        "start": "2026-01-17T07:23:00Z",
+        "end": "2026-01-17T10:23:00Z",
+        "cycle_index": 1,
+        "target_deg_c": -45,
+        "result": "pass"
+      },
+      {
+        "id": "C01-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "kind": "cold_operational",
+        "start": "2026-01-17T14:56:00Z",
+        "end": "2026-01-17T17:56:00Z",
+        "cycle_index": 1,
+        "target_deg_c": -35,
+        "result": "pass"
+      },
+      {
+        "id": "C02-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "kind": "hot_operational",
+        "start": "2026-01-18T05:10:00Z",
+        "end": "2026-01-18T08:10:00Z",
+        "cycle_index": 2,
+        "target_deg_c": 65,
+        "result": "pass"
+      },
+      {
+        "id": "C02-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "kind": "cold_operational",
+        "start": "2026-01-18T19:24:00Z",
+        "end": "2026-01-18T22:24:00Z",
+        "cycle_index": 2,
+        "target_deg_c": -35,
+        "result": "pass"
+      },
+      {
+        "id": "C03-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "kind": "hot_operational",
+        "start": "2026-01-19T09:38:00Z",
+        "end": "2026-01-19T12:38:00Z",
+        "cycle_index": 3,
+        "target_deg_c": 65,
+        "result": "pass"
+      },
+      {
+        "id": "C03-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "kind": "cold_operational",
+        "start": "2026-01-19T23:52:00Z",
+        "end": "2026-01-20T02:52:00Z",
+        "cycle_index": 3,
+        "target_deg_c": -35,
+        "result": "pass"
+      },
+      {
+        "id": "C04-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "kind": "hot_operational",
+        "start": "2026-01-20T14:06:00Z",
+        "end": "2026-01-20T17:06:00Z",
+        "cycle_index": 4,
+        "target_deg_c": 65,
+        "result": "pass"
+      },
+      {
+        "id": "C04-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "kind": "cold_operational",
+        "start": "2026-01-21T04:20:00Z",
+        "end": "2026-01-21T07:20:00Z",
+        "cycle_index": 4,
+        "target_deg_c": -35,
+        "result": "pass"
+      }
+    ],
+    "markers": [
+      {
+        "id": "thermal_acceptance_fat-FUNC-PRE",
+        "label": "Pre-environment functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-15T21:30:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-pre"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-POST",
+        "label": "Post-environment functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-21T20:35:30Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-post"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C01-HOT",
+        "label": "Hot survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-16T18:20:00Z",
+        "cycle_index": 1,
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C01-COLD",
+        "label": "Cold survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-17T18:18:00Z",
+        "cycle_index": 1,
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C02-HOT",
+        "label": "Cycle 2 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-18T08:38:00Z",
+        "cycle_index": 2,
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C02-COLD",
+        "label": "Cycle 2 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-18T22:54:00Z",
+        "cycle_index": 2,
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C03-HOT",
+        "label": "Cycle 3 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-19T12:38:00Z",
+        "cycle_index": 3,
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C03-COLD",
+        "label": "Cycle 3 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-20T02:52:00Z",
+        "cycle_index": 3,
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C04-HOT",
+        "label": "Cycle 4 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-20T17:06:00Z",
+        "cycle_index": 4,
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-FUNC-C04-COLD",
+        "label": "Cycle 4 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-21T07:20:00Z",
+        "cycle_index": 4,
+        "result": "pass",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#functional-cold"
+      },
+      {
+        "id": "thermal_acceptance_fat-INTERLOCK-NOMINAL",
+        "label": "Facility interlocks closed",
+        "kind": "interlock",
+        "role": "interlock",
+        "timestamp": "2026-01-15T10:00:00Z",
+        "result": "closed",
+        "severity": "info",
+        "evidence_ref": "telemetry/thermal_acceptance_fat.jsonl#interlocks"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C01-hot_survival",
+        "label": "Stable Hot survival dwell confirmed",
+        "kind": "stability_achieved",
+        "role": "evidence",
+        "timestamp": "2026-01-16T07:36:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c01-hot_survival"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C01-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "kind": "stability_achieved",
+        "role": "evidence",
+        "timestamp": "2026-01-16T15:09:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c01-hot_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C01-cold_survival",
+        "label": "Stable Cold survival dwell confirmed",
+        "kind": "stability_achieved",
+        "role": "evidence",
+        "timestamp": "2026-01-17T07:23:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c01-cold_survival"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C01-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "kind": "stability_achieved",
+        "role": "evidence",
+        "timestamp": "2026-01-17T14:56:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c01-cold_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C02-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "kind": "stability_achieved",
+        "role": "evidence",
+        "timestamp": "2026-01-18T05:10:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c02-hot_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C02-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "kind": "stability_achieved",
+        "role": "evidence",
+        "timestamp": "2026-01-18T19:24:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c02-cold_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C03-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "kind": "stability_achieved",
+        "role": "evidence",
+        "timestamp": "2026-01-19T09:38:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c03-hot_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C03-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "kind": "stability_achieved",
+        "role": "evidence",
+        "timestamp": "2026-01-19T23:52:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c03-cold_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C04-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "kind": "stability_achieved",
+        "role": "evidence",
+        "timestamp": "2026-01-20T14:06:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c04-hot_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-STABLE-C04-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "kind": "stability_achieved",
+        "role": "evidence",
+        "timestamp": "2026-01-21T04:20:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#stable-c04-cold_operational"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-PRE",
+        "label": "Pre-environment functional test",
+        "kind": "functional_gate",
+        "role": "evidence",
+        "timestamp": "2026-01-15T21:30:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-pre"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-POST",
+        "label": "Post-environment functional test",
+        "kind": "functional_gate",
+        "role": "evidence",
+        "timestamp": "2026-01-21T20:35:30Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-post"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C01-HOT",
+        "label": "Hot survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "evidence",
+        "timestamp": "2026-01-16T18:20:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C01-COLD",
+        "label": "Cold survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "evidence",
+        "timestamp": "2026-01-17T18:18:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-cold"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C02-HOT",
+        "label": "Cycle 2 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "evidence",
+        "timestamp": "2026-01-18T08:38:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C02-COLD",
+        "label": "Cycle 2 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "evidence",
+        "timestamp": "2026-01-18T22:54:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-cold"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C03-HOT",
+        "label": "Cycle 3 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "evidence",
+        "timestamp": "2026-01-19T12:38:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C03-COLD",
+        "label": "Cycle 3 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "evidence",
+        "timestamp": "2026-01-20T02:52:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-cold"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C04-HOT",
+        "label": "Cycle 4 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "evidence",
+        "timestamp": "2026-01-20T17:06:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-hot"
+      },
+      {
+        "id": "thermal_acceptance_fat-EVID-C04-COLD",
+        "label": "Cycle 4 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "evidence",
+        "timestamp": "2026-01-21T07:20:00Z",
+        "result": "pass",
+        "evidence_ref": "reports/thermal_acceptance_fat.json#functional-cold"
+      }
+    ],
+    "companion_groups": [
+      {
+        "id": "dut_temperature_response",
+        "label": "DUT temperature response",
+        "axes": [
+          {
+            "id": "temperature_c",
+            "label": "Temperature",
+            "units": "degC",
+            "scale": "linear",
+            "min": -47,
+            "max": 77,
+            "side": "left",
+            "format": "0.0"
+          }
+        ],
+        "traces": [
+          {
+            "id": "trace.context.chamber_air",
+            "label": "Chamber air",
+            "role": "actual",
+            "units": "degC",
+            "axis_id": "temperature_c",
+            "source": "facility_thermal",
+            "values": null
+          },
+          {
+            "id": "trace.table_loop",
+            "label": "Interface plate",
+            "role": "actual",
+            "units": "degC",
+            "axis_id": "temperature_c",
+            "source": "facility_thermal",
+            "values": null
+          },
+          {
+            "id": "trace.shroud",
+            "label": "Thermal shroud",
+            "role": "actual",
+            "units": "degC",
+            "axis_id": "temperature_c",
+            "source": "facility_thermal",
+            "values": null
+          },
+          {
+            "id": "trace.shroud_inlet",
+            "label": "Shroud inlet",
+            "role": "actual",
+            "units": "degC",
+            "axis_id": "temperature_c",
+            "source": "facility_thermal",
+            "values": null
+          },
+          {
+            "id": "trace.shroud_outlet",
+            "label": "Shroud outlet",
+            "role": "actual",
+            "units": "degC",
+            "axis_id": "temperature_c",
+            "source": "facility_thermal",
+            "values": null
+          },
+          {
+            "id": "trace.dut_temp_a",
+            "label": "High-dissipation DUT node",
+            "role": "actual",
+            "units": "degC",
+            "axis_id": "temperature_c",
+            "source": "dut_thermal",
+            "values": null
+          },
+          {
+            "id": "trace.dut_temp_b",
+            "label": "Vacuum-detached DUT node",
+            "role": "actual",
+            "units": "degC",
+            "axis_id": "temperature_c",
+            "source": "dut_thermal",
+            "values": null
+          },
+          {
+            "id": "trace.dut_gradient",
+            "label": "Internal gradient",
+            "role": "actual",
+            "units": "degC",
+            "axis_id": "temperature_c",
+            "source": "dut_thermal",
+            "values": null
+          },
+          {
+            "id": "trace.shroud_gradient",
+            "label": "Shroud gradient",
+            "role": "source_quality",
+            "units": "degC",
+            "axis_id": "temperature_c",
+            "source": "facility_thermal",
+            "values": null
+          }
+        ]
+      },
+      {
+        "id": "dut_heat_flux_paths",
+        "label": "DUT heat-flux paths",
+        "axes": [
+          {
+            "id": "heat_flux_w",
+            "label": "Heat flux",
+            "units": "W",
+            "scale": "linear",
+            "min": -35,
+            "max": 35,
+            "side": "left",
+            "format": "0.0"
+          }
+        ],
+        "traces": [
+          {
+            "id": "trace.fast_air_flux",
+            "label": "Fast node air flux",
+            "role": "actual",
+            "units": "W",
+            "axis_id": "heat_flux_w",
+            "source": "dut_thermal",
+            "values": null
+          },
+          {
+            "id": "trace.fast_interface_flux",
+            "label": "Fast node interface flux",
+            "role": "actual",
+            "units": "W",
+            "axis_id": "heat_flux_w",
+            "source": "dut_thermal",
+            "values": null
+          },
+          {
+            "id": "trace.lazy_air_flux",
+            "label": "Lazy node air flux",
+            "role": "actual",
+            "units": "W",
+            "axis_id": "heat_flux_w",
+            "source": "dut_thermal",
+            "values": null
+          },
+          {
+            "id": "trace.lazy_interface_flux",
+            "label": "Lazy node interface flux",
+            "role": "actual",
+            "units": "W",
+            "axis_id": "heat_flux_w",
+            "source": "dut_thermal",
+            "values": null
+          },
+          {
+            "id": "trace.lazy_shroud_flux",
+            "label": "Lazy node shroud flux",
+            "role": "actual",
+            "units": "W",
+            "axis_id": "heat_flux_w",
+            "source": "dut_thermal",
+            "values": null
+          },
+          {
+            "id": "trace.dut_self_heat",
+            "label": "DUT self heat",
+            "role": "actual",
+            "units": "W",
+            "axis_id": "heat_flux_w",
+            "source": "dut_power",
+            "values": null
+          }
+        ]
+      },
+      {
+        "id": "facility_actuation",
+        "label": "Facility actuation",
+        "axes": [
+          {
+            "id": "percent",
+            "label": "Duty",
+            "units": "%",
+            "scale": "linear",
+            "min": 0,
+            "max": 100,
+            "side": "right",
+            "format": "0"
+          }
+        ],
+        "traces": [
+          {
+            "id": "trace.ln2_duty",
+            "label": "Cooling actuator",
+            "role": "actual",
+            "units": "%",
+            "axis_id": "percent",
+            "source": "facility_thermal",
+            "values": null
+          }
+        ]
+      },
+      {
+        "id": "building_infrastructure",
+        "label": "Building infrastructure",
+        "axes": [
+          {
+            "id": "temperature_c",
+            "label": "Temperature",
+            "units": "degC",
+            "scale": "linear",
+            "min": -47,
+            "max": 77,
+            "side": "left",
+            "format": "0.0"
+          },
+          {
+            "id": "pressure_bar",
+            "label": "Pressure",
+            "units": "bar",
+            "scale": "linear",
+            "min": 5.8,
+            "max": 6.5,
+            "side": "right",
+            "format": "0.00"
+          }
+        ],
+        "traces": [
+          {
+            "id": "trace.cooling_water_temp",
+            "label": "Cooling water temp",
+            "role": "actual",
+            "units": "degC",
+            "axis_id": "temperature_c",
+            "source": "facility_infrastructure",
+            "values": null
+          },
+          {
+            "id": "trace.pressurized_air_supply",
+            "label": "Pressurized air supply",
+            "role": "actual",
+            "units": "bar",
+            "axis_id": "pressure_bar",
+            "source": "facility_infrastructure",
+            "values": null
+          },
+          {
+            "id": "trace.air_dewpoint",
+            "label": "Air dew point",
+            "role": "actual",
+            "units": "degC",
+            "axis_id": "temperature_c",
+            "source": "facility_infrastructure",
+            "values": null
+          }
+        ]
+      },
+      {
+        "id": "dut_power_response",
+        "label": "DUT power budgets",
+        "axes": [
+          {
+            "id": "power_w",
+            "label": "Power",
+            "units": "W",
+            "scale": "linear",
+            "min": 0,
+            "max": 260,
+            "side": "left",
+            "format": "0"
+          }
+        ],
+        "traces": [
+          {
+            "id": "trace.power_total",
+            "label": "Total power",
+            "role": "actual",
+            "units": "W",
+            "axis_id": "power_w",
+            "source": "dut_power",
+            "values": null
+          },
+          {
+            "id": "trace.power_subsystem",
+            "label": "Subsystem budget",
+            "role": "actual",
+            "units": "W",
+            "axis_id": "power_w",
+            "source": "dut_power",
+            "values": null
+          },
+          {
+            "id": "trace.power_payload",
+            "label": "Payload/FT load",
+            "role": "actual",
+            "units": "W",
+            "axis_id": "power_w",
+            "source": "dut_power",
+            "values": null
+          },
+          {
+            "id": "trace.power_avionics",
+            "label": "Avionics",
+            "role": "actual",
+            "units": "W",
+            "axis_id": "power_w",
+            "source": "dut_power",
+            "values": null
+          },
+          {
+            "id": "trace.power_link",
+            "label": "Link subsystem",
+            "role": "actual",
+            "units": "W",
+            "axis_id": "power_w",
+            "source": "dut_power",
+            "values": null
+          },
+          {
+            "id": "trace.power_thermal_control",
+            "label": "Thermal control",
+            "role": "actual",
+            "units": "W",
+            "axis_id": "power_w",
+            "source": "dut_power",
+            "values": null
+          }
+        ]
+      },
+      {
+        "id": "tmtc_bus_response",
+        "label": "TM/TC bus response",
+        "axes": [
+          {
+            "id": "bus_ms",
+            "label": "Bus latency",
+            "units": "ms",
+            "scale": "linear",
+            "min": 0,
+            "max": 80,
+            "side": "right",
+            "format": "0"
+          }
+        ],
+        "traces": [
+          {
+            "id": "trace.bus_latency",
+            "label": "Bus latency",
+            "role": "source_quality",
+            "units": "ms",
+            "axis_id": "bus_ms",
+            "source": "demo_bus_virtualization",
+            "values": null
+          },
+          {
+            "id": "trace.source_freshness",
+            "label": "Freshness",
+            "role": "source_quality",
+            "units": "ms",
+            "axis_id": "bus_ms",
+            "source": "demo_quality",
+            "values": null
+          }
+        ]
+      },
+      {
+        "id": "tmtc_counter_response",
+        "label": "TM/TC counters",
+        "axes": [
+          {
+            "id": "counter",
+            "label": "Counter",
+            "units": "count",
+            "scale": "linear",
+            "min": 0,
+            "max": 9000,
+            "side": "left",
+            "format": "0"
+          }
+        ],
+        "traces": [
+          {
+            "id": "trace.overall_packet_counter",
+            "label": "Overall packet counter",
+            "role": "counter",
+            "units": "count",
+            "axis_id": "counter",
+            "source": "demo_bus_virtualization",
+            "values": null
+          },
+          {
+            "id": "trace.tm_packet_counter",
+            "label": "TM packet counter",
+            "role": "counter",
+            "units": "count",
+            "axis_id": "counter",
+            "source": "demo_bus_virtualization",
+            "values": null
+          },
+          {
+            "id": "trace.tc_packet_counter",
+            "label": "TC packet counter",
+            "role": "counter",
+            "units": "count",
+            "axis_id": "counter",
+            "source": "demo_bus_virtualization",
+            "values": null
+          },
+          {
+            "id": "trace.dropped_frame_count",
+            "label": "Dropped frames",
+            "role": "counter",
+            "units": "count",
+            "axis_id": "counter",
+            "source": "demo_bus_virtualization",
+            "values": null
+          }
+        ]
+      },
+      {
+        "id": "state_change_swimlane",
+        "label": "State changes and flags",
+        "axes": [
+          {
+            "id": "state",
+            "label": "State",
+            "units": "state",
+            "scale": "step",
+            "min": 0,
+            "max": 5,
+            "side": "left",
+            "format": "0"
+          }
+        ],
+        "traces": [
+          {
+            "id": "trace.phase_enum",
+            "label": "Thermal phase",
+            "role": "event",
+            "units": "state",
+            "axis_id": "state",
+            "source": "thermal_program",
+            "values": null
+          },
+          {
+            "id": "trace.functional_gate_active",
+            "label": "Functional gate",
+            "role": "event",
+            "units": "bool",
+            "axis_id": "state",
+            "source": "test_conductor",
+            "values": null
+          },
+          {
+            "id": "trace.stability_reached",
+            "label": "Stability reached",
+            "role": "state",
+            "units": "bool",
+            "axis_id": "state",
+            "source": "thermal_program",
+            "values": null
+          },
+          {
+            "id": "trace.dwell_active",
+            "label": "Dwell active",
+            "role": "state",
+            "units": "bool",
+            "axis_id": "state",
+            "source": "thermal_program",
+            "values": null
+          },
+          {
+            "id": "trace.dwell_complete",
+            "label": "Dwell complete",
+            "role": "state",
+            "units": "bool",
+            "axis_id": "state",
+            "source": "thermal_program",
+            "values": null
+          },
+          {
+            "id": "trace.interlock_review",
+            "label": "Interlock review",
+            "role": "interlock",
+            "units": "bool",
+            "axis_id": "state",
+            "source": "facility_safety",
+            "values": null
+          },
+          {
+            "id": "trace.source_degraded",
+            "label": "Source degraded",
+            "role": "source_quality",
+            "units": "bool",
+            "axis_id": "state",
+            "source": "demo_quality",
+            "values": null
+          },
+          {
+            "id": "trace.evidence_capture",
+            "label": "Evidence capture",
+            "role": "evidence",
+            "units": "bool",
+            "axis_id": "state",
+            "source": "evidence_report",
+            "values": null
+          },
+          {
+            "id": "trace.dut_ready",
+            "label": "DUT ready",
+            "role": "state",
+            "units": "bool",
+            "axis_id": "state",
+            "source": "dut_control",
+            "values": null
+          },
+          {
+            "id": "trace.dut_operative",
+            "label": "DUT operative",
+            "role": "state",
+            "units": "bool",
+            "axis_id": "state",
+            "source": "dut_control",
+            "values": null
+          },
+          {
+            "id": "trace.payload_active",
+            "label": "Payload active",
+            "role": "state",
+            "units": "bool",
+            "axis_id": "state",
+            "source": "dut_power",
+            "values": null
+          },
+          {
+            "id": "trace.rf_link_locked",
+            "label": "RF link locked",
+            "role": "state",
+            "units": "bool",
+            "axis_id": "state",
+            "source": "dut_link",
+            "values": null
+          },
+          {
+            "id": "trace.fault_flag",
+            "label": "Fault flag",
+            "role": "interlock",
+            "units": "bool",
+            "axis_id": "state",
+            "source": "demo_quality",
+            "values": null
+          }
+        ]
+      }
+    ],
+    "thermal_diagram": {
+      "id": "thermal_acceptance_fat_test_item_thermal_paths",
+      "label": "Generic test item thermal paths",
+      "context": "thermal_chamber",
+      "summary": "Chamber air and a fluid-controlled interface drive two representative DUT thermal nodes with different mass, coupling, self-heating, and sensor behavior.",
+      "nodes": [
+        {
+          "id": "chamber_air",
+          "label": "Chamber air",
+          "kind": "environment",
+          "role": "convective_boundary",
+          "signal": "chamber_air_deg_c",
+          "x": 9,
+          "y": 33
+        },
+        {
+          "id": "interface_plate",
+          "label": "Fluid interface",
+          "kind": "interface",
+          "role": "conductive_boundary",
+          "signal": "interface_plate_deg_c",
+          "x": 28,
+          "y": 69
+        },
+        {
+          "id": "test_item",
+          "label": "Test item",
+          "kind": "test_item",
+          "role": "enclosure",
+          "x": 50,
+          "y": 48
+        },
+        {
+          "id": "fast_node",
+          "label": "High-power node",
+          "kind": "component",
+          "role": "fast_thermal_response",
+          "signal": "dut_fast_component_deg_c",
+          "x": 72,
+          "y": 32
+        },
+        {
+          "id": "lazy_node",
+          "label": "Isolated node",
+          "kind": "component",
+          "role": "slow_thermal_response",
+          "signal": "dut_lazy_component_deg_c",
+          "x": 73,
+          "y": 66
+        }
+      ],
+      "links": [
+        {
+          "id": "air_to_fast",
+          "source": "chamber_air",
+          "target": "fast_node",
+          "kind": "convection",
+          "label": "air convection",
+          "strength": 0.58,
+          "signal": "dut_fast_air_flux_w"
+        },
+        {
+          "id": "air_to_lazy",
+          "source": "chamber_air",
+          "target": "lazy_node",
+          "kind": "convection",
+          "label": "air convection",
+          "strength": 0.42,
+          "signal": "dut_lazy_air_flux_w"
+        },
+        {
+          "id": "interface_to_fast",
+          "source": "interface_plate",
+          "target": "fast_node",
+          "kind": "conduction",
+          "label": "fluid interface conduction",
+          "strength": 0.74,
+          "signal": "dut_fast_interface_flux_w"
+        },
+        {
+          "id": "interface_to_lazy",
+          "source": "interface_plate",
+          "target": "lazy_node",
+          "kind": "conduction",
+          "label": "weak interface conduction",
+          "strength": 0.24,
+          "signal": "dut_lazy_interface_flux_w"
+        }
+      ],
+      "notes": [
+        "High-power node responds quickly and self-heats during functional gates.",
+        "Isolated node is deliberately slower, showing delayed stabilization evidence."
+      ]
+    }
+  },
+  "graph_wall": {
+    "id": "thermal_acceptance_fat_graph_wall",
+    "title": "Thermal Chamber FAT - 4 cycle acceptance profile operator graph wall",
+    "generated_at": "2026-01-15T10:00:00Z",
+    "source_mode": "fixture_backend_owned",
+    "graph_version": "gossamer.graph_wall.v1",
+    "owner": "gossamer_backend_fixture_generator",
+    "provenance": "gossamer internal/environmentalsim deterministic fixture",
+    "time_range": {
+      "start": "2026-01-15T10:00:00Z",
+      "end": "2026-01-21T21:05:00Z",
+      "anchor": "2026-01-15T10:00:00Z",
+      "range_seconds": 558300,
+      "mode": "absolute_fixture",
+      "source": "thermal_program"
+    },
+    "tile_policy": {
+      "default_points": 900,
+      "max_points": 3600,
+      "live_tile_min_refresh_ms": 1000,
+      "history_tile_max_count": 96,
+      "viewport_prefetch_px": 640,
+      "tile_buffer_max_entries": 192,
+      "tile_buffer_ttl_ms": 90000,
+      "resolution_levels": [
+        "raw",
+        "1m",
+        "5m",
+        "15m"
+      ],
+      "subscriber_role": "operator_supervisor",
+      "shared_timebase_required": true,
+      "legend_may_affect_plot_width": false,
+      "malformed_svg_path_hard_failure": true
+    },
+    "graph_groups": [
+      {
+        "id": "thermal_acceptance_fat_operator_wall",
+        "title": "Synchronized environmental execution wall",
+        "mode": "single_chamber_supervisor",
+        "behavior_profile": "loom_dense_operator_wall",
+        "application": "environmental_test_execution",
+        "section_ids": [
+          "thermal_environment",
+          "facility_response",
+          "dut_response",
+          "tmtc_response",
+          "testbed_dynamics"
+        ],
+        "interaction": {
+          "shared_timeline": true,
+          "shared_crosshair": true,
+          "vertical_grid": true,
+          "single_time_axis": true,
+          "cursor_mode": "inspect",
+          "crosshair_scope": "all_cards",
+          "timeline_grid_mode": "phase_cycle_aligned"
+        },
+        "layout": {
+          "pinned_cards_separate": true,
+          "overflow_mode": "vertical_scroll_only",
+          "axis_rail": "fixed_left_and_right",
+          "legend_rail": "fixed_right_outside_plot",
+          "label_rail": "fixed_left_outside_plot",
+          "plot_area_policy": "same_width_all_cards"
+        }
+      }
+    ],
+    "sections": [
+      {
+        "id": "thermal_environment",
+        "title": "Thermal Environment",
+        "group_id": "thermal_acceptance_fat_operator_wall",
+        "transport": "fixture_json",
+        "direction": "derived",
+        "status": "fresh",
+        "unplotted_count": 0,
+        "cards": [
+          {
+            "id": "thermal_program",
+            "title": "Chamber command, ghost, acceptance, actual",
+            "kind": "line",
+            "role": "primary_hero",
+            "placement": {
+              "section_id": "thermal_environment",
+              "group_id": "thermal_acceptance_fat_operator_wall",
+              "order": 1,
+              "height_weight": 2.8,
+              "default_visible": true,
+              "pinned": true,
+              "resize_policy": "fixed_plot_area"
+            },
+            "transport": "fixture_json",
+            "direction": "derived",
+            "unit": "degC",
+            "axis_policy": "temperature_c",
+            "source_family": "facility_thermal",
+            "render_kind": "line",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=thermal_program",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=thermal_program",
+            "collapsible": true,
+            "default_expanded": true,
+            "supports_time_zoom": true,
+            "supports_y_zoom": true,
+            "signals": [
+              {
+                "id": "trace.command.chamber",
+                "label": "Chamber command",
+                "unit": "degC",
+                "source": "thermal_program",
+                "source_family": "thermal_program",
+                "kind": "command",
+                "category": "command",
+                "role": "command",
+                "subsystem": "facility",
+                "axis_id": "temperature_c",
+                "section_id": "thermal_environment"
+              },
+              {
+                "id": "trace.ghost.profile",
+                "label": "Cycle ghost profile",
+                "unit": "degC",
+                "source": "thermal_program",
+                "source_family": "thermal_program",
+                "kind": "ghost",
+                "category": "ghost",
+                "role": "ghost",
+                "subsystem": "facility",
+                "axis_id": "temperature_c",
+                "section_id": "thermal_environment"
+              },
+              {
+                "id": "trace.acceptance.temperature",
+                "label": "Acceptance band center",
+                "unit": "degC",
+                "source": "requirements",
+                "source_family": "requirements",
+                "kind": "acceptance",
+                "category": "acceptance_band",
+                "role": "acceptance_band",
+                "subsystem": "requirements",
+                "axis_id": "temperature_c",
+                "section_id": "thermal_environment"
+              },
+              {
+                "id": "trace.actual.chamber_air",
+                "label": "Chamber air actual",
+                "unit": "degC",
+                "source": "facility_thermal",
+                "source_family": "facility_thermal",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "facility",
+                "axis_id": "temperature_c",
+                "section_id": "thermal_environment"
+              },
+              {
+                "id": "trace.dut_temp_a",
+                "label": "High-dissipation DUT node",
+                "unit": "degC",
+                "source": "dut_thermal",
+                "source_family": "dut_thermal",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "dut",
+                "axis_id": "temperature_c",
+                "section_id": "thermal_environment"
+              },
+              {
+                "id": "trace.dut_temp_b",
+                "label": "Vacuum-detached DUT node",
+                "unit": "degC",
+                "source": "dut_thermal",
+                "source_family": "dut_thermal",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "dut",
+                "axis_id": "temperature_c",
+                "section_id": "thermal_environment"
+              },
+              {
+                "id": "trace.table_loop",
+                "label": "Fluid interface",
+                "unit": "degC",
+                "source": "facility_thermal",
+                "source_family": "facility_thermal",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "facility",
+                "axis_id": "temperature_c",
+                "section_id": "thermal_environment"
+              }
+            ]
+          },
+          {
+            "id": "dut_temperature",
+            "title": "DUT temperatures in chamber context",
+            "kind": "line",
+            "role": "companion",
+            "placement": {
+              "section_id": "thermal_environment",
+              "group_id": "thermal_acceptance_fat_operator_wall",
+              "order": 2,
+              "height_weight": 1,
+              "default_visible": true,
+              "pinned": false,
+              "resize_policy": "fixed_plot_area"
+            },
+            "transport": "fixture_json",
+            "direction": "derived",
+            "unit": "degC",
+            "axis_policy": "temperature_c",
+            "source_family": "dut_thermal",
+            "render_kind": "line",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=dut_temperature",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=dut_temperature",
+            "collapsible": true,
+            "default_expanded": true,
+            "supports_time_zoom": true,
+            "supports_y_zoom": true,
+            "signals": [
+              {
+                "id": "trace.context.chamber_air",
+                "label": "Chamber air",
+                "unit": "degC",
+                "source": "facility_thermal",
+                "source_family": "facility_thermal",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "facility",
+                "axis_id": "temperature_c",
+                "section_id": "thermal_environment"
+              },
+              {
+                "id": "trace.dut_temp_a",
+                "label": "High-dissipation DUT node",
+                "unit": "degC",
+                "source": "dut_thermal",
+                "source_family": "dut_thermal",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "dut",
+                "axis_id": "temperature_c",
+                "section_id": "thermal_environment"
+              },
+              {
+                "id": "trace.dut_temp_b",
+                "label": "Vacuum-detached DUT node",
+                "unit": "degC",
+                "source": "dut_thermal",
+                "source_family": "dut_thermal",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "dut",
+                "axis_id": "temperature_c",
+                "section_id": "thermal_environment"
+              },
+              {
+                "id": "trace.table_loop",
+                "label": "Fluid interface",
+                "unit": "degC",
+                "source": "facility_thermal",
+                "source_family": "facility_thermal",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "facility",
+                "axis_id": "temperature_c",
+                "section_id": "thermal_environment"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "facility_response",
+        "title": "Facility Response",
+        "group_id": "thermal_acceptance_fat_operator_wall",
+        "transport": "fixture_json",
+        "direction": "derived",
+        "status": "fresh",
+        "unplotted_count": 0,
+        "cards": [
+          {
+            "id": "facility_actuation",
+            "title": "Cooling actuator duty",
+            "kind": "line",
+            "role": "companion",
+            "placement": {
+              "section_id": "facility_response",
+              "group_id": "thermal_acceptance_fat_operator_wall",
+              "order": 1,
+              "height_weight": 1,
+              "default_visible": true,
+              "pinned": false,
+              "resize_policy": "fixed_plot_area"
+            },
+            "transport": "fixture_json",
+            "direction": "derived",
+            "unit": "%",
+            "axis_policy": "percent",
+            "source_family": "facility_thermal",
+            "render_kind": "line",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=facility_actuation",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=facility_actuation",
+            "collapsible": true,
+            "default_expanded": true,
+            "supports_time_zoom": true,
+            "supports_y_zoom": true,
+            "signals": [
+              {
+                "id": "trace.ln2_duty",
+                "label": "Cooling demand",
+                "unit": "%",
+                "source": "facility_thermal",
+                "source_family": "facility_thermal",
+                "kind": "actuator",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "facility",
+                "axis_id": "percent",
+                "section_id": "facility_response"
+              }
+            ]
+          },
+          {
+            "id": "building_infrastructure",
+            "title": "Building infrastructure",
+            "kind": "line",
+            "role": "companion",
+            "placement": {
+              "section_id": "facility_response",
+              "group_id": "thermal_acceptance_fat_operator_wall",
+              "order": 2,
+              "height_weight": 1,
+              "default_visible": true,
+              "pinned": false,
+              "resize_policy": "fixed_plot_area"
+            },
+            "transport": "fixture_json",
+            "direction": "derived",
+            "unit": "mixed",
+            "axis_policy": "facility_infra",
+            "source_family": "facility_infrastructure",
+            "render_kind": "line",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=building_infrastructure",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=building_infrastructure",
+            "collapsible": true,
+            "default_expanded": true,
+            "supports_time_zoom": true,
+            "supports_y_zoom": true,
+            "signals": [
+              {
+                "id": "trace.cooling_water_temp",
+                "label": "Cooling water temp",
+                "unit": "degC",
+                "source": "facility_infrastructure",
+                "source_family": "facility_infrastructure",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "facility",
+                "axis_id": "temperature_c",
+                "section_id": "facility_response"
+              },
+              {
+                "id": "trace.pressurized_air_supply",
+                "label": "Pressurized air supply",
+                "unit": "bar",
+                "source": "facility_infrastructure",
+                "source_family": "facility_infrastructure",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "facility",
+                "axis_id": "pressure_bar",
+                "section_id": "facility_response"
+              },
+              {
+                "id": "trace.air_dewpoint",
+                "label": "Air dew point",
+                "unit": "degC",
+                "source": "facility_infrastructure",
+                "source_family": "facility_infrastructure",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "facility",
+                "axis_id": "temperature_c",
+                "section_id": "facility_response"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "dut_response",
+        "title": "DUT Response",
+        "group_id": "thermal_acceptance_fat_operator_wall",
+        "transport": "fixture_json",
+        "direction": "derived",
+        "status": "fresh",
+        "unplotted_count": 0,
+        "cards": [
+          {
+            "id": "dut_power",
+            "title": "DUT power budgets",
+            "kind": "line",
+            "role": "companion",
+            "placement": {
+              "section_id": "dut_response",
+              "group_id": "thermal_acceptance_fat_operator_wall",
+              "order": 1,
+              "height_weight": 1,
+              "default_visible": true,
+              "pinned": false,
+              "resize_policy": "fixed_plot_area"
+            },
+            "transport": "fixture_json",
+            "direction": "derived",
+            "unit": "W",
+            "axis_policy": "power_w",
+            "source_family": "dut_power",
+            "render_kind": "line",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=dut_power",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=dut_power",
+            "collapsible": true,
+            "default_expanded": true,
+            "supports_time_zoom": true,
+            "supports_y_zoom": true,
+            "signals": [
+              {
+                "id": "trace.power_total",
+                "label": "Total power",
+                "unit": "W",
+                "source": "dut_power",
+                "source_family": "dut_power",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "dut_power",
+                "axis_id": "power_w",
+                "section_id": "dut_response"
+              },
+              {
+                "id": "trace.power_subsystem",
+                "label": "Subsystem budget",
+                "unit": "W",
+                "source": "dut_power",
+                "source_family": "dut_power",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "dut_power",
+                "axis_id": "power_w",
+                "section_id": "dut_response"
+              },
+              {
+                "id": "trace.power_payload",
+                "label": "Payload/FT load",
+                "unit": "W",
+                "source": "dut_power",
+                "source_family": "dut_power",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "dut_power",
+                "axis_id": "power_w",
+                "section_id": "dut_response"
+              },
+              {
+                "id": "trace.power_avionics",
+                "label": "Avionics",
+                "unit": "W",
+                "source": "dut_power",
+                "source_family": "dut_power",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "dut_power",
+                "axis_id": "power_w",
+                "section_id": "dut_response"
+              },
+              {
+                "id": "trace.power_link",
+                "label": "Link subsystem",
+                "unit": "W",
+                "source": "dut_power",
+                "source_family": "dut_power",
+                "kind": "measurement",
+                "category": "actual",
+                "role": "actual",
+                "subsystem": "dut_power",
+                "axis_id": "power_w",
+                "section_id": "dut_response"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "tmtc_response",
+        "title": "Telecommand/Telemetry Response",
+        "group_id": "thermal_acceptance_fat_operator_wall",
+        "transport": "fixture_json",
+        "direction": "derived",
+        "status": "fresh",
+        "unplotted_count": 0,
+        "cards": [
+          {
+            "id": "tmtc_health",
+            "title": "TM/TC latency and freshness",
+            "kind": "line",
+            "role": "companion",
+            "placement": {
+              "section_id": "tmtc_response",
+              "group_id": "thermal_acceptance_fat_operator_wall",
+              "order": 1,
+              "height_weight": 1,
+              "default_visible": true,
+              "pinned": false,
+              "resize_policy": "fixed_plot_area"
+            },
+            "transport": "fixture_json",
+            "direction": "derived",
+            "unit": "ms",
+            "axis_policy": "bus_ms",
+            "source_family": "demo_bus_virtualization",
+            "render_kind": "line",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=tmtc_health",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=tmtc_health",
+            "collapsible": true,
+            "default_expanded": true,
+            "supports_time_zoom": true,
+            "supports_y_zoom": true,
+            "signals": [
+              {
+                "id": "trace.bus_latency",
+                "label": "Bus latency",
+                "unit": "ms",
+                "source": "demo_bus_virtualization",
+                "source_family": "demo_bus_virtualization",
+                "kind": "measurement",
+                "category": "source_quality",
+                "role": "source_quality",
+                "subsystem": "tmtc",
+                "axis_id": "bus_ms",
+                "section_id": "tmtc_response"
+              },
+              {
+                "id": "trace.source_freshness",
+                "label": "Freshness",
+                "unit": "ms",
+                "source": "demo_quality",
+                "source_family": "demo_quality",
+                "kind": "measurement",
+                "category": "source_quality",
+                "role": "source_quality",
+                "subsystem": "tmtc",
+                "axis_id": "bus_ms",
+                "section_id": "tmtc_response"
+              }
+            ]
+          },
+          {
+            "id": "tmtc_counters",
+            "title": "TM/TC packet counters",
+            "kind": "counter",
+            "role": "companion",
+            "placement": {
+              "section_id": "tmtc_response",
+              "group_id": "thermal_acceptance_fat_operator_wall",
+              "order": 2,
+              "height_weight": 1,
+              "default_visible": true,
+              "pinned": false,
+              "resize_policy": "fixed_plot_area"
+            },
+            "transport": "fixture_json",
+            "direction": "derived",
+            "unit": "count",
+            "axis_policy": "counter",
+            "source_family": "demo_bus_virtualization",
+            "render_kind": "counter",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=tmtc_counters",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=tmtc_counters",
+            "collapsible": true,
+            "default_expanded": true,
+            "supports_time_zoom": true,
+            "supports_y_zoom": true,
+            "signals": [
+              {
+                "id": "trace.overall_packet_counter",
+                "label": "Overall packet counter",
+                "unit": "count",
+                "source": "demo_bus_virtualization",
+                "source_family": "demo_bus_virtualization",
+                "kind": "counter",
+                "category": "counter",
+                "role": "counter",
+                "subsystem": "tmtc",
+                "axis_id": "counter",
+                "section_id": "tmtc_response"
+              },
+              {
+                "id": "trace.tm_packet_counter",
+                "label": "TM packet counter",
+                "unit": "count",
+                "source": "demo_bus_virtualization",
+                "source_family": "demo_bus_virtualization",
+                "kind": "counter",
+                "category": "counter",
+                "role": "counter",
+                "subsystem": "tmtc",
+                "axis_id": "counter",
+                "section_id": "tmtc_response"
+              },
+              {
+                "id": "trace.tc_packet_counter",
+                "label": "TC packet counter",
+                "unit": "count",
+                "source": "demo_bus_virtualization",
+                "source_family": "demo_bus_virtualization",
+                "kind": "counter",
+                "category": "counter",
+                "role": "counter",
+                "subsystem": "tmtc",
+                "axis_id": "counter",
+                "section_id": "tmtc_response"
+              },
+              {
+                "id": "trace.dropped_frame_count",
+                "label": "Dropped frames",
+                "unit": "count",
+                "source": "demo_bus_virtualization",
+                "source_family": "demo_bus_virtualization",
+                "kind": "counter",
+                "category": "counter",
+                "role": "counter",
+                "subsystem": "tmtc",
+                "axis_id": "counter",
+                "section_id": "tmtc_response"
+              }
+            ]
+          },
+          {
+            "id": "source_quality",
+            "title": "Source freshness quality",
+            "kind": "line",
+            "role": "companion",
+            "placement": {
+              "section_id": "tmtc_response",
+              "group_id": "thermal_acceptance_fat_operator_wall",
+              "order": 3,
+              "height_weight": 1,
+              "default_visible": true,
+              "pinned": false,
+              "resize_policy": "fixed_plot_area"
+            },
+            "transport": "fixture_json",
+            "direction": "derived",
+            "unit": "ms",
+            "axis_policy": "bus_ms",
+            "source_family": "demo_quality",
+            "render_kind": "line",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=source_quality",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=source_quality",
+            "collapsible": true,
+            "default_expanded": true,
+            "supports_time_zoom": true,
+            "supports_y_zoom": true,
+            "signals": [
+              {
+                "id": "trace.source_freshness",
+                "label": "Source freshness",
+                "unit": "ms",
+                "source": "demo_quality",
+                "source_family": "demo_quality",
+                "kind": "measurement",
+                "category": "source_quality",
+                "role": "source_quality",
+                "subsystem": "tmtc",
+                "axis_id": "bus_ms",
+                "section_id": "tmtc_response"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "testbed_dynamics",
+        "title": "Testbed Dynamics",
+        "group_id": "thermal_acceptance_fat_operator_wall",
+        "transport": "fixture_json",
+        "direction": "derived",
+        "status": "fresh",
+        "unplotted_count": 0,
+        "cards": [
+          {
+            "id": "state_change_swimlane",
+            "title": "Testbed state swimlanes",
+            "kind": "state",
+            "role": "swimlane",
+            "placement": {
+              "section_id": "testbed_dynamics",
+              "group_id": "thermal_acceptance_fat_operator_wall",
+              "order": 1,
+              "height_weight": 0.85,
+              "default_visible": true,
+              "pinned": false,
+              "resize_policy": "fixed_plot_area"
+            },
+            "transport": "fixture_json",
+            "direction": "derived",
+            "unit": "state",
+            "axis_policy": "state_lane",
+            "source_family": "thermal_program",
+            "render_kind": "swimlane",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=state_change_swimlane",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=state_change_swimlane",
+            "collapsible": true,
+            "default_expanded": true,
+            "supports_time_zoom": true,
+            "signals": [
+              {
+                "id": "trace.phase_enum",
+                "label": "Thermal phase",
+                "unit": "state",
+                "source": "thermal_program",
+                "source_family": "thermal_program",
+                "kind": "enum",
+                "category": "state",
+                "role": "state",
+                "subsystem": "operator_state",
+                "axis_id": "state_lane",
+                "section_id": "testbed_dynamics",
+                "value_table": {
+                  "0": "ambient pre",
+                  "1": "ramp cold",
+                  "2": "cold op",
+                  "3": "ramp hot",
+                  "4": "hot op",
+                  "5": "hot survival",
+                  "6": "cold survival",
+                  "7": "vacuum ambient",
+                  "8": "ambient post"
+                }
+              },
+              {
+                "id": "trace.functional_gate_active",
+                "label": "Functional gate active",
+                "unit": "state",
+                "source": "test_conductor",
+                "source_family": "test_conductor",
+                "kind": "bool",
+                "category": "state",
+                "role": "state",
+                "subsystem": "operator_state",
+                "axis_id": "state_lane",
+                "section_id": "testbed_dynamics",
+                "value_table": {
+                  "0": "inactive",
+                  "1": "active"
+                }
+              },
+              {
+                "id": "trace.stability_reached",
+                "label": "Stability reached",
+                "unit": "state",
+                "source": "thermal_program",
+                "source_family": "thermal_program",
+                "kind": "bool",
+                "category": "state",
+                "role": "state",
+                "subsystem": "operator_state",
+                "axis_id": "state_lane",
+                "section_id": "testbed_dynamics",
+                "value_table": {
+                  "0": "stabilizing",
+                  "1": "stable"
+                }
+              },
+              {
+                "id": "trace.dwell_active",
+                "label": "Dwell active",
+                "unit": "state",
+                "source": "thermal_program",
+                "source_family": "thermal_program",
+                "kind": "bool",
+                "category": "state",
+                "role": "state",
+                "subsystem": "operator_state",
+                "axis_id": "state_lane",
+                "section_id": "testbed_dynamics",
+                "value_table": {
+                  "0": "idle",
+                  "1": "dwelling"
+                }
+              },
+              {
+                "id": "trace.dwell_complete",
+                "label": "Dwell complete",
+                "unit": "state",
+                "source": "thermal_program",
+                "source_family": "thermal_program",
+                "kind": "bool",
+                "category": "state",
+                "role": "state",
+                "subsystem": "operator_state",
+                "axis_id": "state_lane",
+                "section_id": "testbed_dynamics",
+                "value_table": {
+                  "0": "open",
+                  "1": "complete"
+                }
+              },
+              {
+                "id": "trace.interlock_review",
+                "label": "Facility interlock state",
+                "unit": "state",
+                "source": "facility_safety",
+                "source_family": "facility_safety",
+                "kind": "fault",
+                "category": "state",
+                "role": "state",
+                "subsystem": "operator_state",
+                "axis_id": "state_lane",
+                "section_id": "testbed_dynamics",
+                "value_table": {
+                  "1": "closed",
+                  "2": "review"
+                }
+              },
+              {
+                "id": "trace.source_degraded",
+                "label": "Source degraded",
+                "unit": "state",
+                "source": "demo_quality",
+                "source_family": "demo_quality",
+                "kind": "bool",
+                "category": "state",
+                "role": "state",
+                "subsystem": "operator_state",
+                "axis_id": "state_lane",
+                "section_id": "testbed_dynamics",
+                "value_table": {
+                  "0": "fresh",
+                  "1": "degraded"
+                }
+              },
+              {
+                "id": "trace.evidence_capture",
+                "label": "Evidence capture",
+                "unit": "state",
+                "source": "evidence_report",
+                "source_family": "evidence_report",
+                "kind": "bool",
+                "category": "state",
+                "role": "state",
+                "subsystem": "operator_state",
+                "axis_id": "state_lane",
+                "section_id": "testbed_dynamics",
+                "value_table": {
+                  "0": "idle",
+                  "1": "capture"
+                }
+              },
+              {
+                "id": "trace.dut_ready",
+                "label": "DUT ready",
+                "unit": "state",
+                "source": "dut_control",
+                "source_family": "dut_control",
+                "kind": "bool",
+                "category": "state",
+                "role": "state",
+                "subsystem": "operator_state",
+                "axis_id": "state_lane",
+                "section_id": "testbed_dynamics",
+                "value_table": {
+                  "0": "not ready",
+                  "1": "ready"
+                }
+              },
+              {
+                "id": "trace.dut_operative",
+                "label": "DUT operative",
+                "unit": "state",
+                "source": "dut_control",
+                "source_family": "dut_control",
+                "kind": "bool",
+                "category": "state",
+                "role": "state",
+                "subsystem": "operator_state",
+                "axis_id": "state_lane",
+                "section_id": "testbed_dynamics",
+                "value_table": {
+                  "0": "inhibited",
+                  "1": "operative"
+                }
+              },
+              {
+                "id": "trace.payload_active",
+                "label": "Payload active",
+                "unit": "state",
+                "source": "dut_power",
+                "source_family": "dut_power",
+                "kind": "bool",
+                "category": "state",
+                "role": "state",
+                "subsystem": "operator_state",
+                "axis_id": "state_lane",
+                "section_id": "testbed_dynamics",
+                "value_table": {
+                  "0": "standby",
+                  "1": "active"
+                }
+              },
+              {
+                "id": "trace.rf_link_locked",
+                "label": "RF link locked",
+                "unit": "state",
+                "source": "dut_link",
+                "source_family": "dut_link",
+                "kind": "bool",
+                "category": "state",
+                "role": "state",
+                "subsystem": "operator_state",
+                "axis_id": "state_lane",
+                "section_id": "testbed_dynamics",
+                "value_table": {
+                  "0": "searching",
+                  "1": "locked"
+                }
+              },
+              {
+                "id": "trace.fault_flag",
+                "label": "Fault flag",
+                "unit": "state",
+                "source": "demo_quality",
+                "source_family": "demo_quality",
+                "kind": "fault",
+                "category": "state",
+                "role": "state",
+                "subsystem": "operator_state",
+                "axis_id": "state_lane",
+                "section_id": "testbed_dynamics",
+                "value_table": {
+                  "0": "nominal",
+                  "1": "fault"
+                }
+              }
+            ]
+          },
+          {
+            "id": "functional_events",
+            "title": "Functional gates and evidence events",
+            "kind": "event",
+            "role": "event_rail",
+            "placement": {
+              "section_id": "testbed_dynamics",
+              "group_id": "thermal_acceptance_fat_operator_wall",
+              "order": 2,
+              "height_weight": 0.85,
+              "default_visible": true,
+              "pinned": false,
+              "resize_policy": "fixed_plot_area"
+            },
+            "transport": "fixture_json",
+            "direction": "derived",
+            "unit": "event",
+            "axis_policy": "event",
+            "source_family": "test_conductor",
+            "render_kind": "event_rail",
+            "tile_endpoint": "/api/campaigns/{campaign_id}/tiles?card_id=functional_events",
+            "latest_endpoint": "/api/campaigns/{campaign_id}/latest-tile?card_id=functional_events",
+            "collapsible": true,
+            "default_expanded": true,
+            "supports_time_zoom": true,
+            "signals": [
+              {
+                "id": "functional_gates",
+                "label": "Functional gates",
+                "unit": "event",
+                "source": "test_conductor",
+                "source_family": "test_conductor",
+                "kind": "event",
+                "category": "event",
+                "role": "event",
+                "subsystem": "test_conductor",
+                "axis_id": "event",
+                "section_id": "testbed_dynamics"
+              },
+              {
+                "id": "evidence_markers",
+                "label": "Evidence markers",
+                "unit": "event",
+                "source": "evidence_report",
+                "source_family": "evidence_report",
+                "kind": "event",
+                "category": "evidence",
+                "role": "evidence",
+                "subsystem": "evidence",
+                "axis_id": "event",
+                "section_id": "testbed_dynamics"
+              },
+              {
+                "id": "interlock_windows",
+                "label": "Interlock windows",
+                "unit": "event",
+                "source": "facility_safety",
+                "source_family": "facility_safety",
+                "kind": "event",
+                "category": "interlock",
+                "role": "interlock",
+                "subsystem": "facility",
+                "axis_id": "event",
+                "section_id": "testbed_dynamics"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "tile_manifest": {
+    "schema_version": 1,
+    "id": "thermal_acceptance_fat_tile_manifest",
+    "campaign_id": "thermal_acceptance_fat",
+    "graph_wall_id": "thermal_acceptance_fat_graph_wall",
+    "generated_at": "2026-01-15T10:00:00Z",
+    "source_mode": "fixture_tile_backend",
+    "time_range": {
+      "start": "2026-01-15T10:00:00Z",
+      "end": "2026-01-21T21:05:00Z",
+      "anchor": "2026-01-15T10:00:00Z",
+      "range_seconds": 558300,
+      "mode": "absolute_fixture",
+      "source": "thermal_program"
+    },
+    "tile_policy": {
+      "default_points": 900,
+      "max_points": 3600,
+      "live_tile_min_refresh_ms": 1000,
+      "history_tile_max_count": 96,
+      "viewport_prefetch_px": 640,
+      "tile_buffer_max_entries": 192,
+      "tile_buffer_ttl_ms": 90000,
+      "resolution_levels": [
+        "raw",
+        "1m",
+        "5m",
+        "15m"
+      ],
+      "subscriber_role": "operator_supervisor",
+      "shared_timebase_required": true,
+      "legend_may_affect_plot_width": false,
+      "malformed_svg_path_hard_failure": true
+    },
+    "levels": [
+      {
+        "id": "year",
+        "label": "Year",
+        "resolution": "year",
+        "duration_ms": 31536000000,
+        "max_points": 480,
+        "decimation_mode": "min_max_envelope"
+      },
+      {
+        "id": "month",
+        "label": "Month",
+        "resolution": "month",
+        "duration_ms": 2678400000,
+        "max_points": 600,
+        "decimation_mode": "min_max_envelope"
+      },
+      {
+        "id": "day",
+        "label": "Day",
+        "resolution": "day",
+        "duration_ms": 86400000,
+        "max_points": 720,
+        "decimation_mode": "min_max_envelope"
+      },
+      {
+        "id": "hour",
+        "label": "Hour",
+        "resolution": "hour",
+        "duration_ms": 3600000,
+        "max_points": 900,
+        "decimation_mode": "min_max_envelope"
+      },
+      {
+        "id": "minute",
+        "label": "Minute",
+        "resolution": "minute",
+        "duration_ms": 60000,
+        "max_points": 900,
+        "decimation_mode": "min_max_envelope"
+      },
+      {
+        "id": "second",
+        "label": "Second",
+        "resolution": "second",
+        "duration_ms": 1000,
+        "max_points": 1800,
+        "decimation_mode": "raw_or_envelope"
+      },
+      {
+        "id": "millisecond",
+        "label": "Millisecond",
+        "resolution": "millisecond",
+        "duration_ms": 1,
+        "max_points": 3600,
+        "decimation_mode": "raw_or_envelope"
+      }
+    ],
+    "source_nodes": [
+      {
+        "id": "fixture_backend",
+        "label": "Fixture backend",
+        "kind": "synthetic",
+        "mode": "deterministic",
+        "confidence": "high",
+        "provenance": "gossamer internal simulation"
+      },
+      {
+        "id": "facility_control",
+        "label": "Facility control node",
+        "kind": "live_capable",
+        "mode": "simulated",
+        "confidence": "high",
+        "provenance": "tile source contract"
+      },
+      {
+        "id": "legacy_import",
+        "label": "Legacy import node",
+        "kind": "translated",
+        "mode": "fixture",
+        "confidence": "medium",
+        "provenance": "DataLens translation demo"
+      }
+    ],
+    "datalens_translations": [
+      {
+        "id": "legacy_csv_environment",
+        "label": "Legacy CSV environment import",
+        "source_format": "legacy_csv",
+        "target_schema": "gossamer.graph_tile.v1",
+        "mode": "translated_fixture",
+        "confidence": "high",
+        "provenance": "synthetic DataLens translation demo"
+      },
+      {
+        "id": "binary_tmtc_log",
+        "label": "Binary TM/TC log import",
+        "source_format": "binary_log",
+        "target_schema": "gossamer.graph_tile.v1",
+        "mode": "translated_fixture",
+        "confidence": "medium",
+        "provenance": "synthetic DataLens translation demo"
+      },
+      {
+        "id": "hdf5_evidence_archive",
+        "label": "HDF5-like evidence archive",
+        "source_format": "hdf5",
+        "target_schema": "gossamer.graph_tile.v1",
+        "mode": "translated_fixture",
+        "confidence": "high",
+        "provenance": "synthetic DataLens translation demo"
+      }
+    ],
+    "cards": [
+      {
+        "card_id": "thermal_program",
+        "title": "Chamber command, ghost, acceptance, actual",
+        "render_kind": "line",
+        "unit": "degC",
+        "axis_policy": "temperature_c",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=thermal_program",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=thermal_program",
+        "collapsible": true,
+        "default_expanded": true,
+        "supports_time_zoom": true,
+        "supports_y_zoom": true,
+        "signals": [
+          {
+            "id": "trace.command.chamber",
+            "label": "Chamber command",
+            "unit": "degC",
+            "source": "thermal_program",
+            "source_family": "thermal_program",
+            "kind": "command",
+            "category": "command",
+            "role": "command",
+            "subsystem": "facility",
+            "axis_id": "temperature_c",
+            "section_id": "thermal_environment"
+          },
+          {
+            "id": "trace.ghost.profile",
+            "label": "Cycle ghost profile",
+            "unit": "degC",
+            "source": "thermal_program",
+            "source_family": "thermal_program",
+            "kind": "ghost",
+            "category": "ghost",
+            "role": "ghost",
+            "subsystem": "facility",
+            "axis_id": "temperature_c",
+            "section_id": "thermal_environment"
+          },
+          {
+            "id": "trace.acceptance.temperature",
+            "label": "Acceptance band center",
+            "unit": "degC",
+            "source": "requirements",
+            "source_family": "requirements",
+            "kind": "acceptance",
+            "category": "acceptance_band",
+            "role": "acceptance_band",
+            "subsystem": "requirements",
+            "axis_id": "temperature_c",
+            "section_id": "thermal_environment"
+          },
+          {
+            "id": "trace.actual.chamber_air",
+            "label": "Chamber air actual",
+            "unit": "degC",
+            "source": "facility_thermal",
+            "source_family": "facility_thermal",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "facility",
+            "axis_id": "temperature_c",
+            "section_id": "thermal_environment"
+          },
+          {
+            "id": "trace.dut_temp_a",
+            "label": "High-dissipation DUT node",
+            "unit": "degC",
+            "source": "dut_thermal",
+            "source_family": "dut_thermal",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "dut",
+            "axis_id": "temperature_c",
+            "section_id": "thermal_environment"
+          },
+          {
+            "id": "trace.dut_temp_b",
+            "label": "Vacuum-detached DUT node",
+            "unit": "degC",
+            "source": "dut_thermal",
+            "source_family": "dut_thermal",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "dut",
+            "axis_id": "temperature_c",
+            "section_id": "thermal_environment"
+          },
+          {
+            "id": "trace.table_loop",
+            "label": "Fluid interface",
+            "unit": "degC",
+            "source": "facility_thermal",
+            "source_family": "facility_thermal",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "facility",
+            "axis_id": "temperature_c",
+            "section_id": "thermal_environment"
+          }
+        ]
+      },
+      {
+        "card_id": "dut_temperature",
+        "title": "DUT temperatures in chamber context",
+        "render_kind": "line",
+        "unit": "degC",
+        "axis_policy": "temperature_c",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=dut_temperature",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=dut_temperature",
+        "collapsible": true,
+        "default_expanded": true,
+        "supports_time_zoom": true,
+        "supports_y_zoom": true,
+        "signals": [
+          {
+            "id": "trace.context.chamber_air",
+            "label": "Chamber air",
+            "unit": "degC",
+            "source": "facility_thermal",
+            "source_family": "facility_thermal",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "facility",
+            "axis_id": "temperature_c",
+            "section_id": "thermal_environment"
+          },
+          {
+            "id": "trace.dut_temp_a",
+            "label": "High-dissipation DUT node",
+            "unit": "degC",
+            "source": "dut_thermal",
+            "source_family": "dut_thermal",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "dut",
+            "axis_id": "temperature_c",
+            "section_id": "thermal_environment"
+          },
+          {
+            "id": "trace.dut_temp_b",
+            "label": "Vacuum-detached DUT node",
+            "unit": "degC",
+            "source": "dut_thermal",
+            "source_family": "dut_thermal",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "dut",
+            "axis_id": "temperature_c",
+            "section_id": "thermal_environment"
+          },
+          {
+            "id": "trace.table_loop",
+            "label": "Fluid interface",
+            "unit": "degC",
+            "source": "facility_thermal",
+            "source_family": "facility_thermal",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "facility",
+            "axis_id": "temperature_c",
+            "section_id": "thermal_environment"
+          }
+        ]
+      },
+      {
+        "card_id": "facility_actuation",
+        "title": "Cooling actuator duty",
+        "render_kind": "line",
+        "unit": "%",
+        "axis_policy": "percent",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=facility_actuation",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=facility_actuation",
+        "collapsible": true,
+        "default_expanded": true,
+        "supports_time_zoom": true,
+        "supports_y_zoom": true,
+        "signals": [
+          {
+            "id": "trace.ln2_duty",
+            "label": "Cooling demand",
+            "unit": "%",
+            "source": "facility_thermal",
+            "source_family": "facility_thermal",
+            "kind": "actuator",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "facility",
+            "axis_id": "percent",
+            "section_id": "facility_response"
+          }
+        ]
+      },
+      {
+        "card_id": "building_infrastructure",
+        "title": "Building infrastructure",
+        "render_kind": "line",
+        "unit": "mixed",
+        "axis_policy": "facility_infra",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=building_infrastructure",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=building_infrastructure",
+        "collapsible": true,
+        "default_expanded": true,
+        "supports_time_zoom": true,
+        "supports_y_zoom": true,
+        "signals": [
+          {
+            "id": "trace.cooling_water_temp",
+            "label": "Cooling water temp",
+            "unit": "degC",
+            "source": "facility_infrastructure",
+            "source_family": "facility_infrastructure",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "facility",
+            "axis_id": "temperature_c",
+            "section_id": "facility_response"
+          },
+          {
+            "id": "trace.pressurized_air_supply",
+            "label": "Pressurized air supply",
+            "unit": "bar",
+            "source": "facility_infrastructure",
+            "source_family": "facility_infrastructure",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "facility",
+            "axis_id": "pressure_bar",
+            "section_id": "facility_response"
+          },
+          {
+            "id": "trace.air_dewpoint",
+            "label": "Air dew point",
+            "unit": "degC",
+            "source": "facility_infrastructure",
+            "source_family": "facility_infrastructure",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "facility",
+            "axis_id": "temperature_c",
+            "section_id": "facility_response"
+          }
+        ]
+      },
+      {
+        "card_id": "dut_power",
+        "title": "DUT power budgets",
+        "render_kind": "line",
+        "unit": "W",
+        "axis_policy": "power_w",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=dut_power",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=dut_power",
+        "collapsible": true,
+        "default_expanded": true,
+        "supports_time_zoom": true,
+        "supports_y_zoom": true,
+        "signals": [
+          {
+            "id": "trace.power_total",
+            "label": "Total power",
+            "unit": "W",
+            "source": "dut_power",
+            "source_family": "dut_power",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "dut_power",
+            "axis_id": "power_w",
+            "section_id": "dut_response"
+          },
+          {
+            "id": "trace.power_subsystem",
+            "label": "Subsystem budget",
+            "unit": "W",
+            "source": "dut_power",
+            "source_family": "dut_power",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "dut_power",
+            "axis_id": "power_w",
+            "section_id": "dut_response"
+          },
+          {
+            "id": "trace.power_payload",
+            "label": "Payload/FT load",
+            "unit": "W",
+            "source": "dut_power",
+            "source_family": "dut_power",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "dut_power",
+            "axis_id": "power_w",
+            "section_id": "dut_response"
+          },
+          {
+            "id": "trace.power_avionics",
+            "label": "Avionics",
+            "unit": "W",
+            "source": "dut_power",
+            "source_family": "dut_power",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "dut_power",
+            "axis_id": "power_w",
+            "section_id": "dut_response"
+          },
+          {
+            "id": "trace.power_link",
+            "label": "Link subsystem",
+            "unit": "W",
+            "source": "dut_power",
+            "source_family": "dut_power",
+            "kind": "measurement",
+            "category": "actual",
+            "role": "actual",
+            "subsystem": "dut_power",
+            "axis_id": "power_w",
+            "section_id": "dut_response"
+          }
+        ]
+      },
+      {
+        "card_id": "tmtc_health",
+        "title": "TM/TC latency and freshness",
+        "render_kind": "line",
+        "unit": "ms",
+        "axis_policy": "bus_ms",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=tmtc_health",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=tmtc_health",
+        "collapsible": true,
+        "default_expanded": true,
+        "supports_time_zoom": true,
+        "supports_y_zoom": true,
+        "signals": [
+          {
+            "id": "trace.bus_latency",
+            "label": "Bus latency",
+            "unit": "ms",
+            "source": "demo_bus_virtualization",
+            "source_family": "demo_bus_virtualization",
+            "kind": "measurement",
+            "category": "source_quality",
+            "role": "source_quality",
+            "subsystem": "tmtc",
+            "axis_id": "bus_ms",
+            "section_id": "tmtc_response"
+          },
+          {
+            "id": "trace.source_freshness",
+            "label": "Freshness",
+            "unit": "ms",
+            "source": "demo_quality",
+            "source_family": "demo_quality",
+            "kind": "measurement",
+            "category": "source_quality",
+            "role": "source_quality",
+            "subsystem": "tmtc",
+            "axis_id": "bus_ms",
+            "section_id": "tmtc_response"
+          }
+        ]
+      },
+      {
+        "card_id": "tmtc_counters",
+        "title": "TM/TC packet counters",
+        "render_kind": "counter",
+        "unit": "count",
+        "axis_policy": "counter",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=tmtc_counters",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=tmtc_counters",
+        "collapsible": true,
+        "default_expanded": true,
+        "supports_time_zoom": true,
+        "supports_y_zoom": true,
+        "signals": [
+          {
+            "id": "trace.overall_packet_counter",
+            "label": "Overall packet counter",
+            "unit": "count",
+            "source": "demo_bus_virtualization",
+            "source_family": "demo_bus_virtualization",
+            "kind": "counter",
+            "category": "counter",
+            "role": "counter",
+            "subsystem": "tmtc",
+            "axis_id": "counter",
+            "section_id": "tmtc_response"
+          },
+          {
+            "id": "trace.tm_packet_counter",
+            "label": "TM packet counter",
+            "unit": "count",
+            "source": "demo_bus_virtualization",
+            "source_family": "demo_bus_virtualization",
+            "kind": "counter",
+            "category": "counter",
+            "role": "counter",
+            "subsystem": "tmtc",
+            "axis_id": "counter",
+            "section_id": "tmtc_response"
+          },
+          {
+            "id": "trace.tc_packet_counter",
+            "label": "TC packet counter",
+            "unit": "count",
+            "source": "demo_bus_virtualization",
+            "source_family": "demo_bus_virtualization",
+            "kind": "counter",
+            "category": "counter",
+            "role": "counter",
+            "subsystem": "tmtc",
+            "axis_id": "counter",
+            "section_id": "tmtc_response"
+          },
+          {
+            "id": "trace.dropped_frame_count",
+            "label": "Dropped frames",
+            "unit": "count",
+            "source": "demo_bus_virtualization",
+            "source_family": "demo_bus_virtualization",
+            "kind": "counter",
+            "category": "counter",
+            "role": "counter",
+            "subsystem": "tmtc",
+            "axis_id": "counter",
+            "section_id": "tmtc_response"
+          }
+        ]
+      },
+      {
+        "card_id": "source_quality",
+        "title": "Source freshness quality",
+        "render_kind": "line",
+        "unit": "ms",
+        "axis_policy": "bus_ms",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=source_quality",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=source_quality",
+        "collapsible": true,
+        "default_expanded": true,
+        "supports_time_zoom": true,
+        "supports_y_zoom": true,
+        "signals": [
+          {
+            "id": "trace.source_freshness",
+            "label": "Source freshness",
+            "unit": "ms",
+            "source": "demo_quality",
+            "source_family": "demo_quality",
+            "kind": "measurement",
+            "category": "source_quality",
+            "role": "source_quality",
+            "subsystem": "tmtc",
+            "axis_id": "bus_ms",
+            "section_id": "tmtc_response"
+          }
+        ]
+      },
+      {
+        "card_id": "state_change_swimlane",
+        "title": "Testbed state swimlanes",
+        "render_kind": "swimlane",
+        "unit": "state",
+        "axis_policy": "state_lane",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=state_change_swimlane",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=state_change_swimlane",
+        "collapsible": true,
+        "default_expanded": true,
+        "supports_time_zoom": true,
+        "supports_y_zoom": false,
+        "signals": [
+          {
+            "id": "trace.phase_enum",
+            "label": "Thermal phase",
+            "unit": "state",
+            "source": "thermal_program",
+            "source_family": "thermal_program",
+            "kind": "enum",
+            "category": "state",
+            "role": "state",
+            "subsystem": "operator_state",
+            "axis_id": "state_lane",
+            "section_id": "testbed_dynamics",
+            "value_table": {
+              "0": "ambient pre",
+              "1": "ramp cold",
+              "2": "cold op",
+              "3": "ramp hot",
+              "4": "hot op",
+              "5": "hot survival",
+              "6": "cold survival",
+              "7": "vacuum ambient",
+              "8": "ambient post"
+            }
+          },
+          {
+            "id": "trace.functional_gate_active",
+            "label": "Functional gate active",
+            "unit": "state",
+            "source": "test_conductor",
+            "source_family": "test_conductor",
+            "kind": "bool",
+            "category": "state",
+            "role": "state",
+            "subsystem": "operator_state",
+            "axis_id": "state_lane",
+            "section_id": "testbed_dynamics",
+            "value_table": {
+              "0": "inactive",
+              "1": "active"
+            }
+          },
+          {
+            "id": "trace.stability_reached",
+            "label": "Stability reached",
+            "unit": "state",
+            "source": "thermal_program",
+            "source_family": "thermal_program",
+            "kind": "bool",
+            "category": "state",
+            "role": "state",
+            "subsystem": "operator_state",
+            "axis_id": "state_lane",
+            "section_id": "testbed_dynamics",
+            "value_table": {
+              "0": "stabilizing",
+              "1": "stable"
+            }
+          },
+          {
+            "id": "trace.dwell_active",
+            "label": "Dwell active",
+            "unit": "state",
+            "source": "thermal_program",
+            "source_family": "thermal_program",
+            "kind": "bool",
+            "category": "state",
+            "role": "state",
+            "subsystem": "operator_state",
+            "axis_id": "state_lane",
+            "section_id": "testbed_dynamics",
+            "value_table": {
+              "0": "idle",
+              "1": "dwelling"
+            }
+          },
+          {
+            "id": "trace.dwell_complete",
+            "label": "Dwell complete",
+            "unit": "state",
+            "source": "thermal_program",
+            "source_family": "thermal_program",
+            "kind": "bool",
+            "category": "state",
+            "role": "state",
+            "subsystem": "operator_state",
+            "axis_id": "state_lane",
+            "section_id": "testbed_dynamics",
+            "value_table": {
+              "0": "open",
+              "1": "complete"
+            }
+          },
+          {
+            "id": "trace.interlock_review",
+            "label": "Facility interlock state",
+            "unit": "state",
+            "source": "facility_safety",
+            "source_family": "facility_safety",
+            "kind": "fault",
+            "category": "state",
+            "role": "state",
+            "subsystem": "operator_state",
+            "axis_id": "state_lane",
+            "section_id": "testbed_dynamics",
+            "value_table": {
+              "1": "closed",
+              "2": "review"
+            }
+          },
+          {
+            "id": "trace.source_degraded",
+            "label": "Source degraded",
+            "unit": "state",
+            "source": "demo_quality",
+            "source_family": "demo_quality",
+            "kind": "bool",
+            "category": "state",
+            "role": "state",
+            "subsystem": "operator_state",
+            "axis_id": "state_lane",
+            "section_id": "testbed_dynamics",
+            "value_table": {
+              "0": "fresh",
+              "1": "degraded"
+            }
+          },
+          {
+            "id": "trace.evidence_capture",
+            "label": "Evidence capture",
+            "unit": "state",
+            "source": "evidence_report",
+            "source_family": "evidence_report",
+            "kind": "bool",
+            "category": "state",
+            "role": "state",
+            "subsystem": "operator_state",
+            "axis_id": "state_lane",
+            "section_id": "testbed_dynamics",
+            "value_table": {
+              "0": "idle",
+              "1": "capture"
+            }
+          },
+          {
+            "id": "trace.dut_ready",
+            "label": "DUT ready",
+            "unit": "state",
+            "source": "dut_control",
+            "source_family": "dut_control",
+            "kind": "bool",
+            "category": "state",
+            "role": "state",
+            "subsystem": "operator_state",
+            "axis_id": "state_lane",
+            "section_id": "testbed_dynamics",
+            "value_table": {
+              "0": "not ready",
+              "1": "ready"
+            }
+          },
+          {
+            "id": "trace.dut_operative",
+            "label": "DUT operative",
+            "unit": "state",
+            "source": "dut_control",
+            "source_family": "dut_control",
+            "kind": "bool",
+            "category": "state",
+            "role": "state",
+            "subsystem": "operator_state",
+            "axis_id": "state_lane",
+            "section_id": "testbed_dynamics",
+            "value_table": {
+              "0": "inhibited",
+              "1": "operative"
+            }
+          },
+          {
+            "id": "trace.payload_active",
+            "label": "Payload active",
+            "unit": "state",
+            "source": "dut_power",
+            "source_family": "dut_power",
+            "kind": "bool",
+            "category": "state",
+            "role": "state",
+            "subsystem": "operator_state",
+            "axis_id": "state_lane",
+            "section_id": "testbed_dynamics",
+            "value_table": {
+              "0": "standby",
+              "1": "active"
+            }
+          },
+          {
+            "id": "trace.rf_link_locked",
+            "label": "RF link locked",
+            "unit": "state",
+            "source": "dut_link",
+            "source_family": "dut_link",
+            "kind": "bool",
+            "category": "state",
+            "role": "state",
+            "subsystem": "operator_state",
+            "axis_id": "state_lane",
+            "section_id": "testbed_dynamics",
+            "value_table": {
+              "0": "searching",
+              "1": "locked"
+            }
+          },
+          {
+            "id": "trace.fault_flag",
+            "label": "Fault flag",
+            "unit": "state",
+            "source": "demo_quality",
+            "source_family": "demo_quality",
+            "kind": "fault",
+            "category": "state",
+            "role": "state",
+            "subsystem": "operator_state",
+            "axis_id": "state_lane",
+            "section_id": "testbed_dynamics",
+            "value_table": {
+              "0": "nominal",
+              "1": "fault"
+            }
+          }
+        ]
+      },
+      {
+        "card_id": "functional_events",
+        "title": "Functional gates and evidence events",
+        "render_kind": "event_rail",
+        "unit": "event",
+        "axis_policy": "event",
+        "tile_endpoint": "/api/campaigns/thermal_acceptance_fat/tiles?card_id=functional_events",
+        "latest_endpoint": "/api/campaigns/thermal_acceptance_fat/latest-tile?card_id=functional_events",
+        "collapsible": true,
+        "default_expanded": true,
+        "supports_time_zoom": true,
+        "supports_y_zoom": false,
+        "signals": [
+          {
+            "id": "functional_gates",
+            "label": "Functional gates",
+            "unit": "event",
+            "source": "test_conductor",
+            "source_family": "test_conductor",
+            "kind": "event",
+            "category": "event",
+            "role": "event",
+            "subsystem": "test_conductor",
+            "axis_id": "event",
+            "section_id": "testbed_dynamics"
+          },
+          {
+            "id": "evidence_markers",
+            "label": "Evidence markers",
+            "unit": "event",
+            "source": "evidence_report",
+            "source_family": "evidence_report",
+            "kind": "event",
+            "category": "evidence",
+            "role": "evidence",
+            "subsystem": "evidence",
+            "axis_id": "event",
+            "section_id": "testbed_dynamics"
+          },
+          {
+            "id": "interlock_windows",
+            "label": "Interlock windows",
+            "unit": "event",
+            "source": "facility_safety",
+            "source_family": "facility_safety",
+            "kind": "event",
+            "category": "interlock",
+            "role": "interlock",
+            "subsystem": "facility",
+            "axis_id": "event",
+            "section_id": "testbed_dynamics"
+          }
+        ]
+      }
+    ],
+    "evidence_links": [
+      {
+        "id": "manifest-thermal_acceptance_fat-FUNC-PRE",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-FUNC-PRE",
+        "timestamp": "2026-01-15T21:30:00Z",
+        "status": "pass",
+        "label": "Pre-environment functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-FUNC-POST",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-FUNC-POST",
+        "timestamp": "2026-01-21T20:35:30Z",
+        "status": "pass",
+        "label": "Post-environment functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-FUNC-C01-HOT",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-FUNC-C01-HOT",
+        "timestamp": "2026-01-16T18:20:00Z",
+        "status": "pass",
+        "label": "Hot survival recovery functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-FUNC-C01-COLD",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-FUNC-C01-COLD",
+        "timestamp": "2026-01-17T18:18:00Z",
+        "status": "pass",
+        "label": "Cold survival recovery functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-FUNC-C02-HOT",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-FUNC-C02-HOT",
+        "timestamp": "2026-01-18T08:38:00Z",
+        "status": "pass",
+        "label": "Cycle 2 hot dwell functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-FUNC-C02-COLD",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-FUNC-C02-COLD",
+        "timestamp": "2026-01-18T22:54:00Z",
+        "status": "pass",
+        "label": "Cycle 2 cold dwell functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-FUNC-C03-HOT",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-FUNC-C03-HOT",
+        "timestamp": "2026-01-19T12:38:00Z",
+        "status": "pass",
+        "label": "Cycle 3 hot dwell functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-FUNC-C03-COLD",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-FUNC-C03-COLD",
+        "timestamp": "2026-01-20T02:52:00Z",
+        "status": "pass",
+        "label": "Cycle 3 cold dwell functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-FUNC-C04-HOT",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-FUNC-C04-HOT",
+        "timestamp": "2026-01-20T17:06:00Z",
+        "status": "pass",
+        "label": "Cycle 4 hot dwell functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-FUNC-C04-COLD",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-FUNC-C04-COLD",
+        "timestamp": "2026-01-21T07:20:00Z",
+        "status": "pass",
+        "label": "Cycle 4 cold dwell functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-INTERLOCK-NOMINAL",
+        "requirement_id": "REQ-ANOMALY-REVIEW",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-INTERLOCK-NOMINAL",
+        "timestamp": "2026-01-15T10:00:00Z",
+        "status": "closed",
+        "label": "Facility interlocks closed"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-STABLE-C01-hot_survival",
+        "requirement_id": "REQ-STABILITY",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-STABLE-C01-hot_survival",
+        "timestamp": "2026-01-16T07:36:00Z",
+        "status": "pass",
+        "label": "Stable Hot survival dwell confirmed"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-STABLE-C01-hot_operational",
+        "requirement_id": "REQ-STABILITY",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-STABLE-C01-hot_operational",
+        "timestamp": "2026-01-16T15:09:00Z",
+        "status": "pass",
+        "label": "Stable Hot operational dwell confirmed"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-STABLE-C01-cold_survival",
+        "requirement_id": "REQ-STABILITY",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-STABLE-C01-cold_survival",
+        "timestamp": "2026-01-17T07:23:00Z",
+        "status": "pass",
+        "label": "Stable Cold survival dwell confirmed"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-STABLE-C01-cold_operational",
+        "requirement_id": "REQ-STABILITY",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-STABLE-C01-cold_operational",
+        "timestamp": "2026-01-17T14:56:00Z",
+        "status": "pass",
+        "label": "Stable Cold operational dwell confirmed"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-STABLE-C02-hot_operational",
+        "requirement_id": "REQ-STABILITY",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-STABLE-C02-hot_operational",
+        "timestamp": "2026-01-18T05:10:00Z",
+        "status": "pass",
+        "label": "Stable Hot operational dwell confirmed"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-STABLE-C02-cold_operational",
+        "requirement_id": "REQ-STABILITY",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-STABLE-C02-cold_operational",
+        "timestamp": "2026-01-18T19:24:00Z",
+        "status": "pass",
+        "label": "Stable Cold operational dwell confirmed"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-STABLE-C03-hot_operational",
+        "requirement_id": "REQ-STABILITY",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-STABLE-C03-hot_operational",
+        "timestamp": "2026-01-19T09:38:00Z",
+        "status": "pass",
+        "label": "Stable Hot operational dwell confirmed"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-STABLE-C03-cold_operational",
+        "requirement_id": "REQ-STABILITY",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-STABLE-C03-cold_operational",
+        "timestamp": "2026-01-19T23:52:00Z",
+        "status": "pass",
+        "label": "Stable Cold operational dwell confirmed"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-STABLE-C04-hot_operational",
+        "requirement_id": "REQ-STABILITY",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-STABLE-C04-hot_operational",
+        "timestamp": "2026-01-20T14:06:00Z",
+        "status": "pass",
+        "label": "Stable Hot operational dwell confirmed"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-STABLE-C04-cold_operational",
+        "requirement_id": "REQ-STABILITY",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-STABLE-C04-cold_operational",
+        "timestamp": "2026-01-21T04:20:00Z",
+        "status": "pass",
+        "label": "Stable Cold operational dwell confirmed"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-EVID-PRE",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-EVID-PRE",
+        "timestamp": "2026-01-15T21:30:00Z",
+        "status": "pass",
+        "label": "Pre-environment functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-EVID-POST",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-EVID-POST",
+        "timestamp": "2026-01-21T20:35:30Z",
+        "status": "pass",
+        "label": "Post-environment functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-EVID-C01-HOT",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-EVID-C01-HOT",
+        "timestamp": "2026-01-16T18:20:00Z",
+        "status": "pass",
+        "label": "Hot survival recovery functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-EVID-C01-COLD",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-EVID-C01-COLD",
+        "timestamp": "2026-01-17T18:18:00Z",
+        "status": "pass",
+        "label": "Cold survival recovery functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-EVID-C02-HOT",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-EVID-C02-HOT",
+        "timestamp": "2026-01-18T08:38:00Z",
+        "status": "pass",
+        "label": "Cycle 2 hot dwell functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-EVID-C02-COLD",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-EVID-C02-COLD",
+        "timestamp": "2026-01-18T22:54:00Z",
+        "status": "pass",
+        "label": "Cycle 2 cold dwell functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-EVID-C03-HOT",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-EVID-C03-HOT",
+        "timestamp": "2026-01-19T12:38:00Z",
+        "status": "pass",
+        "label": "Cycle 3 hot dwell functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-EVID-C03-COLD",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-EVID-C03-COLD",
+        "timestamp": "2026-01-20T02:52:00Z",
+        "status": "pass",
+        "label": "Cycle 3 cold dwell functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-EVID-C04-HOT",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-EVID-C04-HOT",
+        "timestamp": "2026-01-20T17:06:00Z",
+        "status": "pass",
+        "label": "Cycle 4 hot dwell functional test"
+      },
+      {
+        "id": "manifest-thermal_acceptance_fat-EVID-C04-COLD",
+        "requirement_id": "REQ-FUNC-GATE",
+        "card_id": "thermal_program",
+        "marker_id": "thermal_acceptance_fat-EVID-C04-COLD",
+        "timestamp": "2026-01-21T07:20:00Z",
+        "status": "pass",
+        "label": "Cycle 4 cold dwell functional test"
+      }
+    ]
+  }
+}

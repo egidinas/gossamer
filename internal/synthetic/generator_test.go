@@ -360,6 +360,9 @@ func TestTileManifestExposesBackendOwnedTileArchitecture(t *testing.T) {
 		if campaignID == "tvac_qualification" && !heroSignals["trace.tvac_pressure"] {
 			t.Fatalf("%s hero tile missing pressure signal", campaignID)
 		}
+		if campaignID == "tvac_qualification" && !heroSignals["trace.tvac_pressure_target"] {
+			t.Fatalf("%s hero tile missing idealized vacuum target signal", campaignID)
+		}
 		if len(manifest.DataLensTranslations) < 3 {
 			t.Fatalf("%s datalens translations = %d, want CSV, binary, and HDF5-like examples", campaignID, len(manifest.DataLensTranslations))
 		}
@@ -500,6 +503,107 @@ func TestThermalGraphModelsExposeLoomGradeHeroContract(t *testing.T) {
 				t.Fatalf("%s TVac pressure axis scale = %q, want log10", campaignID, pressureGroup.Axes[0].Scale)
 			}
 		}
+	}
+}
+
+func TestThermalGhostTraceIncludesStabilizationTime(t *testing.T) {
+	set := Build()
+	for _, campaignID := range []string{"thermal_acceptance_fat", "tvac_qualification"} {
+		model := set.GraphModels[campaignID]
+		command := traceValues(model.HeroGraph.Traces, "trace.command.chamber")
+		ghost := traceValues(model.HeroGraph.Traces, "trace.ghost.profile")
+		if len(command) == 0 || len(ghost) == 0 {
+			t.Fatalf("%s missing command or ghost trace", campaignID)
+		}
+		commandByTime := pointsByTimestamp(command)
+		ghostByTime := pointsByTimestamp(ghost)
+		foundSettlingGhost := false
+		for _, band := range model.HeroGraph.PhaseBands {
+			if band.CycleIndex == 0 || band.Kind != "hot_operational" {
+				continue
+			}
+			var dwellStart time.Time
+			for _, dwell := range model.HeroGraph.DwellWindows {
+				if dwell.CycleIndex == band.CycleIndex && dwell.Kind == band.Kind {
+					dwellStart = mustParseTime(t, dwell.Start)
+					break
+				}
+			}
+			if dwellStart.IsZero() {
+				continue
+			}
+			phaseStart := mustParseTime(t, band.Start)
+			if !dwellStart.After(phaseStart) {
+				continue
+			}
+			for timestamp, commandPoint := range commandByTime {
+				timestampTime := mustParseTime(t, timestamp)
+				if timestampTime.Before(phaseStart) || !timestampTime.Before(dwellStart) {
+					continue
+				}
+				ghostPoint, okGhost := ghostByTime[timestamp]
+				if okGhost && abs(commandPoint.Value-ghostPoint.Value) > 0.5 {
+					foundSettlingGhost = true
+					break
+				}
+			}
+			if foundSettlingGhost {
+				break
+			}
+		}
+		if !foundSettlingGhost {
+			t.Fatalf("%s ghost trace must include non-zero stabilization time before dwell starts", campaignID)
+		}
+	}
+}
+
+func TestTVacPressureTargetAndBakeoutDepletion(t *testing.T) {
+	set := Build()
+	model := set.GraphModels["tvac_qualification"]
+	target := traceValues(model.HeroGraph.Traces, "trace.tvac_pressure_target")
+	if len(target) == 0 {
+		t.Fatal("TVac hero graph missing idealized vacuum target trace")
+	}
+	var flatVacuumSeen bool
+	for _, point := range target {
+		if point.Value > 0 && point.Value <= 0.0000011 {
+			flatVacuumSeen = true
+			break
+		}
+	}
+	if !flatVacuumSeen {
+		t.Fatal("TVac vacuum target should include a flat low-1e-6 mbar target")
+	}
+	cards := graphWallCards(*model.GraphWall)
+	if !graphCardSignal(cards["thermal_program"], "trace.tvac_pressure_target") {
+		t.Fatal("TVac thermal-program graph wall missing vacuum target signal")
+	}
+	if !graphCardSignal(cards["tvac_pressure"], "trace.tvac_pressure_target") {
+		t.Fatal("TVac pressure card missing vacuum target signal")
+	}
+
+	tvac := set.Telemetry["tvac_qualification"]
+	var firstHotMax, lastHotMax float64
+	for _, sample := range tvac {
+		cycle := int(sample.Signals["thermal_cycle_index"])
+		phase := sample.States["thermal_phase"]
+		if phase != "ramp_hot" && phase != "hot_survival" && phase != "hot_operational" {
+			continue
+		}
+		outgas := sample.Signals["tvac_outgassing_mbar_per_min"]
+		if cycle == 1 && outgas > firstHotMax {
+			firstHotMax = outgas
+		}
+		if cycle == 8 && outgas > lastHotMax {
+			lastHotMax = outgas
+		}
+	}
+	finalInventory := tvac[len(tvac)-1].Signals["tvac_volatile_inventory_pct"]
+	if firstHotMax <= 0 || lastHotMax/firstHotMax > 0.20 {
+		t.Fatalf("TVac outgassing depletion too weak: cycle1 %.6g mbar/min cycle8 %.6g mbar/min", firstHotMax, lastHotMax)
+	}
+	if finalInventory > 8 {
+		t.Fatalf("TVac volatile inventory = %.2f%%, want strong bake-out depletion", finalInventory)
 	}
 }
 
@@ -869,6 +973,23 @@ func companionTraceLabel(group contracts.CompanionGraphGroup, label string) bool
 		}
 	}
 	return false
+}
+
+func traceValues(traces []contracts.GraphTrace, id string) []contracts.GraphPoint {
+	for _, trace := range traces {
+		if trace.ID == id {
+			return trace.Values
+		}
+	}
+	return nil
+}
+
+func pointsByTimestamp(points []contracts.GraphPoint) map[string]contracts.GraphPoint {
+	out := map[string]contracts.GraphPoint{}
+	for _, point := range points {
+		out[point.Timestamp] = point
+	}
+	return out
 }
 
 func assertCompanionTraceUnits(t *testing.T, campaignID string, group contracts.CompanionGraphGroup, units string) {

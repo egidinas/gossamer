@@ -1215,12 +1215,26 @@ button {
 
 .graph-card-legend-rail span {
   display: grid;
-  grid-template-columns: 14px minmax(0, 1fr);
+  grid-template-columns: 14px minmax(0, 1fr) auto;
   align-items: center;
   gap: 4px;
   min-width: 0;
   overflow: hidden;
+}
+
+.graph-card-legend-rail b {
+  min-width: 0;
+  overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.graph-card-legend-rail em {
+  color: #f2f7ff;
+  font-size: 9px;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
@@ -1361,7 +1375,39 @@ button {
   bottom: 0;
   width: 1px;
   background: #f2f7ff;
-  box-shadow: 0 0 0 1px rgba(242, 247, 255, 0.22);
+  box-shadow: 0 0 0 1px rgba(242, 247, 255, 0.22), 0 0 12px rgba(242, 247, 255, 0.35);
+  z-index: 3;
+}
+
+.time-axis-now::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 9px;
+  height: 4px;
+  border-radius: 1px;
+  background: #f2f7ff;
+}
+
+.time-axis-peek {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #b8a6ff;
+  box-shadow: 0 0 10px rgba(184, 166, 255, 0.42);
+  z-index: 2;
+}
+
+.time-axis-hover {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #ffd85f;
+  box-shadow: 0 0 10px rgba(255, 216, 95, 0.35);
+  z-index: 4;
 }
 
 .time-axis-tick {
@@ -1680,9 +1726,9 @@ code {
 .landing-architecture,
 .campaign-visual {
   display: grid;
-  grid-template-columns: minmax(260px, 0.48fr) minmax(0, 1fr);
-  align-items: stretch;
-  gap: 12px;
+  grid-template-columns: minmax(220px, 0.34fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
   min-width: 0;
 }
 
@@ -1693,11 +1739,15 @@ code {
   border: 1px solid #273c4d;
   border-radius: 6px;
   background: #050a0f;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .landing-architecture img {
-  aspect-ratio: 16 / 9;
+  align-self: start;
+  justify-self: center;
+  width: min(100%, 260px);
+  height: auto;
+  max-height: none;
 }
 
 .landing-architecture > div,

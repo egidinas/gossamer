@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"math"
 	"net/http"
 	"os"
@@ -14,6 +13,7 @@ import (
 	"time"
 
 	"github.com/egidinas/gossamer/internal/contracts"
+	"github.com/egidinas/gossamer/internal/tilebundle"
 )
 
 type Server struct {
@@ -223,93 +223,7 @@ func (s *Server) readGraphModel(id string) (contracts.GraphModel, error) {
 }
 
 func buildTile(model contracts.GraphModel, cardID, levelID, t0s, t1s string, latest bool) (contracts.GraphTile, error) {
-	if model.GraphWall == nil || model.HeroGraph == nil || model.TileManifest == nil {
-		return contracts.GraphTile{}, fmt.Errorf("campaign has no tile graph model")
-	}
-	if cardID == "" {
-		cardID = "thermal_program"
-	}
-	if levelID == "" {
-		levelID = "minute"
-	}
-	card, ok := findTileCard(*model.TileManifest, cardID)
-	if !ok {
-		return contracts.GraphTile{}, fmt.Errorf("unknown card_id %q", cardID)
-	}
-	start := mustParseTime(model.GraphWall.TimeRange.Start)
-	end := mustParseTime(model.GraphWall.TimeRange.End)
-	if t0s != "" {
-		start = mustParseTime(t0s)
-	}
-	if t1s != "" {
-		end = mustParseTime(t1s)
-	}
-	if latest && model.HeroGraph.TimeAxis.Now != "" {
-		end = mustParseTime(model.HeroGraph.TimeAxis.Now)
-		start = end.Add(-6 * time.Hour)
-	}
-	if !end.After(start) {
-		return contracts.GraphTile{}, fmt.Errorf("t1 must be after t0")
-	}
-	maxPoints := maxPointsForLevel(*model.TileManifest, levelID)
-	perSeriesMax := max(1, maxPoints/max(1, len(card.Signals)))
-	traceIndex := traceIndex(model.HeroGraph)
-	cursor := replayCursor(model.HeroGraph)
-	series := make([]contracts.TileSeries, 0, len(card.Signals))
-	rawCount := 0
-	for _, signal := range card.Signals {
-		points := traceIndex[signal.ID]
-		if len(points) == 0 && card.RenderKind != "event_rail" {
-			continue
-		}
-		filtered := filterPoints(points, start, end)
-		filtered = filterFuturePoints(filtered, signal.Role, cursor)
-		rawCount += len(filtered)
-		decimated := normalizePoints(decimate(filtered, perSeriesMax))
-		series = append(series, contracts.TileSeries{
-			ID: signal.ID, Label: signal.Label, Unit: signal.Unit, Role: signal.Role, Kind: signal.Kind, AxisID: signal.AxisID,
-			Source: signal.Source, Step: card.RenderKind == "counter" || card.RenderKind == "swimlane", ValueTable: signal.ValueTable, Points: decimated,
-		})
-	}
-	bands := intersectBands(model.HeroGraph.PhaseBands, start, end)
-	bands = append(bands, intersectBands(model.HeroGraph.DwellWindows, start, end)...)
-	markers := []contracts.GraphMarker{}
-	events := []contracts.TileEvent{}
-	if card.CardID == "thermal_program" || card.RenderKind == "event_rail" || card.RenderKind == "swimlane" {
-		markers = intersectMarkers(model.HeroGraph.Markers, start, end)
-		markers = filterFutureMarkers(markers, cursor)
-		events = make([]contracts.TileEvent, 0, len(markers))
-		for _, marker := range markers {
-			events = append(events, contracts.TileEvent{ID: marker.ID, Kind: marker.Kind, Label: marker.Label, Timestamp: marker.Timestamp, RequirementID: requirementID(marker.Kind), EvidenceRef: marker.EvidenceRef, Result: marker.Result, Value: marker.Value})
-		}
-	}
-	pointCount := 0
-	decimated := false
-	for _, s := range series {
-		pointCount += len(s.Points)
-		if rawCount > pointCount {
-			decimated = true
-		}
-	}
-	return contracts.GraphTile{
-		Envelope:   contracts.NewEnvelope(time.Now()),
-		ID:         fmt.Sprintf("%s_%s_%s", model.CampaignID, cardID, levelID),
-		ManifestID: model.TileManifest.ID,
-		CampaignID: model.CampaignID,
-		CardID:     cardID,
-		Level:      levelID,
-		T0:         start.UTC().Format(time.RFC3339),
-		T1:         end.UTC().Format(time.RFC3339),
-		Diagnostics: contracts.TileDiagnostics{
-			Source: "fixture_graph_model", Mode: "backend_decimated_tile", PointCount: pointCount, RawPointCount: rawCount,
-			Decimated: decimated, Decimation: "min_max_envelope", TimeSpanMS: end.Sub(start).Milliseconds(), FreshnessMS: 250,
-		},
-		Provenance: contracts.TileProvenance{SourceNode: "fixture_backend", SourceFamily: card.Signals[0].SourceFamily, FixtureVersion: "2026.05", GenerationMode: "deterministic_fixture", Synthetic: true},
-		Series:     series,
-		Bands:      bands,
-		Markers:    markers,
-		Events:     events,
-	}, nil
+	return tilebundle.BuildTile(model, cardID, levelID, t0s, t1s, latest)
 }
 
 func replayCursor(hero *contracts.HeroGraphModel) time.Time {
@@ -347,6 +261,25 @@ func filterFutureMarkers(markers []contracts.GraphMarker, cursor time.Time) []co
 		if !mustParseTime(marker.Timestamp).After(cursor) {
 			out = append(out, marker)
 		}
+	}
+	return out
+}
+
+func filterFutureBands(bands []contracts.GraphBand, cursor time.Time) []contracts.GraphBand {
+	if cursor.IsZero() {
+		return bands
+	}
+	out := bands[:0]
+	for _, band := range bands {
+		start := mustParseTime(band.Start)
+		end := mustParseTime(band.End)
+		if start.After(cursor) {
+			continue
+		}
+		if end.After(cursor) {
+			band.End = cursor.UTC().Format(time.RFC3339)
+		}
+		out = append(out, band)
 	}
 	return out
 }
@@ -572,6 +505,21 @@ func (s *Server) static(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if s.staticDir == "" || strings.HasPrefix(r.URL.Path, "/api/") || r.URL.Path == "/api" || strings.HasPrefix(r.URL.Path, "/healthz/") {
+		http.NotFound(w, r)
+		return
+	}
+	if strings.HasPrefix(r.URL.Path, "/data/") {
+		rel := strings.TrimPrefix(path.Clean("/"+r.URL.Path), "/data/")
+		candidate := filepath.Join(s.root, "fixtures", "public_tiles", filepath.FromSlash(rel))
+		if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
+			if strings.HasSuffix(candidate, "manifest.json") {
+				w.Header().Set("Cache-Control", "no-cache")
+			} else {
+				w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+			}
+			http.ServeFile(w, r, candidate)
+			return
+		}
 		http.NotFound(w, r)
 		return
 	}
