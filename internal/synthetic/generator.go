@@ -1008,8 +1008,6 @@ func supervisorLane(id, label, facility string, campaign contracts.Campaign, act
 		lane.FunctionalGates = campaign.ThermalProgram.FunctionalGates
 		lane.InterlockWindows = campaign.ThermalProgram.InterlockWindows
 		lane.EvidenceMarkers = campaign.ThermalProgram.EvidenceMarkers
-		hero := environmentalsim.Simulate(campaign.ID, campaign.ThermalProgram, FixedTime).HeroGraph
-		lane.HeroGraph = &hero
 	}
 	return lane
 }

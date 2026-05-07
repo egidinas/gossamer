@@ -900,12 +900,6 @@ func TestSupervisorLanesExposeThermalProgramsAndDenseHeroGraphs(t *testing.T) {
 		if len(lane.EvidenceMarkers) == 0 {
 			t.Fatalf("lane %s missing evidence markers", lane.ID)
 		}
-		if lane.HeroGraph == nil {
-			t.Fatalf("lane %s missing backend-owned hero graph contract", lane.ID)
-		}
-		if lane.HeroGraph.Owner != "gossamer_backend_fixture_generator" {
-			t.Fatalf("lane %s hero owner = %q", lane.ID, lane.HeroGraph.Owner)
-		}
 	}
 }
 
