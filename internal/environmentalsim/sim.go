@@ -31,6 +31,13 @@ const (
 	cryoSorptionCutoffColdDegC = -70.0
 	stickingCoefficient        = 0.012
 	coldSurfaceAreaM2          = 1.0
+
+	// P5 correlated sensor drift: a per-chamber slow Ornstein-Uhlenbeck bias
+	// shared across all in-chamber temperature sensors, on top of independent
+	// per-channel noise. Driven by a separate RNG so existing per-channel
+	// noise sequences stay bit-identical.
+	correlatedDriftTauMinutes = 120.0
+	correlatedDriftSigmaDegC  = 0.05
 )
 
 type Result struct {
@@ -61,6 +68,7 @@ type state struct {
 	tmPackets              float64
 	tcPackets              float64
 	drops                  float64
+	chamberDriftBiasDegC   float64
 }
 
 type componentParams struct {
@@ -100,6 +108,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 		seed = 84031
 	}
 	rng := rand.New(rand.NewSource(seed))
+	driftRng := rand.New(rand.NewSource(seed ^ 0x5D1F7))
 	dt := time.Minute
 	st := state{chamberAir: 22, table: 22, shroud: 22.4, shroudInlet: 22.2, shroudOutlet: 22.7, exhaustCryoTemp: 20, exhaustScavengedTemp: 20, scavengerWaterReturn: 15.8, fastComponent: 21.2, lazyComponent: 22.6, pressure: 101325, volatilePool: 1, tmPackets: 6000, tcPackets: 120}
 	fastNode := componentParams{
@@ -120,6 +129,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 	trace := sampleTrace{}
 
 	appendPoint := func(t time.Time, cycle int, phaseID string, phase string, phaseCode float64, command float64, ghost float64, gate string, gateCode float64, targetPressureMbar float64) {
+		st.chamberDriftBiasDegC = updateSlowDrift(st.chamberDriftBiasDegC, driftRng, dt)
 		gateActive := gate != "" && gate != "none"
 		survivalMode := isSurvivalPhase(phase)
 		coolingDemand := clamp((st.chamberAir-command)/38, 0, 1)
@@ -198,12 +208,12 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 		payloadActive := !survivalMode && (gateActive || isOperationalDwellPhase(phase))
 		var fastFlux, lazyFlux heatFlux
 		st.fastComponent, st.lazyComponent, fastFlux, lazyFlux = advanceComponentPair(st.fastComponent, st.lazyComponent, st.chamberAir, st.table, st.shroud, st.pressure, campaignID, fastNode, lazyNode, gateActive, payloadActive, survivalMode, dt)
-		fastMeasured := st.fastComponent + fastNode.sensorBiasDegC + noise(rng, fastNode.sensorNoiseDegC)
-		lazyMeasured := st.lazyComponent + lazyNode.sensorBiasDegC + noise(rng, lazyNode.sensorNoiseDegC)
-		shroudMeasured := st.shroud + noise(rng, 0.06)
-		shroudInletMeasured := st.shroudInlet + noise(rng, 0.07)
-		shroudOutletMeasured := st.shroudOutlet + noise(rng, 0.07)
-		tableMeasured := st.table + noise(rng, 0.04)
+		fastMeasured := st.fastComponent + fastNode.sensorBiasDegC + st.chamberDriftBiasDegC + noise(rng, fastNode.sensorNoiseDegC)
+		lazyMeasured := st.lazyComponent + lazyNode.sensorBiasDegC + st.chamberDriftBiasDegC + noise(rng, lazyNode.sensorNoiseDegC)
+		shroudMeasured := st.shroud + st.chamberDriftBiasDegC + noise(rng, 0.06)
+		shroudInletMeasured := st.shroudInlet + st.chamberDriftBiasDegC + noise(rng, 0.07)
+		shroudOutletMeasured := st.shroudOutlet + st.chamberDriftBiasDegC + noise(rng, 0.07)
+		tableMeasured := st.table + st.chamberDriftBiasDegC + noise(rng, 0.04)
 		internalGradient := math.Abs(fastMeasured - lazyMeasured)
 
 		pressure, volatilePool, outgasRate, virtualLeak, roughingRate, turboRate, totalPumpRate := advancePressure(campaignID, st.pressure, st.volatilePool, t.Sub(start), phase, cycle, st.shroud, st.fastComponent, st.lazyComponent, dt)
@@ -319,7 +329,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 				"thermal_cycle_index":                       float64(cycle),
 				"thermal_phase_code":                        phaseCode,
 				"chamber_setpoint_deg_c":                    round(command),
-				"chamber_air_deg_c":                         round(st.chamberAir),
+				"chamber_air_deg_c":                         round(st.chamberAir + st.chamberDriftBiasDegC),
 				"thermal_zone_1_deg_c":                      round(fastMeasured),
 				"thermal_zone_2_deg_c":                      round(lazyMeasured),
 				"dut_fast_component_deg_c":                  round(fastMeasured),
@@ -806,6 +816,18 @@ func firstOrderDelta(current, target, tauMin float64, dt time.Duration) float64 
 	}
 	alpha := 1 - math.Exp(-dt.Minutes()/tauMin)
 	return (target - current) * clamp(alpha, 0, 1)
+}
+
+// updateSlowDrift advances a discrete Ornstein-Uhlenbeck process whose
+// stationary distribution is N(0, correlatedDriftSigmaDegC^2) with relaxation
+// time correlatedDriftTauMinutes. Used to model a chamber-wide gradient
+// wandering that biases all in-chamber sensors together.
+func updateSlowDrift(prev float64, driftRng *rand.Rand, dt time.Duration) float64 {
+	tauMin := correlatedDriftTauMinutes
+	sigma := correlatedDriftSigmaDegC
+	alpha := 1 - math.Exp(-dt.Minutes()/tauMin)
+	whiteSigma := sigma * math.Sqrt(2*alpha)
+	return prev*(1-alpha) + driftRng.NormFloat64()*whiteSigma
 }
 
 func advanceComponent(temp, chamberAir, table, shroud, pressure float64, campaignID string, params componentParams, gateActive, payloadActive, survivalMode bool, dt time.Duration) (float64, heatFlux) {
