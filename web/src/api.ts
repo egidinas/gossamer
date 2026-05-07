@@ -82,7 +82,10 @@ export const api = {
   topology: () => getJSON<Topology>("/api/topology"),
   sources: () => getJSON<SourceCatalogue>("/api/sources"),
   supervisor: () => getJSON<SupervisorOverview>("/api/supervisor"),
-  commandCenterFAT: () => getJSON<CommandCenterFAT>("/api/command-center/fat"),
+  commandCenterFAT: () => getJSONWithFallback<CommandCenterFAT>(
+    "/data/current/command_center_fat.json",
+    "/api/command-center/fat"
+  ),
   busTap: () => getJSON<BusVirtualizationTap>("/api/bus-tap"),
   campaigns: () => getJSON<CampaignList>("/api/campaigns"),
   campaign: (id: string) => getJSON<Campaign>(`/api/campaigns/${id}`),

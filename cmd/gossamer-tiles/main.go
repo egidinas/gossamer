@@ -45,6 +45,9 @@ func main() {
 	if err := copyTelemetry(*root, versionedOut, manifest.Campaigns); err != nil {
 		log.Fatal(err)
 	}
+	if err := copyStaticFixtures(*root, versionedOut, []string{"command_center_fat.json"}); err != nil {
+		log.Fatal(err)
+	}
 	if *current {
 		currentOut := filepath.Join(*root, *out, "current")
 		if err := replaceDir(currentOut, versionedOut); err != nil {
@@ -89,6 +92,17 @@ func copyTelemetry(root string, out string, campaigns []contracts.TileCampaignMa
 		src := filepath.Join(root, "fixtures", "public", "telemetry", campaign.CampaignID+".arrow")
 		dst := filepath.Join(out, "campaigns", campaign.CampaignID, "telemetry.arrow")
 		if err := copyFile(src+".gz", dst+".gz"); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func copyStaticFixtures(root string, out string, names []string) error {
+	for _, name := range names {
+		src := filepath.Join(root, "fixtures", "public", name)
+		dst := filepath.Join(out, name)
+		if err := copyFile(src, dst); err != nil {
 			return err
 		}
 	}
