@@ -4,7 +4,7 @@ Gossamer is not a certification tool. It uses common public engineering language
 
 ## Public Standards Vocabulary
 
-The demo is compatible with discussion around standard spacecraft and environmental-test ideas such as:
+The demo is compatible with discussion around standard environmental-test and space-system ideas such as:
 
 - subsystem-level derisking before integrated system testing,
 - acceptance and qualification campaign separation,

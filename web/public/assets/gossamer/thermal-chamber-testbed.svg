@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-labelledby="title">
+  <title>Fluid interface and chamber air thermal paths</title>
+  <rect width="900" height="520" fill="#081119"/>
+  <rect x="120" y="100" width="660" height="320" rx="26" fill="#111d27" stroke="#556e80" stroke-width="3"/>
+  <rect x="214" y="174" width="472" height="176" rx="18" fill="#182733" stroke="#6f8794" stroke-width="2"/>
+  <rect x="304" y="286" width="292" height="36" rx="8" fill="#223746" stroke="#80a4b3" stroke-width="2"/>
+  <rect x="354" y="218" width="192" height="72" rx="12" fill="#29343c" stroke="#b7c8ce" stroke-width="2"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M186 212c86-54 176-54 270 0s181 54 258 0" stroke="#719aaf" stroke-width="5" opacity=".5"/>
+    <path d="M186 252c88 44 175 43 262 0s181-43 266 0" stroke="#b18d63" stroke-width="4" opacity=".45"/>
+    <path d="M304 304H190c-42 0-42 64 0 64h86" stroke="#82aeb8" stroke-width="5"/>
+    <path d="M596 304h114c42 0 42 64 0 64h-86" stroke="#82aeb8" stroke-width="5"/>
+    <path d="M448 218v-78" stroke="#c8b27d" stroke-width="4"/>
+    <path d="M392 226l-76-62M508 226l76-62" stroke="#9eb2bd" stroke-width="3" opacity=".75"/>
+  </g>
+  <g fill="#d6e3e7" opacity=".75">
+    <circle cx="448" cy="140" r="8"/>
+    <circle cx="316" cy="164" r="8"/>
+    <circle cx="584" cy="164" r="8"/>
+    <circle cx="276" cy="368" r="8"/>
+    <circle cx="624" cy="368" r="8"/>
+  </g>
+</svg>

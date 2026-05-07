@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+out_dir="${1:-/tmp/gossamer-brume2}"
+archive="${out_dir}.tar.gz"
+
+cd "$repo_root"
+
+if [[ "${GOSSAMER_SKIP_FIXTURES:-0}" != "1" ]]; then
+	go run ./cmd/gossamer-fixtures
+fi
+
+npm --prefix web run build
+
+rm -rf "$out_dir" "$archive"
+mkdir -p "$out_dir/fixtures" "$out_dir/web" "$out_dir/deploy/openwrt"
+
+router_toolchain="${GOSSAMER_BRUME2_GOTOOLCHAIN:-go1.22.12}"
+go_mod_backup="$(mktemp)"
+cp go.mod "$go_mod_backup"
+restore_go_mod() {
+	cp "$go_mod_backup" go.mod
+	rm -f "$go_mod_backup"
+}
+trap restore_go_mod EXIT
+
+# OpenWrt 21 on the Brume2 accepts connections but stalls HTTP handlers with
+# newer Go runtime builds. Keep the router artifact on a known-good toolchain.
+go mod edit -go=1.22
+GOTOOLCHAIN="$router_toolchain" CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -trimpath -ldflags="-s -w" -o "$out_dir/gossamer-server" ./cmd/gossamer-server
+restore_go_mod
+trap - EXIT
+
+cp -a fixtures/public "$out_dir/fixtures/public"
+cp -a web/dist "$out_dir/web/dist"
+cp deploy/openwrt/gossamer.init "$out_dir/gossamer.init"
+cp -a deploy/openwrt "$out_dir/deploy/"
+
+chmod +x "$out_dir/gossamer-server" "$out_dir/gossamer.init"
+tar -C "$out_dir" -czf "$archive" .
+
+du -h "$archive"
+printf 'Package: %s\n' "$archive"

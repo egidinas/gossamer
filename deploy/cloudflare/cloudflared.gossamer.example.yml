@@ -1,0 +1,7 @@
+tunnel: <tunnel-uuid-or-name>
+credentials-file: /home/svc_pmg_testbed_b/.cloudflared/<tunnel-uuid>.json
+
+ingress:
+  - hostname: gossamer.jmeyer.space
+    service: http://127.0.0.1:8095
+  - service: http_status:404

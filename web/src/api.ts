@@ -4,6 +4,8 @@ import type {
   BusVirtualizationTap,
   CommandAuthorityState,
   EvidenceReport,
+  GraphTile,
+  GraphTileManifest,
   GraphModel,
   Manifest,
   SourceCatalogue,
@@ -39,6 +41,14 @@ export const api = {
   campaign: (id: string) => getJSON<Campaign>(`/api/campaigns/${id}`),
   telemetry: (id: string) => getJSONL<TelemetrySample>(`/api/campaigns/${id}/telemetry`),
   graphModel: (id: string) => getJSON<GraphModel>(`/api/campaigns/${id}/graph-model`),
+  graphShell: (id: string) => getJSON<GraphModel>(`/api/campaigns/${id}/graph-shell`),
+  tileManifest: (id: string) => getJSON<GraphTileManifest>(`/api/campaigns/${id}/tile-manifest`),
+  tile: (id: string, cardID: string, level = "minute", t0?: string, t1?: string) => {
+    const params = new URLSearchParams({ card_id: cardID, level });
+    if (t0) params.set("t0", t0);
+    if (t1) params.set("t1", t1);
+    return getJSON<GraphTile>(`/api/campaigns/${id}/tiles?${params.toString()}`);
+  },
   commandAuthority: () => getJSON<CommandAuthorityState>("/api/command-authority"),
   evidenceReport: (id: string) => getJSON<EvidenceReport>(`/api/campaigns/${id}/evidence-report`),
   requestLease: () => fetch("/api/command-authority/request-lease", { method: "POST" }).then(() => api.commandAuthority()),

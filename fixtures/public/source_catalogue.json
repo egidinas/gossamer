@@ -3,8 +3,8 @@
   "generated_at": "2026-01-15T10:00:00Z",
   "sources": [
     {
-      "id": "spacecraft_power",
-      "label": "Spacecraft Power",
+      "id": "dut_power",
+      "label": "DUT Power",
       "owner": "egse_power_role",
       "bus": "telemetry_bus",
       "quality": "fresh",
@@ -13,12 +13,13 @@
       "evidence_suitability": "primary",
       "signals": [
         "eps_bus_voltage_v",
-        "eps_bus_current_a"
+        "eps_bus_current_a",
+        "dut_self_heat_w"
       ]
     },
     {
-      "id": "spacecraft_cdh",
-      "label": "Spacecraft CDH",
+      "id": "dut_control",
+      "label": "DUT Control",
       "owner": "subsystem_test_role",
       "bus": "subsystem_event_bus",
       "quality": "fresh",
@@ -32,8 +33,8 @@
       ]
     },
     {
-      "id": "spacecraft_rf",
-      "label": "Spacecraft RF Comms",
+      "id": "dut_link",
+      "label": "DUT Link",
       "owner": "subsystem_test_role",
       "bus": "telemetry_bus",
       "quality": "fresh",
@@ -46,6 +47,26 @@
       ]
     },
     {
+      "id": "dut_thermal",
+      "label": "DUT Thermal Model",
+      "owner": "test_conductor_role",
+      "bus": "derived_model_bus",
+      "quality": "synthetic",
+      "freshness_ms": 300,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "dut_fast_component_deg_c",
+        "dut_lazy_component_deg_c",
+        "dut_fast_air_flux_w",
+        "dut_fast_interface_flux_w",
+        "dut_fast_shroud_flux_w",
+        "dut_lazy_air_flux_w",
+        "dut_lazy_interface_flux_w",
+        "dut_lazy_shroud_flux_w"
+      ]
+    },
+    {
       "id": "facility_thermal",
       "label": "Facility Thermal",
       "owner": "facility_test_role",
@@ -55,9 +76,41 @@
       "provenance": "synthetic_fixture_generator",
       "evidence_suitability": "primary",
       "signals": [
+        "thermal_cycle_index",
+        "thermal_phase_code",
+        "chamber_setpoint_deg_c",
         "thermal_zone_1_deg_c",
         "thermal_zone_2_deg_c",
-        "chamber_air_deg_c"
+        "chamber_air_deg_c",
+        "interface_plate_deg_c",
+        "thermal_shroud_deg_c",
+        "thermal_shroud_inlet_deg_c",
+        "thermal_shroud_outlet_deg_c",
+        "thermal_shroud_gradient_deg_c",
+        "huber_table_deg_c",
+        "ln2_line_temp_deg_c",
+        "ln2_valve_duty_pct",
+        "tvac_cryo_exhaust_temp_deg_c"
+      ]
+    },
+    {
+      "id": "facility_infrastructure",
+      "label": "Building Infrastructure",
+      "owner": "facility_test_role",
+      "bus": "facility_control_bus",
+      "quality": "fresh",
+      "freshness_ms": 600,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "cooling_water_freeze_margin_deg_c",
+        "cooling_water_temp_deg_c",
+        "pressurized_air_supply_bar",
+        "air_dewpoint_deg_c",
+        "tvac_scavenged_exhaust_temp_deg_c",
+        "tvac_scavenger_cooling_water_return_deg_c",
+        "tvac_exhaust_cold_recovery_pct",
+        "tvac_exhaust_duct_safe"
       ]
     },
     {
@@ -70,7 +123,7 @@
       "provenance": "synthetic_fixture_generator",
       "evidence_suitability": "primary",
       "signals": [
-        "tvac_pressure_pa"
+        "tvac_pressure_mbar"
       ]
     },
     {
@@ -86,6 +139,7 @@
         "bus_latency_ms",
         "tm_packet_counter",
         "tc_packet_counter",
+        "overall_packet_counter",
         "dropped_frame_count"
       ]
     },

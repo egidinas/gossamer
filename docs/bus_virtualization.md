@@ -6,7 +6,7 @@ The Gossamer bus tap is a fictional teaching model for observing data movement b
 
 The fixture `fixtures/public/bus_virtualization_tap.json` describes one synthetic connection:
 
-- source and destination nodes such as `flatsat_rack_a`, `aurorasat_1`, `archive_node_a`, `thermal_chamber_a`, and `tvac_chamber_q1`,
+- source and destination nodes such as `flatsat_rack_a`, `reference_dut`, `archive_node_a`, `thermal_chamber_a`, and `tvac_chamber_q1`,
 - generic buses such as `telemetry_bus`, `command_bus`, and `facility_control_bus`,
 - stream health fields including latency, freshness, packet counters, dropped-frame count, and quality state,
 - recent replay events with fictional envelope IDs such as `BUS-TM-0001` and `BUS-TC-0001`.

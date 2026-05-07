@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-labelledby="title">
+  <title>Thermal chamber test setup illustration</title>
+  <defs>
+    <linearGradient id="chamber" x1="0" x2="1">
+      <stop offset="0" stop-color="#182633"/>
+      <stop offset="1" stop-color="#0c1720"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="520" fill="#081119"/>
+  <g opacity=".28" stroke="#2c4556">
+    <path d="M92 88h716M92 432h716M92 88v344M808 88v344"/>
+    <path d="M120 126h660M120 394h660"/>
+  </g>
+  <rect x="138" y="104" width="624" height="312" rx="24" fill="url(#chamber)" stroke="#597285" stroke-width="3"/>
+  <rect x="228" y="178" width="444" height="152" rx="16" fill="#111d27" stroke="#5f788a" stroke-width="2"/>
+  <path d="M238 236c82-42 171-43 262 0s164 42 162-2" fill="none" stroke="#a9c7cf" stroke-width="4" opacity=".6"/>
+  <path d="M238 272c76 34 154 34 232 0s142-34 192 0" fill="none" stroke="#c59a65" stroke-width="4" opacity=".55"/>
+  <rect x="318" y="244" width="260" height="54" rx="8" fill="#202d37" stroke="#7e9cac" stroke-width="2"/>
+  <rect x="372" y="212" width="152" height="50" rx="9" fill="#26323a" stroke="#9bb1bd" stroke-width="2"/>
+  <g stroke="#8ab3bf" stroke-width="4" fill="none" stroke-linecap="round">
+    <path d="M320 298v56h-86"/>
+    <path d="M578 298v56h92"/>
+    <path d="M306 216h-56v-58"/>
+    <path d="M592 216h56v-58"/>
+  </g>
+  <g fill="#8ab3bf">
+    <circle cx="234" cy="354" r="9"/>
+    <circle cx="670" cy="354" r="9"/>
+    <circle cx="250" cy="158" r="9"/>
+    <circle cx="648" cy="158" r="9"/>
+  </g>
+  <g fill="none" stroke-width="3">
+    <path d="M150 434c42-38 92-34 138 0s91 37 132 0 92-36 136 0 91 37 136 0 82-38 116 0" stroke="#7597a8" opacity=".4"/>
+    <path d="M150 86c42 38 92 34 138 0s91-37 132 0 92 36 136 0 91-37 136 0 82 38 116 0" stroke="#a77f52" opacity=".32"/>
+  </g>
+</svg>

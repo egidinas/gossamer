@@ -2,124 +2,157 @@
   "schema_version": 1,
   "generated_at": "2026-01-15T10:00:00Z",
   "campaign_id": "tvac_qualification",
-  "summary": "TVAC Qualification evidence package for AuroraSat-1.",
+  "summary": "TVac Qualification evidence package for a generic reference DUT.",
   "result": "inconclusive",
   "requirements": [
     {
       "id": "REQ-CYCLE-COUNT",
       "title": "Required cycle count completed",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "fixtures/public/telemetry/tvac_qualification.jsonl",
         "fixtures/public/graph_models/tvac_qualification.json"
       ],
-      "rationale": "Synthetic telemetry and campaign metadata satisfy this public demo requirement."
+      "rationale": "Observed 8 backend-defined thermal cycles for TVac Qualification - 8 cycle vacuum thermal profile."
     },
     {
       "id": "REQ-HOT-TARGET",
       "title": "Hot target reached",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "fixtures/public/telemetry/tvac_qualification.jsonl",
         "fixtures/public/graph_models/tvac_qualification.json"
       ],
-      "rationale": "Synthetic telemetry and campaign metadata satisfy this public demo requirement."
+      "rationale": "Chamber command, chamber air, article-zone traces, and acceptance bands show hot target achievement near 70.0 degC."
     },
     {
       "id": "REQ-COLD-TARGET",
       "title": "Cold target reached",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "fixtures/public/telemetry/tvac_qualification.jsonl",
         "fixtures/public/graph_models/tvac_qualification.json"
       ],
-      "rationale": "Synthetic telemetry and campaign metadata satisfy this public demo requirement."
+      "rationale": "Cold ramp, LN2 duty, chamber air, and article-zone traces show cold target achievement near -40.0 degC."
+    },
+    {
+      "id": "REQ-HOT-SURVIVAL",
+      "title": "Hot survival exposure completed",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "result": "pass",
+      "evidence": [
+        "fixtures/public/telemetry/tvac_qualification.jsonl",
+        "fixtures/public/graph_models/tvac_qualification.json"
+      ],
+      "rationale": "The first cycle includes hot survival exposure before the hot operational functional gate."
+    },
+    {
+      "id": "REQ-COLD-SURVIVAL",
+      "title": "Cold survival exposure completed",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "result": "pass",
+      "evidence": [
+        "fixtures/public/telemetry/tvac_qualification.jsonl",
+        "fixtures/public/graph_models/tvac_qualification.json"
+      ],
+      "rationale": "The first cycle includes cold survival exposure before the cold operational functional gate."
     },
     {
       "id": "REQ-STABILITY",
       "title": "Stabilization window achieved",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "inconclusive",
       "evidence": [
         "fixtures/public/telemetry/tvac_qualification.jsonl",
         "fixtures/public/graph_models/tvac_qualification.json"
       ],
-      "rationale": "Synthetic evidence marks this item for review to demonstrate anomaly disposition workflow."
+      "rationale": "Dwell-window evidence uses source freshness, article-zone convergence, and stability markers from the physics-backed thermal model."
     },
     {
       "id": "REQ-DWELL",
       "title": "Dwell duration achieved",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "fixtures/public/telemetry/tvac_qualification.jsonl",
         "fixtures/public/graph_models/tvac_qualification.json"
       ],
-      "rationale": "Synthetic telemetry and campaign metadata satisfy this public demo requirement."
+      "rationale": "Hot and cold dwell windows are declared for all 8 cycles and referenced by telemetry evidence."
     },
     {
       "id": "REQ-FUNC-GATE-PRE",
       "title": "Pre-environment functional gate passed",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "fixtures/public/telemetry/tvac_qualification.jsonl",
         "fixtures/public/graph_models/tvac_qualification.json"
       ],
-      "rationale": "Synthetic telemetry and campaign metadata satisfy this public demo requirement."
+      "rationale": "Functional gate markers are present in telemetry and linked to load, TM/TC bus latency, packet counter, and thermal self-heating evidence."
+    },
+    {
+      "id": "REQ-FUNC-GATE-SURVIVAL",
+      "title": "Functional test after survival exposure passed",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "result": "pass",
+      "evidence": [
+        "fixtures/public/telemetry/tvac_qualification.jsonl",
+        "fixtures/public/graph_models/tvac_qualification.json"
+      ],
+      "rationale": "Functional gate markers are present in telemetry and linked to load, TM/TC bus latency, packet counter, and thermal self-heating evidence."
     },
     {
       "id": "REQ-FUNC-GATE-DURING",
       "title": "During-environment functional gate passed",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "fixtures/public/telemetry/tvac_qualification.jsonl",
         "fixtures/public/graph_models/tvac_qualification.json"
       ],
-      "rationale": "Synthetic telemetry and campaign metadata satisfy this public demo requirement."
+      "rationale": "Functional gate markers are present in telemetry and linked to load, TM/TC bus latency, packet counter, and thermal self-heating evidence."
     },
     {
       "id": "REQ-FUNC-GATE-POST",
       "title": "Post-environment functional gate passed",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "fixtures/public/telemetry/tvac_qualification.jsonl",
         "fixtures/public/graph_models/tvac_qualification.json"
       ],
-      "rationale": "Synthetic telemetry and campaign metadata satisfy this public demo requirement."
+      "rationale": "Functional gate markers are present in telemetry and linked to load, TM/TC bus latency, packet counter, and thermal self-heating evidence."
     },
     {
       "id": "REQ-DATA-QUALITY",
       "title": "Evidence data quality acceptable",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "inconclusive",
       "evidence": [
         "fixtures/public/telemetry/tvac_qualification.jsonl",
         "fixtures/public/graph_models/tvac_qualification.json"
       ],
-      "rationale": "Synthetic evidence marks this item for review to demonstrate anomaly disposition workflow."
+      "rationale": "Sensor freshness, dropout/source-quality flags, and graph evidence markers are evaluated from the generated physical telemetry."
     },
     {
       "id": "REQ-ANOMALY-REVIEW",
       "title": "Anomaly review disposition complete",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "inconclusive",
       "evidence": [
         "fixtures/public/telemetry/tvac_qualification.jsonl",
         "fixtures/public/graph_models/tvac_qualification.json"
       ],
-      "rationale": "Synthetic evidence marks this item for review to demonstrate anomaly disposition workflow."
+      "rationale": "Interlock and anomaly disposition references are tied to exact cycle/phase timestamps in the thermal program."
     }
   ],
   "sources": [
     {
-      "id": "spacecraft_power",
-      "label": "Spacecraft Power",
+      "id": "dut_power",
+      "label": "DUT Power",
       "owner": "egse_power_role",
       "bus": "telemetry_bus",
       "quality": "fresh",
@@ -128,12 +161,13 @@
       "evidence_suitability": "primary",
       "signals": [
         "eps_bus_voltage_v",
-        "eps_bus_current_a"
+        "eps_bus_current_a",
+        "dut_self_heat_w"
       ]
     },
     {
-      "id": "spacecraft_cdh",
-      "label": "Spacecraft CDH",
+      "id": "dut_control",
+      "label": "DUT Control",
       "owner": "subsystem_test_role",
       "bus": "subsystem_event_bus",
       "quality": "fresh",
@@ -147,8 +181,8 @@
       ]
     },
     {
-      "id": "spacecraft_rf",
-      "label": "Spacecraft RF Comms",
+      "id": "dut_link",
+      "label": "DUT Link",
       "owner": "subsystem_test_role",
       "bus": "telemetry_bus",
       "quality": "fresh",
@@ -161,6 +195,26 @@
       ]
     },
     {
+      "id": "dut_thermal",
+      "label": "DUT Thermal Model",
+      "owner": "test_conductor_role",
+      "bus": "derived_model_bus",
+      "quality": "synthetic",
+      "freshness_ms": 300,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "dut_fast_component_deg_c",
+        "dut_lazy_component_deg_c",
+        "dut_fast_air_flux_w",
+        "dut_fast_interface_flux_w",
+        "dut_fast_shroud_flux_w",
+        "dut_lazy_air_flux_w",
+        "dut_lazy_interface_flux_w",
+        "dut_lazy_shroud_flux_w"
+      ]
+    },
+    {
       "id": "facility_thermal",
       "label": "Facility Thermal",
       "owner": "facility_test_role",
@@ -170,9 +224,41 @@
       "provenance": "synthetic_fixture_generator",
       "evidence_suitability": "primary",
       "signals": [
+        "thermal_cycle_index",
+        "thermal_phase_code",
+        "chamber_setpoint_deg_c",
         "thermal_zone_1_deg_c",
         "thermal_zone_2_deg_c",
-        "chamber_air_deg_c"
+        "chamber_air_deg_c",
+        "interface_plate_deg_c",
+        "thermal_shroud_deg_c",
+        "thermal_shroud_inlet_deg_c",
+        "thermal_shroud_outlet_deg_c",
+        "thermal_shroud_gradient_deg_c",
+        "huber_table_deg_c",
+        "ln2_line_temp_deg_c",
+        "ln2_valve_duty_pct",
+        "tvac_cryo_exhaust_temp_deg_c"
+      ]
+    },
+    {
+      "id": "facility_infrastructure",
+      "label": "Building Infrastructure",
+      "owner": "facility_test_role",
+      "bus": "facility_control_bus",
+      "quality": "fresh",
+      "freshness_ms": 600,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "cooling_water_freeze_margin_deg_c",
+        "cooling_water_temp_deg_c",
+        "pressurized_air_supply_bar",
+        "air_dewpoint_deg_c",
+        "tvac_scavenged_exhaust_temp_deg_c",
+        "tvac_scavenger_cooling_water_return_deg_c",
+        "tvac_exhaust_cold_recovery_pct",
+        "tvac_exhaust_duct_safe"
       ]
     },
     {
@@ -185,7 +271,7 @@
       "provenance": "synthetic_fixture_generator",
       "evidence_suitability": "primary",
       "signals": [
-        "tvac_pressure_pa"
+        "tvac_pressure_mbar"
       ]
     },
     {
@@ -201,6 +287,7 @@
         "bus_latency_ms",
         "tm_packet_counter",
         "tc_packet_counter",
+        "overall_packet_counter",
         "dropped_frame_count"
       ]
     },
@@ -226,16 +313,1190 @@
   "anomalies": [
     {
       "id": "ANOM-TVAC-001",
-      "title": "Synthetic pressure source degradation during cold dwell",
+      "title": "Pressure-source degradation during cold dwell",
       "severity": "medium",
       "status": "needs_disposition",
       "evidence_ref": "telemetry/tvac_qualification.jsonl#sample-32",
       "disposition": "Review required before closure."
     }
   ],
+  "thermal_program": {
+    "id": "tvac_qualification_program",
+    "kind": "tvac_qualification",
+    "label": "TVac Qualification - 8 cycle vacuum thermal profile",
+    "facility": "tvac_chamber_q1",
+    "cycle_count": 8,
+    "cold_target_deg_c": -40,
+    "hot_target_deg_c": 70,
+    "ramp_rate_deg_c_min": 1,
+    "dwell_minutes": 180,
+    "cycles": [
+      {
+        "index": 1,
+        "label": "Cycle 1",
+        "start": "2026-01-16T12:00:00Z",
+        "end": "2026-01-18T15:16:00Z",
+        "cold_target_deg_c": -40,
+        "hot_target_deg_c": 70,
+        "phases": [
+          {
+            "id": "C01-RAMP-HOT-SURVIVAL",
+            "label": "Ramp to hot survival",
+            "kind": "ramp_hot",
+            "start": "2026-01-16T12:00:00Z",
+            "end": "2026-01-16T12:58:00Z",
+            "target_deg_c": 80
+          },
+          {
+            "id": "C01-HOT-SURVIVAL",
+            "label": "Hot survival dwell",
+            "kind": "hot_survival",
+            "start": "2026-01-16T12:58:00Z",
+            "end": "2026-01-17T03:45:00Z",
+            "target_deg_c": 80
+          },
+          {
+            "id": "C01-RAMP-HOT-OPERATIONAL",
+            "label": "Cool down to hot operational",
+            "kind": "ramp_hot",
+            "start": "2026-01-17T03:45:00Z",
+            "end": "2026-01-17T03:55:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C01-HOT-OPERATIONAL",
+            "label": "Hot operational dwell",
+            "kind": "hot_operational",
+            "start": "2026-01-17T03:55:00Z",
+            "end": "2026-01-17T11:57:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C01-RAMP-COLD-SURVIVAL",
+            "label": "Ramp to cold survival",
+            "kind": "ramp_cold",
+            "start": "2026-01-17T11:57:00Z",
+            "end": "2026-01-17T13:57:00Z",
+            "target_deg_c": -50
+          },
+          {
+            "id": "C01-COLD-SURVIVAL",
+            "label": "Cold survival dwell",
+            "kind": "cold_survival",
+            "start": "2026-01-17T13:57:00Z",
+            "end": "2026-01-18T07:04:00Z",
+            "target_deg_c": -50
+          },
+          {
+            "id": "C01-RAMP-COLD-OPERATIONAL",
+            "label": "Warm up to cold operational",
+            "kind": "ramp_cold",
+            "start": "2026-01-18T07:04:00Z",
+            "end": "2026-01-18T07:14:00Z",
+            "target_deg_c": -40
+          },
+          {
+            "id": "C01-COLD-OPERATIONAL",
+            "label": "Cold operational dwell",
+            "kind": "cold_operational",
+            "start": "2026-01-18T07:14:00Z",
+            "end": "2026-01-18T15:16:00Z",
+            "target_deg_c": -40
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "label": "Cycle 2",
+        "start": "2026-01-18T15:16:00Z",
+        "end": "2026-01-19T23:00:00Z",
+        "cold_target_deg_c": -40,
+        "hot_target_deg_c": 70,
+        "phases": [
+          {
+            "id": "C02-RAMP-HOT",
+            "label": "Ramp to hot operational",
+            "kind": "ramp_hot",
+            "start": "2026-01-18T15:16:00Z",
+            "end": "2026-01-18T17:06:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C02-HOT-OPERATIONAL",
+            "label": "Hot operational dwell",
+            "kind": "hot_operational",
+            "start": "2026-01-18T17:06:00Z",
+            "end": "2026-01-19T07:08:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C02-RAMP-COLD",
+            "label": "Ramp to cold operational",
+            "kind": "ramp_cold",
+            "start": "2026-01-19T07:08:00Z",
+            "end": "2026-01-19T08:58:00Z",
+            "target_deg_c": -40
+          },
+          {
+            "id": "C02-COLD-OPERATIONAL",
+            "label": "Cold operational dwell",
+            "kind": "cold_operational",
+            "start": "2026-01-19T08:58:00Z",
+            "end": "2026-01-19T23:00:00Z",
+            "target_deg_c": -40
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "label": "Cycle 3",
+        "start": "2026-01-19T23:00:00Z",
+        "end": "2026-01-21T06:44:00Z",
+        "cold_target_deg_c": -40,
+        "hot_target_deg_c": 70,
+        "phases": [
+          {
+            "id": "C03-RAMP-HOT",
+            "label": "Ramp to hot operational",
+            "kind": "ramp_hot",
+            "start": "2026-01-19T23:00:00Z",
+            "end": "2026-01-20T00:50:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C03-HOT-OPERATIONAL",
+            "label": "Hot operational dwell",
+            "kind": "hot_operational",
+            "start": "2026-01-20T00:50:00Z",
+            "end": "2026-01-20T14:52:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C03-RAMP-COLD",
+            "label": "Ramp to cold operational",
+            "kind": "ramp_cold",
+            "start": "2026-01-20T14:52:00Z",
+            "end": "2026-01-20T16:42:00Z",
+            "target_deg_c": -40
+          },
+          {
+            "id": "C03-COLD-OPERATIONAL",
+            "label": "Cold operational dwell",
+            "kind": "cold_operational",
+            "start": "2026-01-20T16:42:00Z",
+            "end": "2026-01-21T06:44:00Z",
+            "target_deg_c": -40
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "label": "Cycle 4",
+        "start": "2026-01-21T06:44:00Z",
+        "end": "2026-01-22T14:28:00Z",
+        "cold_target_deg_c": -40,
+        "hot_target_deg_c": 70,
+        "phases": [
+          {
+            "id": "C04-RAMP-HOT",
+            "label": "Ramp to hot operational",
+            "kind": "ramp_hot",
+            "start": "2026-01-21T06:44:00Z",
+            "end": "2026-01-21T08:34:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C04-HOT-OPERATIONAL",
+            "label": "Hot operational dwell",
+            "kind": "hot_operational",
+            "start": "2026-01-21T08:34:00Z",
+            "end": "2026-01-21T22:36:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C04-RAMP-COLD",
+            "label": "Ramp to cold operational",
+            "kind": "ramp_cold",
+            "start": "2026-01-21T22:36:00Z",
+            "end": "2026-01-22T00:26:00Z",
+            "target_deg_c": -40
+          },
+          {
+            "id": "C04-COLD-OPERATIONAL",
+            "label": "Cold operational dwell",
+            "kind": "cold_operational",
+            "start": "2026-01-22T00:26:00Z",
+            "end": "2026-01-22T14:28:00Z",
+            "target_deg_c": -40
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "label": "Cycle 5",
+        "start": "2026-01-22T14:28:00Z",
+        "end": "2026-01-23T22:12:00Z",
+        "cold_target_deg_c": -40,
+        "hot_target_deg_c": 70,
+        "phases": [
+          {
+            "id": "C05-RAMP-HOT",
+            "label": "Ramp to hot operational",
+            "kind": "ramp_hot",
+            "start": "2026-01-22T14:28:00Z",
+            "end": "2026-01-22T16:18:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C05-HOT-OPERATIONAL",
+            "label": "Hot operational dwell",
+            "kind": "hot_operational",
+            "start": "2026-01-22T16:18:00Z",
+            "end": "2026-01-23T06:20:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C05-RAMP-COLD",
+            "label": "Ramp to cold operational",
+            "kind": "ramp_cold",
+            "start": "2026-01-23T06:20:00Z",
+            "end": "2026-01-23T08:10:00Z",
+            "target_deg_c": -40
+          },
+          {
+            "id": "C05-COLD-OPERATIONAL",
+            "label": "Cold operational dwell",
+            "kind": "cold_operational",
+            "start": "2026-01-23T08:10:00Z",
+            "end": "2026-01-23T22:12:00Z",
+            "target_deg_c": -40
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "label": "Cycle 6",
+        "start": "2026-01-23T22:12:00Z",
+        "end": "2026-01-25T05:56:00Z",
+        "cold_target_deg_c": -40,
+        "hot_target_deg_c": 70,
+        "phases": [
+          {
+            "id": "C06-RAMP-HOT",
+            "label": "Ramp to hot operational",
+            "kind": "ramp_hot",
+            "start": "2026-01-23T22:12:00Z",
+            "end": "2026-01-24T00:02:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C06-HOT-OPERATIONAL",
+            "label": "Hot operational dwell",
+            "kind": "hot_operational",
+            "start": "2026-01-24T00:02:00Z",
+            "end": "2026-01-24T14:04:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C06-RAMP-COLD",
+            "label": "Ramp to cold operational",
+            "kind": "ramp_cold",
+            "start": "2026-01-24T14:04:00Z",
+            "end": "2026-01-24T15:54:00Z",
+            "target_deg_c": -40
+          },
+          {
+            "id": "C06-COLD-OPERATIONAL",
+            "label": "Cold operational dwell",
+            "kind": "cold_operational",
+            "start": "2026-01-24T15:54:00Z",
+            "end": "2026-01-25T05:56:00Z",
+            "target_deg_c": -40
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "label": "Cycle 7",
+        "start": "2026-01-25T05:56:00Z",
+        "end": "2026-01-26T13:40:00Z",
+        "cold_target_deg_c": -40,
+        "hot_target_deg_c": 70,
+        "phases": [
+          {
+            "id": "C07-RAMP-HOT",
+            "label": "Ramp to hot operational",
+            "kind": "ramp_hot",
+            "start": "2026-01-25T05:56:00Z",
+            "end": "2026-01-25T07:46:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C07-HOT-OPERATIONAL",
+            "label": "Hot operational dwell",
+            "kind": "hot_operational",
+            "start": "2026-01-25T07:46:00Z",
+            "end": "2026-01-25T21:48:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C07-RAMP-COLD",
+            "label": "Ramp to cold operational",
+            "kind": "ramp_cold",
+            "start": "2026-01-25T21:48:00Z",
+            "end": "2026-01-25T23:38:00Z",
+            "target_deg_c": -40
+          },
+          {
+            "id": "C07-COLD-OPERATIONAL",
+            "label": "Cold operational dwell",
+            "kind": "cold_operational",
+            "start": "2026-01-25T23:38:00Z",
+            "end": "2026-01-26T13:40:00Z",
+            "target_deg_c": -40
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "label": "Cycle 8",
+        "start": "2026-01-26T13:40:00Z",
+        "end": "2026-01-27T21:24:00Z",
+        "cold_target_deg_c": -40,
+        "hot_target_deg_c": 70,
+        "phases": [
+          {
+            "id": "C08-RAMP-HOT",
+            "label": "Ramp to hot operational",
+            "kind": "ramp_hot",
+            "start": "2026-01-26T13:40:00Z",
+            "end": "2026-01-26T15:30:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C08-HOT-OPERATIONAL",
+            "label": "Hot operational dwell",
+            "kind": "hot_operational",
+            "start": "2026-01-26T15:30:00Z",
+            "end": "2026-01-27T05:32:00Z",
+            "target_deg_c": 70
+          },
+          {
+            "id": "C08-RAMP-COLD",
+            "label": "Ramp to cold operational",
+            "kind": "ramp_cold",
+            "start": "2026-01-27T05:32:00Z",
+            "end": "2026-01-27T07:22:00Z",
+            "target_deg_c": -40
+          },
+          {
+            "id": "C08-COLD-OPERATIONAL",
+            "label": "Cold operational dwell",
+            "kind": "cold_operational",
+            "start": "2026-01-27T07:22:00Z",
+            "end": "2026-01-27T21:24:00Z",
+            "target_deg_c": -40
+          }
+        ]
+      }
+    ],
+    "dwell_windows": [
+      {
+        "id": "C01-HOT-SURVIVAL-WINDOW",
+        "label": "Hot survival dwell",
+        "cycle_index": 1,
+        "kind": "hot_survival",
+        "start": "2026-01-16T23:45:00Z",
+        "end": "2026-01-17T02:45:00Z",
+        "target_deg_c": 80,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-01-hot_survival-stable"
+      },
+      {
+        "id": "C01-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "cycle_index": 1,
+        "kind": "hot_operational",
+        "start": "2026-01-17T07:57:00Z",
+        "end": "2026-01-17T10:57:00Z",
+        "target_deg_c": 70,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-01-hot_operational-stable"
+      },
+      {
+        "id": "C01-COLD-SURVIVAL-WINDOW",
+        "label": "Cold survival dwell",
+        "cycle_index": 1,
+        "kind": "cold_survival",
+        "start": "2026-01-18T03:04:00Z",
+        "end": "2026-01-18T06:04:00Z",
+        "target_deg_c": -50,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-01-cold_survival-stable"
+      },
+      {
+        "id": "C01-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "cycle_index": 1,
+        "kind": "cold_operational",
+        "start": "2026-01-18T11:16:00Z",
+        "end": "2026-01-18T14:16:00Z",
+        "target_deg_c": -40,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-01-cold_operational-stable"
+      },
+      {
+        "id": "C02-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "cycle_index": 2,
+        "kind": "hot_operational",
+        "start": "2026-01-19T03:08:00Z",
+        "end": "2026-01-19T06:08:00Z",
+        "target_deg_c": 70,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-02-hot_operational-stable"
+      },
+      {
+        "id": "C02-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "cycle_index": 2,
+        "kind": "cold_operational",
+        "start": "2026-01-19T19:00:00Z",
+        "end": "2026-01-19T22:00:00Z",
+        "target_deg_c": -40,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-02-cold_operational-stable"
+      },
+      {
+        "id": "C03-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "cycle_index": 3,
+        "kind": "hot_operational",
+        "start": "2026-01-20T10:52:00Z",
+        "end": "2026-01-20T13:52:00Z",
+        "target_deg_c": 70,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-03-hot_operational-stable"
+      },
+      {
+        "id": "C03-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "cycle_index": 3,
+        "kind": "cold_operational",
+        "start": "2026-01-21T02:44:00Z",
+        "end": "2026-01-21T05:44:00Z",
+        "target_deg_c": -40,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-03-cold_operational-stable"
+      },
+      {
+        "id": "C04-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "cycle_index": 4,
+        "kind": "hot_operational",
+        "start": "2026-01-21T18:36:00Z",
+        "end": "2026-01-21T21:36:00Z",
+        "target_deg_c": 70,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-04-hot_operational-stable"
+      },
+      {
+        "id": "C04-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "cycle_index": 4,
+        "kind": "cold_operational",
+        "start": "2026-01-22T10:28:00Z",
+        "end": "2026-01-22T13:28:00Z",
+        "target_deg_c": -40,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-04-cold_operational-stable"
+      },
+      {
+        "id": "C05-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "cycle_index": 5,
+        "kind": "hot_operational",
+        "start": "2026-01-23T02:20:00Z",
+        "end": "2026-01-23T05:20:00Z",
+        "target_deg_c": 70,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-05-hot_operational-stable"
+      },
+      {
+        "id": "C05-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "cycle_index": 5,
+        "kind": "cold_operational",
+        "start": "2026-01-23T18:12:00Z",
+        "end": "2026-01-23T21:12:00Z",
+        "target_deg_c": -40,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-05-cold_operational-stable"
+      },
+      {
+        "id": "C06-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "cycle_index": 6,
+        "kind": "hot_operational",
+        "start": "2026-01-24T10:04:00Z",
+        "end": "2026-01-24T13:04:00Z",
+        "target_deg_c": 70,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-06-hot_operational-stable"
+      },
+      {
+        "id": "C06-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "cycle_index": 6,
+        "kind": "cold_operational",
+        "start": "2026-01-25T01:56:00Z",
+        "end": "2026-01-25T04:56:00Z",
+        "target_deg_c": -40,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-06-cold_operational-stable"
+      },
+      {
+        "id": "C07-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "cycle_index": 7,
+        "kind": "hot_operational",
+        "start": "2026-01-25T17:48:00Z",
+        "end": "2026-01-25T20:48:00Z",
+        "target_deg_c": 70,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-07-hot_operational-stable"
+      },
+      {
+        "id": "C07-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "cycle_index": 7,
+        "kind": "cold_operational",
+        "start": "2026-01-26T09:40:00Z",
+        "end": "2026-01-26T12:40:00Z",
+        "target_deg_c": -40,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-07-cold_operational-stable"
+      },
+      {
+        "id": "C08-HOT-OPERATIONAL-WINDOW",
+        "label": "Hot operational dwell",
+        "cycle_index": 8,
+        "kind": "hot_operational",
+        "start": "2026-01-27T01:32:00Z",
+        "end": "2026-01-27T04:32:00Z",
+        "target_deg_c": 70,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-08-hot_operational-stable"
+      },
+      {
+        "id": "C08-COLD-OPERATIONAL-WINDOW",
+        "label": "Cold operational dwell",
+        "cycle_index": 8,
+        "kind": "cold_operational",
+        "start": "2026-01-27T17:24:00Z",
+        "end": "2026-01-27T20:24:00Z",
+        "target_deg_c": -40,
+        "stability_band_c": 2,
+        "minimum_minutes": 180,
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#cycle-08-cold_operational-stable"
+      }
+    ],
+    "functional_gates": [
+      {
+        "id": "tvac_qualification-FUNC-AMBIENT-PRE",
+        "label": "Ambient-pressure functional test before pumpdown",
+        "gate": "ambient_pre",
+        "cycle_index": 0,
+        "phase_id": "ambient_precheck",
+        "timestamp": "2026-01-15T11:30:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-ambient_pre"
+      },
+      {
+        "id": "tvac_qualification-FUNC-VACUUM-PRE",
+        "label": "Vacuum ambient functional test after pressure gate",
+        "gate": "vacuum_pre",
+        "cycle_index": 0,
+        "phase_id": "ambient_precheck",
+        "timestamp": "2026-01-16T11:30:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-vacuum_pre"
+      },
+      {
+        "id": "tvac_qualification-FUNC-VACUUM-POST",
+        "label": "Final ambient-temperature functional test under vacuum",
+        "gate": "vacuum_post",
+        "cycle_index": 0,
+        "phase_id": "ambient_postcheck_vacuum",
+        "timestamp": "2026-01-27T22:24:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-vacuum_post"
+      },
+      {
+        "id": "tvac_qualification-FUNC-POST",
+        "label": "Ambient-pressure functional test after vent",
+        "gate": "post",
+        "cycle_index": 0,
+        "phase_id": "ambient_postcheck",
+        "timestamp": "2026-01-29T00:14:24Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-post"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C01-HOT",
+        "label": "Hot survival recovery functional test",
+        "gate": "hot",
+        "cycle_index": 1,
+        "phase_id": "C01-HOT-OPERATIONAL",
+        "timestamp": "2026-01-17T11:31:00Z",
+        "result": "inconclusive",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C01-COLD",
+        "label": "Cold survival recovery functional test",
+        "gate": "cold",
+        "cycle_index": 1,
+        "phase_id": "C01-COLD-OPERATIONAL",
+        "timestamp": "2026-01-18T15:01:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C02-HOT",
+        "label": "Cycle 2 hot dwell functional test",
+        "gate": "hot",
+        "cycle_index": 2,
+        "phase_id": "C02-HOT-OPERATIONAL",
+        "timestamp": "2026-01-19T06:53:00Z",
+        "result": "inconclusive",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C02-COLD",
+        "label": "Cycle 2 cold dwell functional test",
+        "gate": "cold",
+        "cycle_index": 2,
+        "phase_id": "C02-COLD-OPERATIONAL",
+        "timestamp": "2026-01-19T22:15:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C03-HOT",
+        "label": "Cycle 3 hot dwell functional test",
+        "gate": "hot",
+        "cycle_index": 3,
+        "phase_id": "C03-HOT-OPERATIONAL",
+        "timestamp": "2026-01-20T14:13:00Z",
+        "result": "inconclusive",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C03-COLD",
+        "label": "Cycle 3 cold dwell functional test",
+        "gate": "cold",
+        "cycle_index": 3,
+        "phase_id": "C03-COLD-OPERATIONAL",
+        "timestamp": "2026-01-21T06:16:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C04-HOT",
+        "label": "Cycle 4 hot dwell functional test",
+        "gate": "hot",
+        "cycle_index": 4,
+        "phase_id": "C04-HOT-OPERATIONAL",
+        "timestamp": "2026-01-21T22:14:00Z",
+        "result": "inconclusive",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C04-COLD",
+        "label": "Cycle 4 cold dwell functional test",
+        "gate": "cold",
+        "cycle_index": 4,
+        "phase_id": "C04-COLD-OPERATIONAL",
+        "timestamp": "2026-01-22T14:13:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C05-HOT",
+        "label": "Cycle 5 hot dwell functional test",
+        "gate": "hot",
+        "cycle_index": 5,
+        "phase_id": "C05-HOT-OPERATIONAL",
+        "timestamp": "2026-01-23T05:28:00Z",
+        "result": "inconclusive",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C05-COLD",
+        "label": "Cycle 5 cold dwell functional test",
+        "gate": "cold",
+        "cycle_index": 5,
+        "phase_id": "C05-COLD-OPERATIONAL",
+        "timestamp": "2026-01-23T21:12:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C06-HOT",
+        "label": "Cycle 6 hot dwell functional test",
+        "gate": "hot",
+        "cycle_index": 6,
+        "phase_id": "C06-HOT-OPERATIONAL",
+        "timestamp": "2026-01-24T13:04:00Z",
+        "result": "inconclusive",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C06-COLD",
+        "label": "Cycle 6 cold dwell functional test",
+        "gate": "cold",
+        "cycle_index": 6,
+        "phase_id": "C06-COLD-OPERATIONAL",
+        "timestamp": "2026-01-25T04:56:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C07-HOT",
+        "label": "Cycle 7 hot dwell functional test",
+        "gate": "hot",
+        "cycle_index": 7,
+        "phase_id": "C07-HOT-OPERATIONAL",
+        "timestamp": "2026-01-25T20:48:00Z",
+        "result": "inconclusive",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C07-COLD",
+        "label": "Cycle 7 cold dwell functional test",
+        "gate": "cold",
+        "cycle_index": 7,
+        "phase_id": "C07-COLD-OPERATIONAL",
+        "timestamp": "2026-01-26T12:40:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C08-HOT",
+        "label": "Cycle 8 hot dwell functional test",
+        "gate": "hot",
+        "cycle_index": 8,
+        "phase_id": "C08-HOT-OPERATIONAL",
+        "timestamp": "2026-01-27T04:32:00Z",
+        "result": "inconclusive",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-FUNC-C08-COLD",
+        "label": "Cycle 8 cold dwell functional test",
+        "gate": "cold",
+        "cycle_index": 8,
+        "phase_id": "C08-COLD-OPERATIONAL",
+        "timestamp": "2026-01-27T20:24:00Z",
+        "result": "pass",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#functional-cold"
+      }
+    ],
+    "interlock_windows": [
+      {
+        "id": "tvac_qualification-INTERLOCK-NOMINAL",
+        "label": "Facility interlocks closed",
+        "start": "2026-01-15T10:00:00Z",
+        "end": "2026-01-29T00:44:24Z",
+        "state": "closed",
+        "severity": "info",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#interlocks"
+      },
+      {
+        "id": "TVAC-LN2-VALVE-REVIEW",
+        "label": "LN2 valve duty review window",
+        "start": "2026-01-24T18:54:00Z",
+        "end": "2026-01-24T19:44:00Z",
+        "state": "review",
+        "severity": "medium",
+        "evidence_ref": "telemetry/tvac_qualification.jsonl#ln2-review"
+      }
+    ],
+    "evidence_markers": [
+      {
+        "id": "tvac_qualification-STABLE-C01-hot_survival",
+        "label": "Stable Hot survival dwell confirmed",
+        "timestamp": "2026-01-16T23:45:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c01-hot_survival"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C01-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "timestamp": "2026-01-17T07:57:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c01-hot_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C01-cold_survival",
+        "label": "Stable Cold survival dwell confirmed",
+        "timestamp": "2026-01-18T03:04:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c01-cold_survival"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C01-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "timestamp": "2026-01-18T11:16:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c01-cold_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C02-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "timestamp": "2026-01-19T03:08:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c02-hot_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C02-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "timestamp": "2026-01-19T19:00:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c02-cold_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C03-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "timestamp": "2026-01-20T10:52:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c03-hot_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C03-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "timestamp": "2026-01-21T02:44:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c03-cold_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C04-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "timestamp": "2026-01-21T18:36:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c04-hot_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C04-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "timestamp": "2026-01-22T10:28:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c04-cold_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C05-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "timestamp": "2026-01-23T02:20:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c05-hot_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C05-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "timestamp": "2026-01-23T18:12:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c05-cold_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C06-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "timestamp": "2026-01-24T10:04:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c06-hot_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C06-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "timestamp": "2026-01-25T01:56:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c06-cold_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C07-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "timestamp": "2026-01-25T17:48:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c07-hot_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C07-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "timestamp": "2026-01-26T09:40:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c07-cold_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C08-hot_operational",
+        "label": "Stable Hot operational dwell confirmed",
+        "timestamp": "2026-01-27T01:32:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c08-hot_operational"
+      },
+      {
+        "id": "tvac_qualification-STABLE-C08-cold_operational",
+        "label": "Stable Cold operational dwell confirmed",
+        "timestamp": "2026-01-27T17:24:00Z",
+        "kind": "stability_achieved",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#stable-c08-cold_operational"
+      },
+      {
+        "id": "tvac_qualification-PRESSURE-GATE-PRE",
+        "label": "Vacuum pressure gate reached",
+        "timestamp": "2026-01-16T11:00:00Z",
+        "kind": "pressure_gate",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#pressure-gate-pre"
+      },
+      {
+        "id": "tvac_qualification-PRESSURE-GATE-POST",
+        "label": "Vacuum pressure gate held for final test",
+        "timestamp": "2026-01-27T21:54:00Z",
+        "kind": "pressure_gate",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#pressure-gate-post"
+      },
+      {
+        "id": "tvac_qualification-EVID-AMBIENT-PRE",
+        "label": "Ambient-pressure functional test before pumpdown",
+        "timestamp": "2026-01-15T11:30:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#functional-ambient_pre"
+      },
+      {
+        "id": "tvac_qualification-EVID-VACUUM-PRE",
+        "label": "Vacuum ambient functional test after pressure gate",
+        "timestamp": "2026-01-16T11:30:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#functional-vacuum_pre"
+      },
+      {
+        "id": "tvac_qualification-EVID-VACUUM-POST",
+        "label": "Final ambient-temperature functional test under vacuum",
+        "timestamp": "2026-01-27T22:24:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#functional-vacuum_post"
+      },
+      {
+        "id": "tvac_qualification-EVID-POST",
+        "label": "Ambient-pressure functional test after vent",
+        "timestamp": "2026-01-29T00:14:24Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#functional-post"
+      },
+      {
+        "id": "tvac_qualification-EVID-C01-HOT",
+        "label": "Hot survival recovery functional test",
+        "timestamp": "2026-01-17T11:31:00Z",
+        "kind": "functional_gate",
+        "result": "inconclusive",
+        "evidence_ref": "reports/tvac_qualification.json#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-EVID-C01-COLD",
+        "label": "Cold survival recovery functional test",
+        "timestamp": "2026-01-18T15:01:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#functional-cold"
+      },
+      {
+        "id": "tvac_qualification-EVID-C02-HOT",
+        "label": "Cycle 2 hot dwell functional test",
+        "timestamp": "2026-01-19T06:53:00Z",
+        "kind": "functional_gate",
+        "result": "inconclusive",
+        "evidence_ref": "reports/tvac_qualification.json#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-EVID-C02-COLD",
+        "label": "Cycle 2 cold dwell functional test",
+        "timestamp": "2026-01-19T22:15:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#functional-cold"
+      },
+      {
+        "id": "tvac_qualification-EVID-C03-HOT",
+        "label": "Cycle 3 hot dwell functional test",
+        "timestamp": "2026-01-20T14:13:00Z",
+        "kind": "functional_gate",
+        "result": "inconclusive",
+        "evidence_ref": "reports/tvac_qualification.json#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-EVID-C03-COLD",
+        "label": "Cycle 3 cold dwell functional test",
+        "timestamp": "2026-01-21T06:16:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#functional-cold"
+      },
+      {
+        "id": "tvac_qualification-EVID-C04-HOT",
+        "label": "Cycle 4 hot dwell functional test",
+        "timestamp": "2026-01-21T22:14:00Z",
+        "kind": "functional_gate",
+        "result": "inconclusive",
+        "evidence_ref": "reports/tvac_qualification.json#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-EVID-C04-COLD",
+        "label": "Cycle 4 cold dwell functional test",
+        "timestamp": "2026-01-22T14:13:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#functional-cold"
+      },
+      {
+        "id": "tvac_qualification-EVID-C05-HOT",
+        "label": "Cycle 5 hot dwell functional test",
+        "timestamp": "2026-01-23T05:28:00Z",
+        "kind": "functional_gate",
+        "result": "inconclusive",
+        "evidence_ref": "reports/tvac_qualification.json#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-EVID-C05-COLD",
+        "label": "Cycle 5 cold dwell functional test",
+        "timestamp": "2026-01-23T21:12:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#functional-cold"
+      },
+      {
+        "id": "tvac_qualification-EVID-C06-HOT",
+        "label": "Cycle 6 hot dwell functional test",
+        "timestamp": "2026-01-24T13:04:00Z",
+        "kind": "functional_gate",
+        "result": "inconclusive",
+        "evidence_ref": "reports/tvac_qualification.json#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-EVID-C06-COLD",
+        "label": "Cycle 6 cold dwell functional test",
+        "timestamp": "2026-01-25T04:56:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#functional-cold"
+      },
+      {
+        "id": "tvac_qualification-EVID-C07-HOT",
+        "label": "Cycle 7 hot dwell functional test",
+        "timestamp": "2026-01-25T20:48:00Z",
+        "kind": "functional_gate",
+        "result": "inconclusive",
+        "evidence_ref": "reports/tvac_qualification.json#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-EVID-C07-COLD",
+        "label": "Cycle 7 cold dwell functional test",
+        "timestamp": "2026-01-26T12:40:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#functional-cold"
+      },
+      {
+        "id": "tvac_qualification-EVID-C08-HOT",
+        "label": "Cycle 8 hot dwell functional test",
+        "timestamp": "2026-01-27T04:32:00Z",
+        "kind": "functional_gate",
+        "result": "inconclusive",
+        "evidence_ref": "reports/tvac_qualification.json#functional-hot"
+      },
+      {
+        "id": "tvac_qualification-EVID-C08-COLD",
+        "label": "Cycle 8 cold dwell functional test",
+        "timestamp": "2026-01-27T20:24:00Z",
+        "kind": "functional_gate",
+        "result": "pass",
+        "evidence_ref": "reports/tvac_qualification.json#functional-cold"
+      }
+    ]
+  },
+  "simulation_provenance": {
+    "model": "multi_path_dut_thermal_rc_v2",
+    "model_version": "2026.05.1",
+    "seed": 84031,
+    "step_seconds": 300,
+    "source": "gossamer internal/environmentalsim deterministic fixture",
+    "parameters": {
+      "chamber_air_tau_min": 18,
+      "fast_air_conductance_w_per_k": 0.34,
+      "fast_component_capacitance_j_per_k": 3200,
+      "fast_interface_conductance_w_per_k": 0.52,
+      "functional_gate_fast_self_heat_w": 15,
+      "functional_gate_lazy_self_heat_w": 2.8,
+      "interface_plate_tau_min": 33,
+      "lazy_air_conductance_w_per_k": 0.24,
+      "lazy_component_capacitance_j_per_k": 18500,
+      "lazy_interface_conductance_w_per_k": 0.045,
+      "lazy_radiating_area_m2": 0.105,
+      "tvac_baked_ultimate_pressure_mbar": 9.971189189189189e-8,
+      "tvac_baked_ultimate_pressure_pa": 0.00000997118918918919,
+      "tvac_base_virtual_leak_pa_per_min": 0.0000051,
+      "tvac_cryo_pump_max_multiplier": 3.2,
+      "tvac_effective_pump_rate_per_min": 0.185,
+      "tvac_exhaust_scavenger_min_safe_c": 4,
+      "tvac_exhaust_water_flow_nominal": 1,
+      "tvac_min_air_coupling_factor": 0.015,
+      "tvac_nominal_pump_rate_per_min": 0.185,
+      "tvac_shroud_nominal_tau_min": 28
+    },
+    "deterministic": true
+  },
   "reproducibility": [
     "go run ./cmd/gossamer-fixtures",
     "go run ./cmd/gossamer-report --campaign tvac_qualification"
   ],
-  "synthetic_data_note": "This report is generated from deterministic synthetic data for public demonstration only."
+  "synthetic_data_note": "Generated from deterministic physics-backed fixture data."
 }

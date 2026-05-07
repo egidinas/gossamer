@@ -3,13 +3,13 @@
   "generated_at": "2026-01-15T10:00:00Z",
   "connection_id": "bus_virtualization_demo",
   "description": "Polling replay of fictional TM and TC envelopes between generic test nodes.",
-  "replay_cursor": "cursor-aurorasat-demo-001",
+  "replay_cursor": "cursor-reference-dut-demo-001",
   "streams": [
     {
       "id": "tm_primary",
-      "label": "AuroraSat-1 TM to Archive",
+      "label": "Reference DUT TM to Archive",
       "direction": "TM",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "bus": "telemetry_bus",
       "quality": "fresh",
@@ -19,10 +19,10 @@
     },
     {
       "id": "tc_primary",
-      "label": "Flatsat Rack TC to AuroraSat-1",
+      "label": "Flatsat Rack TC to Reference DUT",
       "direction": "TC",
       "source_node": "flatsat_rack_a",
-      "destination_node": "aurorasat_1",
+      "destination_node": "reference_dut",
       "bus": "command_bus",
       "quality": "fresh",
       "latency_ms": 31,
@@ -48,7 +48,7 @@
       "stream_id": "tm_primary",
       "direction": "TM",
       "timestamp": "2026-01-15T10:00:00Z",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "event_class": "telemetry_sample",
       "authority": "read_only_tap",
@@ -71,7 +71,7 @@
       "direction": "TC",
       "timestamp": "2026-01-15T10:00:00Z",
       "source_node": "flatsat_rack_a",
-      "destination_node": "aurorasat_1",
+      "destination_node": "reference_dut",
       "event_class": "command_request",
       "authority": "demo_operator_lease",
       "quality": "fresh",
@@ -92,7 +92,7 @@
       "stream_id": "tm_primary",
       "direction": "TM",
       "timestamp": "2026-01-15T10:15:00Z",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "event_class": "telemetry_sample",
       "authority": "read_only_tap",
@@ -100,9 +100,9 @@
       "latency_ms": 19,
       "packet_counter": 6017,
       "fields": {
-        "bus_latency_ms": 19.07,
+        "bus_latency_ms": 19.066,
         "eps_bus_voltage_v": 28.04,
-        "thermal_zone_1_deg_c": -12.92
+        "thermal_zone_1_deg_c": -12.925
       },
       "states": {
         "rf_link_sim_state": "locked"
@@ -114,7 +114,7 @@
       "stream_id": "tm_primary",
       "direction": "TM",
       "timestamp": "2026-01-15T10:30:00Z",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "event_class": "telemetry_sample",
       "authority": "read_only_tap",
@@ -122,8 +122,8 @@
       "latency_ms": 20,
       "packet_counter": 6034,
       "fields": {
-        "bus_latency_ms": 20.11,
-        "eps_bus_voltage_v": 28.08,
+        "bus_latency_ms": 20.114,
+        "eps_bus_voltage_v": 28.079,
         "thermal_zone_1_deg_c": -8.27
       },
       "states": {
@@ -136,7 +136,7 @@
       "stream_id": "tm_primary",
       "direction": "TM",
       "timestamp": "2026-01-15T10:45:00Z",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "event_class": "telemetry_sample",
       "authority": "read_only_tap",
@@ -144,9 +144,9 @@
       "latency_ms": 21,
       "packet_counter": 6051,
       "fields": {
-        "bus_latency_ms": 21.12,
-        "eps_bus_voltage_v": 28.12,
-        "thermal_zone_1_deg_c": -3.66
+        "bus_latency_ms": 21.123,
+        "eps_bus_voltage_v": 28.117,
+        "thermal_zone_1_deg_c": -3.657
       },
       "states": {
         "rf_link_sim_state": "locked"
@@ -159,7 +159,7 @@
       "direction": "TC",
       "timestamp": "2026-01-15T10:45:00Z",
       "source_node": "flatsat_rack_a",
-      "destination_node": "aurorasat_1",
+      "destination_node": "reference_dut",
       "event_class": "command_request",
       "authority": "demo_operator_lease",
       "quality": "fresh",
@@ -180,7 +180,7 @@
       "stream_id": "tm_primary",
       "direction": "TM",
       "timestamp": "2026-01-15T11:00:00Z",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "event_class": "telemetry_sample",
       "authority": "read_only_tap",
@@ -188,9 +188,9 @@
       "latency_ms": 22,
       "packet_counter": 6068,
       "fields": {
-        "bus_latency_ms": 22.08,
-        "eps_bus_voltage_v": 28.15,
-        "thermal_zone_1_deg_c": 0.89
+        "bus_latency_ms": 22.077,
+        "eps_bus_voltage_v": 28.153,
+        "thermal_zone_1_deg_c": 0.893678
       },
       "states": {
         "rf_link_sim_state": "locked"
@@ -202,7 +202,7 @@
       "stream_id": "tm_primary",
       "direction": "TM",
       "timestamp": "2026-01-15T11:15:00Z",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "event_class": "telemetry_sample",
       "authority": "read_only_tap",
@@ -210,9 +210,9 @@
       "latency_ms": 23,
       "packet_counter": 6085,
       "fields": {
-        "bus_latency_ms": 22.96,
-        "eps_bus_voltage_v": 28.19,
-        "thermal_zone_1_deg_c": 5.36
+        "bus_latency_ms": 22.958,
+        "eps_bus_voltage_v": 28.186,
+        "thermal_zone_1_deg_c": 5.362
       },
       "states": {
         "rf_link_sim_state": "locked"
@@ -224,7 +224,7 @@
       "stream_id": "tm_primary",
       "direction": "TM",
       "timestamp": "2026-01-15T11:30:00Z",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "event_class": "telemetry_sample",
       "authority": "read_only_tap",
@@ -232,9 +232,9 @@
       "latency_ms": 24,
       "packet_counter": 6102,
       "fields": {
-        "bus_latency_ms": 23.75,
-        "eps_bus_voltage_v": 28.22,
-        "thermal_zone_1_deg_c": 9.73
+        "bus_latency_ms": 23.751,
+        "eps_bus_voltage_v": 28.216,
+        "thermal_zone_1_deg_c": 9.727
       },
       "states": {
         "rf_link_sim_state": "locked"
@@ -247,7 +247,7 @@
       "direction": "TC",
       "timestamp": "2026-01-15T11:30:00Z",
       "source_node": "flatsat_rack_a",
-      "destination_node": "aurorasat_1",
+      "destination_node": "reference_dut",
       "event_class": "command_request",
       "authority": "demo_operator_lease",
       "quality": "fresh",
@@ -268,7 +268,7 @@
       "stream_id": "tm_primary",
       "direction": "TM",
       "timestamp": "2026-01-15T11:45:00Z",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "event_class": "telemetry_sample",
       "authority": "read_only_tap",
@@ -276,9 +276,9 @@
       "latency_ms": 24,
       "packet_counter": 6119,
       "fields": {
-        "bus_latency_ms": 24.44,
-        "eps_bus_voltage_v": 28.24,
-        "thermal_zone_1_deg_c": 13.97
+        "bus_latency_ms": 24.441,
+        "eps_bus_voltage_v": 28.242,
+        "thermal_zone_1_deg_c": 13.971
       },
       "states": {
         "rf_link_sim_state": "locked"
@@ -290,7 +290,7 @@
       "stream_id": "tm_primary",
       "direction": "TM",
       "timestamp": "2026-01-15T12:00:00Z",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "event_class": "telemetry_sample",
       "authority": "read_only_tap",
@@ -298,9 +298,9 @@
       "latency_ms": 25,
       "packet_counter": 6136,
       "fields": {
-        "bus_latency_ms": 25.02,
-        "eps_bus_voltage_v": 28.26,
-        "thermal_zone_1_deg_c": 18.07
+        "bus_latency_ms": 25.016,
+        "eps_bus_voltage_v": 28.263,
+        "thermal_zone_1_deg_c": 18.073
       },
       "states": {
         "rf_link_sim_state": "locked"
@@ -312,7 +312,7 @@
       "stream_id": "tm_primary",
       "direction": "TM",
       "timestamp": "2026-01-15T12:15:00Z",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "event_class": "telemetry_sample",
       "authority": "read_only_tap",
@@ -320,9 +320,9 @@
       "latency_ms": 25,
       "packet_counter": 6153,
       "fields": {
-        "bus_latency_ms": 25.47,
+        "bus_latency_ms": 25.465,
         "eps_bus_voltage_v": 28.28,
-        "thermal_zone_1_deg_c": 22.02
+        "thermal_zone_1_deg_c": 22.016
       },
       "states": {
         "rf_link_sim_state": "locked"
@@ -335,7 +335,7 @@
       "direction": "TC",
       "timestamp": "2026-01-15T12:15:00Z",
       "source_node": "flatsat_rack_a",
-      "destination_node": "aurorasat_1",
+      "destination_node": "reference_dut",
       "event_class": "command_request",
       "authority": "demo_operator_lease",
       "quality": "fresh",
@@ -356,7 +356,7 @@
       "stream_id": "tm_primary",
       "direction": "TM",
       "timestamp": "2026-01-15T12:30:00Z",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "event_class": "telemetry_sample",
       "authority": "read_only_tap",
@@ -364,9 +364,9 @@
       "latency_ms": 26,
       "packet_counter": 6170,
       "fields": {
-        "bus_latency_ms": 25.78,
-        "eps_bus_voltage_v": 28.29,
-        "thermal_zone_1_deg_c": 25.78
+        "bus_latency_ms": 25.782,
+        "eps_bus_voltage_v": 28.292,
+        "thermal_zone_1_deg_c": 25.782
       },
       "states": {
         "rf_link_sim_state": "locked"
@@ -378,7 +378,7 @@
       "stream_id": "tm_primary",
       "direction": "TM",
       "timestamp": "2026-01-15T12:45:00Z",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "event_class": "telemetry_sample",
       "authority": "read_only_tap",
@@ -387,8 +387,8 @@
       "packet_counter": 6187,
       "fields": {
         "bus_latency_ms": 25.96,
-        "eps_bus_voltage_v": 28.3,
-        "thermal_zone_1_deg_c": 29.35
+        "eps_bus_voltage_v": 28.298,
+        "thermal_zone_1_deg_c": 29.355
       },
       "states": {
         "rf_link_sim_state": "locked"
@@ -400,7 +400,7 @@
       "stream_id": "tm_primary",
       "direction": "TM",
       "timestamp": "2026-01-15T13:00:00Z",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "event_class": "telemetry_sample",
       "authority": "read_only_tap",
@@ -408,9 +408,9 @@
       "latency_ms": 26,
       "packet_counter": 6204,
       "fields": {
-        "bus_latency_ms": 26,
+        "bus_latency_ms": 25.996,
         "eps_bus_voltage_v": 28.3,
-        "thermal_zone_1_deg_c": 32.72
+        "thermal_zone_1_deg_c": 32.718
       },
       "states": {
         "rf_link_sim_state": "locked"
@@ -423,7 +423,7 @@
       "direction": "TC",
       "timestamp": "2026-01-15T13:00:00Z",
       "source_node": "flatsat_rack_a",
-      "destination_node": "aurorasat_1",
+      "destination_node": "reference_dut",
       "event_class": "command_request",
       "authority": "demo_operator_lease",
       "quality": "fresh",
@@ -444,7 +444,7 @@
       "stream_id": "tm_primary",
       "direction": "TM",
       "timestamp": "2026-01-15T13:15:00Z",
-      "source_node": "aurorasat_1",
+      "source_node": "reference_dut",
       "destination_node": "archive_node_a",
       "event_class": "telemetry_sample",
       "authority": "read_only_tap",
@@ -452,9 +452,9 @@
       "latency_ms": 26,
       "packet_counter": 6221,
       "fields": {
-        "bus_latency_ms": 25.89,
-        "eps_bus_voltage_v": 28.3,
-        "thermal_zone_1_deg_c": 35.86
+        "bus_latency_ms": 25.889,
+        "eps_bus_voltage_v": 28.296,
+        "thermal_zone_1_deg_c": 35.856
       },
       "states": {
         "rf_link_sim_state": "locked"

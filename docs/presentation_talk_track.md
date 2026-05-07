@@ -4,7 +4,7 @@ Gossamer is a compact way to discuss system thinking without revealing protected
 
 ## Opening
 
-Gossamer models a fictional spacecraft test program called `AuroraSat-1`. The point is not the spacecraft. The point is the operating model: facilities, buses, sources, requirements, authority, and evidence are represented as explicit contracts rather than scattered tribal knowledge.
+Gossamer models a generic reference DUT moving through environmental-test campaigns. The point is not a particular device. The point is the operating model: facilities, buses, sources, requirements, authority, and evidence are represented as explicit contracts rather than scattered tribal knowledge.
 
 ## Walkthrough
 
@@ -20,7 +20,7 @@ Gossamer models a fictional spacecraft test program called `AuroraSat-1`. The po
 
 ## What To Emphasize
 
-- This is clean-room and public-safe by design.
+- The visible model is generic and fixture-backed by design.
 - The implementation is small enough to inspect, but structured like a real product seed.
 - The same pattern scales from flatsat derisking to integrated system FAT or qualification.
 - Synthetic fixtures make architecture visible without needing private hardware or data.

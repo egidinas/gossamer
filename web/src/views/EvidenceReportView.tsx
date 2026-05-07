@@ -11,10 +11,14 @@ export function EvidenceReportView({ report }: { report: EvidenceReport }) {
       <OperatorPanel title="Evidence Report" meta={report.campaign_id}>
         <p className="summary">{report.summary}</p>
         <StatusBadge value={report.result} />
-        <p className="disclaimer">{report.synthetic_data_note}</p>
+        {report.simulation_provenance && (
+          <p className="disclaimer">
+            Simulation {report.simulation_provenance.model} / seed {report.simulation_provenance.seed} / source {report.simulation_provenance.source}
+          </p>
+        )}
       </OperatorPanel>
       <OperatorPanel title="Anomaly Disposition" meta={`${anomalies.length} anomalies`}>
-        {anomalies.length === 0 ? <p>No open synthetic anomalies.</p> : anomalies.map((anomaly) => (
+        {anomalies.length === 0 ? <p>No open anomalies.</p> : anomalies.map((anomaly) => (
           <div className="anomaly" key={anomaly.id}>
             <strong>{anomaly.id}: {anomaly.title}</strong>
             <span>{anomaly.disposition}</span>

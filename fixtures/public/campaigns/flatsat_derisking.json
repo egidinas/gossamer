@@ -6,7 +6,7 @@
   "level": "subsystem",
   "state": "complete",
   "result": "pass",
-  "article": "AuroraSat-1",
+  "article": "Reference DUT",
   "facility": "flatsat_rack_a",
   "start": "2026-01-15T10:00:00Z",
   "end": "2026-01-15T21:00:00Z",
@@ -14,114 +14,147 @@
     {
       "id": "REQ-CYCLE-COUNT",
       "title": "Required cycle count completed",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "telemetry",
         "graph_model"
       ],
-      "rationale": "Evaluated from deterministic synthetic fixture data."
+      "rationale": "Evaluated from deterministic fixture data."
     },
     {
       "id": "REQ-HOT-TARGET",
       "title": "Hot target reached",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "telemetry",
         "graph_model"
       ],
-      "rationale": "Evaluated from deterministic synthetic fixture data."
+      "rationale": "Evaluated from deterministic fixture data."
     },
     {
       "id": "REQ-COLD-TARGET",
       "title": "Cold target reached",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "telemetry",
         "graph_model"
       ],
-      "rationale": "Evaluated from deterministic synthetic fixture data."
+      "rationale": "Evaluated from deterministic fixture data."
+    },
+    {
+      "id": "REQ-HOT-SURVIVAL",
+      "title": "Hot survival exposure completed",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "result": "pass",
+      "evidence": [
+        "telemetry",
+        "graph_model"
+      ],
+      "rationale": "Evaluated from deterministic fixture data."
+    },
+    {
+      "id": "REQ-COLD-SURVIVAL",
+      "title": "Cold survival exposure completed",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "result": "pass",
+      "evidence": [
+        "telemetry",
+        "graph_model"
+      ],
+      "rationale": "Evaluated from deterministic fixture data."
     },
     {
       "id": "REQ-STABILITY",
       "title": "Stabilization window achieved",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "telemetry",
         "graph_model"
       ],
-      "rationale": "Evaluated from deterministic synthetic fixture data."
+      "rationale": "Evaluated from deterministic fixture data."
     },
     {
       "id": "REQ-DWELL",
       "title": "Dwell duration achieved",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "telemetry",
         "graph_model"
       ],
-      "rationale": "Evaluated from deterministic synthetic fixture data."
+      "rationale": "Evaluated from deterministic fixture data."
     },
     {
       "id": "REQ-FUNC-GATE-PRE",
       "title": "Pre-environment functional gate passed",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "telemetry",
         "graph_model"
       ],
-      "rationale": "Evaluated from deterministic synthetic fixture data."
+      "rationale": "Evaluated from deterministic fixture data."
+    },
+    {
+      "id": "REQ-FUNC-GATE-SURVIVAL",
+      "title": "Functional test after survival exposure passed",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "result": "pass",
+      "evidence": [
+        "telemetry",
+        "graph_model"
+      ],
+      "rationale": "Evaluated from deterministic fixture data."
     },
     {
       "id": "REQ-FUNC-GATE-DURING",
       "title": "During-environment functional gate passed",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "telemetry",
         "graph_model"
       ],
-      "rationale": "Evaluated from deterministic synthetic fixture data."
+      "rationale": "Evaluated from deterministic fixture data."
     },
     {
       "id": "REQ-FUNC-GATE-POST",
       "title": "Post-environment functional gate passed",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "telemetry",
         "graph_model"
       ],
-      "rationale": "Evaluated from deterministic synthetic fixture data."
+      "rationale": "Evaluated from deterministic fixture data."
     },
     {
       "id": "REQ-DATA-QUALITY",
       "title": "Evidence data quality acceptable",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "telemetry",
         "graph_model"
       ],
-      "rationale": "Evaluated from deterministic synthetic fixture data."
+      "rationale": "Evaluated from deterministic fixture data."
     },
     {
       "id": "REQ-ANOMALY-REVIEW",
       "title": "Anomaly review disposition complete",
-      "description": "Synthetic public requirement used to demonstrate traceability.",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
       "result": "pass",
       "evidence": [
         "telemetry",
         "graph_model"
       ],
-      "rationale": "Evaluated from deterministic synthetic fixture data."
+      "rationale": "Evaluated from deterministic fixture data."
     }
   ],
   "anomalies": [],
-  "synthetic_note": "Synthetic campaign generated for public demonstration only."
+  "synthetic_note": "Reference campaign model with backend-owned telemetry, evidence, and graph contracts."
 }

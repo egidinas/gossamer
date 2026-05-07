@@ -6,7 +6,7 @@ func TestValidateManifestAcceptsPublicSyntheticManifest(t *testing.T) {
 	manifest := Manifest{
 		Envelope:      Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"},
 		Name:          "Gossamer",
-		TestArticle:   "AuroraSat-1",
+		TestArticle:   "Reference DUT",
 		Campaigns:     []string{"thermal_acceptance_fat"},
 		PublicDemo:    true,
 		SyntheticOnly: true,
@@ -53,7 +53,7 @@ func TestValidateCampaignRejectsUnknownRequirementResult(t *testing.T) {
 	campaign := Campaign{
 		Envelope: Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"},
 		ID:       "thermal_acceptance_fat",
-		Name:     "Thermal Acceptance FAT",
+		Name:     "Thermal Chamber FAT",
 		Result:   "pass",
 		Requirements: []Requirement{{
 			ID:     "REQ-DATA-QUALITY",
@@ -106,8 +106,8 @@ func TestValidateBusVirtualizationRequiresTMAndTCEvents(t *testing.T) {
 		Envelope:     Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"},
 		ConnectionID: "bus_virtualization_demo",
 		Streams: []BusStream{
-			{ID: "tm_primary", Direction: "TM", SourceNode: "aurorasat_1", DestinationNode: "archive_node_a", Bus: "telemetry_bus", Quality: "fresh"},
-			{ID: "tc_primary", Direction: "TC", SourceNode: "flatsat_rack_a", DestinationNode: "aurorasat_1", Bus: "command_bus", Quality: "fresh"},
+			{ID: "tm_primary", Direction: "TM", SourceNode: "reference_dut", DestinationNode: "archive_node_a", Bus: "telemetry_bus", Quality: "fresh"},
+			{ID: "tc_primary", Direction: "TC", SourceNode: "flatsat_rack_a", DestinationNode: "reference_dut", Bus: "command_bus", Quality: "fresh"},
 		},
 		Events: []BusEvent{
 			{ID: "BUS-TM-0001", StreamID: "tm_primary", Direction: "TM", Timestamp: "2026-01-15T10:00:00Z", EventClass: "telemetry_sample", Quality: "fresh"},

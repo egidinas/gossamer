@@ -6,17 +6,17 @@ Gossamer is safest as a local demonstrator. Temporary public access is possible,
 
 - Run the Go API on loopback, for example `127.0.0.1:8095`.
 - Build the web UI with `npm run build`.
-- Serve `web/dist` as static files.
-- Reverse-proxy only the static UI and `/api/*` routes.
+- Serve `web/dist` from the same loopback listener with `-web-dir`.
 - Use HTTPS at the public domain.
 - Do not expose shell access, repository directories, fixture-generation commands, or logs.
 
 ## Example Local Commands
 
 ```bash
-go run ./cmd/gossamer-server -addr 127.0.0.1:8095
 cd web
 npm run build
+cd ..
+go run ./cmd/gossamer-server -addr 127.0.0.1:8095 -root . -web-dir web/dist
 ```
 
 ## Domain Notes

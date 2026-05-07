@@ -1,17 +1,17 @@
 # Gossamer
 
-Gossamer is a public-safe synthetic spacecraft environmental-test demonstrator for explaining how requirements, test configuration, facility state, telemetry provenance, command authority, anomalies, and evidence reporting can become one repeatable operating model.
+Gossamer is an environmental-test data and evidence demonstrator for exploring how requirements, test configuration, facility state, telemetry provenance, command authority, anomalies, and evidence reporting can become one repeatable operating model.
 
-The repository is independent, fictional, and not affiliated with any employer or customer. It does not contain real spacecraft data, real lab configuration, real protocol definitions, real facility procedures, or private identifiers.
+The repository is independent, fictional, and not affiliated with any employer or customer. It does not contain real device data, real lab configuration, real protocol definitions, real facility procedures, or private identifiers.
 
 ## What It Shows
 
-- A fictional `AuroraSat-1` test article moving through flatsat, thermal acceptance, TVAC qualification, and integrated system FAT campaigns.
+- A generic reference DUT moving through flatsat, thermal acceptance, TVac qualification, and integrated system FAT campaigns.
 - Backend-owned semantic contracts for source quality, graph lanes, requirements, command authority, and evidence reports.
-- A landing page, supervisor swimlane board, and virtual bus tap that make the demo usable as a public portfolio walkthrough.
+- A landing page, campaign graph pages, and virtual bus tap that make the demo usable as a technical portfolio walkthrough.
 - Deterministic synthetic fixtures that make the demo reproducible.
 - A local API and operator UI that can be shown without hardware, private networks, or external services.
-- A reusable portfolio artifact for discussing test-system architecture, clean-room abstraction, and operator workflows without exposing protected work.
+- A reusable portfolio artifact for discussing test-system architecture, source abstraction, and operator workflows.
 
 ## Repository Shape
 
@@ -21,7 +21,7 @@ The repository is independent, fictional, and not affiliated with any employer o
 - `internal/contracts`: backend-owned response models with `schema_version` and `generated_at`.
 - `fixtures/public`: synthetic JSON and JSONL contracts served by the API and tested by the UI.
 - `web`: Vite/React operator UI.
-- `docs`: clean-room, architecture, standards, traceability, and public-demo notes.
+- `docs`: architecture, standards, traceability, and deployment notes.
 
 ## Local Run
 
@@ -60,7 +60,7 @@ npm run build
 
 The UI exposes eight views:
 
-- landing: public-safe project story, navigation, and compact parallel FAT preview,
+- landing: project story, navigation, and compact parallel FAT preview,
 - mission map: synthetic test article, facilities, buses, and campaigns,
 - supervisor: swimlane board for parallel FAT and qualification activities with backend-defined hero graphs,
 - graph wall: backend-defined graph lanes over deterministic telemetry,
@@ -72,7 +72,7 @@ The UI exposes eight views:
 
 ## Clean-Room Boundary
 
-Gossamer uses only fictional names, deterministic synthetic data, generic spacecraft subsystems, generic environmental facilities, and public engineering concepts. See [docs/ip_clean_room.md](docs/ip_clean_room.md).
+Gossamer uses fictional names, deterministic fixture data, generic DUT subsystems, generic environmental facilities, and public engineering concepts. See [docs/ip_clean_room.md](docs/ip_clean_room.md).
 
 ## Public Demo
 

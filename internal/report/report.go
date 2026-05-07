@@ -31,17 +31,24 @@ func Build(campaignID string) (contracts.EvidenceReport, error) {
 	if anomalies == nil {
 		anomalies = []contracts.Anomaly{}
 	}
+	var simulationProvenance *contracts.SimulationProvenance
+	if graphModel, ok := set.GraphModels[campaignID]; ok && graphModel.SimulationProvenance != nil {
+		provenance := *graphModel.SimulationProvenance
+		simulationProvenance = &provenance
+	}
 	return contracts.EvidenceReport{
-		Envelope:          contracts.NewEnvelope(synthetic.FixedTime),
-		CampaignID:        campaignID,
-		Summary:           fmt.Sprintf("%s evidence package for AuroraSat-1.", campaign.Name),
-		Result:            result,
-		Requirements:      reqs,
-		Sources:           set.SourceCatalogue.Sources,
-		GraphEvidence:     []string{fmt.Sprintf("fixtures/public/graph_models/%s.json", campaignID), fmt.Sprintf("fixtures/public/telemetry/%s.jsonl", campaignID)},
-		Anomalies:         anomalies,
-		Reproducibility:   []string{"go run ./cmd/gossamer-fixtures", fmt.Sprintf("go run ./cmd/gossamer-report --campaign %s", campaignID)},
-		SyntheticDataNote: "This report is generated from deterministic synthetic data for public demonstration only.",
+		Envelope:             contracts.NewEnvelope(synthetic.FixedTime),
+		CampaignID:           campaignID,
+		Summary:              fmt.Sprintf("%s evidence package for a generic reference DUT.", campaign.Name),
+		Result:               result,
+		Requirements:         reqs,
+		Sources:              set.SourceCatalogue.Sources,
+		GraphEvidence:        []string{fmt.Sprintf("fixtures/public/graph_models/%s.json", campaignID), fmt.Sprintf("fixtures/public/telemetry/%s.jsonl", campaignID)},
+		Anomalies:            anomalies,
+		ThermalProgram:       campaign.ThermalProgram,
+		SimulationProvenance: simulationProvenance,
+		Reproducibility:      []string{"go run ./cmd/gossamer-fixtures", fmt.Sprintf("go run ./cmd/gossamer-report --campaign %s", campaignID)},
+		SyntheticDataNote:    "Generated from deterministic physics-backed fixture data.",
 	}, nil
 }
 

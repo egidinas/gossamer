@@ -1,11 +1,15 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
+	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/report"
 	"github.com/egidinas/gossamer/internal/synthetic"
 )
@@ -105,4 +109,195 @@ func TestBusTapEndpointServesTMAndTCEvents(t *testing.T) {
 	if !strings.Contains(body, `"direction": "TM"`) || !strings.Contains(body, `"direction": "TC"`) {
 		t.Fatalf("body missing TM or TC events: %s", body)
 	}
+}
+
+func TestTileManifestEndpointServesTileArchitecture(t *testing.T) {
+	server := newTestServer(t)
+	req := httptest.NewRequest(http.MethodGet, "/api/campaigns/thermal_acceptance_fat/tile-manifest", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+	var manifest contracts.GraphTileManifest
+	if err := json.Unmarshal(rec.Body.Bytes(), &manifest); err != nil {
+		t.Fatalf("decode manifest: %v", err)
+	}
+	if manifest.CampaignID != "thermal_acceptance_fat" {
+		t.Fatalf("campaign_id = %q", manifest.CampaignID)
+	}
+	if len(manifest.Cards) == 0 || len(manifest.Levels) == 0 {
+		t.Fatalf("manifest missing cards or levels: %+v", manifest)
+	}
+	if !strings.Contains(rec.Body.String(), `"source_format":"legacy_csv"`) {
+		t.Fatalf("manifest missing DataLens legacy CSV translation: %s", rec.Body.String())
+	}
+}
+
+func TestGraphShellEndpointOmitsRawTraceValues(t *testing.T) {
+	server := newTestServer(t)
+	req := httptest.NewRequest(http.MethodGet, "/api/campaigns/thermal_acceptance_fat/graph-shell", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+	var model contracts.GraphModel
+	if err := json.Unmarshal(rec.Body.Bytes(), &model); err != nil {
+		t.Fatalf("decode shell: %v", err)
+	}
+	if model.HeroGraph == nil || len(model.HeroGraph.Traces) == 0 {
+		t.Fatalf("shell missing hero graph metadata")
+	}
+	for _, trace := range model.HeroGraph.Traces {
+		if len(trace.Values) != 0 {
+			t.Fatalf("shell trace %s retained %d raw values", trace.ID, len(trace.Values))
+		}
+	}
+}
+
+func TestTileEndpointUsesCachedGraphModelAfterManifestLoad(t *testing.T) {
+	server := newTestServer(t)
+	req := httptest.NewRequest(http.MethodGet, "/api/campaigns/thermal_acceptance_fat/tile-manifest", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("manifest status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+
+	modelPath := filepath.Join(server.root, "fixtures", "public", "graph_models", "thermal_acceptance_fat.json")
+	hiddenPath := modelPath + ".hidden"
+	if err := os.Rename(modelPath, hiddenPath); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = os.Rename(hiddenPath, modelPath)
+	})
+
+	req = httptest.NewRequest(http.MethodGet, "/api/campaigns/thermal_acceptance_fat/tiles?card_id=thermal_program&level=minute", nil)
+	rec = httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("tile status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+}
+
+func TestTileEndpointRespectsTimeRangePointBudgetAndEvidence(t *testing.T) {
+	server := newTestServer(t)
+	req := httptest.NewRequest(http.MethodGet, "/api/campaigns/thermal_acceptance_fat/tiles?card_id=thermal_program&level=minute&t0=2026-01-15T10:30:00Z&t1=2026-01-15T22:30:00Z", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+	var tile contracts.GraphTile
+	if err := json.Unmarshal(rec.Body.Bytes(), &tile); err != nil {
+		t.Fatalf("decode tile: %v", err)
+	}
+	if tile.CardID != "thermal_program" {
+		t.Fatalf("card_id = %q", tile.CardID)
+	}
+	if tile.Diagnostics.PointCount <= 0 || tile.Diagnostics.PointCount > 900 {
+		t.Fatalf("point_count = %d, want 1..900", tile.Diagnostics.PointCount)
+	}
+	for _, series := range tile.Series {
+		for _, point := range series.Points {
+			if point.Timestamp < tile.T0 || point.Timestamp > tile.T1 {
+				t.Fatalf("point %s outside tile range %s..%s", point.Timestamp, tile.T0, tile.T1)
+			}
+		}
+	}
+	if len(tile.Markers) == 0 {
+		t.Fatalf("tile missing evidence/functional markers")
+	}
+}
+
+func TestSwimlaneTileCarriesStateSignals(t *testing.T) {
+	server := newTestServer(t)
+	req := httptest.NewRequest(http.MethodGet, "/api/campaigns/thermal_acceptance_fat/tiles?card_id=state_change_swimlane&level=minute", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+	var tile contracts.GraphTile
+	if err := json.Unmarshal(rec.Body.Bytes(), &tile); err != nil {
+		t.Fatalf("decode tile: %v", err)
+	}
+	if tile.CardID != "state_change_swimlane" {
+		t.Fatalf("card_id = %q", tile.CardID)
+	}
+	if tile.Diagnostics.PointCount == 0 {
+		t.Fatalf("swimlane tile has no state points")
+	}
+	series := map[string]contracts.TileSeries{}
+	for _, s := range tile.Series {
+		series[s.ID] = s
+		if !s.Step {
+			t.Fatalf("state series %s is not step-rendered", s.ID)
+		}
+	}
+	for _, id := range []string{"trace.phase_enum", "trace.functional_gate_active", "trace.dut_ready", "trace.payload_active", "trace.fault_flag"} {
+		if len(series[id].Points) == 0 {
+			t.Fatalf("swimlane missing populated series %s", id)
+		}
+	}
+}
+
+func TestStaticIndexServedWhenConfigured(t *testing.T) {
+	server := newTestServerWithStatic(t)
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+	if !strings.Contains(rec.Body.String(), `<div id="root"></div>`) {
+		t.Fatalf("body missing static index: %s", rec.Body.String())
+	}
+}
+
+func TestStaticAssetServedWhenConfigured(t *testing.T) {
+	server := newTestServerWithStatic(t)
+	req := httptest.NewRequest(http.MethodGet, "/assets/app.js", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+	if got := strings.TrimSpace(rec.Body.String()); got != `console.log("gossamer")` {
+		t.Fatalf("asset body = %q", got)
+	}
+}
+
+func TestUnknownStaticPathFallsBackToIndex(t *testing.T) {
+	server := newTestServerWithStatic(t)
+	req := httptest.NewRequest(http.MethodGet, "/operator-demo", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+	if !strings.Contains(rec.Body.String(), `<div id="root"></div>`) {
+		t.Fatalf("body missing fallback index: %s", rec.Body.String())
+	}
+}
+
+func newTestServerWithStatic(t *testing.T) *Server {
+	t.Helper()
+	dir := t.TempDir()
+	if err := synthetic.WritePublicFixtures(dir); err != nil {
+		t.Fatal(err)
+	}
+	webDir := filepath.Join(dir, "web", "dist")
+	if err := os.MkdirAll(filepath.Join(webDir, "assets"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(webDir, "index.html"), []byte(`<!doctype html><div id="root"></div>`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(webDir, "assets", "app.js"), []byte(`console.log("gossamer")`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	return NewWithStatic(dir, webDir)
 }

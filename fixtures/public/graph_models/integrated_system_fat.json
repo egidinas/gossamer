@@ -8,13 +8,22 @@
       "label": "Thermal",
       "series": [
         {
+          "id": "chamber_setpoint_deg_c",
+          "label": "Chamber Setpoint",
+          "role": "facility_setpoint",
+          "units": "degC",
+          "source": "facility_thermal",
+          "min": -45,
+          "max": 75
+        },
+        {
           "id": "chamber_air_deg_c",
           "label": "Chamber Air",
           "role": "facility_environment",
           "units": "degC",
           "source": "facility_thermal",
           "min": -45,
-          "max": 70
+          "max": 75
         },
         {
           "id": "thermal_zone_1_deg_c",
@@ -23,7 +32,7 @@
           "units": "degC",
           "source": "facility_thermal",
           "min": -45,
-          "max": 70
+          "max": 75
         }
       ]
     },
@@ -32,13 +41,37 @@
       "label": "Pressure",
       "series": [
         {
-          "id": "tvac_pressure_pa",
-          "label": "TVAC Pressure",
+          "id": "tvac_pressure_mbar",
+          "label": "TVac pressure",
           "role": "facility_environment",
-          "units": "Pa",
+          "units": "mbar",
           "source": "facility_pressure",
-          "min": 0.001,
-          "max": 101325
+          "min": 1e-8,
+          "max": 1013.25
+        }
+      ]
+    },
+    {
+      "id": "facility_safety",
+      "label": "Facility Safety",
+      "series": [
+        {
+          "id": "ln2_valve_duty_pct",
+          "label": "Cooling Actuator Duty",
+          "role": "facility_interlock",
+          "units": "%",
+          "source": "facility_thermal",
+          "min": 0,
+          "max": 100
+        },
+        {
+          "id": "cooling_water_freeze_margin_deg_c",
+          "label": "Water scavenger freeze margin",
+          "role": "facility_interlock",
+          "units": "degC",
+          "source": "facility_infrastructure",
+          "min": 0,
+          "max": 25
         }
       ]
     },
@@ -49,18 +82,18 @@
         {
           "id": "eps_bus_voltage_v",
           "label": "Bus Voltage",
-          "role": "spacecraft_power",
+          "role": "dut_power",
           "units": "V",
-          "source": "spacecraft_power",
+          "source": "dut_power",
           "min": 26,
           "max": 30
         },
         {
           "id": "eps_bus_current_a",
           "label": "Bus Current",
-          "role": "spacecraft_power",
+          "role": "dut_power",
           "units": "A",
-          "source": "spacecraft_power",
+          "source": "dut_power",
           "min": 0,
           "max": 8
         }
