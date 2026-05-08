@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "test:contracts": "node scripts/test-contracts.mjs",
-    "test:browser": "node scripts/browser-smoke.mjs"
+    "test:browser": "node scripts/browser-smoke.mjs",
+    "test:hosted": "node scripts/hosted-smoke.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.1.1",
