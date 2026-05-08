@@ -24,6 +24,8 @@ rm -f '$REMOTE_ROOT/data/current'
 mv '$REMOTE_ROOT/data/current.next' '$REMOTE_ROOT/data/current'
 rm -rf '$REMOTE_ROOT/fixtures/public_tiles/current'
 ln -s '$REMOTE_ROOT/data/current' '$REMOTE_ROOT/fixtures/public_tiles/current'
+rm -f '$REMOTE_ROOT/fixtures/public_tiles/$DATA_VERSION'
+ln -s '$REMOTE_ROOT/data/releases/$DATA_VERSION' '$REMOTE_ROOT/fixtures/public_tiles/$DATA_VERSION'
 rm -f '$REMOTE_TMP'
 wget -T 8 -t 1 -qO- http://[::1]:8095/data/current/manifest.json >/dev/null
 df -h /tmp '$REMOTE_ROOT' 2>/dev/null || df -h /tmp

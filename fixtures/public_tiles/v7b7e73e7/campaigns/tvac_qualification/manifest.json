@@ -1,0 +1,1704 @@
+{
+  "campaign_id": "tvac_qualification",
+  "title": "TVac Qualification - 8 cycle vacuum thermal profile operator graph wall",
+  "graph_shell_path": "/data/current/campaigns/tvac_qualification/graph-shell.json",
+  "manifest_path": "/data/current/campaigns/tvac_qualification/manifest.json",
+  "time_range": {
+    "start": "2026-01-15T10:00:00Z",
+    "end": "2026-01-28T13:54:00Z",
+    "anchor": "2026-01-15T10:00:00Z",
+    "range_seconds": 1137240,
+    "mode": "absolute_fixture",
+    "source": "thermal_program"
+  },
+  "replay_speed": "1 simulated hour per wall-clock minute",
+  "levels": [
+    {
+      "id": "minute",
+      "label": "Minute",
+      "resolution": "minute",
+      "duration_ms": 60000,
+      "max_points": 4200,
+      "decimation_mode": "viewport_lttb_seed"
+    }
+  ],
+  "cards": [
+    {
+      "card_id": "thermal_program",
+      "title": "TVac command, pressure, shroud, interface, DUT",
+      "render_kind": "line",
+      "unit": "degC",
+      "axis_policy": "temperature_c",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "trace.command.chamber",
+          "label": "Chamber command",
+          "unit": "degC",
+          "source": "thermal_program",
+          "source_family": "thermal_program",
+          "kind": "command",
+          "category": "command",
+          "role": "command",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "thermal_environment"
+        },
+        {
+          "id": "trace.ghost.profile",
+          "label": "Cycle ghost profile",
+          "unit": "degC",
+          "source": "thermal_program",
+          "source_family": "thermal_program",
+          "kind": "ghost",
+          "category": "ghost",
+          "role": "ghost",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "thermal_environment"
+        },
+        {
+          "id": "trace.acceptance.temperature",
+          "label": "Acceptance band center",
+          "unit": "degC",
+          "source": "requirements",
+          "source_family": "requirements",
+          "kind": "acceptance",
+          "category": "acceptance_band",
+          "role": "acceptance_band",
+          "subsystem": "requirements",
+          "axis_id": "temperature_c",
+          "section_id": "thermal_environment"
+        },
+        {
+          "id": "trace.dut_temp_a",
+          "label": "High-dissipation DUT node",
+          "unit": "degC",
+          "source": "dut_thermal",
+          "source_family": "dut_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "dut",
+          "axis_id": "temperature_c",
+          "section_id": "thermal_environment"
+        },
+        {
+          "id": "trace.dut_temp_b",
+          "label": "Vacuum-detached DUT node",
+          "unit": "degC",
+          "source": "dut_thermal",
+          "source_family": "dut_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "dut",
+          "axis_id": "temperature_c",
+          "section_id": "thermal_environment"
+        },
+        {
+          "id": "trace.table_loop",
+          "label": "Fluid interface",
+          "unit": "degC",
+          "source": "facility_thermal",
+          "source_family": "facility_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "thermal_environment"
+        },
+        {
+          "id": "trace.tvac_pressure",
+          "label": "TVac pressure",
+          "unit": "mbar",
+          "source": "facility_pressure",
+          "source_family": "facility_pressure",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "pressure_mbar",
+          "section_id": "thermal_environment"
+        },
+        {
+          "id": "trace.tvac_pressure_target",
+          "label": "Vacuum target",
+          "unit": "mbar",
+          "source": "requirements",
+          "source_family": "requirements",
+          "kind": "target",
+          "category": "ghost",
+          "role": "ghost",
+          "subsystem": "requirements",
+          "axis_id": "pressure_mbar",
+          "section_id": "thermal_environment"
+        },
+        {
+          "id": "trace.shroud_inlet",
+          "label": "Shroud inlet",
+          "unit": "degC",
+          "source": "facility_thermal",
+          "source_family": "facility_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "thermal_environment"
+        },
+        {
+          "id": "trace.shroud_outlet",
+          "label": "Shroud outlet",
+          "unit": "degC",
+          "source": "facility_thermal",
+          "source_family": "facility_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "thermal_environment"
+        }
+      ]
+    },
+    {
+      "card_id": "dut_temperature",
+      "title": "DUT temperatures in TVac context",
+      "render_kind": "line",
+      "unit": "degC",
+      "axis_policy": "temperature_c",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "trace.dut_temp_a",
+          "label": "High-dissipation DUT node",
+          "unit": "degC",
+          "source": "dut_thermal",
+          "source_family": "dut_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "dut",
+          "axis_id": "temperature_c",
+          "section_id": "thermal_environment"
+        },
+        {
+          "id": "trace.dut_temp_b",
+          "label": "Vacuum-detached DUT node",
+          "unit": "degC",
+          "source": "dut_thermal",
+          "source_family": "dut_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "dut",
+          "axis_id": "temperature_c",
+          "section_id": "thermal_environment"
+        },
+        {
+          "id": "trace.table_loop",
+          "label": "Fluid interface",
+          "unit": "degC",
+          "source": "facility_thermal",
+          "source_family": "facility_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "thermal_environment"
+        },
+        {
+          "id": "trace.shroud_inlet",
+          "label": "Shroud inlet",
+          "unit": "degC",
+          "source": "facility_thermal",
+          "source_family": "facility_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "thermal_environment"
+        },
+        {
+          "id": "trace.shroud_outlet",
+          "label": "Shroud outlet",
+          "unit": "degC",
+          "source": "facility_thermal",
+          "source_family": "facility_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "thermal_environment"
+        },
+        {
+          "id": "trace.shroud_gradient",
+          "label": "Shroud gradient",
+          "unit": "degC",
+          "source": "facility_thermal",
+          "source_family": "facility_thermal",
+          "kind": "measurement",
+          "category": "source_quality",
+          "role": "source_quality",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "thermal_environment"
+        }
+      ]
+    },
+    {
+      "card_id": "tvac_pressure",
+      "title": "TVac pressure pumpdown and bursts",
+      "render_kind": "line",
+      "unit": "mbar",
+      "axis_policy": "log_pressure_mbar",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "trace.tvac_pressure",
+          "label": "Pressure",
+          "unit": "mbar",
+          "source": "facility_pressure",
+          "source_family": "facility_pressure",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "pressure_mbar",
+          "section_id": "facility_response"
+        },
+        {
+          "id": "trace.tvac_pressure_target",
+          "label": "Vacuum target",
+          "unit": "mbar",
+          "source": "requirements",
+          "source_family": "requirements",
+          "kind": "target",
+          "category": "ghost",
+          "role": "ghost",
+          "subsystem": "requirements",
+          "axis_id": "pressure_mbar",
+          "section_id": "facility_response"
+        }
+      ]
+    },
+    {
+      "card_id": "tvac_pressure_sources",
+      "title": "Pump, leak, and outgassing balance",
+      "render_kind": "line",
+      "unit": "mixed",
+      "axis_policy": "pressure_balance",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "trace.tvac_outgassing",
+          "label": "Temperature outgassing",
+          "unit": "mbar/min",
+          "source": "facility_pressure",
+          "source_family": "facility_pressure",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "pressure_rate",
+          "section_id": "facility_response"
+        },
+        {
+          "id": "trace.tvac_virtual_leak",
+          "label": "Virtual leak",
+          "unit": "mbar/min",
+          "source": "facility_pressure",
+          "source_family": "facility_pressure",
+          "kind": "limit",
+          "category": "acceptance_band",
+          "role": "acceptance_band",
+          "subsystem": "facility",
+          "axis_id": "pressure_rate",
+          "section_id": "facility_response"
+        },
+        {
+          "id": "trace.tvac_roughing_pump",
+          "label": "Roughing pump",
+          "unit": "mbar/min",
+          "source": "facility_pressure",
+          "source_family": "facility_pressure",
+          "kind": "measurement",
+          "category": "source_quality",
+          "role": "source_quality",
+          "subsystem": "facility",
+          "axis_id": "pressure_rate",
+          "section_id": "facility_response"
+        },
+        {
+          "id": "trace.tvac_turbo_pump",
+          "label": "Turbo pump",
+          "unit": "mbar/min",
+          "source": "facility_pressure",
+          "source_family": "facility_pressure",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "pressure_rate",
+          "section_id": "facility_response"
+        },
+        {
+          "id": "trace.tvac_pump_removal",
+          "label": "Pump removal",
+          "unit": "mbar/min",
+          "source": "facility_pressure",
+          "source_family": "facility_pressure",
+          "kind": "measurement",
+          "category": "source_quality",
+          "role": "source_quality",
+          "subsystem": "facility",
+          "axis_id": "pressure_rate",
+          "section_id": "facility_response"
+        },
+        {
+          "id": "trace.tvac_volatile_inventory",
+          "label": "Volatile inventory",
+          "unit": "%",
+          "source": "facility_pressure",
+          "source_family": "facility_pressure",
+          "kind": "derived",
+          "category": "ghost",
+          "role": "ghost",
+          "subsystem": "facility",
+          "axis_id": "percent",
+          "section_id": "facility_response"
+        }
+      ]
+    },
+    {
+      "card_id": "facility_actuation",
+      "title": "LN2 valve duty",
+      "render_kind": "line",
+      "unit": "%",
+      "axis_policy": "percent",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "trace.ln2_duty",
+          "label": "LN2 valve",
+          "unit": "%",
+          "source": "facility_thermal",
+          "source_family": "facility_thermal",
+          "kind": "actuator",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "percent",
+          "section_id": "facility_response"
+        }
+      ]
+    },
+    {
+      "card_id": "facility_temperature_safety",
+      "title": "Heat-exchanger freeze margin",
+      "render_kind": "line",
+      "unit": "degC",
+      "axis_policy": "temperature_c",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "trace.freeze_margin",
+          "label": "Water scavenger freeze margin",
+          "unit": "degC",
+          "source": "facility_infrastructure",
+          "source_family": "facility_infrastructure",
+          "kind": "safety_margin",
+          "category": "interlock",
+          "role": "interlock",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "facility_response"
+        }
+      ]
+    },
+    {
+      "card_id": "tvac_exhaust_scavenger",
+      "title": "Exhaust cold scavenger",
+      "render_kind": "line",
+      "unit": "mixed",
+      "axis_policy": "facility_exhaust_scavenger",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "trace.tvac_cryo_exhaust",
+          "label": "Cryogenic exhaust",
+          "unit": "degC",
+          "source": "facility_thermal",
+          "source_family": "facility_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "facility_response"
+        },
+        {
+          "id": "trace.tvac_scavenged_exhaust",
+          "label": "After water scavenger",
+          "unit": "degC",
+          "source": "facility_infrastructure",
+          "source_family": "facility_infrastructure",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "facility_response"
+        },
+        {
+          "id": "trace.tvac_scavenger_water_return",
+          "label": "Scavenger water return",
+          "unit": "degC",
+          "source": "facility_infrastructure",
+          "source_family": "facility_infrastructure",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "facility_response"
+        },
+        {
+          "id": "trace.tvac_exhaust_cold_recovery",
+          "label": "Cold recovery",
+          "unit": "%",
+          "source": "facility_infrastructure",
+          "source_family": "facility_infrastructure",
+          "kind": "derived",
+          "category": "source_quality",
+          "role": "source_quality",
+          "subsystem": "facility",
+          "axis_id": "percent",
+          "section_id": "facility_response"
+        }
+      ]
+    },
+    {
+      "card_id": "building_infrastructure",
+      "title": "Building infrastructure",
+      "render_kind": "line",
+      "unit": "mixed",
+      "axis_policy": "facility_infra",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "trace.cooling_water_temp",
+          "label": "Cooling water temp",
+          "unit": "degC",
+          "source": "facility_infrastructure",
+          "source_family": "facility_infrastructure",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "facility_response"
+        },
+        {
+          "id": "trace.pressurized_air_supply",
+          "label": "Pressurized air supply",
+          "unit": "bar",
+          "source": "facility_infrastructure",
+          "source_family": "facility_infrastructure",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "pressure_bar",
+          "section_id": "facility_response"
+        },
+        {
+          "id": "trace.air_dewpoint",
+          "label": "Air dew point",
+          "unit": "degC",
+          "source": "facility_infrastructure",
+          "source_family": "facility_infrastructure",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "facility_response"
+        }
+      ]
+    },
+    {
+      "card_id": "dut_power",
+      "title": "DUT power budgets",
+      "render_kind": "line",
+      "unit": "W",
+      "axis_policy": "power_w",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "trace.power_total",
+          "label": "Total power",
+          "unit": "W",
+          "source": "dut_power",
+          "source_family": "dut_power",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "dut_power",
+          "axis_id": "power_w",
+          "section_id": "dut_response"
+        },
+        {
+          "id": "trace.power_subsystem",
+          "label": "Subsystem budget",
+          "unit": "W",
+          "source": "dut_power",
+          "source_family": "dut_power",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "dut_power",
+          "axis_id": "power_w",
+          "section_id": "dut_response"
+        },
+        {
+          "id": "trace.power_payload",
+          "label": "Payload/FT load",
+          "unit": "W",
+          "source": "dut_power",
+          "source_family": "dut_power",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "dut_power",
+          "axis_id": "power_w",
+          "section_id": "dut_response"
+        },
+        {
+          "id": "trace.power_avionics",
+          "label": "Avionics",
+          "unit": "W",
+          "source": "dut_power",
+          "source_family": "dut_power",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "dut_power",
+          "axis_id": "power_w",
+          "section_id": "dut_response"
+        },
+        {
+          "id": "trace.power_link",
+          "label": "Link subsystem",
+          "unit": "W",
+          "source": "dut_power",
+          "source_family": "dut_power",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "dut_power",
+          "axis_id": "power_w",
+          "section_id": "dut_response"
+        }
+      ]
+    },
+    {
+      "card_id": "tmtc_health",
+      "title": "TM/TC latency and freshness",
+      "render_kind": "line",
+      "unit": "ms",
+      "axis_policy": "bus_ms",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "trace.bus_latency",
+          "label": "Bus latency",
+          "unit": "ms",
+          "source": "demo_bus_virtualization",
+          "source_family": "demo_bus_virtualization",
+          "kind": "measurement",
+          "category": "source_quality",
+          "role": "source_quality",
+          "subsystem": "tmtc",
+          "axis_id": "bus_ms",
+          "section_id": "tmtc_response"
+        },
+        {
+          "id": "trace.source_freshness",
+          "label": "Freshness",
+          "unit": "ms",
+          "source": "demo_quality",
+          "source_family": "demo_quality",
+          "kind": "measurement",
+          "category": "source_quality",
+          "role": "source_quality",
+          "subsystem": "tmtc",
+          "axis_id": "bus_ms",
+          "section_id": "tmtc_response"
+        }
+      ]
+    },
+    {
+      "card_id": "tmtc_counters",
+      "title": "TM/TC packet counters",
+      "render_kind": "counter",
+      "unit": "count",
+      "axis_policy": "counter",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "trace.overall_packet_counter",
+          "label": "Overall packet counter",
+          "unit": "count",
+          "source": "demo_bus_virtualization",
+          "source_family": "demo_bus_virtualization",
+          "kind": "counter",
+          "category": "counter",
+          "role": "counter",
+          "subsystem": "tmtc",
+          "axis_id": "counter",
+          "section_id": "tmtc_response"
+        },
+        {
+          "id": "trace.tm_packet_counter",
+          "label": "TM packet counter",
+          "unit": "count",
+          "source": "demo_bus_virtualization",
+          "source_family": "demo_bus_virtualization",
+          "kind": "counter",
+          "category": "counter",
+          "role": "counter",
+          "subsystem": "tmtc",
+          "axis_id": "counter",
+          "section_id": "tmtc_response"
+        },
+        {
+          "id": "trace.tc_packet_counter",
+          "label": "TC packet counter",
+          "unit": "count",
+          "source": "demo_bus_virtualization",
+          "source_family": "demo_bus_virtualization",
+          "kind": "counter",
+          "category": "counter",
+          "role": "counter",
+          "subsystem": "tmtc",
+          "axis_id": "counter",
+          "section_id": "tmtc_response"
+        },
+        {
+          "id": "trace.dropped_frame_count",
+          "label": "Dropped frames",
+          "unit": "count",
+          "source": "demo_bus_virtualization",
+          "source_family": "demo_bus_virtualization",
+          "kind": "counter",
+          "category": "counter",
+          "role": "counter",
+          "subsystem": "tmtc",
+          "axis_id": "counter",
+          "section_id": "tmtc_response"
+        }
+      ]
+    },
+    {
+      "card_id": "source_quality",
+      "title": "Source freshness quality",
+      "render_kind": "line",
+      "unit": "ms",
+      "axis_policy": "bus_ms",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "trace.source_freshness",
+          "label": "Source freshness",
+          "unit": "ms",
+          "source": "demo_quality",
+          "source_family": "demo_quality",
+          "kind": "measurement",
+          "category": "source_quality",
+          "role": "source_quality",
+          "subsystem": "tmtc",
+          "axis_id": "bus_ms",
+          "section_id": "tmtc_response"
+        }
+      ]
+    },
+    {
+      "card_id": "state_change_swimlane",
+      "title": "Testbed state swimlanes",
+      "render_kind": "swimlane",
+      "unit": "state",
+      "axis_policy": "state_lane",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": false,
+      "signals": [
+        {
+          "id": "trace.phase_enum",
+          "label": "Thermal phase",
+          "unit": "state",
+          "source": "thermal_program",
+          "source_family": "thermal_program",
+          "kind": "enum",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "ambient pre",
+            "1": "ramp cold",
+            "2": "cold op",
+            "3": "ramp hot",
+            "4": "hot op",
+            "5": "hot survival",
+            "6": "cold survival",
+            "7": "vacuum ambient",
+            "8": "ambient recovery",
+            "9": "ambient post"
+          }
+        },
+        {
+          "id": "trace.functional_gate_active",
+          "label": "Functional gate active",
+          "unit": "state",
+          "source": "test_conductor",
+          "source_family": "test_conductor",
+          "kind": "bool",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "inactive",
+            "1": "active"
+          }
+        },
+        {
+          "id": "trace.stability_reached",
+          "label": "Stability reached",
+          "unit": "state",
+          "source": "thermal_program",
+          "source_family": "thermal_program",
+          "kind": "bool",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "stabilizing",
+            "1": "stable"
+          }
+        },
+        {
+          "id": "trace.dwell_active",
+          "label": "Dwell active",
+          "unit": "state",
+          "source": "thermal_program",
+          "source_family": "thermal_program",
+          "kind": "bool",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "idle",
+            "1": "dwelling"
+          }
+        },
+        {
+          "id": "trace.dwell_complete",
+          "label": "Dwell complete",
+          "unit": "state",
+          "source": "thermal_program",
+          "source_family": "thermal_program",
+          "kind": "bool",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "open",
+            "1": "complete"
+          }
+        },
+        {
+          "id": "trace.pressure_gate",
+          "label": "Pressure gate",
+          "unit": "state",
+          "source": "facility_pressure",
+          "source_family": "facility_pressure",
+          "kind": "bool",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "waiting",
+            "1": "reached"
+          }
+        },
+        {
+          "id": "trace.pump_mode",
+          "label": "Pump mode",
+          "unit": "state",
+          "source": "facility_pressure",
+          "source_family": "facility_pressure",
+          "kind": "enum",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "ambient",
+            "1": "roughing",
+            "2": "crossover",
+            "3": "turbo"
+          }
+        },
+        {
+          "id": "trace.exhaust_duct_safe",
+          "label": "Exhaust duct safe",
+          "unit": "state",
+          "source": "facility_infrastructure",
+          "source_family": "facility_infrastructure",
+          "kind": "bool",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "scavenger warming",
+            "1": "duct safe"
+          }
+        },
+        {
+          "id": "trace.interlock_review",
+          "label": "Facility interlock state",
+          "unit": "state",
+          "source": "facility_safety",
+          "source_family": "facility_safety",
+          "kind": "fault",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "1": "closed",
+            "2": "review"
+          }
+        },
+        {
+          "id": "trace.source_degraded",
+          "label": "Source degraded",
+          "unit": "state",
+          "source": "demo_quality",
+          "source_family": "demo_quality",
+          "kind": "bool",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "fresh",
+            "1": "degraded"
+          }
+        },
+        {
+          "id": "trace.evidence_capture",
+          "label": "Evidence capture",
+          "unit": "state",
+          "source": "evidence_report",
+          "source_family": "evidence_report",
+          "kind": "bool",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "idle",
+            "1": "capture"
+          }
+        },
+        {
+          "id": "trace.dut_ready",
+          "label": "DUT ready",
+          "unit": "state",
+          "source": "dut_control",
+          "source_family": "dut_control",
+          "kind": "bool",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "not ready",
+            "1": "ready"
+          }
+        },
+        {
+          "id": "trace.dut_operative",
+          "label": "DUT operative",
+          "unit": "state",
+          "source": "dut_control",
+          "source_family": "dut_control",
+          "kind": "bool",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "inhibited",
+            "1": "operative"
+          }
+        },
+        {
+          "id": "trace.payload_active",
+          "label": "Payload active",
+          "unit": "state",
+          "source": "dut_power",
+          "source_family": "dut_power",
+          "kind": "bool",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "standby",
+            "1": "active"
+          }
+        },
+        {
+          "id": "trace.rf_link_locked",
+          "label": "RF link locked",
+          "unit": "state",
+          "source": "dut_link",
+          "source_family": "dut_link",
+          "kind": "bool",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "searching",
+            "1": "locked"
+          }
+        },
+        {
+          "id": "trace.fault_flag",
+          "label": "Fault flag",
+          "unit": "state",
+          "source": "demo_quality",
+          "source_family": "demo_quality",
+          "kind": "fault",
+          "category": "state",
+          "role": "state",
+          "subsystem": "operator_state",
+          "axis_id": "state_lane",
+          "section_id": "testbed_dynamics",
+          "value_table": {
+            "0": "nominal",
+            "1": "fault"
+          }
+        }
+      ]
+    },
+    {
+      "card_id": "functional_events",
+      "title": "Functional gates and evidence events",
+      "render_kind": "event_rail",
+      "unit": "event",
+      "axis_policy": "event",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": false,
+      "signals": [
+        {
+          "id": "functional_gates",
+          "label": "Functional gates",
+          "unit": "event",
+          "source": "test_conductor",
+          "source_family": "test_conductor",
+          "kind": "event",
+          "category": "event",
+          "role": "event",
+          "subsystem": "test_conductor",
+          "axis_id": "event",
+          "section_id": "testbed_dynamics"
+        },
+        {
+          "id": "evidence_markers",
+          "label": "Evidence markers",
+          "unit": "event",
+          "source": "evidence_report",
+          "source_family": "evidence_report",
+          "kind": "event",
+          "category": "evidence",
+          "role": "evidence",
+          "subsystem": "evidence",
+          "axis_id": "event",
+          "section_id": "testbed_dynamics"
+        },
+        {
+          "id": "interlock_windows",
+          "label": "Interlock windows",
+          "unit": "event",
+          "source": "facility_safety",
+          "source_family": "facility_safety",
+          "kind": "event",
+          "category": "interlock",
+          "role": "interlock",
+          "subsystem": "facility",
+          "axis_id": "event",
+          "section_id": "testbed_dynamics"
+        }
+      ]
+    }
+  ],
+  "evidence_links": [
+    {
+      "id": "manifest-tvac_qualification-FUNC-AMBIENT-PRE",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-AMBIENT-PRE",
+      "timestamp": "2026-01-15T11:30:00Z",
+      "status": "pass",
+      "label": "Ambient-pressure functional test before pumpdown"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-VACUUM-PRE",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-VACUUM-PRE",
+      "timestamp": "2026-01-16T11:30:00Z",
+      "status": "pass",
+      "label": "Vacuum ambient functional test after pressure gate"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-VACUUM-POST",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-VACUUM-POST",
+      "timestamp": "2026-01-28T06:54:00Z",
+      "status": "pass",
+      "label": "Final ambient-temperature functional test under vacuum"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-POST",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-POST",
+      "timestamp": "2026-01-28T13:24:00Z",
+      "status": "pass",
+      "label": "Ambient-pressure functional test after vent"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C01-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C01-HOT",
+      "timestamp": "2026-01-17T13:45:00Z",
+      "status": "inconclusive",
+      "label": "Hot survival recovery functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C01-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C01-COLD",
+      "timestamp": "2026-01-18T20:09:00Z",
+      "status": "pass",
+      "label": "Cold survival recovery functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C02-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C02-HOT",
+      "timestamp": "2026-01-19T10:46:00Z",
+      "status": "inconclusive",
+      "label": "Cycle 2 hot dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C02-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C02-COLD",
+      "timestamp": "2026-01-20T04:13:00Z",
+      "status": "pass",
+      "label": "Cycle 2 cold dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C03-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C03-HOT",
+      "timestamp": "2026-01-20T18:50:00Z",
+      "status": "inconclusive",
+      "label": "Cycle 3 hot dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C03-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C03-COLD",
+      "timestamp": "2026-01-21T12:17:00Z",
+      "status": "pass",
+      "label": "Cycle 3 cold dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C04-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C04-HOT",
+      "timestamp": "2026-01-22T02:54:00Z",
+      "status": "inconclusive",
+      "label": "Cycle 4 hot dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C04-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C04-COLD",
+      "timestamp": "2026-01-22T20:21:00Z",
+      "status": "pass",
+      "label": "Cycle 4 cold dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C05-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C05-HOT",
+      "timestamp": "2026-01-23T10:58:00Z",
+      "status": "inconclusive",
+      "label": "Cycle 5 hot dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C05-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C05-COLD",
+      "timestamp": "2026-01-24T04:25:00Z",
+      "status": "pass",
+      "label": "Cycle 5 cold dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C06-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C06-HOT",
+      "timestamp": "2026-01-24T19:02:00Z",
+      "status": "inconclusive",
+      "label": "Cycle 6 hot dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C06-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C06-COLD",
+      "timestamp": "2026-01-25T12:29:00Z",
+      "status": "pass",
+      "label": "Cycle 6 cold dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C07-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C07-HOT",
+      "timestamp": "2026-01-26T03:06:00Z",
+      "status": "inconclusive",
+      "label": "Cycle 7 hot dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C07-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C07-COLD",
+      "timestamp": "2026-01-26T20:33:00Z",
+      "status": "pass",
+      "label": "Cycle 7 cold dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C08-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C08-HOT",
+      "timestamp": "2026-01-27T11:10:00Z",
+      "status": "inconclusive",
+      "label": "Cycle 8 hot dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-FUNC-C08-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-FUNC-C08-COLD",
+      "timestamp": "2026-01-28T04:37:00Z",
+      "status": "pass",
+      "label": "Cycle 8 cold dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-INTERLOCK-NOMINAL",
+      "requirement_id": "REQ-ANOMALY-REVIEW",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-INTERLOCK-NOMINAL",
+      "timestamp": "2026-01-15T10:00:00Z",
+      "status": "closed",
+      "label": "Facility interlocks closed"
+    },
+    {
+      "id": "manifest-TVAC-LN2-VALVE-REVIEW",
+      "requirement_id": "REQ-ANOMALY-REVIEW",
+      "card_id": "thermal_program",
+      "marker_id": "TVAC-LN2-VALVE-REVIEW",
+      "timestamp": "2026-01-25T00:07:00Z",
+      "status": "review",
+      "label": "LN2 valve duty review window"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C01-hot_survival",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C01-hot_survival",
+      "timestamp": "2026-01-17T05:30:00Z",
+      "status": "pass",
+      "label": "Stable Hot survival dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C01-hot_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C01-hot_operational",
+      "timestamp": "2026-01-17T13:05:00Z",
+      "status": "pass",
+      "label": "Stable Hot operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C01-cold_survival",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C01-cold_survival",
+      "timestamp": "2026-01-18T11:54:00Z",
+      "status": "pass",
+      "label": "Stable Cold survival dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C01-cold_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C01-cold_operational",
+      "timestamp": "2026-01-18T19:29:00Z",
+      "status": "pass",
+      "label": "Stable Cold operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C02-hot_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C02-hot_operational",
+      "timestamp": "2026-01-19T10:06:00Z",
+      "status": "pass",
+      "label": "Stable Hot operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C02-cold_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C02-cold_operational",
+      "timestamp": "2026-01-20T03:33:00Z",
+      "status": "pass",
+      "label": "Stable Cold operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C03-hot_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C03-hot_operational",
+      "timestamp": "2026-01-20T18:10:00Z",
+      "status": "pass",
+      "label": "Stable Hot operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C03-cold_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C03-cold_operational",
+      "timestamp": "2026-01-21T11:37:00Z",
+      "status": "pass",
+      "label": "Stable Cold operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C04-hot_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C04-hot_operational",
+      "timestamp": "2026-01-22T02:14:00Z",
+      "status": "pass",
+      "label": "Stable Hot operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C04-cold_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C04-cold_operational",
+      "timestamp": "2026-01-22T19:41:00Z",
+      "status": "pass",
+      "label": "Stable Cold operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C05-hot_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C05-hot_operational",
+      "timestamp": "2026-01-23T10:18:00Z",
+      "status": "pass",
+      "label": "Stable Hot operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C05-cold_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C05-cold_operational",
+      "timestamp": "2026-01-24T03:45:00Z",
+      "status": "pass",
+      "label": "Stable Cold operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C06-hot_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C06-hot_operational",
+      "timestamp": "2026-01-24T18:22:00Z",
+      "status": "pass",
+      "label": "Stable Hot operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C06-cold_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C06-cold_operational",
+      "timestamp": "2026-01-25T11:49:00Z",
+      "status": "pass",
+      "label": "Stable Cold operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C07-hot_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C07-hot_operational",
+      "timestamp": "2026-01-26T02:26:00Z",
+      "status": "pass",
+      "label": "Stable Hot operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C07-cold_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C07-cold_operational",
+      "timestamp": "2026-01-26T19:53:00Z",
+      "status": "pass",
+      "label": "Stable Cold operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C08-hot_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C08-hot_operational",
+      "timestamp": "2026-01-27T10:30:00Z",
+      "status": "pass",
+      "label": "Stable Hot operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-STABLE-C08-cold_operational",
+      "requirement_id": "REQ-STABILITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-STABLE-C08-cold_operational",
+      "timestamp": "2026-01-28T03:57:00Z",
+      "status": "pass",
+      "label": "Stable Cold operational dwell confirmed"
+    },
+    {
+      "id": "manifest-tvac_qualification-PRESSURE-GATE-PRE",
+      "requirement_id": "REQ-DATA-QUALITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-PRESSURE-GATE-PRE",
+      "timestamp": "2026-01-16T11:00:00Z",
+      "status": "pass",
+      "label": "Vacuum pressure gate reached"
+    },
+    {
+      "id": "manifest-tvac_qualification-PRESSURE-GATE-POST",
+      "requirement_id": "REQ-DATA-QUALITY",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-PRESSURE-GATE-POST",
+      "timestamp": "2026-01-28T06:24:00Z",
+      "status": "pass",
+      "label": "Vacuum pressure gate held for final test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-AMBIENT-PRE",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-AMBIENT-PRE",
+      "timestamp": "2026-01-15T11:30:00Z",
+      "status": "pass",
+      "label": "Ambient-pressure functional test before pumpdown"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-VACUUM-PRE",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-VACUUM-PRE",
+      "timestamp": "2026-01-16T11:30:00Z",
+      "status": "pass",
+      "label": "Vacuum ambient functional test after pressure gate"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-VACUUM-POST",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-VACUUM-POST",
+      "timestamp": "2026-01-28T06:54:00Z",
+      "status": "pass",
+      "label": "Final ambient-temperature functional test under vacuum"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-POST",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-POST",
+      "timestamp": "2026-01-28T13:24:00Z",
+      "status": "pass",
+      "label": "Ambient-pressure functional test after vent"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C01-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C01-HOT",
+      "timestamp": "2026-01-17T13:45:00Z",
+      "status": "inconclusive",
+      "label": "Hot survival recovery functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C01-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C01-COLD",
+      "timestamp": "2026-01-18T20:09:00Z",
+      "status": "pass",
+      "label": "Cold survival recovery functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C02-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C02-HOT",
+      "timestamp": "2026-01-19T10:46:00Z",
+      "status": "inconclusive",
+      "label": "Cycle 2 hot dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C02-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C02-COLD",
+      "timestamp": "2026-01-20T04:13:00Z",
+      "status": "pass",
+      "label": "Cycle 2 cold dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C03-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C03-HOT",
+      "timestamp": "2026-01-20T18:50:00Z",
+      "status": "inconclusive",
+      "label": "Cycle 3 hot dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C03-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C03-COLD",
+      "timestamp": "2026-01-21T12:17:00Z",
+      "status": "pass",
+      "label": "Cycle 3 cold dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C04-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C04-HOT",
+      "timestamp": "2026-01-22T02:54:00Z",
+      "status": "inconclusive",
+      "label": "Cycle 4 hot dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C04-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C04-COLD",
+      "timestamp": "2026-01-22T20:21:00Z",
+      "status": "pass",
+      "label": "Cycle 4 cold dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C05-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C05-HOT",
+      "timestamp": "2026-01-23T10:58:00Z",
+      "status": "inconclusive",
+      "label": "Cycle 5 hot dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C05-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C05-COLD",
+      "timestamp": "2026-01-24T04:25:00Z",
+      "status": "pass",
+      "label": "Cycle 5 cold dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C06-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C06-HOT",
+      "timestamp": "2026-01-24T19:02:00Z",
+      "status": "inconclusive",
+      "label": "Cycle 6 hot dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C06-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C06-COLD",
+      "timestamp": "2026-01-25T12:29:00Z",
+      "status": "pass",
+      "label": "Cycle 6 cold dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C07-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C07-HOT",
+      "timestamp": "2026-01-26T03:06:00Z",
+      "status": "inconclusive",
+      "label": "Cycle 7 hot dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C07-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C07-COLD",
+      "timestamp": "2026-01-26T20:33:00Z",
+      "status": "pass",
+      "label": "Cycle 7 cold dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C08-HOT",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C08-HOT",
+      "timestamp": "2026-01-27T11:10:00Z",
+      "status": "inconclusive",
+      "label": "Cycle 8 hot dwell functional test"
+    },
+    {
+      "id": "manifest-tvac_qualification-EVID-C08-COLD",
+      "requirement_id": "REQ-FUNC-GATE",
+      "card_id": "thermal_program",
+      "marker_id": "tvac_qualification-EVID-C08-COLD",
+      "timestamp": "2026-01-28T04:37:00Z",
+      "status": "pass",
+      "label": "Cycle 8 cold dwell functional test"
+    }
+  ],
+  "source_fixture_version": "gossamer.telemetry.arrow.v2"
+}

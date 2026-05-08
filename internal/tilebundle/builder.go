@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/egidinas/gossamer/internal/arrowtelemetry"
 	"github.com/egidinas/gossamer/internal/contracts"
 )
 
@@ -68,7 +69,7 @@ func WriteBundle(models []contracts.GraphModel, opts Options) (contracts.TileBun
 		DataVersion:          opts.DataVersion,
 		UIVersion:            opts.UIVersion,
 		GeneratedAt:          opts.Now.UTC().Format(time.RFC3339),
-		SourceFixtureVersion: "graph_models",
+		SourceFixtureVersion: arrowtelemetry.SchemaName,
 		TimeRange:            rootRange,
 		ReplaySpeed:          replaySpeed(models[0]),
 		PresentCursorPolicy:  "observed_until_cursor_planned_after_cursor",
@@ -119,17 +120,16 @@ func writeCampaignBundle(model contracts.GraphModel, opts Options) (contracts.Ti
 		card.TileFiles = nil
 	}
 	campaignManifest := contracts.TileCampaignManifest{
-		CampaignID:        model.CampaignID,
-		Title:             model.GraphWall.Title,
-		GraphShellPath:    joinURL(opts.TileBasePath, "campaigns", model.CampaignID, "graph-shell.json"),
-		ManifestPath:      joinURL(opts.TileBasePath, "campaigns", model.CampaignID, "manifest.json"),
-		TimeRange:         model.GraphWall.TimeRange,
-		ReplaySpeed:       replaySpeed(model),
-		Levels:            levelsForModel(model, opts.Levels),
-		Cards:             cardRefs,
-		EvidenceLinks:     model.TileManifest.EvidenceLinks,
-		CompressedBytes:   0,
-		UncompressedBytes: 0,
+		CampaignID:           model.CampaignID,
+		Title:                model.GraphWall.Title,
+		GraphShellPath:       joinURL(opts.TileBasePath, "campaigns", model.CampaignID, "graph-shell.json"),
+		ManifestPath:         joinURL(opts.TileBasePath, "campaigns", model.CampaignID, "manifest.json"),
+		TimeRange:            model.GraphWall.TimeRange,
+		ReplaySpeed:          replaySpeed(model),
+		Levels:               levelsForModel(model, opts.Levels),
+		Cards:                cardRefs,
+		EvidenceLinks:        model.TileManifest.EvidenceLinks,
+		SourceFixtureVersion: arrowtelemetry.SchemaName,
 	}
 	if err := writeJSON(filepath.Join(campaignDir, "manifest.json"), campaignManifest); err != nil {
 		return contracts.TileCampaignManifest{}, err

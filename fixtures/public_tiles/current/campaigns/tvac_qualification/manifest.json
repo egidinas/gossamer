@@ -1699,5 +1699,6 @@
       "status": "pass",
       "label": "Cycle 8 cold dwell functional test"
     }
-  ]
+  ],
+  "source_fixture_version": "gossamer.telemetry.arrow.v2"
 }

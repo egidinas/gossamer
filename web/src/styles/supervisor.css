@@ -1,0 +1,78 @@
+.lane-stack {
+  display: grid;
+  gap: 14px;
+}
+
+.swimlane-board {
+  display: grid;
+  gap: 12px;
+}
+
+.swimlane {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.34fr) minmax(260px, 0.24fr) minmax(520px, 1fr);
+  align-items: stretch;
+  gap: 12px;
+  border: 1px solid #253f5c;
+  border-radius: 6px;
+  background: #070c12;
+  padding: 12px;
+}
+
+.swimlane-head {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.swimlane-head span,
+.stream-card span,
+.event-card span,
+.value-grid span {
+  color: #8fa2ad;
+  font-size: 12px;
+}
+
+.lane-meta-grid,
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.lane-meta-grid {
+  align-content: start;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.lane-meta-grid > span,
+.lane-meta-grid > div,
+.metric-grid > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.lane-meta-grid > div,
+.stream-metric {
+  display: grid;
+  gap: 3px;
+  border: 1px solid #25313a;
+  border-radius: 5px;
+  padding: 8px;
+  background: #10181d;
+}
+
+.lane-meta-grid.compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.single-chamber-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.6fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.supervisor-view {
+  display: grid;
+  gap: 14px;
+}

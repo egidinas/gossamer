@@ -1,8 +1,12 @@
 import { tableFromIPC } from "apache-arrow";
-import type { GraphModel, GraphTile, GraphTileCardRef, GraphWallSignal, TileSeries } from "./types";
+import type { GraphModel, GraphTile, GraphTileCardRef, GraphTileManifest, GraphWallSignal, TileSeries } from "./types";
 
 const arrowCache = new Map<string, Promise<ArrowTelemetry>>();
 const maxMaterializedPoints = 1400;
+
+export function invalidateArrowCache() {
+  arrowCache.clear();
+}
 
 type ArrowTelemetry = {
   bySensor: Map<string, ArrowRow[]>;
@@ -16,14 +20,16 @@ type ArrowRow = {
   state: string;
 };
 
+type NumericArrowRow = ArrowRow & { value: number };
+
 type BuiltSeries = {
   series: TileSeries;
   rawCount: number;
   pointCount: number;
 };
 
-export async function arrowTile(campaignId: string, card: GraphTileCardRef, graph: GraphModel, level = "arrow-native", requestedT0?: string, requestedT1?: string): Promise<GraphTile> {
-  const telemetry = await cachedArrowTelemetry(campaignId);
+export async function arrowTile(campaignId: string, card: GraphTileCardRef, tileManifest: GraphTileManifest, graph: GraphModel, level = "arrow-native", requestedT0?: string, requestedT1?: string, dataVersion?: string): Promise<GraphTile> {
+  const telemetry = await cachedArrowTelemetry(campaignId, dataVersion);
   const start = requestedT0 ? Date.parse(requestedT0) : Date.parse(graph.graph_wall?.time_range.start ?? telemetry.t0);
   const end = requestedT1 ? Date.parse(requestedT1) : Date.parse(graph.graph_wall?.time_range.end ?? telemetry.t1);
   const t0 = Number.isFinite(start) ? start : Date.parse(telemetry.t0);
@@ -47,7 +53,7 @@ export async function arrowTile(campaignId: string, card: GraphTileCardRef, grap
     }));
   return {
     schema_version: 1,
-    generated_at: new Date().toISOString(),
+    generated_at: tileManifest.generated_at,
     id: `${campaignId}_${card.card_id}_${level}_arrow`,
     campaign_id: campaignId,
     card_id: card.card_id,
@@ -73,23 +79,24 @@ export async function arrowTile(campaignId: string, card: GraphTileCardRef, grap
       source_node: "gossamer_arrow_fixture",
       source_family: card.signals[0]?.source_family,
       generation_mode: "arrow_stream_to_tile_view",
-      fixture_version: "gossamer.telemetry.arrow.v2",
+      fixture_version: tileManifest.source_fixture_version ?? "gossamer.telemetry.arrow.v2",
       synthetic: true
     }
   };
 }
 
-async function cachedArrowTelemetry(campaignId: string) {
-  let cached = arrowCache.get(campaignId);
+async function cachedArrowTelemetry(campaignId: string, dataVersion?: string) {
+  const key = dataVersion ? `${campaignId}@${dataVersion}` : campaignId;
+  let cached = arrowCache.get(key);
   if (!cached) {
-    cached = fetchArrowTelemetry(campaignId);
-    arrowCache.set(campaignId, cached);
+    cached = fetchArrowTelemetry(campaignId, dataVersion);
+    arrowCache.set(key, cached);
   }
   return cached;
 }
 
-async function fetchArrowTelemetry(campaignId: string): Promise<ArrowTelemetry> {
-  const buffer = await fetchArrowBuffer(campaignId);
+async function fetchArrowTelemetry(campaignId: string, dataVersion?: string): Promise<ArrowTelemetry> {
+  const buffer = await fetchArrowBuffer(campaignId, dataVersion);
   const table = tableFromIPC(new Uint8Array(await decodeArrowBuffer(buffer)));
   const timestamp = table.getChild("timestamp_ns");
   const sensor = table.getChild("sensor");
@@ -121,8 +128,9 @@ async function fetchArrowTelemetry(campaignId: string): Promise<ArrowTelemetry> 
   };
 }
 
-async function fetchArrowBuffer(campaignId: string) {
-  const url = `/data/current/campaigns/${campaignId}/telemetry.arrow.gz`;
+async function fetchArrowBuffer(campaignId: string, dataVersion?: string) {
+  const base = `/data/current/campaigns/${campaignId}/telemetry.arrow.gz`;
+  const url = dataVersion ? `${base}?v=${encodeURIComponent(dataVersion)}` : base;
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`${url} returned ${response.status}`);
@@ -172,12 +180,13 @@ function buildSeries(signal: GraphWallSignal, card: GraphTileCardRef, telemetry:
     tileSeries.spans = rowsToSpans(rows, signal.value_table, t1);
     return { series: tileSeries, rawCount: rows.length, pointCount: tileSeries.spans.length };
   }
-  const materialized = decimateRows(numeric, maxMaterializedPoints);
-  tileSeries.points = materialized.map((row) => ({ timestamp: new Date(row.t).toISOString(), value: roundValue(row.value ?? 0) }));
-  return { series: tileSeries, rawCount: numeric.length, pointCount: materialized.length };
+  const numericRows = numeric as NumericArrowRow[];
+  const materialized = decimateRows(numericRows, maxMaterializedPoints);
+  tileSeries.points = materialized.map((row) => ({ timestamp: new Date(row.t).toISOString(), value: row.value }));
+  return { series: tileSeries, rawCount: numericRows.length, pointCount: materialized.length };
 }
 
-function decimateRows(rows: ArrowRow[], budget: number): ArrowRow[] {
+function decimateRows(rows: NumericArrowRow[], budget: number): NumericArrowRow[] {
   if (rows.length <= budget || budget < 4) return rows;
   const out = [rows[0]];
   const bucketSize = (rows.length - 2) / (budget - 2);
@@ -188,8 +197,8 @@ function decimateRows(rows: ArrowRow[], budget: number): ArrowRow[] {
     let max = rows[start];
     for (let i = start + 1; i < end; i++) {
       const row = rows[i];
-      if ((row.value ?? 0) < (min.value ?? 0)) min = row;
-      if ((row.value ?? 0) > (max.value ?? 0)) max = row;
+      if (row.value < min.value) min = row;
+      if (row.value > max.value) max = row;
     }
     if (min.t <= max.t) out.push(min, max);
     else out.push(max, min);
@@ -219,10 +228,6 @@ function nullableNumber(value: unknown) {
   if (value === null || value === undefined) return null;
   const n = Number(value);
   return Number.isFinite(n) ? n : null;
-}
-
-function roundValue(value: number) {
-  return Math.round(value * 10000) / 10000;
 }
 
 function intersectByWindow<T extends { start: string; end: string }>(items: T[], t0: number, t1: number): T[] {

@@ -597,17 +597,22 @@ func (s *Server) static(w http.ResponseWriter, r *http.Request) {
 	if strings.HasPrefix(r.URL.Path, "/data/") {
 		rel := strings.TrimPrefix(path.Clean("/"+r.URL.Path), "/data/")
 		candidate := filepath.Join(s.root, "fixtures", "public_tiles", filepath.FromSlash(rel))
+		isMutable := strings.HasPrefix(rel, "current/") || rel == "current"
 		if strings.HasSuffix(candidate, ".arrow") {
 			if arrowStaticExists(candidate) {
-				serveArrowFile(w, r, candidate, "public, max-age=31536000, immutable")
+				cc := "public, max-age=31536000, immutable"
+				if isMutable {
+					cc = "no-store"
+				}
+				serveArrowFile(w, r, candidate, cc)
 				return
 			}
 			http.NotFound(w, r)
 			return
 		}
 		if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
-			if strings.HasSuffix(candidate, "manifest.json") {
-				w.Header().Set("Cache-Control", "no-cache")
+			if isMutable || strings.HasSuffix(candidate, "manifest.json") {
+				w.Header().Set("Cache-Control", "no-store")
 			} else {
 				w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
 			}

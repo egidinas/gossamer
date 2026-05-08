@@ -1,0 +1,334 @@
+.landing-grid,
+.profile-grid,
+.supervisor-view {
+  display: grid;
+  gap: 14px;
+}
+
+.landing-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 18px;
+  min-height: 310px;
+  overflow: hidden;
+  border: 1px solid #263d53;
+  border-radius: 8px;
+  padding: 30px;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(92, 131, 151, 0.18), transparent 34%),
+    linear-gradient(90deg, rgba(6, 12, 18, 0.98) 0%, rgba(6, 12, 18, 0.92) 54%, rgba(6, 12, 18, 0.78) 100%),
+    #071019;
+}
+
+.landing-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.landing-hero-copy {
+  align-self: center;
+}
+
+.landing-hero h1 {
+  font-size: 48px;
+  line-height: 1;
+  margin: 8px 0 12px;
+}
+
+.landing-hero p {
+  max-width: 760px;
+  color: #b9c9d1;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.hero-actions,
+.stream-title,
+.event-head,
+.swimlane-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-actions {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.hero-actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  border: 1px solid #44616c;
+  border-radius: 6px;
+  padding: 0 13px;
+  color: #effbff;
+  text-decoration: none;
+  background: #1a2930;
+}
+
+.landing-data-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  max-width: 820px;
+  margin-top: 14px;
+}
+
+.landing-data-flow span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  border: 1px solid #253f5c;
+  border-radius: 4px;
+  background: #0b151d;
+  color: #d8e8f8;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px;
+  white-space: nowrap;
+}
+
+.landing-hero .landing-preview {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: end;
+}
+
+.landing-experience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.landing-experience-card {
+  display: grid;
+  grid-template-rows: minmax(128px, 0.72fr) auto;
+  min-width: 0;
+  min-height: 250px;
+  border: 1px solid #263f56;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #071019;
+  color: #effbff;
+  text-decoration: none;
+}
+
+.landing-experience-card:hover {
+  border-color: #5b879b;
+}
+
+.landing-preview-screen {
+  display: grid;
+  grid-template-rows: 18px minmax(0, 1fr) 20px;
+  gap: 7px;
+  min-height: 0;
+  padding: 10px;
+  background: #050a0f;
+}
+
+.preview-topline,
+.preview-footer {
+  display: grid;
+  grid-template-columns: 1fr 0.62fr 0.42fr;
+  gap: 6px;
+}
+
+.preview-topline span,
+.preview-footer span {
+  border: 1px solid #20364d;
+  border-radius: 3px;
+  background: #0d1822;
+}
+
+.preview-plot {
+  position: relative;
+  min-height: 92px;
+  overflow: hidden;
+  border: 1px solid #20364d;
+  border-radius: 4px;
+  background:
+    linear-gradient(#10202c 1px, transparent 1px),
+    linear-gradient(90deg, #10202c 1px, transparent 1px),
+    #07111a;
+  background-size: 100% 28px, 54px 100%;
+}
+
+.preview-gridline,
+.preview-marker {
+  position: absolute;
+  inset-block: 0;
+  width: 1px;
+  background: #31465a;
+}
+
+.preview-marker {
+  width: 8px;
+  height: 8px;
+  inset-block: auto 18px;
+  border: 2px solid #ffb000;
+  border-radius: 50%;
+  background: #050a0f;
+  transform: translateX(-50%);
+}
+
+.preview-trace {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  height: 3px;
+  border-radius: 999px;
+  transform-origin: left center;
+}
+
+.preview-command {
+  top: 32%;
+  background: #ffd400;
+  box-shadow: 28px 18px 0 #ffd400, 74px -10px 0 #ffd400, 124px 8px 0 #ffd400;
+}
+
+.preview-actual {
+  top: 58%;
+  background: #00c8ff;
+  box-shadow: 32px -16px 0 #00c8ff, 84px 9px 0 #00c8ff, 138px -13px 0 #00c8ff;
+}
+
+.preview-dut {
+  top: 74%;
+  background: #ff315f;
+  box-shadow: 24px -11px 0 #ff315f, 68px -24px 0 #ff315f, 116px -7px 0 #ff315f;
+}
+
+.landing-experience-card[data-preview-kind="command"] .preview-plot {
+  background:
+    linear-gradient(90deg, transparent 0 19%, rgba(88, 108, 124, 0.26) 19% 28%, transparent 28% 47%, rgba(88, 108, 124, 0.26) 47% 56%, transparent 56%),
+    linear-gradient(#10202c 1px, transparent 1px),
+    #07111a;
+  background-size: 100% 100%, 100% 23px, 100% 100%;
+}
+
+.landing-experience-card[data-preview-kind="qualification"] .preview-actual {
+  background: #1f6fff;
+  box-shadow: 22px 20px 0 #1f6fff, 92px -18px 0 #1f6fff, 148px 15px 0 #1f6fff;
+}
+
+.landing-experience-copy {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  border-top: 1px solid #20364d;
+}
+
+.landing-experience-copy span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #8bd0d8;
+  font-size: 12px;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.landing-experience-copy strong {
+  font-size: 18px;
+}
+
+.landing-experience-copy small {
+  color: #b9c9d1;
+  font-size: 12px;
+}
+
+.landing-system-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.landing-system-grid > div {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  min-height: 148px;
+  border: 1px solid #20364d;
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, rgba(14, 31, 45, 0.92), rgba(7, 17, 26, 0.94)),
+    #07111a;
+  padding: 13px;
+}
+
+.landing-system-grid strong {
+  color: #effbff;
+  font-size: 14px;
+}
+
+.landing-system-grid span {
+  color: #b9c9d1;
+  font-size: 13px;
+  line-height: 1.48;
+}
+
+.landing-preview {
+  display: grid;
+  gap: 10px;
+  border: 1px solid #2b3942;
+  border-radius: 8px;
+  background: rgba(10, 17, 23, 0.92);
+  padding: 12px;
+}
+
+.campaign-context-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(210px, 0.24fr);
+  gap: 8px;
+  align-items: stretch;
+  margin-top: 6px;
+  border-top: 1px solid #17283a;
+  padding-top: 6px;
+}
+
+.campaign-context-strip img {
+  width: 100%;
+  height: 82px;
+  object-fit: cover;
+  border: 1px solid #273c4d;
+  border-radius: 4px;
+  background: #050a0f;
+}
+
+.campaign-context-strip p {
+  align-self: center;
+  margin: 0;
+  border: 1px solid #1f3348;
+  background: #09131e;
+  padding: 8px;
+  color: #b9c9d1;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.landing-preview-head,
+.preview-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.landing-preview-head span,
+.preview-row span {
+  color: #8fa2ad;
+  font-size: 12px;
+}
+
+.preview-row {
+  border: 1px solid #25313a;
+  border-radius: 6px;
+  padding: 8px;
+  background: #0f1519;
+}

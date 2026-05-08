@@ -539,6 +539,7 @@ export type GraphTileManifest = Envelope & {
   graph_wall_id: string;
   generated_at: string;
   source_mode: string;
+  source_fixture_version?: string;
   time_range: GraphWallTimeRange;
   tile_policy: GraphTilePolicy;
   levels: TileLevel[];

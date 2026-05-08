@@ -1,0 +1,501 @@
+import uPlot from "uplot";
+import type { GraphTile, HeroGraphModel, TileSeries } from "../../types";
+import { colorForSignal, signalPriority } from "./visualPolicy";
+import { timeTicks } from "./timeAxis";
+import { viewportSeries, commandCenterGapBreaks, resampleSeries, decimationValue, commandCenterProjectedSeries, displayValue } from "./decimation";
+import { markerColor, operatorMarkerLines, placeMarkerLabel, rectanglesOverlap, fitCanvasText, shortGateLabel, rawValueAt } from "./markers";
+
+export type TimeRange = {
+  start: number;
+  end: number;
+};
+
+export type UPlotBuild = {
+  data: uPlot.AlignedData;
+  series: uPlot.Series[];
+  scales: Record<string, uPlot.Scale>;
+  axes: uPlot.Axis[];
+};
+
+const DAY_MS = 86_400_000;
+
+export function uplotData(tile: GraphTile, currentTimeMs?: number, viewportWidth = 900): UPlotBuild {
+  const tileSeries = tile.series.filter((series) => (series.points ?? []).length > 0).sort(seriesDrawOrder);
+  const plottedSeries = tileSeries.map((series) => viewportSeries(tile, series, viewportWidth));
+  const xValues = sharedTimeGrid(tile, plottedSeries);
+  const data: uPlot.AlignedData = [xValues];
+  const series: uPlot.Series[] = [{}];
+  const scaleKeys = new Set<string>();
+  plottedSeries.forEach((seriesTile, index) => {
+    const scale = scaleForSeries(tile, seriesTile);
+    scaleKeys.add(scale);
+    data.push(resampleSeries(tile, seriesTile, xValues, currentTimeMs));
+    series.push({
+      label: seriesTile.label,
+      scale,
+      stroke: colorForSignal(seriesTile, index),
+      width: lineWidthFor(seriesTile.role),
+      dash: seriesTile.role === "ghost" ? [7, 4] : seriesTile.role === "acceptance_band" ? [2, 5] : undefined,
+      points: { show: false }
+    });
+  });
+  return { data, series, scales: buildScales(scaleKeys), axes: buildAxes(scaleKeys, tile) };
+}
+
+export function seriesDrawOrder(a: TileSeries, b: TileSeries) {
+  const order: Record<string, number> = {
+    ghost: 5,
+    acceptance_band: 8,
+    actual: 10,
+    source_quality: 12,
+    counter: 14,
+    command: 45,
+    event: 50,
+    interlock: 55,
+    evidence: 60,
+  };
+  const roleDelta = (order[a.role] ?? 15) - (order[b.role] ?? 15);
+  if (roleDelta) return roleDelta;
+  return signalPriority(a) - signalPriority(b);
+}
+
+export function lineWidthFor(role: string) {
+  if (role === "command") return 1.55;
+  if (role === "ghost") return 0.9;
+  if (role === "acceptance_band") return 0.75;
+  if (role === "counter" || role === "source_quality") return 1.05;
+  return 0.85;
+}
+
+export function sharedTimeGrid(tile: GraphTile, tileSeries: TileSeries[]): number[] {
+  const start = Date.parse(tile.t0);
+  const end = Date.parse(tile.t1);
+  const finiteTimes = tileSeries
+    .flatMap((series) => (series.points ?? []).map((point) => Date.parse(point.timestamp)))
+    .filter(Number.isFinite);
+  const gapTimes = tileSeries.flatMap((series) => commandCenterGapBreaks(tile, series));
+  const t0 = Number.isFinite(start) ? start : Math.min(...finiteTimes);
+  const t1 = Number.isFinite(end) ? end : Math.max(...finiteTimes);
+  if (!Number.isFinite(t0) || !Number.isFinite(t1) || t1 <= t0) {
+    return Array.from(new Set([...finiteTimes, ...gapTimes])).sort((a, b) => a - b);
+  }
+  return Array.from(new Set([start, end, ...finiteTimes, ...gapTimes])).filter(Number.isFinite).sort((a, b) => a - b);
+}
+
+export function buildScales(scaleKeys: Set<string>): Record<string, uPlot.Scale> {
+  const scales: Record<string, uPlot.Scale> = {};
+  scaleKeys.forEach((key) => {
+    if (key === "temperature_c") scales[key] = { range: paddedRange(12, [-92, 92]) };
+    else if (key === "pressure_log") scales[key] = { distr: 3, log: 10, range: () => [1e-8, 1.2e3] };
+    else if (key === "pressure_rate_log") scales[key] = { distr: 3, log: 10, range: () => [1e-8, 1e3] };
+    else if (key === "pressure_bar") scales[key] = { range: paddedRange(0.08, [0, 12]) };
+    else if (key === "percent") scales[key] = { range: (_u, _min, _max) => [0, 100] };
+    else if (key === "heat_flux_w") scales[key] = { range: paddedRange(8, [-45, 45]) };
+    else scales[key] = {};
+  });
+  return scales;
+}
+
+export function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[] {
+  const leftAxisSize = 54;
+  const rightAxisSize = 58;
+  const axes: uPlot.Axis[] = [{ show: false }];
+  const primary = scaleKeys.has("temperature_c")
+    ? "temperature_c"
+    : scaleKeys.has("power_w")
+      ? "power_w"
+      : scaleKeys.has("heat_flux_w")
+        ? "heat_flux_w"
+        : scaleKeys.has("bus_ms")
+          ? "bus_ms"
+          : scaleKeys.has("counter")
+            ? "counter"
+            : scaleKeys.has("pressure_log")
+              ? "pressure_log"
+              : scaleKeys.has("pressure_rate_log")
+                ? "pressure_rate_log"
+                : scaleKeys.has("pressure_bar")
+                  ? "pressure_bar"
+              : "percent";
+  axes.push({
+    show: true,
+    scale: primary,
+    stroke: "#7890a4",
+    grid: { stroke: "rgba(83,112,140,0.26)", width: 1 },
+    ticks: { stroke: "rgba(83,112,140,0.48)", width: 1, size: 4 },
+    splits: (_u, _axisIdx, scaleMin, scaleMax) => logScale(primary) ? logSplits(scaleMin, scaleMax) : ySplits(scaleMin, scaleMax),
+    size: leftAxisSize,
+    label: axisLabel(primary, tile),
+    labelSize: 12,
+    labelGap: 0,
+    values: logScale(primary) ? (_u, vals) => vals.map((v) => formatScientific(v)) : undefined,
+  });
+  const extra = Array.from(scaleKeys).filter((key) => key !== primary);
+  extra.forEach((key) => {
+    axes.push({
+      show: true,
+      scale: key,
+      side: 1,
+      stroke: key.includes("pressure") ? "#60a5fa" : "#8bd3a5",
+      grid: { show: false },
+      ticks: { show: false },
+      size: rightAxisSize,
+      label: axisLabel(key, tile),
+      labelSize: 12,
+      labelGap: 0,
+      splits: logScale(key) ? (_u, _axisIdx, scaleMin, scaleMax) => logSplits(scaleMin, scaleMax) : undefined,
+      values: logScale(key) ? (_u, vals) => vals.map((v) => formatScientific(v)) : undefined,
+    });
+  });
+  if (!extra.length) {
+    axes.push({
+      show: true,
+      side: 1,
+      scale: primary,
+      size: rightAxisSize,
+      label: "",
+      labelSize: 12,
+      labelGap: 0,
+      grid: { show: false },
+      ticks: { show: false },
+      values: () => [],
+    });
+  }
+  return axes;
+}
+
+export function paddedRange(minPad: number, clamp?: [number, number]): uPlot.Range.Function {
+  return (_u: uPlot, min: number, max: number) => {
+    if (!Number.isFinite(min) || !Number.isFinite(max)) return clamp ?? [0, 1] as [number, number];
+    if (max <= min) return [min - minPad, max + minPad] as [number, number];
+    const pad = Math.max(minPad, (max - min) * 0.08);
+    const low = min - pad;
+    const high = max + pad;
+    if (!clamp) return [low, high] as [number, number];
+    return [Math.max(clamp[0], low), Math.min(clamp[1], high)] as [number, number];
+  };
+}
+
+export function logScale(scale: string) {
+  return scale === "pressure_log" || scale === "pressure_rate_log";
+}
+
+export function logSplits(min: number, max: number) {
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= 0 || max <= min) return [];
+  const first = Math.ceil(Math.log10(Math.max(min, 1e-12)));
+  const last = Math.floor(Math.log10(max));
+  const values: number[] = [];
+  for (let exp = first; exp <= last; exp += 1) values.push(Math.pow(10, exp));
+  return values;
+}
+
+export function ySplits(min: number, max: number) {
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) return [];
+  const target = 8;
+  const rough = (max - min) / target;
+  const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+  const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((candidate) => rough <= candidate) ?? mag * 10;
+  const first = Math.ceil(min / step) * step;
+  const values: number[] = [];
+  for (let v = first; v <= max + step * 0.25; v += step) values.push(Number(v.toFixed(6)));
+  return values;
+}
+
+export function axisLabel(scale: string, tile: GraphTile) {
+  if (scale === "temperature_c") return tile.card_id === "thermal_program" && hasPressure(tile) ? "degC + pressure rail" : "degC";
+  if (scale === "pressure_log") return "log10 mbar";
+  if (scale === "pressure_rate_log") return "log10 mbar/min";
+  if (scale === "pressure_bar") return "bar";
+  if (scale === "heat_flux_w") return "W";
+  if (scale === "power_w") return "W";
+  if (scale === "bus_ms") return "ms";
+  if (scale === "counter") return "count";
+  if (scale === "percent") return "%";
+  return scale;
+}
+
+export function hasPressure(tile: GraphTile) {
+  return tile.series.some((series) => series.axis_id === "pressure_mbar");
+}
+
+export function pressureHeroRailDegC(mbar: number) {
+  const minLog = Math.log10(0.00000001);
+  const maxLog = Math.log10(1013.25);
+  const ratio = (Math.log10(Math.max(0.00000001, Math.min(1013.25, mbar))) - minLog) / (maxLog - minLog);
+  return -82 + ratio * 104;
+}
+
+export function scaleForSeries(tile: GraphTile, series: TileSeries): string {
+  if (series.axis_id === "pressure_mbar" && tile.card_id === "thermal_program") return "temperature_c";
+  if (series.axis_id === "pressure_mbar") return "pressure_log";
+  if (series.axis_id === "pressure_rate") return "pressure_rate_log";
+  if (series.axis_id === "pressure_bar") return "pressure_bar";
+  if (series.axis_id === "power_w") return "power_w";
+  if (series.axis_id === "heat_flux_w") return "heat_flux_w";
+  if (series.axis_id === "counter") return "counter";
+  if (series.axis_id === "bus_ms") return "bus_ms";
+  if (series.axis_id === "percent") return "percent";
+  return "temperature_c";
+}
+
+export function stateBlocks(series: TileSeries, start: number, span: number) {
+  if (series.spans?.length) {
+    return series.spans.flatMap((state, index) => {
+      const stateStart = Date.parse(state.start);
+      const stateEnd = Date.parse(state.end);
+      if (!Number.isFinite(stateStart) || !Number.isFinite(stateEnd) || stateEnd < start || stateStart > start + span) return [];
+      const left = Math.max(0, Math.min(100, ((stateStart - start) / span) * 100));
+      const right = Math.max(left + 0.15, Math.min(100, ((stateEnd - start) / span) * 100));
+      return [{
+        key: `${series.id}-span-${index}`,
+        left,
+        width: right - left,
+        value: state.value ?? Number(state.state ?? 0),
+        label: state.label ?? state.state ?? "",
+      }];
+    });
+  }
+  const sorted = [...(series.points ?? [])].sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp));
+  return sorted.flatMap((point, index) => {
+    const pointTime = Date.parse(point.timestamp);
+    const nextTime = index + 1 < sorted.length ? Date.parse(sorted[index + 1].timestamp) : start + span;
+    if (!Number.isFinite(pointTime) || !Number.isFinite(nextTime) || nextTime < start || pointTime > start + span) return [];
+    const left = Math.max(0, Math.min(100, ((pointTime - start) / span) * 100));
+    const right = Math.max(left + 0.15, Math.min(100, ((nextTime - start) / span) * 100));
+    return [{ key: `${series.id}-${index}`, left, width: right - left, value: point.value, label: String(point.value) }];
+  });
+}
+
+export function inTimeRange(timestamp: string, range: TimeRange) {
+  const t = Date.parse(timestamp);
+  return Number.isFinite(t) && t >= range.start && t <= range.end;
+}
+
+export function renderKindFor(kind: string) {
+  if (kind === "state") return "swimlane";
+  if (kind === "event") return "event_rail";
+  if (kind === "counter") return "counter";
+  return "line";
+}
+
+function formatScientific(value: number) {
+  if (!Number.isFinite(value)) return "";
+  if (value === 0) return "0";
+  return value.toExponential(2).replace("e", "E");
+}
+
+function commandCenterGateLabelAllowed(width: number, spanMs: number) {
+  const days = spanMs / DAY_MS;
+  return width / Math.max(1, days) >= 140;
+}
+
+function markerAnchor(plot: uPlot, tile: GraphTile, timeMs: number, top: number, height: number) {
+  const anchorSeries = tile.series.find((series) => series.id === "trace.command.chamber")
+    ?? tile.series.find((series) => series.role === "command" && (series.points ?? []).length)
+    ?? tile.series.find((series) => series.role === "ghost" && (series.points ?? []).length);
+  if (!anchorSeries) return null;
+  const raw = rawValueAt(anchorSeries, timeMs);
+  if (raw === undefined) return null;
+  const scale = scaleForSeries(tile, anchorSeries);
+  const y = plot.valToPos(displayValue(tile, anchorSeries, raw), scale);
+  if (!Number.isFinite(y)) return null;
+  return { y: Math.max(top + 12, Math.min(top + height - 10, y)) };
+}
+
+export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphModel, currentTimeMs?: number, hoverTimeMs?: number, timeRange?: TimeRange) {
+  const ctx = plot.ctx;
+  const bbox = plot.bbox;
+  const left = bbox.left;
+  const top = bbox.top;
+  const width = bbox.width;
+  const height = bbox.height;
+  const start = timeRange?.start ?? Date.parse(tile.t0);
+  const end = timeRange?.end ?? Date.parse(tile.t1);
+  const span = Math.max(1, end - start);
+  ctx.save();
+  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), 14);
+  ctx.strokeStyle = "rgba(83,112,140,0.16)";
+  ctx.lineWidth = 1;
+  ctx.setLineDash([]);
+  ticks.forEach((tick) => {
+    const x = left + tick.ratio * width;
+    ctx.beginPath();
+    ctx.moveTo(x, top);
+    ctx.lineTo(x, top + height);
+    ctx.stroke();
+  });
+  (tile.bands ?? []).forEach((band) => {
+    const x = left + ((Date.parse(band.start) - start) / span) * width;
+    const x2 = left + ((Date.parse(band.end) - start) / span) * width;
+    const bandKind = band.kind.toLowerCase();
+    const vacuumBand = tile.campaign_id === "tvac_qualification" && (bandKind.includes("vacuum") || tile.card_id.includes("pressure"));
+    ctx.fillStyle = vacuumBand
+      ? "rgba(59,130,246,0.09)"
+      : bandKind.includes("breakdown")
+        ? "rgba(255,112,67,0.17)"
+        : bandKind.includes("reset")
+          ? "rgba(36,214,255,0.15)"
+          : bandKind.includes("cold")
+            ? "rgba(61,133,198,0.12)"
+            : "rgba(198,119,61,0.11)";
+    ctx.fillRect(x, top, Math.max(1, x2 - x), height);
+  });
+  const placedMarkerLabels: Array<{ x: number; y: number; width: number; height: number }> = [];
+  (tile.markers ?? []).forEach((marker) => {
+    const markerTime = Date.parse(marker.timestamp);
+    if (!Number.isFinite(markerTime)) return;
+    const x = left + ((markerTime - start) / span) * width;
+    if (x < left || x > left + width) return;
+    const color = markerColor(marker);
+    const operatorMarker = marker.role === "operator_interaction" || marker.kind?.startsWith("operator_");
+    const attachedMarker = marker.kind === "functional_gate" || marker.kind === "stability" || marker.kind === "stability_achieved";
+    const anchor = attachedMarker || operatorMarker ? markerAnchor(plot, tile, markerTime, top, height) : null;
+    const anchorY = anchor?.y ?? top + 10;
+    if (operatorMarker) {
+      const compact = tile.campaign_id === "command_center_fat" || width < 760;
+      const y = anchor?.y ?? top + 18 + (marker.kind === "operator_reset" ? 34 : marker.kind === "operator_reset_ready" ? 68 : 0);
+      const markerRadius = compact ? 9 : 12;
+      ctx.save();
+      ctx.shadowColor = "rgba(0,0,0,0.72)";
+      ctx.shadowBlur = 6;
+      ctx.fillStyle = "rgba(2,6,11,0.88)";
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(x, y, markerRadius + 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      if (marker.kind === "operator_breakdown") {
+        ctx.moveTo(x, y - markerRadius);
+        ctx.lineTo(x + markerRadius, y);
+        ctx.lineTo(x, y + markerRadius);
+        ctx.lineTo(x - markerRadius, y);
+        ctx.closePath();
+      } else if (marker.kind === "operator_reset") {
+        ctx.rect(x - markerRadius + 1, y - markerRadius + 1, (markerRadius - 1) * 2, (markerRadius - 1) * 2);
+      } else {
+        ctx.moveTo(x, y - markerRadius);
+        ctx.lineTo(x + markerRadius, y + markerRadius - 2);
+        ctx.lineTo(x - markerRadius, y + markerRadius - 2);
+        ctx.closePath();
+      }
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.lineWidth = 1.4;
+      ctx.strokeStyle = "rgba(2,6,11,0.96)";
+      ctx.stroke();
+      if (tile.campaign_id === "command_center_fat" && marker.kind === "operator_reset_ready") {
+        ctx.restore();
+        return;
+      }
+      const lines = operatorMarkerLines(marker, compact);
+      const fontSize = compact ? Math.max(8.5, Math.min(10.5, width / 118)) : 12;
+      const lineHeight = compact ? 11 : 14;
+      ctx.font = `850 ${fontSize}px system-ui, sans-serif`;
+      const maxLabelWidth = compact ? Math.max(76, Math.min(118, width * 0.11)) : Math.max(110, Math.min(170, width * 0.16));
+      const measuredWidth = Math.max(...lines.map((line) => ctx.measureText(line).width)) + 12;
+      const labelWidth = Math.min(maxLabelWidth, measuredWidth);
+      const labelHeight = lines.length * lineHeight + 8;
+      const placed = placeMarkerLabel({ x, y, labelWidth, labelHeight, left, top, width, height, placed: placedMarkerLabels, markerRadius });
+      if (tile.campaign_id === "command_center_fat" && placedMarkerLabels.some((other) => rectanglesOverlap(placed, other))) {
+        ctx.restore();
+        return;
+      }
+      placedMarkerLabels.push(placed);
+      const labelX = placed.x;
+      const labelY = placed.y;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(labelX < x ? labelX + labelWidth : labelX, labelY + labelHeight / 2);
+      ctx.stroke();
+      ctx.fillStyle = "rgba(2,6,11,0.94)";
+      ctx.fillRect(labelX, labelY, labelWidth, labelHeight);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.2;
+      ctx.strokeRect(labelX, labelY, labelWidth, labelHeight);
+      ctx.fillStyle = color;
+      lines.forEach((line, lineIndex) => ctx.fillText(fitCanvasText(ctx, line, labelWidth - 10), labelX + 6, labelY + lineHeight + 1 + lineIndex * lineHeight));
+      ctx.restore();
+    } else if (attachedMarker) {
+      const commandCenterMarker = tile.campaign_id === "command_center_fat";
+      ctx.save();
+      ctx.fillStyle = "rgba(2,6,11,0.86)";
+      ctx.strokeStyle = color;
+      ctx.lineWidth = commandCenterMarker ? 2.2 : 1.8;
+      ctx.beginPath();
+      ctx.arc(x, anchorY - (marker.kind === "functional_gate" ? 5 : 0), commandCenterMarker ? 8 : marker.kind === "functional_gate" ? 10 : 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      if (marker.kind === "functional_gate") {
+        ctx.moveTo(x, anchorY);
+        ctx.lineTo(x - 7, anchorY - 12);
+        ctx.lineTo(x + 7, anchorY - 12);
+        ctx.closePath();
+      } else {
+        ctx.arc(x, anchorY, 5.6, 0, Math.PI * 2);
+      }
+      ctx.fill();
+      if (commandCenterMarker && !commandCenterGateLabelAllowed(width, span)) return;
+      const label = commandCenterMarker ? "FT" : shortGateLabel(marker.label);
+      ctx.save();
+      ctx.font = commandCenterMarker ? "850 10px system-ui, sans-serif" : "850 14px system-ui, sans-serif";
+      const metrics = ctx.measureText(label);
+      const labelWidth = Math.max(commandCenterMarker ? 22 : 42, metrics.width + 11);
+      const labelHeight = commandCenterMarker ? 16 : 20;
+      const placed = commandCenterMarker
+        ? placeMarkerLabel({ x, y: anchorY, labelWidth, labelHeight, left, top, width, height, placed: placedMarkerLabels, markerRadius: 8 })
+        : { x: Math.max(left + 8, Math.min(left + width - labelWidth - 8, x + 8)), y: Math.max(top + 24, Math.min(top + height - 16, anchorY - 14)), width: labelWidth, height: labelHeight };
+      if (commandCenterMarker) placedMarkerLabels.push(placed);
+      const labelX = placed.x;
+      const labelY = placed.y;
+      ctx.translate(labelX, labelY);
+      const nearRightEdge = x > left + width - 72;
+      ctx.rotate(commandCenterMarker ? 0 : nearRightEdge ? -Math.PI / 12 : -Math.PI / 6);
+      ctx.fillStyle = "rgba(2,6,11,0.92)";
+      ctx.fillRect(-5, -labelHeight + 4, labelWidth, labelHeight);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(-5, -labelHeight + 4, labelWidth, labelHeight);
+      ctx.fillStyle = marker.kind === "functional_gate" ? "#fff0a8" : "#c9ffef";
+      ctx.shadowColor = "rgba(0,0,0,0.88)";
+      ctx.shadowBlur = 5;
+      ctx.fillText(label, 0, 0);
+      ctx.restore();
+    } else {
+      ctx.beginPath();
+      ctx.arc(x, top + 10, 3.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+  const now = currentTimeMs ?? Date.parse(heroGraph.time_axis.now ?? heroGraph.execution?.now ?? "");
+  if (Number.isFinite(now)) {
+    const x = left + ((now - start) / span) * width;
+    ctx.fillStyle = "rgba(3,7,12,0.58)";
+    ctx.fillRect(Math.max(left, x), top, Math.max(0, left + width - x), height);
+    ctx.strokeStyle = "rgba(242,247,255,0.9)";
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.moveTo(x, top);
+    ctx.lineTo(x, top + height);
+    ctx.stroke();
+  }
+  if (Number.isFinite(hoverTimeMs)) {
+    const x = left + (((hoverTimeMs as number) - start) / span) * width;
+    if (x >= left && x <= left + width) {
+      ctx.strokeStyle = "rgba(255,216,95,0.95)";
+      ctx.setLineDash([]);
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x, top);
+      ctx.lineTo(x, top + height);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+}

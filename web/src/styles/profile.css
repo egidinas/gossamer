@@ -1,0 +1,49 @@
+.profile-hero {
+  display: grid;
+  gap: 12px;
+  border-bottom: 1px solid #2c3942;
+  padding: 22px 0;
+}
+
+.profile-hero h1 {
+  font-size: 44px;
+  line-height: 1;
+}
+
+.profile-hero p,
+.profile-note p {
+  max-width: 900px;
+  color: #b9c9d1;
+  font-size: 15px;
+  line-height: 1.58;
+}
+
+.profile-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.profile-contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  border: 1px solid #44616c;
+  border-radius: 6px;
+  padding: 0 12px;
+  color: #effbff;
+  text-decoration: none;
+  background: #1a2930;
+}
+
+.profile-note {
+  display: grid;
+  gap: 10px;
+}
+
+.profile-scope-grid strong {
+  font-size: 15px;
+  line-height: 1.32;
+}

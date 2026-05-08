@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"flag"
 	"fmt"
 	"log"
@@ -9,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/egidinas/gossamer/internal/arrowtelemetry"
 	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/tilebundle"
 )
@@ -17,7 +20,7 @@ func main() {
 	var (
 		root        = flag.String("root", ".", "repository or fixture root")
 		out         = flag.String("out", "fixtures/public_tiles", "tile bundle output root")
-		dataVersion = flag.String("data-version", time.Now().UTC().Format("20060102T150405Z"), "immutable data bundle version")
+		dataVersion = flag.String("data-version", "", "immutable data bundle version (default: content-addressed hash)")
 		current     = flag.Bool("current", true, "also refresh fixtures/public_tiles/current")
 		campaigns   = flag.String("campaigns", "thermal_acceptance_fat,tvac_qualification,command_center_fat", "comma-separated campaign IDs")
 		levels      = flag.String("levels", "minute", "comma-separated tile levels to materialize")
@@ -28,12 +31,18 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	versionedOut := filepath.Join(*root, *out, *dataVersion)
+
+	version := *dataVersion
+	if version == "" {
+		version = contentAddressedVersion(models)
+	}
+
+	versionedOut := filepath.Join(*root, *out, version)
 	if err := os.RemoveAll(versionedOut); err != nil {
 		log.Fatal(err)
 	}
 	manifest, err := tilebundle.WriteBundle(models, tilebundle.Options{
-		DataVersion:  *dataVersion,
+		DataVersion:  version,
 		OutputDir:    versionedOut,
 		TileBasePath: "/data/current",
 		Levels:       splitCSV(*levels),
@@ -55,6 +64,21 @@ func main() {
 		}
 	}
 	fmt.Printf("wrote tile bundle %s with %d campaigns to %s\n", manifest.DataVersion, len(manifest.Campaigns), versionedOut)
+}
+
+// contentAddressedVersion produces a stable 8-hex-char version derived from
+// campaign IDs, simulation model versions, and the Arrow schema version.
+// Identical inputs → identical version → no noisy git diffs on every rebuild.
+func contentAddressedVersion(models []contracts.GraphModel) string {
+	h := sha256.New()
+	h.Write([]byte(arrowtelemetry.SchemaName))
+	for _, model := range models {
+		h.Write([]byte(model.CampaignID))
+		if model.SimulationProvenance != nil {
+			h.Write([]byte(model.SimulationProvenance.ModelVersion))
+		}
+	}
+	return "v" + hex.EncodeToString(h.Sum(nil))[:8]
 }
 
 func splitCSV(value string) []string {

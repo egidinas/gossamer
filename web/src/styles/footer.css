@@ -1,0 +1,22 @@
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+  margin-top: 18px;
+  border-top: 1px solid #2c3942;
+  padding-top: 10px;
+  color: #8fa2ad;
+  font-size: 11px;
+}
+
+.site-footer a {
+  color: #8bd0d8;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+}

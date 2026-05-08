@@ -1,6 +1,6 @@
 import { Activity, CalendarDays, FileCheck, Home, ShieldCheck, User } from "lucide-react";
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
-import { api } from "./api";
+import { api, invalidateCaches } from "./api";
 import type { BusVirtualizationTap, Campaign, CommandAuthorityState, CommandCenterFAT, EvidenceReport, GraphModel, Manifest, SourceCatalogue, SupervisorOverview, TileCampaignManifest, Topology } from "./types";
 import { LandingView } from "./views/LandingView";
 
@@ -153,6 +153,7 @@ export function App() {
     api.currentBundle()
       .then((bundle) => {
         if (cancelled) return;
+        invalidateCaches(bundle.data_version);
         setManifest({
           ...bootManifest,
           generated_at: bundle.generated_at,

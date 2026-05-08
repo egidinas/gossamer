@@ -1,0 +1,300 @@
+{
+  "campaign_id": "command_center_fat",
+  "title": "Command Center FAT operator graph wall",
+  "graph_shell_path": "/data/current/campaigns/command_center_fat/graph-shell.json",
+  "manifest_path": "/data/current/campaigns/command_center_fat/manifest.json",
+  "time_range": {
+    "start": "2025-12-04T00:00:00Z",
+    "end": "2026-02-26T00:00:00Z",
+    "anchor": "2026-01-15T10:00:00Z",
+    "range_seconds": 7257600,
+    "mode": "absolute_fixture",
+    "source": "command_center_fat"
+  },
+  "replay_speed": "wall clock replay cursor",
+  "levels": [
+    {
+      "id": "minute",
+      "label": "Minute",
+      "resolution": "minute",
+      "duration_ms": 60000,
+      "max_points": 4200,
+      "decimation_mode": "viewport_lttb_seed"
+    }
+  ],
+  "cards": [
+    {
+      "card_id": "cc.alpha.lane",
+      "title": "Alpha chamber FAT lane",
+      "render_kind": "line",
+      "include_markers": true,
+      "unit": "degC",
+      "axis_policy": "temperature_c",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "cc.alpha.command_deg_c",
+          "label": "Command",
+          "unit": "degC",
+          "source": "thermal_program",
+          "source_family": "thermal_program",
+          "kind": "command",
+          "category": "command",
+          "role": "command",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        },
+        {
+          "id": "cc.alpha.ghost_deg_c",
+          "label": "Ghost",
+          "unit": "degC",
+          "source": "thermal_program",
+          "source_family": "thermal_program",
+          "kind": "ghost",
+          "category": "ghost",
+          "role": "ghost",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        },
+        {
+          "id": "cc.alpha.chamber_deg_c",
+          "label": "Chamber air",
+          "unit": "degC",
+          "source": "facility_thermal",
+          "source_family": "facility_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        },
+        {
+          "id": "cc.alpha.dut_deg_c",
+          "label": "DUT",
+          "unit": "degC",
+          "source": "dut_thermal",
+          "source_family": "dut_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "dut",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        }
+      ]
+    },
+    {
+      "card_id": "cc.bravo.lane",
+      "title": "Bravo chamber FAT lane",
+      "render_kind": "line",
+      "include_markers": true,
+      "unit": "degC",
+      "axis_policy": "temperature_c",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "cc.bravo.command_deg_c",
+          "label": "Command",
+          "unit": "degC",
+          "source": "thermal_program",
+          "source_family": "thermal_program",
+          "kind": "command",
+          "category": "command",
+          "role": "command",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        },
+        {
+          "id": "cc.bravo.ghost_deg_c",
+          "label": "Ghost",
+          "unit": "degC",
+          "source": "thermal_program",
+          "source_family": "thermal_program",
+          "kind": "ghost",
+          "category": "ghost",
+          "role": "ghost",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        },
+        {
+          "id": "cc.bravo.chamber_deg_c",
+          "label": "Chamber air",
+          "unit": "degC",
+          "source": "facility_thermal",
+          "source_family": "facility_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        },
+        {
+          "id": "cc.bravo.dut_deg_c",
+          "label": "DUT",
+          "unit": "degC",
+          "source": "dut_thermal",
+          "source_family": "dut_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "dut",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        }
+      ]
+    },
+    {
+      "card_id": "cc.charlie.lane",
+      "title": "Charlie chamber FAT lane",
+      "render_kind": "line",
+      "include_markers": true,
+      "unit": "degC",
+      "axis_policy": "temperature_c",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "cc.charlie.command_deg_c",
+          "label": "Command",
+          "unit": "degC",
+          "source": "thermal_program",
+          "source_family": "thermal_program",
+          "kind": "command",
+          "category": "command",
+          "role": "command",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        },
+        {
+          "id": "cc.charlie.ghost_deg_c",
+          "label": "Ghost",
+          "unit": "degC",
+          "source": "thermal_program",
+          "source_family": "thermal_program",
+          "kind": "ghost",
+          "category": "ghost",
+          "role": "ghost",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        },
+        {
+          "id": "cc.charlie.chamber_deg_c",
+          "label": "Chamber air",
+          "unit": "degC",
+          "source": "facility_thermal",
+          "source_family": "facility_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        },
+        {
+          "id": "cc.charlie.dut_deg_c",
+          "label": "DUT",
+          "unit": "degC",
+          "source": "dut_thermal",
+          "source_family": "dut_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "dut",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        }
+      ]
+    },
+    {
+      "card_id": "cc.delta.lane",
+      "title": "Delta chamber FAT lane",
+      "render_kind": "line",
+      "include_markers": true,
+      "unit": "degC",
+      "axis_policy": "temperature_c",
+      "tile_endpoint": "",
+      "latest_endpoint": "",
+      "collapsible": true,
+      "default_expanded": true,
+      "supports_time_zoom": true,
+      "supports_y_zoom": true,
+      "signals": [
+        {
+          "id": "cc.delta.command_deg_c",
+          "label": "Command",
+          "unit": "degC",
+          "source": "thermal_program",
+          "source_family": "thermal_program",
+          "kind": "command",
+          "category": "command",
+          "role": "command",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        },
+        {
+          "id": "cc.delta.ghost_deg_c",
+          "label": "Ghost",
+          "unit": "degC",
+          "source": "thermal_program",
+          "source_family": "thermal_program",
+          "kind": "ghost",
+          "category": "ghost",
+          "role": "ghost",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        },
+        {
+          "id": "cc.delta.chamber_deg_c",
+          "label": "Chamber air",
+          "unit": "degC",
+          "source": "facility_thermal",
+          "source_family": "facility_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "facility",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        },
+        {
+          "id": "cc.delta.dut_deg_c",
+          "label": "DUT",
+          "unit": "degC",
+          "source": "dut_thermal",
+          "source_family": "dut_thermal",
+          "kind": "measurement",
+          "category": "actual",
+          "role": "actual",
+          "subsystem": "dut",
+          "axis_id": "temperature_c",
+          "section_id": "command_center_lanes"
+        }
+      ]
+    }
+  ],
+  "source_fixture_version": "gossamer.telemetry.arrow.v2"
+}

@@ -4,10 +4,10 @@ const baseURL = process.env.GOSSAMER_HOSTED_URL || "https://gossamer.jmeyer.spac
 const expectedDataVersion = process.env.GOSSAMER_EXPECT_DATA_VERSION || "";
 
 const routes = [
-  ["landing", "#landing", 0, "Complete Operator Surfaces"],
-  ["acceptance", "#acceptance", 8, "Thermal Chamber FAT -"],
-  ["command-center", "#command-center-fat", 4, "Command Center FAT"],
-  ["qualification", "#qualification", 12, "TVac Qualification -"],
+  { name: "landing", hash: "#landing", expectedGraphs: 0, textNeedle: "Complete Operator Surfaces", minReadouts: 0 },
+  { name: "acceptance", hash: "#acceptance", expectedGraphs: 8, textNeedle: "Thermal Chamber FAT -", minReadouts: 10 },
+  { name: "command-center", hash: "#command-center-fat", expectedGraphs: 4, textNeedle: "Command Center FAT", minReadouts: 8 },
+  { name: "qualification", hash: "#qualification", expectedGraphs: 12, textNeedle: "TVac Qualification -", minReadouts: 12 },
 ];
 
 async function launchBrowser() {
@@ -53,7 +53,7 @@ try {
     failedRequests.push(`${request.url()} ${request.failure()?.errorText}`);
   });
 
-  for (const [name, hash, expectedGraphs, textNeedle] of routes) {
+  for (const { name, hash, expectedGraphs, textNeedle, minReadouts } of routes) {
     await page.goto(url(hash), { waitUntil: "networkidle", timeout: 60000 });
     await page.locator(".shell").waitFor({ state: "visible", timeout: 30000 });
     await page.getByText(textNeedle, { exact: false }).first().waitFor({ timeout: 30000 });
@@ -63,6 +63,20 @@ try {
       await page.waitForFunction(
         (minimumGraphs) => document.querySelectorAll("canvas").length >= minimumGraphs,
         expectedGraphs,
+        { timeout: 30000 }
+      );
+    }
+
+    if (minReadouts > 0) {
+      // Readouts populate after tiles fetch and the animated replay cursor reaches the data window.
+      await page.waitForFunction(
+        (minimum) => {
+          const values = [...document.querySelectorAll(".graph-card-legend-rail em")]
+            .map((el) => (el.textContent ?? "").trim())
+            .filter((v) => v && v !== "-");
+          return values.length >= minimum;
+        },
+        minReadouts,
         { timeout: 30000 }
       );
     }
@@ -97,7 +111,10 @@ try {
           };
         })
         .filter((item) => item.fontSize > 42 && item.height > 20);
-      return { loadingText, canvases, largeText };
+      const readouts = [...document.querySelectorAll(".graph-card-legend-rail em")]
+        .map((element) => (element.textContent ?? "").trim())
+        .filter((value) => value && value !== "-");
+      return { loadingText, canvases, largeText, readouts };
     });
 
     const graphCount = routeState.canvases.length;
@@ -115,8 +132,11 @@ try {
     if (name === "command-center" && routeState.largeText.length > 0) {
       throw new Error(`${name}: oversized operator text: ${JSON.stringify(routeState.largeText.slice(0, 4))}`);
     }
+    if (routeState.readouts.length < minReadouts) {
+      throw new Error(`${name}: expected at least ${minReadouts} populated legend readouts, got ${routeState.readouts.length}`);
+    }
 
-    console.log(`${name}: ok graphs=${graphCount}`);
+    console.log(`${name}: ok graphs=${graphCount} readouts=${routeState.readouts.length}`);
   }
 
   if (pageErrors.length > 0) {

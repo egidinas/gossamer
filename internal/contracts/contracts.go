@@ -523,6 +523,7 @@ type GraphTileManifest struct {
 	GraphWallID          string                `json:"graph_wall_id"`
 	GeneratedAt          string                `json:"generated_at"`
 	SourceMode           string                `json:"source_mode"`
+	SourceFixtureVersion string                `json:"source_fixture_version,omitempty"`
 	TimeRange            GraphWallTimeRange    `json:"time_range"`
 	TilePolicy           GraphTilePolicy       `json:"tile_policy"`
 	Levels               []TileLevel           `json:"levels"`
@@ -611,17 +612,18 @@ type TileBundleManifest struct {
 }
 
 type TileCampaignManifest struct {
-	CampaignID        string             `json:"campaign_id"`
-	Title             string             `json:"title"`
-	GraphShellPath    string             `json:"graph_shell_path"`
-	ManifestPath      string             `json:"manifest_path"`
-	TimeRange         GraphWallTimeRange `json:"time_range"`
-	ReplaySpeed       string             `json:"replay_speed"`
-	Levels            []TileLevel        `json:"levels"`
-	Cards             []GraphTileCardRef `json:"cards"`
-	EvidenceLinks     []EvidenceLink     `json:"evidence_links,omitempty"`
-	CompressedBytes   int64              `json:"compressed_bytes,omitempty"`
-	UncompressedBytes int64              `json:"uncompressed_bytes,omitempty"`
+	CampaignID           string             `json:"campaign_id"`
+	Title                string             `json:"title"`
+	GraphShellPath       string             `json:"graph_shell_path"`
+	ManifestPath         string             `json:"manifest_path"`
+	TimeRange            GraphWallTimeRange `json:"time_range"`
+	ReplaySpeed          string             `json:"replay_speed"`
+	Levels               []TileLevel        `json:"levels"`
+	Cards                []GraphTileCardRef `json:"cards"`
+	EvidenceLinks        []EvidenceLink     `json:"evidence_links,omitempty"`
+	CompressedBytes      int64              `json:"compressed_bytes,omitempty"`
+	UncompressedBytes    int64              `json:"uncompressed_bytes,omitempty"`
+	SourceFixtureVersion string             `json:"source_fixture_version,omitempty"`
 }
 
 type TileFile struct {

@@ -13,7 +13,7 @@ import type {
   TileBundleManifest,
   Topology
 } from "./types";
-import { arrowTile } from "./arrowTiles";
+import { arrowTile, invalidateArrowCache } from "./arrowTiles";
 
 async function getJSON<T>(path: string): Promise<T> {
   const response = await fetch(path);
@@ -34,9 +34,19 @@ async function getJSON<T>(path: string): Promise<T> {
 
 const tileManifestCache = new Map<string, Promise<GraphTileManifest>>();
 const graphShellCache = new Map<string, Promise<GraphModel>>();
+let currentDataVersion = "";
+
+export function invalidateCaches(dataVersion: string) {
+  if (dataVersion !== currentDataVersion) {
+    currentDataVersion = dataVersion;
+    tileManifestCache.clear();
+    graphShellCache.clear();
+    invalidateArrowCache();
+  }
+}
 
 function cachedTileManifest(id: string) {
-  const key = id;
+  const key = `${id}@${currentDataVersion}`;
   let cached = tileManifestCache.get(key);
   if (!cached) {
     cached = getJSON<GraphTileManifest>(`/data/current/campaigns/${id}/manifest.json`);
@@ -46,10 +56,11 @@ function cachedTileManifest(id: string) {
 }
 
 function cachedGraphShell(id: string) {
-  let cached = graphShellCache.get(id);
+  const key = `${id}@${currentDataVersion}`;
+  let cached = graphShellCache.get(key);
   if (!cached) {
     cached = getJSON<GraphModel>(`/data/current/campaigns/${id}/graph-shell.json`);
-    graphShellCache.set(id, cached);
+    graphShellCache.set(key, cached);
   }
   return cached;
 }
@@ -71,7 +82,7 @@ export const api = {
     const [manifest, graph] = await Promise.all([cachedTileManifest(id), cachedGraphShell(id)]);
     const card = manifest.cards.find((candidate) => candidate.card_id === cardID);
     if (!card) throw new Error(`unknown card ${cardID}`);
-    return arrowTile(id, card, graph, level, t0, t1);
+    return arrowTile(id, card, manifest, graph, level, t0, t1, currentDataVersion || undefined);
   },
   commandAuthority: () => getJSON<CommandAuthorityState>("/api/command-authority"),
   evidenceReport: (id: string) => getJSON<EvidenceReport>(`/api/campaigns/${id}/evidence-report`),

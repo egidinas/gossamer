@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/egidinas/gossamer/internal/arrowtelemetry"
 	"github.com/egidinas/gossamer/internal/contracts"
 )
 
@@ -182,6 +183,14 @@ func TestWriteBundleCreatesStaticManifestAndCompressedTiles(t *testing.T) {
 	}
 	if campaign.CompressedBytes != 0 || campaign.UncompressedBytes != 0 {
 		t.Fatalf("legacy tile byte counts should be zero: compressed=%d uncompressed=%d", campaign.CompressedBytes, campaign.UncompressedBytes)
+	}
+	// CI guard: bundle and per-campaign manifests must carry the Arrow schema version so
+	// frontend can verify without a hardcoded string in TypeScript.
+	if manifest.SourceFixtureVersion != arrowtelemetry.SchemaName {
+		t.Errorf("bundle source_fixture_version = %q, want %q", manifest.SourceFixtureVersion, arrowtelemetry.SchemaName)
+	}
+	if campaign.SourceFixtureVersion != arrowtelemetry.SchemaName {
+		t.Errorf("campaign source_fixture_version = %q, want %q", campaign.SourceFixtureVersion, arrowtelemetry.SchemaName)
 	}
 }
 

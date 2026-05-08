@@ -295,5 +295,6 @@
         }
       ]
     }
-  ]
+  ],
+  "source_fixture_version": "gossamer.telemetry.arrow.v2"
 }
