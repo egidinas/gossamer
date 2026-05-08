@@ -1,8 +1,4 @@
-/* ── Command Center: all lanes full-width, equal height ─────── */
-.operator-graph-wall[data-campaign-id="command_center_fat"] .operator-wall-cards {
-  grid-template-columns: minmax(0, 1fr);
-}
-
+/* ── Command Center: equal-height lanes ─────────────────────── */
 /* clamp scales with viewport so all 4 lanes together fill ~85% svh at any size */
 .operator-graph-wall[data-campaign-id="command_center_fat"] .graph-wall-card {
   --plot-height: clamp(200px, calc((100svh - 220px) / 4), 600px);

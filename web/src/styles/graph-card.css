@@ -119,10 +119,18 @@
 /* ── Plot shell ────────────────────────────────────────────── */
 .graph-card-plot-shell {
   position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
   height: var(--plot-height);
   background: var(--color-bg-plot);
   border-bottom: 1px solid var(--color-border-default);
+  overflow: hidden;
+}
+
+/* uPlot host: fills remaining height after the inline title row */
+.graph-card-uplot {
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
 }
 
