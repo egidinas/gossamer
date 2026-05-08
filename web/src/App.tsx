@@ -149,9 +149,10 @@ export function App() {
   }, [route, activeCampaign]);
 
   useEffect(() => {
-    scheduleIdle(() => {
-      api.currentBundle()
+    let cancelled = false;
+    api.currentBundle()
       .then((bundle) => {
+        if (cancelled) return;
         setManifest({
           ...bootManifest,
           generated_at: bundle.generated_at,
@@ -160,7 +161,9 @@ export function App() {
         setCampaigns(bundle.campaigns.map(campaignFromTileManifest));
       })
       .catch((err: Error) => setError(err.message));
-    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -203,11 +206,11 @@ export function App() {
   const graphReady = graph?.campaign_id === requestedCampaign;
   const reportReady = report?.campaign_id === requestedCampaign;
   const landingReady = campaigns.length > 0;
-  const campaignRouteReady = landingReady && !!selectedCampaign && !!graph && graphReady;
+  const campaignRouteReady = !!selectedCampaign && !!graph && graphReady;
   const routeReady =
     route === "landing" ? landingReady :
     route === "profile" ? true :
-    route === "command-center-fat" ? landingReady && !!commandCenterFAT :
+    route === "command-center-fat" ? !!commandCenterFAT :
     route === "mission-map" ? landingReady && !!topology :
     route === "sources" ? landingReady && !!sources :
     route === "commands" ? landingReady && !!commands :
@@ -311,14 +314,6 @@ function hashRoute(): Route {
 
 function routeLabel(route: Route): string {
   return routes.find((item) => item.id === route)?.label ?? route;
-}
-
-function scheduleIdle(work: () => void) {
-  if ("requestIdleCallback" in window) {
-    window.requestIdleCallback(work, { timeout: 800 });
-    return;
-  }
-  globalThis.setTimeout(work, 0);
 }
 
 function campaignFromTileManifest(tile: TileCampaignManifest): Campaign {

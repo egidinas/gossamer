@@ -1294,7 +1294,7 @@ button {
 }
 
 .operator-graph-wall[data-campaign-id="command_center_fat"] .graph-wall-card {
-  --plot-height: clamp(190px, calc((100svh - 300px) / 4), 520px);
+  --plot-height: clamp(190px, calc((100svh - 235px) / 4), 520px);
   grid-template-columns: minmax(0, 1fr) clamp(150px, 10vw, 260px);
 }
 
@@ -2358,24 +2358,26 @@ code {
 
 .command-center-view {
   display: grid;
-  gap: 18px;
+  gap: 10px;
 }
 
 .command-center-header {
-  align-items: end;
+  align-items: start;
   display: grid;
-  gap: 18px;
-  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  grid-template-columns: minmax(440px, 1fr) minmax(360px, 500px);
 }
 
 .command-center-header h2 {
-  font-size: clamp(28px, 5vw, 58px);
-  margin: 4px 0 6px;
+  font-size: clamp(26px, 2.4vw, 34px);
+  line-height: 1.02;
+  margin: 2px 0 5px;
 }
 
 .command-center-header p {
   color: #a7bac7;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.35;
   max-width: 880px;
   margin: 0;
 }
@@ -2389,8 +2391,8 @@ code {
 .command-center-kpis div {
   background: #08111b;
   border: 1px solid rgba(129, 173, 197, 0.22);
-  border-radius: 8px;
-  padding: 10px;
+  border-radius: 6px;
+  padding: 7px 8px;
 }
 
 .command-center-kpis span,
@@ -2405,8 +2407,8 @@ code {
 .command-center-kpis strong {
   color: #f3f8ff;
   display: block;
-  font-size: 18px;
-  margin-top: 4px;
+  font-size: 16px;
+  margin-top: 2px;
 }
 
 .fat-timeline-shell {
@@ -2994,6 +2996,14 @@ code {
 }
 
 @media (max-width: 1200px) {
+  .command-center-header {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .command-center-kpis {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .operator-graph-wall[data-campaign-id="command_center_fat"] .graph-wall-card {
     --plot-height: clamp(170px, calc((100svh - 240px) / 4), 260px);
     grid-template-columns: minmax(0, 1fr) 136px;
@@ -3001,6 +3011,18 @@ code {
 }
 
 @media (max-width: 820px) {
+  .command-center-header {
+    gap: 10px;
+  }
+
+  .command-center-header h2 {
+    font-size: 25px;
+  }
+
+  .command-center-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .operator-graph-wall[data-campaign-id="command_center_fat"] {
     padding-bottom: 72px;
   }
