@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "id": "gossamer_tile_bundle_20260508T060705Z",
-  "data_version": "20260508T060705Z",
-  "generated_at": "2026-05-08T06:07:05Z",
+  "id": "gossamer_tile_bundle_20260508T063652Z",
+  "data_version": "20260508T063652Z",
+  "generated_at": "2026-05-08T06:36:53Z",
   "source_fixture_version": "graph_models",
   "time_range": {
     "start": "2026-01-15T10:00:00Z",

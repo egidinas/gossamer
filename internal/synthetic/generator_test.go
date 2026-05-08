@@ -1472,13 +1472,27 @@ func TestBuildProducesCommandCenterTelemetryFromPhysicsSimulation(t *testing.T) 
 				t.Fatalf("%s points = %d, want physics-density trace", id, len(signalValues[id]))
 			}
 		}
-		for _, point := range signalValues[chamberID] {
-			if point.t.After(now) {
-				t.Fatalf("%s includes actual chamber data after now: %s", chamberID, point.t.Format(time.RFC3339))
-			}
+		if !hasPointAfter(signalValues[chamberID], now) {
+			t.Fatalf("%s has no tiled chamber physics trace after now", chamberID)
+		}
+		if !hasPointAfter(signalValues[dutID], now) {
+			t.Fatalf("%s has no tiled DUT physics trace after now", dutID)
 		}
 		if !hasPointAfter(signalValues[ghostID], now) {
 			t.Fatalf("%s has no ghost forecast after now", ghostID)
+		}
+		for _, run := range lane.Runs {
+			runStart := mustTime(run.Start)
+			runEnd := mustTime(run.End)
+			if runEnd.Before(now) {
+				continue
+			}
+			if countPointsBetween(signalValues[chamberID], runStart, runEnd) < 60 {
+				t.Fatalf("%s has too few chamber physics points for tiled run %s", chamberID, run.ID)
+			}
+			if countPointsBetween(signalValues[dutID], runStart, runEnd) < 60 {
+				t.Fatalf("%s has too few DUT physics points for tiled run %s", dutID, run.ID)
+			}
 		}
 		if meanAbsoluteDelta(signalValues[commandID], signalValues[chamberID]) < 0.01 {
 			t.Fatalf("%s chamber trace is too close to command to prove physics response", chamberID)
@@ -1487,6 +1501,19 @@ func TestBuildProducesCommandCenterTelemetryFromPhysicsSimulation(t *testing.T) 
 			t.Fatalf("%s DUT trace does not show thermal lag versus chamber", dutID)
 		}
 	}
+}
+
+func countPointsBetween(points []struct {
+	t time.Time
+	v float64
+}, start, end time.Time) int {
+	count := 0
+	for _, point := range points {
+		if !point.t.Before(start) && !point.t.After(end) {
+			count++
+		}
+	}
+	return count
 }
 
 func sameUTCDate(a, b time.Time) bool {

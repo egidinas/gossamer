@@ -1282,7 +1282,7 @@ function resampleSeries(tile: GraphTile, series: TileSeries, xValues: number[], 
   if (!points.length) return xValues.map(() => null);
 
   const stepped = series.step || series.render_kind === "counter" || series.kind === "counter" || series.render_kind === "swimlane";
-  const isFutureVisible = series.role === "ghost";
+  const isFutureVisible = series.role === "ghost" || commandCenterProjectedSeries(tile, series);
   let cursor = 0;
   return xValues.map((x) => {
     if (Number.isFinite(currentTimeMs) && x > (currentTimeMs as number) && !isFutureVisible) return null;
@@ -1294,6 +1294,10 @@ function resampleSeries(tile: GraphTile, series: TileSeries, xValues: number[], 
     const ratio = (x - current.t) / (next.t - current.t);
     return current.v + (next.v - current.v) * Math.max(0, Math.min(1, ratio));
   });
+}
+
+function commandCenterProjectedSeries(tile: GraphTile, series: TileSeries) {
+  return tile.campaign_id === "command_center_fat" && (series.role === "actual" || series.role === "command");
 }
 
 function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphModel, currentTimeMs?: number, hoverTimeMs?: number, timeRange?: TimeRange) {
@@ -1514,7 +1518,7 @@ function legendReadouts(tile: GraphTile, visibleSignals: Array<{ id: string; lab
   const visible = new Set(visibleSignals.map((signal) => signal.id));
   tile.series.forEach((series) => {
     if (!visible.has(series.id)) return;
-    if (Number.isFinite(timeMs) && Number.isFinite(currentTimeMs) && (timeMs as number) > (currentTimeMs as number) && series.role !== "ghost") return;
+    if (Number.isFinite(timeMs) && Number.isFinite(currentTimeMs) && (timeMs as number) > (currentTimeMs as number) && series.role !== "ghost" && !commandCenterProjectedSeries(tile, series)) return;
     if (series.spans?.length) {
       const state = stateAt(series, timeMs);
       if (state) readouts.set(series.id, state);

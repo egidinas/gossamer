@@ -865,15 +865,15 @@
       "default_window_end": "2026-01-29T00:00:00Z",
       "range_seconds": 7257600,
       "clamp": true,
-      "latest_policy": "actual until command center now, ghost after cursor"
+      "latest_policy": "tiled as-run physics traces across complete command-center horizon"
     },
     "execution": {
       "mode": "simulated_live_command_center",
       "now": "2026-01-15T10:00:00Z",
       "percent_complete": 50.496,
       "acceleration": "wall clock replay cursor",
-      "past_data_policy": "physics as-run traces are emitted only before now",
-      "future_data_policy": "dashed ghost traces and planned FT markers after now",
+      "past_data_policy": "physics as-run traces are tiled from the source FAT simulation",
+      "future_data_policy": "projected chamber and DUT traces reuse the source physics simulation with dashed ghost profile and planned FT markers",
       "completed_cycles": 21,
       "target_cycles": 49,
       "current_cycle": 0,

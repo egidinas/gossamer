@@ -1179,7 +1179,7 @@ func buildCommandCenterGraphModel(env contracts.Envelope, commandCenter contract
 			DefaultWindowEnd:   commandCenter.WindowEnd,
 			RangeSeconds:       int(windowEnd.Sub(windowStart).Seconds()),
 			Clamp:              true,
-			LatestPolicy:       "actual until command center now, ghost after cursor",
+			LatestPolicy:       "tiled as-run physics traces across complete command-center horizon",
 		},
 		Axes: []contracts.GraphYAxis{
 			{ID: "temperature_c", Label: "Temperature", Units: "degC", Scale: "linear", Min: -55, Max: 82, Side: "left", Format: "fixed_1"},
@@ -1189,8 +1189,8 @@ func buildCommandCenterGraphModel(env contracts.Envelope, commandCenter contract
 			Now:              commandCenter.Now,
 			PercentComplete:  round(100 * windowPercent(FixedTime, windowStart, windowEnd)),
 			Acceleration:     "wall clock replay cursor",
-			PastDataPolicy:   "physics as-run traces are emitted only before now",
-			FutureDataPolicy: "dashed ghost traces and planned FT markers after now",
+			PastDataPolicy:   "physics as-run traces are tiled from the source FAT simulation",
+			FutureDataPolicy: "projected chamber and DUT traces reuse the source physics simulation with dashed ghost profile and planned FT markers",
 			CompletedCycles:  completedCommandCenterRuns(commandCenter),
 			TargetCycles:     totalCommandCenterRuns(commandCenter),
 			CurrentCycle:     0,
@@ -1283,12 +1283,10 @@ func buildCommandCenterGraphModel(env contracts.Envelope, commandCenter contract
 					commandID: round(command),
 					ghostID:   round(ghost),
 				}
-				if !t.After(FixedTime) {
-					chamberTrace.Values = append(chamberTrace.Values, graphPointAt(t, chamber))
-					dutTrace.Values = append(dutTrace.Values, graphPointAt(t, dut))
-					signalValues[chamberID] = round(chamber)
-					signalValues[dutID] = round(dut)
-				}
+				chamberTrace.Values = append(chamberTrace.Values, graphPointAt(t, chamber))
+				dutTrace.Values = append(dutTrace.Values, graphPointAt(t, dut))
+				signalValues[chamberID] = round(chamber)
+				signalValues[dutID] = round(dut)
 				samples = append(samples, contracts.TelemetrySample{Timestamp: t.Format(time.RFC3339), Quality: sample.Quality, Signals: signalValues, States: map[string]string{"command_center_lane": lane.ID, "command_center_run": run.ID}})
 			}
 		}
