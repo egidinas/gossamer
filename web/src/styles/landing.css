@@ -111,9 +111,9 @@
 
 .landing-experience-card {
   display: grid;
-  grid-template-rows: minmax(128px, 0.72fr) auto;
+  grid-template-rows: minmax(180px, 0.75fr) auto;
   min-width: 0;
-  min-height: 250px;
+  min-height: 300px;
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-3);
   overflow: hidden;

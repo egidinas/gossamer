@@ -32,7 +32,7 @@ body {
 
 button, select { font: inherit; }
 
-.shell { min-height: 100vh; padding: var(--space-5); }
+.shell { min-height: 100vh; padding: var(--space-5); display: grid; align-content: start; }
 
 /* ── Type primitives ──────────────────────────────────────── */
 h1, h2, p { margin: 0; }

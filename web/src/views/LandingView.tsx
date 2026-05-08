@@ -45,6 +45,11 @@ export function LandingView({ manifest, campaigns }: { manifest: Manifest; campa
             Source provenance, graph semantics, command authority, and evidence links are explicit so a TVac or factory
             acceptance campaign can be followed by engineers and stakeholders, then traced back to reportable proof.
           </p>
+          <div className="hero-actions">
+            <a href="#acceptance">Acceptance FAT →</a>
+            <a href="#command-center-fat">Operator Center →</a>
+            <a href="#qualification">Qualification TVac →</a>
+          </div>
           <div className="landing-data-flow" aria-label="data flow">
             <span><Database size={15} /> Facility/DUT nodes</span>
             <span><CalendarDays size={15} /> Chamber schedule</span>

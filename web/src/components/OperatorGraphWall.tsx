@@ -350,14 +350,16 @@ function GraphWallCardView({
   const visibleSignals = orderLegendSignals(cardRef?.signals ?? card.signals).slice(0, renderKind === "swimlane" ? 10 : 7);
   const readouts = tile ? legendReadouts(tile, visibleSignals, readoutTimeMs, currentTimeMs) : new Map<string, string>();
   const cardRefEl = useRef<HTMLElement | null>(null);
-  const minHeight = renderKind === "swimlane" ? 190 : renderKind === "event_rail" ? 170 : 190;
+  const isPrimary = card.role === "primary" || card.placement.pinned;
+  const defaultPlotHeight = isPrimary ? 300 : renderKind === "swimlane" ? 180 : renderKind === "event_rail" ? 150 : 220;
+  const minHeight = renderKind === "swimlane" ? 150 : renderKind === "event_rail" ? 120 : isPrimary ? 240 : 180;
   const maxHeight = card.id === "thermal_program" ? 760 : 560;
   const style = height ? ({ "--plot-height": `${height}px` } as CSSProperties) : undefined;
   const startResize = (event: ReactPointerEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
     const startY = event.clientY;
-    const startHeight = cardRefEl.current?.getBoundingClientRect().height ?? height ?? (card.id === "thermal_program" ? 560 : 260);
+    const startHeight = cardRefEl.current?.getBoundingClientRect().height ?? height ?? defaultPlotHeight;
     const pointerID = event.pointerId;
     event.currentTarget.setPointerCapture?.(pointerID);
     const move = (moveEvent: PointerEvent) => {
@@ -381,6 +383,7 @@ function GraphWallCardView({
       data-card-id={card.id}
       data-card-kind={card.kind}
       data-render-kind={renderKind}
+      data-card-priority={card.role === "primary" || card.placement.pinned ? "primary" : "secondary"}
       style={style}
     >
       <div className="graph-card-label-rail">
