@@ -1240,11 +1240,19 @@ func TestBuildProducesCommandCenterFATWorkdayLadder(t *testing.T) {
 			}
 			reset := mustTime(run.ResetStart)
 			resetEnd := mustTime(run.ResetEnd)
-			if (end.Weekday() == time.Saturday || end.Weekday() == time.Sunday) && reset.Weekday() != time.Monday {
-				t.Fatalf("%s weekend end reset = %s, want Monday", run.ID, run.ResetStart)
+			breakdown := mustTime(run.BreakdownStart)
+			breakdownEnd := mustTime(run.BreakdownEnd)
+			if (end.Weekday() == time.Saturday || end.Weekday() == time.Sunday) && breakdown.Weekday() != time.Monday {
+				t.Fatalf("%s weekend end breakdown = %s, want Monday", run.ID, run.BreakdownStart)
 			}
-			if !isBusinessHour(reset) || !isBusinessHour(resetEnd.Add(-time.Nanosecond)) {
-				t.Fatalf("%s breakdown/reset window outside business hours: %s..%s", run.ID, run.ResetStart, run.ResetEnd)
+			if !isBusinessHour(breakdown) || !isBusinessHour(breakdownEnd.Add(-time.Nanosecond)) || !isBusinessHour(reset) || !isBusinessHour(resetEnd.Add(-time.Nanosecond)) {
+				t.Fatalf("%s breakdown/reset window outside business hours: breakdown %s..%s reset %s..%s", run.ID, run.BreakdownStart, run.BreakdownEnd, run.ResetStart, run.ResetEnd)
+			}
+			if got := addBusinessDuration(breakdown, 3*time.Hour); !got.Equal(breakdownEnd) {
+				t.Fatalf("%s breakdown end = %s, want 3 business hours after %s (%s)", run.ID, run.BreakdownEnd, run.BreakdownStart, got.Format(time.RFC3339))
+			}
+			if !breakdownEnd.Equal(reset) {
+				t.Fatalf("%s reset start = %s, want breakdown end %s", run.ID, run.ResetStart, run.BreakdownEnd)
 			}
 			if got := addBusinessDuration(reset, 3*time.Hour); !got.Equal(resetEnd) {
 				t.Fatalf("%s reset end = %s, want 3 business hours after %s (%s)", run.ID, run.ResetEnd, run.ResetStart, got.Format(time.RFC3339))
@@ -1397,13 +1405,31 @@ func TestBuildProducesCommandCenterFATGraphWallContract(t *testing.T) {
 	}
 
 	passGates := 0
+	markersByID := map[string]contracts.GraphMarker{}
 	for _, marker := range model.HeroGraph.Markers {
+		markersByID[marker.ID] = marker
 		if marker.Kind == "functional_gate" && marker.Result == "pass" {
 			passGates++
 		}
 	}
 	if passGates < 24 {
 		t.Fatalf("FT pass gate markers = %d, want at least 24", passGates)
+	}
+	for _, lane := range model.Lanes {
+		for _, run := range lane.Runs {
+			breakdown := markersByID[run.ID+"-operator-breakdown-start"]
+			if breakdown.Timestamp != run.BreakdownStart || breakdown.Kind != "operator_breakdown" || breakdown.Role != "operator_interaction" {
+				t.Fatalf("%s breakdown marker = %#v, want timestamp %s operator interaction", run.ID, breakdown, run.BreakdownStart)
+			}
+			reset := markersByID[run.ID+"-operator-reset-start"]
+			if reset.Timestamp != run.ResetStart || reset.Kind != "operator_reset" || reset.Role != "operator_interaction" {
+				t.Fatalf("%s reset marker = %#v, want timestamp %s operator interaction", run.ID, reset, run.ResetStart)
+			}
+			ready := markersByID[run.ID+"-operator-reset-ready"]
+			if ready.Timestamp != run.ResetEnd || ready.Kind != "operator_reset_ready" || ready.Role != "operator_interaction" {
+				t.Fatalf("%s reset ready marker = %#v, want timestamp %s operator interaction", run.ID, ready, run.ResetEnd)
+			}
+		}
 	}
 }
 

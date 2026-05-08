@@ -3,7 +3,7 @@ import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from
 import uPlot from "uplot";
 import "uplot/dist/uPlot.min.css";
 import { api } from "../api";
-import type { GraphTile, GraphTileCardRef, GraphTileManifest, GraphWallCard, GraphWallModel, HeroGraphModel, TileSeries } from "../types";
+import type { GraphMarker, GraphTile, GraphTileCardRef, GraphTileManifest, GraphWallCard, GraphWallModel, HeroGraphModel, TileSeries } from "../types";
 
 type Props = {
   campaignId: string;
@@ -1323,7 +1323,15 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
     const x2 = left + ((Date.parse(band.end) - start) / span) * width;
     const bandKind = band.kind.toLowerCase();
     const vacuumBand = tile.campaign_id === "tvac_qualification" && (bandKind.includes("vacuum") || tile.card_id.includes("pressure"));
-    ctx.fillStyle = vacuumBand ? "rgba(59,130,246,0.09)" : bandKind.includes("cold") ? "rgba(61,133,198,0.12)" : "rgba(198,119,61,0.11)";
+    ctx.fillStyle = vacuumBand
+      ? "rgba(59,130,246,0.09)"
+      : bandKind.includes("breakdown")
+        ? "rgba(255,112,67,0.17)"
+        : bandKind.includes("reset")
+          ? "rgba(36,214,255,0.15)"
+          : bandKind.includes("cold")
+            ? "rgba(61,133,198,0.12)"
+            : "rgba(198,119,61,0.11)";
     ctx.fillRect(x, top, Math.max(1, x2 - x), height);
   });
   (tile.markers ?? []).forEach((marker) => {
@@ -1332,19 +1340,59 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
     const x = left + ((markerTime - start) / span) * width;
     if (x < left || x > left + width) return;
     const color = markerColor(marker);
+    const operatorMarker = marker.role === "operator_interaction" || marker.kind?.startsWith("operator_");
     const attachedMarker = marker.kind === "functional_gate" || marker.kind === "stability" || marker.kind === "stability_achieved";
     const anchor = attachedMarker ? markerAnchor(plot, tile, markerTime, top, height) : null;
     const anchorY = anchor?.y ?? top + 10;
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
-    ctx.lineWidth = attachedMarker ? 1.6 : 1.1;
-    ctx.setLineDash(marker.role === "interlock" ? [5, 4] : []);
+    ctx.lineWidth = operatorMarker ? 2.2 : attachedMarker ? 1.6 : 1.1;
+    ctx.setLineDash(marker.role === "interlock" ? [5, 4] : marker.kind === "operator_reset_ready" ? [7, 4] : []);
     ctx.beginPath();
     ctx.moveTo(x, attachedMarker ? Math.max(top + 2, anchorY - 42) : top + 2);
     ctx.lineTo(x, top + height - 2);
     ctx.stroke();
     ctx.setLineDash([]);
-    if (attachedMarker) {
+    if (operatorMarker) {
+      const y = top + 18 + (marker.kind === "operator_reset" ? 34 : marker.kind === "operator_reset_ready" ? 68 : 0);
+      ctx.save();
+      ctx.shadowColor = "rgba(0,0,0,0.72)";
+      ctx.shadowBlur = 7;
+      ctx.beginPath();
+      if (marker.kind === "operator_breakdown") {
+        ctx.moveTo(x, y - 9);
+        ctx.lineTo(x + 9, y);
+        ctx.lineTo(x, y + 9);
+        ctx.lineTo(x - 9, y);
+        ctx.closePath();
+      } else if (marker.kind === "operator_reset") {
+        ctx.rect(x - 8, y - 8, 16, 16);
+      } else {
+        ctx.moveTo(x, y - 9);
+        ctx.lineTo(x + 9, y + 7);
+        ctx.lineTo(x - 9, y + 7);
+        ctx.closePath();
+      }
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.lineWidth = 1.4;
+      ctx.strokeStyle = "rgba(2,6,11,0.96)";
+      ctx.stroke();
+      const lines = operatorMarkerLines(marker);
+      ctx.font = "850 12px system-ui, sans-serif";
+      const labelWidth = Math.max(...lines.map((line) => ctx.measureText(line).width)) + 14;
+      const labelHeight = lines.length * 14 + 8;
+      const labelX = Math.max(left + 8, Math.min(left + width - labelWidth - 8, x + 12));
+      const labelY = Math.max(top + 8, Math.min(top + height - labelHeight - 8, y - 12));
+      ctx.fillStyle = "rgba(2,6,11,0.94)";
+      ctx.fillRect(labelX, labelY, labelWidth, labelHeight);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.2;
+      ctx.strokeRect(labelX, labelY, labelWidth, labelHeight);
+      ctx.fillStyle = color;
+      lines.forEach((line, lineIndex) => ctx.fillText(line, labelX + 7, labelY + 15 + lineIndex * 14));
+      ctx.restore();
+    } else if (attachedMarker) {
       ctx.beginPath();
       if (marker.kind === "functional_gate") {
         ctx.moveTo(x, anchorY);
@@ -1422,6 +1470,9 @@ function markerAnchor(plot: uPlot, tile: GraphTile, timeMs: number, top: number,
 }
 
 function markerColor(marker: { role?: string; result?: string; kind?: string }) {
+  if (marker.kind === "operator_breakdown") return "rgba(255,112,67,0.98)";
+  if (marker.kind === "operator_reset") return "rgba(36,214,255,0.98)";
+  if (marker.kind === "operator_reset_ready") return "rgba(146,255,111,0.98)";
   if (marker.role === "interlock" || marker.result === "fail") return "rgba(255,49,95,0.96)";
   if (marker.role === "evidence") return "rgba(176,121,255,0.96)";
   if (marker.kind === "functional_gate") return "rgba(255,176,0,0.98)";
@@ -1429,8 +1480,26 @@ function markerColor(marker: { role?: string; result?: string; kind?: string }) 
   return "rgba(49,214,255,0.95)";
 }
 
+function operatorMarkerLines(marker: GraphMarker) {
+  const kindLabel = marker.kind === "operator_breakdown"
+    ? "BREAKDOWN"
+    : marker.kind === "operator_reset"
+      ? "RESET"
+      : "READY";
+  return [kindLabel, formatMarkerDateTime(marker.timestamp)];
+}
+
+function formatMarkerDateTime(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString(undefined, { weekday: "short", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+}
+
 function shortGateLabel(label: string) {
   return label
+    .replace(/\s+breakdown\s+start$/i, " BD")
+    .replace(/\s+reset\s+start$/i, " RESET")
+    .replace(/\s+reset\s+ready$/i, " READY")
     .replace(/^Stable\s+/i, "STABLE ")
     .replace(/\s+confirmed$/i, "")
     .replace(/^Cycle\s+/i, "C")

@@ -106,7 +106,7 @@ function RunManifest({ run }: { run: CommandCenterRun }) {
       <em>{run.manifest.operator_next}</em>
       <span className="command-center-reset">
         <RotateCw size={12} />
-        reset ready {formatShort(run.reset_end)}
+        breakdown {formatShort(run.breakdown_start)} to reset ready {formatShort(run.reset_end)}
       </span>
     </div>
   );

@@ -766,6 +766,8 @@ export type CommandCenterTestItemManifest = {
   result: string;
   start: string;
   end: string;
+  breakdown_start: string;
+  breakdown_end: string;
   reset_start: string;
   reset_end: string;
 };
@@ -778,6 +780,8 @@ export type CommandCenterRun = {
   result: string;
   start: string;
   end: string;
+  breakdown_start: string;
+  breakdown_end: string;
   reset_start: string;
   reset_end: string;
   manifest: CommandCenterTestItemManifest;

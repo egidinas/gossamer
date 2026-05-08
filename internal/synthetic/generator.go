@@ -1075,10 +1075,10 @@ func buildCommandCenterFAT(env contracts.Envelope, runDuration time.Duration) co
 		for runIndex := 0; runIndex < 256; runIndex++ {
 			start = commandCenterDeconflictStart(start, runDuration, assignedStarts, assignedFinishes)
 			runEnd := start.Add(runDuration)
-			resetStart, resetEnd := commandCenterBreakdownWindow(runEnd, laneIndex, runIndex)
+			breakdownStart, breakdownEnd, resetStart, resetEnd := commandCenterOperatorWindows(runEnd, laneIndex, runIndex)
 			state, result := commandCenterState(start, runEnd)
 			if runEnd.After(dataStart) && start.Before(dataEnd) {
-				runs = append(runs, buildCommandCenterRun(chamber.id, chamber.name, chamber.facility, laneIndex, runIndex, start, runEnd, resetStart, resetEnd, state, result))
+				runs = append(runs, buildCommandCenterRun(chamber.id, chamber.name, chamber.facility, laneIndex, runIndex, start, runEnd, breakdownStart, breakdownEnd, resetStart, resetEnd, state, result))
 			}
 			assignedStarts = append(assignedStarts, start)
 			assignedFinishes = append(assignedFinishes, runEnd)
@@ -1115,26 +1115,28 @@ func buildCommandCenterFAT(env contracts.Envelope, runDuration time.Duration) co
 	}
 }
 
-func buildCommandCenterRun(chamberID, chamberName, facility string, laneIndex, runIndex int, start, end, resetStart, resetEnd time.Time, state, result string) contracts.CommandCenterRun {
+func buildCommandCenterRun(chamberID, chamberName, facility string, laneIndex, runIndex int, start, end, breakdownStart, breakdownEnd, resetStart, resetEnd time.Time, state, result string) contracts.CommandCenterRun {
 	runID := fmt.Sprintf("%s-fat-%02d", chamberID, runIndex+1)
 	article := fmt.Sprintf("DUT %02d-%s", 41+laneIndex*7+runIndex, strings.ToUpper(chamberName[:1]))
 	serial := fmt.Sprintf("DUT-%s-%04d", strings.ToUpper(chamberName[:1]), 2600+laneIndex*100+runIndex*11)
-	operatorNext := commandCenterOperatorNext(state, resetStart, resetEnd)
+	operatorNext := commandCenterOperatorNext(state, breakdownStart, breakdownEnd, resetEnd)
 	manifest := contracts.CommandCenterTestItemManifest{
-		ID:           runID + "-manifest",
-		Label:        fmt.Sprintf("%s item manifest", chamberName),
-		Article:      article,
-		SerialNumber: serial,
-		Facility:     facility,
-		ChamberName:  chamberName,
-		CampaignID:   "thermal_acceptance_fat",
-		OperatorNext: operatorNext,
-		State:        state,
-		Result:       result,
-		Start:        start.Format(time.RFC3339),
-		End:          end.Format(time.RFC3339),
-		ResetStart:   resetStart.Format(time.RFC3339),
-		ResetEnd:     resetEnd.Format(time.RFC3339),
+		ID:             runID + "-manifest",
+		Label:          fmt.Sprintf("%s item manifest", chamberName),
+		Article:        article,
+		SerialNumber:   serial,
+		Facility:       facility,
+		ChamberName:    chamberName,
+		CampaignID:     "thermal_acceptance_fat",
+		OperatorNext:   operatorNext,
+		State:          state,
+		Result:         result,
+		Start:          start.Format(time.RFC3339),
+		End:            end.Format(time.RFC3339),
+		BreakdownStart: breakdownStart.Format(time.RFC3339),
+		BreakdownEnd:   breakdownEnd.Format(time.RFC3339),
+		ResetStart:     resetStart.Format(time.RFC3339),
+		ResetEnd:       resetEnd.Format(time.RFC3339),
 	}
 	return contracts.CommandCenterRun{
 		ID:                 runID,
@@ -1144,14 +1146,18 @@ func buildCommandCenterRun(chamberID, chamberName, facility string, laneIndex, r
 		Result:             result,
 		Start:              start.Format(time.RFC3339),
 		End:                end.Format(time.RFC3339),
+		BreakdownStart:     breakdownStart.Format(time.RFC3339),
+		BreakdownEnd:       breakdownEnd.Format(time.RFC3339),
 		ResetStart:         resetStart.Format(time.RFC3339),
 		ResetEnd:           resetEnd.Format(time.RFC3339),
 		Manifest:           manifest,
-		InteractionWindows: commandCenterInteractionWindows(runID, start, end),
+		InteractionWindows: commandCenterInteractionWindows(runID, start, end, breakdownStart, breakdownEnd, resetStart, resetEnd),
 		Events: []contracts.CommandCenterEvent{
 			{ID: runID + "-start", Label: "FAT start", Kind: "start", Timestamp: start.Format(time.RFC3339), State: state},
 			{ID: runID + "-end", Label: "FAT closeout", Kind: "closeout", Timestamp: end.Format(time.RFC3339), State: state},
-			{ID: runID + "-reset", Label: "Reset ready", Kind: "reset", Timestamp: resetEnd.Format(time.RFC3339), State: "reset"},
+			{ID: runID + "-breakdown-start", Label: "Breakdown start", Kind: "breakdown", Timestamp: breakdownStart.Format(time.RFC3339), State: "operator"},
+			{ID: runID + "-reset-start", Label: "Reset start", Kind: "reset", Timestamp: resetStart.Format(time.RFC3339), State: "operator"},
+			{ID: runID + "-reset-ready", Label: "Reset ready", Kind: "reset_ready", Timestamp: resetEnd.Format(time.RFC3339), State: "reset"},
 		},
 	}
 }
@@ -1216,34 +1222,50 @@ func buildCommandCenterGraphModel(env contracts.Envelope, commandCenter contract
 			runStart := mustTime(run.Start)
 			runEnd := mustTime(run.End)
 			hero.PhaseBands = append(hero.PhaseBands, contracts.GraphBand{ID: run.ID + "-window", Label: run.Title, Kind: "test_window", Start: run.Start, End: run.End, Result: run.Result})
-			hero.PhaseBands = append(hero.PhaseBands, contracts.GraphBand{ID: run.ID + "-reset", Label: lane.ChamberName + " reset", Kind: "reset", Start: run.ResetStart, End: run.ResetEnd, Result: "planned"})
-			for _, cycle := range baseProgram.Cycles {
-				hero.PhaseBands = append(hero.PhaseBands, contracts.GraphBand{
-					ID:         fmt.Sprintf("%s-cycle-%02d", run.ID, cycle.Index),
-					Label:      fmt.Sprintf("%s cycle %d", lane.ChamberName, cycle.Index),
-					Kind:       "thermal_cycle",
-					Start:      shiftTime(mustTime(cycle.Start), runStart, baseStart).Format(time.RFC3339),
-					End:        shiftTime(mustTime(cycle.End), runStart, baseStart).Format(time.RFC3339),
-					CycleIndex: cycle.Index + laneIndex*10 + runIndex,
-					Result:     run.Result,
-				})
-			}
+			hero.PhaseBands = append(hero.PhaseBands, contracts.GraphBand{ID: run.ID + "-breakdown", Label: lane.ChamberName + " breakdown", Kind: "breakdown", Start: run.BreakdownStart, End: run.BreakdownEnd, Result: "operator"})
+			hero.PhaseBands = append(hero.PhaseBands, contracts.GraphBand{ID: run.ID + "-reset", Label: lane.ChamberName + " reset", Kind: "reset", Start: run.ResetStart, End: run.ResetEnd, Result: "operator"})
+			hero.Markers = append(hero.Markers,
+				contracts.GraphMarker{
+					ID:        run.ID + "-operator-breakdown-start",
+					Label:     lane.ChamberName + " breakdown start",
+					Kind:      "operator_breakdown",
+					Role:      "operator_interaction",
+					Timestamp: run.BreakdownStart,
+					Result:    "action_required",
+					Severity:  "operator",
+				},
+				contracts.GraphMarker{
+					ID:        run.ID + "-operator-reset-start",
+					Label:     lane.ChamberName + " reset start",
+					Kind:      "operator_reset",
+					Role:      "operator_interaction",
+					Timestamp: run.ResetStart,
+					Result:    "action_required",
+					Severity:  "operator",
+				},
+				contracts.GraphMarker{
+					ID:        run.ID + "-operator-reset-ready",
+					Label:     lane.ChamberName + " reset ready",
+					Kind:      "operator_reset_ready",
+					Role:      "operator_interaction",
+					Timestamp: run.ResetEnd,
+					Result:    "ready",
+					Severity:  "operator",
+				},
+			)
 			for _, gate := range baseProgram.FunctionalGates {
 				ts := shiftTime(mustTime(gate.Timestamp), runStart, baseStart)
 				if ts.Before(runStart) || ts.After(runEnd) {
 					continue
 				}
 				hero.Markers = append(hero.Markers, contracts.GraphMarker{
-					ID:          fmt.Sprintf("%s-%s", run.ID, strings.TrimPrefix(gate.ID, CommandCenterGraphCampaignID+"-")),
-					Label:       fmt.Sprintf("%s %s", lane.ChamberName, gate.Label),
-					Kind:        "functional_gate",
-					Role:        "event",
-					Timestamp:   ts.Format(time.RFC3339),
-					CycleIndex:  gate.CycleIndex + laneIndex*10 + runIndex,
-					AxisID:      "temperature_c",
-					Value:       70,
-					Result:      "pass",
-					EvidenceRef: fmt.Sprintf("reports/%s.json#%s", CommandCenterGraphCampaignID, run.ID),
+					ID:         fmt.Sprintf("%s-%s", run.ID, strings.TrimPrefix(gate.ID, CommandCenterGraphCampaignID+"-")),
+					Label:      fmt.Sprintf("%s %s", lane.ChamberName, gate.Label),
+					Kind:       "functional_gate",
+					Role:       "event",
+					Timestamp:  ts.Format(time.RFC3339),
+					CycleIndex: gate.CycleIndex + laneIndex*10 + runIndex,
+					Result:     "pass",
 				})
 			}
 			for i, sample := range baseSim.Samples {
@@ -1484,12 +1506,14 @@ func commandCenterSpaced(candidate time.Time, assigned []time.Time, minGap time.
 	return true
 }
 
-func commandCenterBreakdownWindow(runEnd time.Time, laneIndex, runIndex int) (time.Time, time.Time) {
+func commandCenterOperatorWindows(runEnd time.Time, laneIndex, runIndex int) (time.Time, time.Time, time.Time, time.Time) {
 	start := workdayResetStart(runEnd)
 	jitter := time.Duration((laneIndex*17+runIndex*11)%4) * 30 * time.Minute
-	start = addBusinessDuration(start, jitter)
-	end := addBusinessDuration(start, 3*time.Hour)
-	return start, end
+	breakdownStart := addBusinessDuration(start, jitter)
+	breakdownEnd := addBusinessDuration(breakdownStart, 3*time.Hour)
+	resetStart := breakdownEnd
+	resetEnd := addBusinessDuration(resetStart, 3*time.Hour)
+	return breakdownStart, breakdownEnd, resetStart, resetEnd
 }
 
 func addBusinessDuration(start time.Time, duration time.Duration) time.Time {
@@ -1562,7 +1586,7 @@ func windowPercent(t, start, end time.Time) float64 {
 	return math.Max(0, math.Min(1, float64(t.Sub(start))/float64(end.Sub(start))))
 }
 
-func commandCenterInteractionWindows(runID string, start, end time.Time) []contracts.CommandCenterBand {
+func commandCenterInteractionWindows(runID string, start, end, breakdownStart, breakdownEnd, resetStart, resetEnd time.Time) []contracts.CommandCenterBand {
 	duration := end.Sub(start)
 	points := []struct {
 		suffix, label string
@@ -1573,11 +1597,15 @@ func commandCenterInteractionWindows(runID string, start, end time.Time) []contr
 		{"hot", "Hot dwell gate", 0.76},
 		{"closeout", "Closeout evidence", 0.94},
 	}
-	windows := make([]contracts.CommandCenterBand, 0, len(points))
+	windows := make([]contracts.CommandCenterBand, 0, len(points)+2)
 	for _, point := range points {
 		center := start.Add(time.Duration(point.offset * float64(duration)))
 		windows = append(windows, contracts.CommandCenterBand{ID: runID + "-" + point.suffix, Label: point.label, Kind: "operator_gate", Start: center.Add(-45 * time.Minute).Format(time.RFC3339), End: center.Add(45 * time.Minute).Format(time.RFC3339)})
 	}
+	windows = append(windows,
+		contracts.CommandCenterBand{ID: runID + "-breakdown-window", Label: "Breakdown", Kind: "operator_breakdown", Start: breakdownStart.Format(time.RFC3339), End: breakdownEnd.Format(time.RFC3339)},
+		contracts.CommandCenterBand{ID: runID + "-reset-window", Label: "Reset", Kind: "operator_reset", Start: resetStart.Format(time.RFC3339), End: resetEnd.Format(time.RFC3339)},
+	)
 	return windows
 }
 
@@ -1592,9 +1620,12 @@ func commandCenterState(start, end time.Time) (string, string) {
 	}
 }
 
-func commandCenterOperatorNext(state string, resetStart, resetEnd time.Time) string {
+func commandCenterOperatorNext(state string, breakdownStart, breakdownEnd, resetEnd time.Time) string {
 	switch state {
 	case "complete":
+		if FixedTime.Before(breakdownEnd) {
+			return "breakdown in progress"
+		}
 		if FixedTime.Before(resetEnd) {
 			return "reset in progress"
 		}
@@ -1602,7 +1633,7 @@ func commandCenterOperatorNext(state string, resetStart, resetEnd time.Time) str
 	case "running":
 		return "monitor dwell gate"
 	default:
-		return fmt.Sprintf("prepare reset slot %s", resetStart.Format("Mon 15:04"))
+		return fmt.Sprintf("prepare breakdown slot %s", breakdownStart.Format("Mon 15:04"))
 	}
 }
 

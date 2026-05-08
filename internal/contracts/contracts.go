@@ -784,20 +784,22 @@ type CommandCenterTrace struct {
 }
 
 type CommandCenterTestItemManifest struct {
-	ID           string `json:"id"`
-	Label        string `json:"label"`
-	Article      string `json:"article"`
-	SerialNumber string `json:"serial_number"`
-	Facility     string `json:"facility"`
-	ChamberName  string `json:"chamber_name"`
-	CampaignID   string `json:"campaign_id"`
-	OperatorNext string `json:"operator_next"`
-	State        string `json:"state"`
-	Result       string `json:"result"`
-	Start        string `json:"start"`
-	End          string `json:"end"`
-	ResetStart   string `json:"reset_start"`
-	ResetEnd     string `json:"reset_end"`
+	ID             string `json:"id"`
+	Label          string `json:"label"`
+	Article        string `json:"article"`
+	SerialNumber   string `json:"serial_number"`
+	Facility       string `json:"facility"`
+	ChamberName    string `json:"chamber_name"`
+	CampaignID     string `json:"campaign_id"`
+	OperatorNext   string `json:"operator_next"`
+	State          string `json:"state"`
+	Result         string `json:"result"`
+	Start          string `json:"start"`
+	End            string `json:"end"`
+	BreakdownStart string `json:"breakdown_start"`
+	BreakdownEnd   string `json:"breakdown_end"`
+	ResetStart     string `json:"reset_start"`
+	ResetEnd       string `json:"reset_end"`
 }
 
 type CommandCenterRun struct {
@@ -808,6 +810,8 @@ type CommandCenterRun struct {
 	Result             string                        `json:"result"`
 	Start              string                        `json:"start"`
 	End                string                        `json:"end"`
+	BreakdownStart     string                        `json:"breakdown_start"`
+	BreakdownEnd       string                        `json:"breakdown_end"`
 	ResetStart         string                        `json:"reset_start"`
 	ResetEnd           string                        `json:"reset_end"`
 	Manifest           CommandCenterTestItemManifest `json:"manifest"`
