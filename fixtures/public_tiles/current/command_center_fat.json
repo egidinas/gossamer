@@ -3154,12 +3154,12 @@
           "title": "Charlie FAT 03",
           "state": "complete",
           "result": "pass",
-          "start": "2025-12-24T11:30:00Z",
-          "end": "2025-12-28T23:18:00Z",
-          "breakdown_start": "2025-12-29T08:00:00Z",
-          "breakdown_end": "2025-12-29T11:00:00Z",
-          "reset_start": "2025-12-29T11:00:00Z",
-          "reset_end": "2025-12-29T14:00:00Z",
+          "start": "2025-12-26T11:30:00Z",
+          "end": "2025-12-30T23:18:00Z",
+          "breakdown_start": "2025-12-31T08:00:00Z",
+          "breakdown_end": "2025-12-31T11:00:00Z",
+          "reset_start": "2025-12-31T11:00:00Z",
+          "reset_end": "2025-12-31T14:00:00Z",
           "manifest": {
             "id": "thermal_chamber_charlie-fat-03-manifest",
             "label": "Charlie item manifest",
@@ -3171,55 +3171,55 @@
             "operator_next": "archive evidence",
             "state": "complete",
             "result": "pass",
-            "start": "2025-12-24T11:30:00Z",
-            "end": "2025-12-28T23:18:00Z",
-            "breakdown_start": "2025-12-29T08:00:00Z",
-            "breakdown_end": "2025-12-29T11:00:00Z",
-            "reset_start": "2025-12-29T11:00:00Z",
-            "reset_end": "2025-12-29T14:00:00Z"
+            "start": "2025-12-26T11:30:00Z",
+            "end": "2025-12-30T23:18:00Z",
+            "breakdown_start": "2025-12-31T08:00:00Z",
+            "breakdown_end": "2025-12-31T11:00:00Z",
+            "reset_start": "2025-12-31T11:00:00Z",
+            "reset_end": "2025-12-31T14:00:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_charlie-fat-03-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2025-12-24T12:54:21Z",
-              "end": "2025-12-24T14:24:21Z"
+              "start": "2025-12-26T12:54:21Z",
+              "end": "2025-12-26T14:24:21Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-03-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2025-12-26T12:20:16Z",
-              "end": "2025-12-26T13:50:16Z"
+              "start": "2025-12-28T12:20:16Z",
+              "end": "2025-12-28T13:50:16Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-03-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2025-12-27T20:40:40Z",
-              "end": "2025-12-27T22:10:40Z"
+              "start": "2025-12-29T20:40:40Z",
+              "end": "2025-12-29T22:10:40Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-03-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2025-12-28T16:04:55Z",
-              "end": "2025-12-28T17:34:55Z"
+              "start": "2025-12-30T16:04:55Z",
+              "end": "2025-12-30T17:34:55Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-03-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2025-12-29T08:00:00Z",
-              "end": "2025-12-29T11:00:00Z"
+              "start": "2025-12-31T08:00:00Z",
+              "end": "2025-12-31T11:00:00Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-03-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2025-12-29T11:00:00Z",
-              "end": "2025-12-29T14:00:00Z"
+              "start": "2025-12-31T11:00:00Z",
+              "end": "2025-12-31T14:00:00Z"
             }
           ],
           "events": [
@@ -3227,35 +3227,35 @@
               "id": "thermal_chamber_charlie-fat-03-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2025-12-24T11:30:00Z",
+              "timestamp": "2025-12-26T11:30:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_charlie-fat-03-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2025-12-28T23:18:00Z",
+              "timestamp": "2025-12-30T23:18:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_charlie-fat-03-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2025-12-29T08:00:00Z",
+              "timestamp": "2025-12-31T08:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-03-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2025-12-29T11:00:00Z",
+              "timestamp": "2025-12-31T11:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-03-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2025-12-29T14:00:00Z",
+              "timestamp": "2025-12-31T14:00:00Z",
               "state": "reset"
             }
           ]
@@ -3266,12 +3266,12 @@
           "title": "Charlie FAT 04",
           "state": "complete",
           "result": "pass",
-          "start": "2025-12-31T14:30:00Z",
-          "end": "2026-01-05T02:18:00Z",
-          "breakdown_start": "2026-01-05T09:30:00Z",
-          "breakdown_end": "2026-01-05T12:30:00Z",
-          "reset_start": "2026-01-05T12:30:00Z",
-          "reset_end": "2026-01-05T15:30:00Z",
+          "start": "2026-01-02T13:00:00Z",
+          "end": "2026-01-07T00:48:00Z",
+          "breakdown_start": "2026-01-07T09:30:00Z",
+          "breakdown_end": "2026-01-07T12:30:00Z",
+          "reset_start": "2026-01-07T12:30:00Z",
+          "reset_end": "2026-01-07T15:30:00Z",
           "manifest": {
             "id": "thermal_chamber_charlie-fat-04-manifest",
             "label": "Charlie item manifest",
@@ -3283,55 +3283,55 @@
             "operator_next": "archive evidence",
             "state": "complete",
             "result": "pass",
-            "start": "2025-12-31T14:30:00Z",
-            "end": "2026-01-05T02:18:00Z",
-            "breakdown_start": "2026-01-05T09:30:00Z",
-            "breakdown_end": "2026-01-05T12:30:00Z",
-            "reset_start": "2026-01-05T12:30:00Z",
-            "reset_end": "2026-01-05T15:30:00Z"
+            "start": "2026-01-02T13:00:00Z",
+            "end": "2026-01-07T00:48:00Z",
+            "breakdown_start": "2026-01-07T09:30:00Z",
+            "breakdown_end": "2026-01-07T12:30:00Z",
+            "reset_start": "2026-01-07T12:30:00Z",
+            "reset_end": "2026-01-07T15:30:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_charlie-fat-04-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2025-12-31T15:54:21Z",
-              "end": "2025-12-31T17:24:21Z"
+              "start": "2026-01-02T14:24:21Z",
+              "end": "2026-01-02T15:54:21Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-04-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-02T15:20:16Z",
-              "end": "2026-01-02T16:50:16Z"
+              "start": "2026-01-04T13:50:16Z",
+              "end": "2026-01-04T15:20:16Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-04-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-03T23:40:40Z",
-              "end": "2026-01-04T01:10:40Z"
+              "start": "2026-01-05T22:10:40Z",
+              "end": "2026-01-05T23:40:40Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-04-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-04T19:04:55Z",
-              "end": "2026-01-04T20:34:55Z"
+              "start": "2026-01-06T17:34:55Z",
+              "end": "2026-01-06T19:04:55Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-04-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-01-05T09:30:00Z",
-              "end": "2026-01-05T12:30:00Z"
+              "start": "2026-01-07T09:30:00Z",
+              "end": "2026-01-07T12:30:00Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-04-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-01-05T12:30:00Z",
-              "end": "2026-01-05T15:30:00Z"
+              "start": "2026-01-07T12:30:00Z",
+              "end": "2026-01-07T15:30:00Z"
             }
           ],
           "events": [
@@ -3339,35 +3339,35 @@
               "id": "thermal_chamber_charlie-fat-04-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2025-12-31T14:30:00Z",
+              "timestamp": "2026-01-02T13:00:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_charlie-fat-04-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-05T02:18:00Z",
+              "timestamp": "2026-01-07T00:48:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_charlie-fat-04-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-01-05T09:30:00Z",
+              "timestamp": "2026-01-07T09:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-04-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-01-05T12:30:00Z",
+              "timestamp": "2026-01-07T12:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-04-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-01-05T15:30:00Z",
+              "timestamp": "2026-01-07T15:30:00Z",
               "state": "reset"
             }
           ]
@@ -3378,12 +3378,12 @@
           "title": "Charlie FAT 05",
           "state": "complete",
           "result": "pass",
-          "start": "2026-01-07T16:30:00Z",
-          "end": "2026-01-12T04:18:00Z",
-          "breakdown_start": "2026-01-12T09:00:00Z",
-          "breakdown_end": "2026-01-12T12:00:00Z",
-          "reset_start": "2026-01-12T12:00:00Z",
-          "reset_end": "2026-01-12T15:00:00Z",
+          "start": "2026-01-09T15:00:00Z",
+          "end": "2026-01-14T02:48:00Z",
+          "breakdown_start": "2026-01-14T09:00:00Z",
+          "breakdown_end": "2026-01-14T12:00:00Z",
+          "reset_start": "2026-01-14T12:00:00Z",
+          "reset_end": "2026-01-14T15:00:00Z",
           "manifest": {
             "id": "thermal_chamber_charlie-fat-05-manifest",
             "label": "Charlie item manifest",
@@ -3395,55 +3395,55 @@
             "operator_next": "archive evidence",
             "state": "complete",
             "result": "pass",
-            "start": "2026-01-07T16:30:00Z",
-            "end": "2026-01-12T04:18:00Z",
-            "breakdown_start": "2026-01-12T09:00:00Z",
-            "breakdown_end": "2026-01-12T12:00:00Z",
-            "reset_start": "2026-01-12T12:00:00Z",
-            "reset_end": "2026-01-12T15:00:00Z"
+            "start": "2026-01-09T15:00:00Z",
+            "end": "2026-01-14T02:48:00Z",
+            "breakdown_start": "2026-01-14T09:00:00Z",
+            "breakdown_end": "2026-01-14T12:00:00Z",
+            "reset_start": "2026-01-14T12:00:00Z",
+            "reset_end": "2026-01-14T15:00:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_charlie-fat-05-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-07T17:54:21Z",
-              "end": "2026-01-07T19:24:21Z"
+              "start": "2026-01-09T16:24:21Z",
+              "end": "2026-01-09T17:54:21Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-05-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-09T17:20:16Z",
-              "end": "2026-01-09T18:50:16Z"
+              "start": "2026-01-11T15:50:16Z",
+              "end": "2026-01-11T17:20:16Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-05-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-11T01:40:40Z",
-              "end": "2026-01-11T03:10:40Z"
+              "start": "2026-01-13T00:10:40Z",
+              "end": "2026-01-13T01:40:40Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-05-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-11T21:04:55Z",
-              "end": "2026-01-11T22:34:55Z"
+              "start": "2026-01-13T19:34:55Z",
+              "end": "2026-01-13T21:04:55Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-05-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-01-12T09:00:00Z",
-              "end": "2026-01-12T12:00:00Z"
+              "start": "2026-01-14T09:00:00Z",
+              "end": "2026-01-14T12:00:00Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-05-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-01-12T12:00:00Z",
-              "end": "2026-01-12T15:00:00Z"
+              "start": "2026-01-14T12:00:00Z",
+              "end": "2026-01-14T15:00:00Z"
             }
           ],
           "events": [
@@ -3451,35 +3451,35 @@
               "id": "thermal_chamber_charlie-fat-05-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-07T16:30:00Z",
+              "timestamp": "2026-01-09T15:00:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_charlie-fat-05-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-12T04:18:00Z",
+              "timestamp": "2026-01-14T02:48:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_charlie-fat-05-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-01-12T09:00:00Z",
+              "timestamp": "2026-01-14T09:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-05-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-01-12T12:00:00Z",
+              "timestamp": "2026-01-14T12:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-05-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-01-12T15:00:00Z",
+              "timestamp": "2026-01-14T15:00:00Z",
               "state": "reset"
             }
           ]
@@ -3488,14 +3488,14 @@
           "id": "thermal_chamber_charlie-fat-06",
           "campaign_id": "thermal_acceptance_fat",
           "title": "Charlie FAT 06",
-          "state": "running",
-          "result": "in_progress",
-          "start": "2026-01-13T17:00:00Z",
-          "end": "2026-01-18T04:48:00Z",
-          "breakdown_start": "2026-01-19T08:30:00Z",
-          "breakdown_end": "2026-01-19T11:30:00Z",
-          "reset_start": "2026-01-19T11:30:00Z",
-          "reset_end": "2026-01-19T14:30:00Z",
+          "state": "scheduled",
+          "result": "pending",
+          "start": "2026-01-15T17:00:00Z",
+          "end": "2026-01-20T04:48:00Z",
+          "breakdown_start": "2026-01-20T08:30:00Z",
+          "breakdown_end": "2026-01-20T11:30:00Z",
+          "reset_start": "2026-01-20T11:30:00Z",
+          "reset_end": "2026-01-20T14:30:00Z",
           "manifest": {
             "id": "thermal_chamber_charlie-fat-06-manifest",
             "label": "Charlie item manifest",
@@ -3504,58 +3504,58 @@
             "facility": "TC-C",
             "chamber_name": "Charlie",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "monitor dwell gate",
-            "state": "running",
-            "result": "in_progress",
-            "start": "2026-01-13T17:00:00Z",
-            "end": "2026-01-18T04:48:00Z",
-            "breakdown_start": "2026-01-19T08:30:00Z",
-            "breakdown_end": "2026-01-19T11:30:00Z",
-            "reset_start": "2026-01-19T11:30:00Z",
-            "reset_end": "2026-01-19T14:30:00Z"
+            "operator_next": "prepare breakdown slot Tue 08:30",
+            "state": "scheduled",
+            "result": "pending",
+            "start": "2026-01-15T17:00:00Z",
+            "end": "2026-01-20T04:48:00Z",
+            "breakdown_start": "2026-01-20T08:30:00Z",
+            "breakdown_end": "2026-01-20T11:30:00Z",
+            "reset_start": "2026-01-20T11:30:00Z",
+            "reset_end": "2026-01-20T14:30:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_charlie-fat-06-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-13T18:24:21Z",
-              "end": "2026-01-13T19:54:21Z"
+              "start": "2026-01-15T18:24:21Z",
+              "end": "2026-01-15T19:54:21Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-06-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-15T17:50:16Z",
-              "end": "2026-01-15T19:20:16Z"
+              "start": "2026-01-17T17:50:16Z",
+              "end": "2026-01-17T19:20:16Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-06-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-17T02:10:40Z",
-              "end": "2026-01-17T03:40:40Z"
+              "start": "2026-01-19T02:10:40Z",
+              "end": "2026-01-19T03:40:40Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-06-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-17T21:34:55Z",
-              "end": "2026-01-17T23:04:55Z"
+              "start": "2026-01-19T21:34:55Z",
+              "end": "2026-01-19T23:04:55Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-06-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-01-19T08:30:00Z",
-              "end": "2026-01-19T11:30:00Z"
+              "start": "2026-01-20T08:30:00Z",
+              "end": "2026-01-20T11:30:00Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-06-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-01-19T11:30:00Z",
-              "end": "2026-01-19T14:30:00Z"
+              "start": "2026-01-20T11:30:00Z",
+              "end": "2026-01-20T14:30:00Z"
             }
           ],
           "events": [
@@ -3563,35 +3563,35 @@
               "id": "thermal_chamber_charlie-fat-06-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-13T17:00:00Z",
-              "state": "running"
+              "timestamp": "2026-01-15T17:00:00Z",
+              "state": "scheduled"
             },
             {
               "id": "thermal_chamber_charlie-fat-06-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-18T04:48:00Z",
-              "state": "running"
+              "timestamp": "2026-01-20T04:48:00Z",
+              "state": "scheduled"
             },
             {
               "id": "thermal_chamber_charlie-fat-06-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-01-19T08:30:00Z",
+              "timestamp": "2026-01-20T08:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-06-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-01-19T11:30:00Z",
+              "timestamp": "2026-01-20T11:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-06-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-01-19T14:30:00Z",
+              "timestamp": "2026-01-20T14:30:00Z",
               "state": "reset"
             }
           ]
@@ -3602,12 +3602,12 @@
           "title": "Charlie FAT 07",
           "state": "scheduled",
           "result": "pending",
-          "start": "2026-01-21T11:30:00Z",
-          "end": "2026-01-25T23:18:00Z",
-          "breakdown_start": "2026-01-26T08:00:00Z",
-          "breakdown_end": "2026-01-26T11:00:00Z",
-          "reset_start": "2026-01-26T11:00:00Z",
-          "reset_end": "2026-01-26T14:00:00Z",
+          "start": "2026-01-22T11:30:00Z",
+          "end": "2026-01-26T23:18:00Z",
+          "breakdown_start": "2026-01-27T08:00:00Z",
+          "breakdown_end": "2026-01-27T11:00:00Z",
+          "reset_start": "2026-01-27T11:00:00Z",
+          "reset_end": "2026-01-27T14:00:00Z",
           "manifest": {
             "id": "thermal_chamber_charlie-fat-07-manifest",
             "label": "Charlie item manifest",
@@ -3616,58 +3616,58 @@
             "facility": "TC-C",
             "chamber_name": "Charlie",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare breakdown slot Mon 08:00",
+            "operator_next": "prepare breakdown slot Tue 08:00",
             "state": "scheduled",
             "result": "pending",
-            "start": "2026-01-21T11:30:00Z",
-            "end": "2026-01-25T23:18:00Z",
-            "breakdown_start": "2026-01-26T08:00:00Z",
-            "breakdown_end": "2026-01-26T11:00:00Z",
-            "reset_start": "2026-01-26T11:00:00Z",
-            "reset_end": "2026-01-26T14:00:00Z"
+            "start": "2026-01-22T11:30:00Z",
+            "end": "2026-01-26T23:18:00Z",
+            "breakdown_start": "2026-01-27T08:00:00Z",
+            "breakdown_end": "2026-01-27T11:00:00Z",
+            "reset_start": "2026-01-27T11:00:00Z",
+            "reset_end": "2026-01-27T14:00:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_charlie-fat-07-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-21T12:54:21Z",
-              "end": "2026-01-21T14:24:21Z"
+              "start": "2026-01-22T12:54:21Z",
+              "end": "2026-01-22T14:24:21Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-07-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-23T12:20:16Z",
-              "end": "2026-01-23T13:50:16Z"
+              "start": "2026-01-24T12:20:16Z",
+              "end": "2026-01-24T13:50:16Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-07-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-24T20:40:40Z",
-              "end": "2026-01-24T22:10:40Z"
+              "start": "2026-01-25T20:40:40Z",
+              "end": "2026-01-25T22:10:40Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-07-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-25T16:04:55Z",
-              "end": "2026-01-25T17:34:55Z"
+              "start": "2026-01-26T16:04:55Z",
+              "end": "2026-01-26T17:34:55Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-07-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-01-26T08:00:00Z",
-              "end": "2026-01-26T11:00:00Z"
+              "start": "2026-01-27T08:00:00Z",
+              "end": "2026-01-27T11:00:00Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-07-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-01-26T11:00:00Z",
-              "end": "2026-01-26T14:00:00Z"
+              "start": "2026-01-27T11:00:00Z",
+              "end": "2026-01-27T14:00:00Z"
             }
           ],
           "events": [
@@ -3675,35 +3675,35 @@
               "id": "thermal_chamber_charlie-fat-07-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-21T11:30:00Z",
+              "timestamp": "2026-01-22T11:30:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_charlie-fat-07-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-25T23:18:00Z",
+              "timestamp": "2026-01-26T23:18:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_charlie-fat-07-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-01-26T08:00:00Z",
+              "timestamp": "2026-01-27T08:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-07-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-01-26T11:00:00Z",
+              "timestamp": "2026-01-27T11:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-07-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-01-26T14:00:00Z",
+              "timestamp": "2026-01-27T14:00:00Z",
               "state": "reset"
             }
           ]
@@ -3714,12 +3714,12 @@
           "title": "Charlie FAT 08",
           "state": "scheduled",
           "result": "pending",
-          "start": "2026-01-28T14:30:00Z",
-          "end": "2026-02-02T02:18:00Z",
-          "breakdown_start": "2026-02-02T09:30:00Z",
-          "breakdown_end": "2026-02-02T12:30:00Z",
-          "reset_start": "2026-02-02T12:30:00Z",
-          "reset_end": "2026-02-02T15:30:00Z",
+          "start": "2026-01-29T13:00:00Z",
+          "end": "2026-02-03T00:48:00Z",
+          "breakdown_start": "2026-02-03T09:30:00Z",
+          "breakdown_end": "2026-02-03T12:30:00Z",
+          "reset_start": "2026-02-03T12:30:00Z",
+          "reset_end": "2026-02-03T15:30:00Z",
           "manifest": {
             "id": "thermal_chamber_charlie-fat-08-manifest",
             "label": "Charlie item manifest",
@@ -3728,58 +3728,58 @@
             "facility": "TC-C",
             "chamber_name": "Charlie",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare breakdown slot Mon 09:30",
+            "operator_next": "prepare breakdown slot Tue 09:30",
             "state": "scheduled",
             "result": "pending",
-            "start": "2026-01-28T14:30:00Z",
-            "end": "2026-02-02T02:18:00Z",
-            "breakdown_start": "2026-02-02T09:30:00Z",
-            "breakdown_end": "2026-02-02T12:30:00Z",
-            "reset_start": "2026-02-02T12:30:00Z",
-            "reset_end": "2026-02-02T15:30:00Z"
+            "start": "2026-01-29T13:00:00Z",
+            "end": "2026-02-03T00:48:00Z",
+            "breakdown_start": "2026-02-03T09:30:00Z",
+            "breakdown_end": "2026-02-03T12:30:00Z",
+            "reset_start": "2026-02-03T12:30:00Z",
+            "reset_end": "2026-02-03T15:30:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_charlie-fat-08-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-28T15:54:21Z",
-              "end": "2026-01-28T17:24:21Z"
+              "start": "2026-01-29T14:24:21Z",
+              "end": "2026-01-29T15:54:21Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-08-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-30T15:20:16Z",
-              "end": "2026-01-30T16:50:16Z"
+              "start": "2026-01-31T13:50:16Z",
+              "end": "2026-01-31T15:20:16Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-08-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-31T23:40:40Z",
-              "end": "2026-02-01T01:10:40Z"
+              "start": "2026-02-01T22:10:40Z",
+              "end": "2026-02-01T23:40:40Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-08-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-02-01T19:04:55Z",
-              "end": "2026-02-01T20:34:55Z"
+              "start": "2026-02-02T17:34:55Z",
+              "end": "2026-02-02T19:04:55Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-08-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-02-02T09:30:00Z",
-              "end": "2026-02-02T12:30:00Z"
+              "start": "2026-02-03T09:30:00Z",
+              "end": "2026-02-03T12:30:00Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-08-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-02-02T12:30:00Z",
-              "end": "2026-02-02T15:30:00Z"
+              "start": "2026-02-03T12:30:00Z",
+              "end": "2026-02-03T15:30:00Z"
             }
           ],
           "events": [
@@ -3787,35 +3787,35 @@
               "id": "thermal_chamber_charlie-fat-08-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-28T14:30:00Z",
+              "timestamp": "2026-01-29T13:00:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_charlie-fat-08-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-02-02T02:18:00Z",
+              "timestamp": "2026-02-03T00:48:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_charlie-fat-08-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-02-02T09:30:00Z",
+              "timestamp": "2026-02-03T09:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-08-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-02-02T12:30:00Z",
+              "timestamp": "2026-02-03T12:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-08-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-02-02T15:30:00Z",
+              "timestamp": "2026-02-03T15:30:00Z",
               "state": "reset"
             }
           ]
@@ -3826,12 +3826,12 @@
           "title": "Charlie FAT 09",
           "state": "scheduled",
           "result": "pending",
-          "start": "2026-02-04T16:30:00Z",
-          "end": "2026-02-09T04:18:00Z",
-          "breakdown_start": "2026-02-09T09:00:00Z",
-          "breakdown_end": "2026-02-09T12:00:00Z",
-          "reset_start": "2026-02-09T12:00:00Z",
-          "reset_end": "2026-02-09T15:00:00Z",
+          "start": "2026-02-05T15:00:00Z",
+          "end": "2026-02-10T02:48:00Z",
+          "breakdown_start": "2026-02-10T09:00:00Z",
+          "breakdown_end": "2026-02-10T12:00:00Z",
+          "reset_start": "2026-02-10T12:00:00Z",
+          "reset_end": "2026-02-10T15:00:00Z",
           "manifest": {
             "id": "thermal_chamber_charlie-fat-09-manifest",
             "label": "Charlie item manifest",
@@ -3840,58 +3840,58 @@
             "facility": "TC-C",
             "chamber_name": "Charlie",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare breakdown slot Mon 09:00",
+            "operator_next": "prepare breakdown slot Tue 09:00",
             "state": "scheduled",
             "result": "pending",
-            "start": "2026-02-04T16:30:00Z",
-            "end": "2026-02-09T04:18:00Z",
-            "breakdown_start": "2026-02-09T09:00:00Z",
-            "breakdown_end": "2026-02-09T12:00:00Z",
-            "reset_start": "2026-02-09T12:00:00Z",
-            "reset_end": "2026-02-09T15:00:00Z"
+            "start": "2026-02-05T15:00:00Z",
+            "end": "2026-02-10T02:48:00Z",
+            "breakdown_start": "2026-02-10T09:00:00Z",
+            "breakdown_end": "2026-02-10T12:00:00Z",
+            "reset_start": "2026-02-10T12:00:00Z",
+            "reset_end": "2026-02-10T15:00:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_charlie-fat-09-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-02-04T17:54:21Z",
-              "end": "2026-02-04T19:24:21Z"
+              "start": "2026-02-05T16:24:21Z",
+              "end": "2026-02-05T17:54:21Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-09-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-02-06T17:20:16Z",
-              "end": "2026-02-06T18:50:16Z"
+              "start": "2026-02-07T15:50:16Z",
+              "end": "2026-02-07T17:20:16Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-09-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-02-08T01:40:40Z",
-              "end": "2026-02-08T03:10:40Z"
+              "start": "2026-02-09T00:10:40Z",
+              "end": "2026-02-09T01:40:40Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-09-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-02-08T21:04:55Z",
-              "end": "2026-02-08T22:34:55Z"
+              "start": "2026-02-09T19:34:55Z",
+              "end": "2026-02-09T21:04:55Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-09-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-02-09T09:00:00Z",
-              "end": "2026-02-09T12:00:00Z"
+              "start": "2026-02-10T09:00:00Z",
+              "end": "2026-02-10T12:00:00Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-09-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-02-09T12:00:00Z",
-              "end": "2026-02-09T15:00:00Z"
+              "start": "2026-02-10T12:00:00Z",
+              "end": "2026-02-10T15:00:00Z"
             }
           ],
           "events": [
@@ -3899,35 +3899,35 @@
               "id": "thermal_chamber_charlie-fat-09-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-02-04T16:30:00Z",
+              "timestamp": "2026-02-05T15:00:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_charlie-fat-09-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-02-09T04:18:00Z",
+              "timestamp": "2026-02-10T02:48:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_charlie-fat-09-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-02-09T09:00:00Z",
+              "timestamp": "2026-02-10T09:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-09-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-02-09T12:00:00Z",
+              "timestamp": "2026-02-10T12:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-09-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-02-09T15:00:00Z",
+              "timestamp": "2026-02-10T15:00:00Z",
               "state": "reset"
             }
           ]
@@ -3938,12 +3938,12 @@
           "title": "Charlie FAT 10",
           "state": "scheduled",
           "result": "pending",
-          "start": "2026-02-10T17:00:00Z",
-          "end": "2026-02-15T04:48:00Z",
-          "breakdown_start": "2026-02-16T08:30:00Z",
-          "breakdown_end": "2026-02-16T11:30:00Z",
-          "reset_start": "2026-02-16T11:30:00Z",
-          "reset_end": "2026-02-16T14:30:00Z",
+          "start": "2026-02-13T11:30:00Z",
+          "end": "2026-02-17T23:18:00Z",
+          "breakdown_start": "2026-02-18T08:30:00Z",
+          "breakdown_end": "2026-02-18T11:30:00Z",
+          "reset_start": "2026-02-18T11:30:00Z",
+          "reset_end": "2026-02-18T14:30:00Z",
           "manifest": {
             "id": "thermal_chamber_charlie-fat-10-manifest",
             "label": "Charlie item manifest",
@@ -3952,58 +3952,58 @@
             "facility": "TC-C",
             "chamber_name": "Charlie",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare breakdown slot Mon 08:30",
+            "operator_next": "prepare breakdown slot Wed 08:30",
             "state": "scheduled",
             "result": "pending",
-            "start": "2026-02-10T17:00:00Z",
-            "end": "2026-02-15T04:48:00Z",
-            "breakdown_start": "2026-02-16T08:30:00Z",
-            "breakdown_end": "2026-02-16T11:30:00Z",
-            "reset_start": "2026-02-16T11:30:00Z",
-            "reset_end": "2026-02-16T14:30:00Z"
+            "start": "2026-02-13T11:30:00Z",
+            "end": "2026-02-17T23:18:00Z",
+            "breakdown_start": "2026-02-18T08:30:00Z",
+            "breakdown_end": "2026-02-18T11:30:00Z",
+            "reset_start": "2026-02-18T11:30:00Z",
+            "reset_end": "2026-02-18T14:30:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_charlie-fat-10-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-02-10T18:24:21Z",
-              "end": "2026-02-10T19:54:21Z"
+              "start": "2026-02-13T12:54:21Z",
+              "end": "2026-02-13T14:24:21Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-10-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-02-12T17:50:16Z",
-              "end": "2026-02-12T19:20:16Z"
+              "start": "2026-02-15T12:20:16Z",
+              "end": "2026-02-15T13:50:16Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-10-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-02-14T02:10:40Z",
-              "end": "2026-02-14T03:40:40Z"
+              "start": "2026-02-16T20:40:40Z",
+              "end": "2026-02-16T22:10:40Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-10-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-02-14T21:34:55Z",
-              "end": "2026-02-14T23:04:55Z"
+              "start": "2026-02-17T16:04:55Z",
+              "end": "2026-02-17T17:34:55Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-10-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-02-16T08:30:00Z",
-              "end": "2026-02-16T11:30:00Z"
+              "start": "2026-02-18T08:30:00Z",
+              "end": "2026-02-18T11:30:00Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-10-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-02-16T11:30:00Z",
-              "end": "2026-02-16T14:30:00Z"
+              "start": "2026-02-18T11:30:00Z",
+              "end": "2026-02-18T14:30:00Z"
             }
           ],
           "events": [
@@ -4011,35 +4011,35 @@
               "id": "thermal_chamber_charlie-fat-10-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-02-10T17:00:00Z",
+              "timestamp": "2026-02-13T11:30:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_charlie-fat-10-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-02-15T04:48:00Z",
+              "timestamp": "2026-02-17T23:18:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_charlie-fat-10-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-02-16T08:30:00Z",
+              "timestamp": "2026-02-18T08:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-10-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-02-16T11:30:00Z",
+              "timestamp": "2026-02-18T11:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-10-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-02-16T14:30:00Z",
+              "timestamp": "2026-02-18T14:30:00Z",
               "state": "reset"
             }
           ]
@@ -4050,12 +4050,12 @@
           "title": "Charlie FAT 11",
           "state": "scheduled",
           "result": "pending",
-          "start": "2026-02-18T11:30:00Z",
-          "end": "2026-02-22T23:18:00Z",
-          "breakdown_start": "2026-02-23T08:00:00Z",
-          "breakdown_end": "2026-02-23T11:00:00Z",
-          "reset_start": "2026-02-23T11:00:00Z",
-          "reset_end": "2026-02-23T14:00:00Z",
+          "start": "2026-02-20T11:30:00Z",
+          "end": "2026-02-24T23:18:00Z",
+          "breakdown_start": "2026-02-25T08:00:00Z",
+          "breakdown_end": "2026-02-25T11:00:00Z",
+          "reset_start": "2026-02-25T11:00:00Z",
+          "reset_end": "2026-02-25T14:00:00Z",
           "manifest": {
             "id": "thermal_chamber_charlie-fat-11-manifest",
             "label": "Charlie item manifest",
@@ -4064,58 +4064,58 @@
             "facility": "TC-C",
             "chamber_name": "Charlie",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare breakdown slot Mon 08:00",
+            "operator_next": "prepare breakdown slot Wed 08:00",
             "state": "scheduled",
             "result": "pending",
-            "start": "2026-02-18T11:30:00Z",
-            "end": "2026-02-22T23:18:00Z",
-            "breakdown_start": "2026-02-23T08:00:00Z",
-            "breakdown_end": "2026-02-23T11:00:00Z",
-            "reset_start": "2026-02-23T11:00:00Z",
-            "reset_end": "2026-02-23T14:00:00Z"
+            "start": "2026-02-20T11:30:00Z",
+            "end": "2026-02-24T23:18:00Z",
+            "breakdown_start": "2026-02-25T08:00:00Z",
+            "breakdown_end": "2026-02-25T11:00:00Z",
+            "reset_start": "2026-02-25T11:00:00Z",
+            "reset_end": "2026-02-25T14:00:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_charlie-fat-11-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-02-18T12:54:21Z",
-              "end": "2026-02-18T14:24:21Z"
+              "start": "2026-02-20T12:54:21Z",
+              "end": "2026-02-20T14:24:21Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-11-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-02-20T12:20:16Z",
-              "end": "2026-02-20T13:50:16Z"
+              "start": "2026-02-22T12:20:16Z",
+              "end": "2026-02-22T13:50:16Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-11-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-02-21T20:40:40Z",
-              "end": "2026-02-21T22:10:40Z"
+              "start": "2026-02-23T20:40:40Z",
+              "end": "2026-02-23T22:10:40Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-11-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-02-22T16:04:55Z",
-              "end": "2026-02-22T17:34:55Z"
+              "start": "2026-02-24T16:04:55Z",
+              "end": "2026-02-24T17:34:55Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-11-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-02-23T08:00:00Z",
-              "end": "2026-02-23T11:00:00Z"
+              "start": "2026-02-25T08:00:00Z",
+              "end": "2026-02-25T11:00:00Z"
             },
             {
               "id": "thermal_chamber_charlie-fat-11-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-02-23T11:00:00Z",
-              "end": "2026-02-23T14:00:00Z"
+              "start": "2026-02-25T11:00:00Z",
+              "end": "2026-02-25T14:00:00Z"
             }
           ],
           "events": [
@@ -4123,147 +4123,35 @@
               "id": "thermal_chamber_charlie-fat-11-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-02-18T11:30:00Z",
+              "timestamp": "2026-02-20T11:30:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_charlie-fat-11-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-02-22T23:18:00Z",
+              "timestamp": "2026-02-24T23:18:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_charlie-fat-11-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-02-23T08:00:00Z",
+              "timestamp": "2026-02-25T08:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-11-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-02-23T11:00:00Z",
+              "timestamp": "2026-02-25T11:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_charlie-fat-11-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-02-23T14:00:00Z",
-              "state": "reset"
-            }
-          ]
-        },
-        {
-          "id": "thermal_chamber_charlie-fat-12",
-          "campaign_id": "thermal_acceptance_fat",
-          "title": "Charlie FAT 12",
-          "state": "scheduled",
-          "result": "pending",
-          "start": "2026-02-25T14:30:00Z",
-          "end": "2026-03-02T02:18:00Z",
-          "breakdown_start": "2026-03-02T09:30:00Z",
-          "breakdown_end": "2026-03-02T12:30:00Z",
-          "reset_start": "2026-03-02T12:30:00Z",
-          "reset_end": "2026-03-02T15:30:00Z",
-          "manifest": {
-            "id": "thermal_chamber_charlie-fat-12-manifest",
-            "label": "Charlie item manifest",
-            "article": "DUT 66-C",
-            "serial_number": "DUT-C-2921",
-            "facility": "TC-C",
-            "chamber_name": "Charlie",
-            "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare breakdown slot Mon 09:30",
-            "state": "scheduled",
-            "result": "pending",
-            "start": "2026-02-25T14:30:00Z",
-            "end": "2026-03-02T02:18:00Z",
-            "breakdown_start": "2026-03-02T09:30:00Z",
-            "breakdown_end": "2026-03-02T12:30:00Z",
-            "reset_start": "2026-03-02T12:30:00Z",
-            "reset_end": "2026-03-02T15:30:00Z"
-          },
-          "interaction_windows": [
-            {
-              "id": "thermal_chamber_charlie-fat-12-setup",
-              "label": "Setup review",
-              "kind": "operator_gate",
-              "start": "2026-02-25T15:54:21Z",
-              "end": "2026-02-25T17:24:21Z"
-            },
-            {
-              "id": "thermal_chamber_charlie-fat-12-cold",
-              "label": "Cold dwell gate",
-              "kind": "operator_gate",
-              "start": "2026-02-27T15:20:16Z",
-              "end": "2026-02-27T16:50:16Z"
-            },
-            {
-              "id": "thermal_chamber_charlie-fat-12-hot",
-              "label": "Hot dwell gate",
-              "kind": "operator_gate",
-              "start": "2026-02-28T23:40:40Z",
-              "end": "2026-03-01T01:10:40Z"
-            },
-            {
-              "id": "thermal_chamber_charlie-fat-12-closeout",
-              "label": "Closeout evidence",
-              "kind": "operator_gate",
-              "start": "2026-03-01T19:04:55Z",
-              "end": "2026-03-01T20:34:55Z"
-            },
-            {
-              "id": "thermal_chamber_charlie-fat-12-breakdown-window",
-              "label": "Breakdown",
-              "kind": "operator_breakdown",
-              "start": "2026-03-02T09:30:00Z",
-              "end": "2026-03-02T12:30:00Z"
-            },
-            {
-              "id": "thermal_chamber_charlie-fat-12-reset-window",
-              "label": "Reset",
-              "kind": "operator_reset",
-              "start": "2026-03-02T12:30:00Z",
-              "end": "2026-03-02T15:30:00Z"
-            }
-          ],
-          "events": [
-            {
-              "id": "thermal_chamber_charlie-fat-12-start",
-              "label": "FAT start",
-              "kind": "start",
-              "timestamp": "2026-02-25T14:30:00Z",
-              "state": "scheduled"
-            },
-            {
-              "id": "thermal_chamber_charlie-fat-12-end",
-              "label": "FAT closeout",
-              "kind": "closeout",
-              "timestamp": "2026-03-02T02:18:00Z",
-              "state": "scheduled"
-            },
-            {
-              "id": "thermal_chamber_charlie-fat-12-breakdown-start",
-              "label": "Breakdown start",
-              "kind": "breakdown",
-              "timestamp": "2026-03-02T09:30:00Z",
-              "state": "operator"
-            },
-            {
-              "id": "thermal_chamber_charlie-fat-12-reset-start",
-              "label": "Reset start",
-              "kind": "reset",
-              "timestamp": "2026-03-02T12:30:00Z",
-              "state": "operator"
-            },
-            {
-              "id": "thermal_chamber_charlie-fat-12-reset-ready",
-              "label": "Reset ready",
-              "kind": "reset_ready",
-              "timestamp": "2026-03-02T15:30:00Z",
+              "timestamp": "2026-02-25T14:00:00Z",
               "state": "reset"
             }
           ]
@@ -4283,12 +4171,12 @@
           "title": "Delta FAT 01",
           "state": "complete",
           "result": "pass",
-          "start": "2025-12-09T17:00:00Z",
-          "end": "2025-12-14T04:48:00Z",
-          "breakdown_start": "2025-12-15T09:30:00Z",
-          "breakdown_end": "2025-12-15T12:30:00Z",
-          "reset_start": "2025-12-15T12:30:00Z",
-          "reset_end": "2025-12-15T15:30:00Z",
+          "start": "2025-12-11T11:30:00Z",
+          "end": "2025-12-15T23:18:00Z",
+          "breakdown_start": "2025-12-16T09:30:00Z",
+          "breakdown_end": "2025-12-16T12:30:00Z",
+          "reset_start": "2025-12-16T12:30:00Z",
+          "reset_end": "2025-12-16T15:30:00Z",
           "manifest": {
             "id": "thermal_chamber_delta-fat-01-manifest",
             "label": "Delta item manifest",
@@ -4300,55 +4188,55 @@
             "operator_next": "archive evidence",
             "state": "complete",
             "result": "pass",
-            "start": "2025-12-09T17:00:00Z",
-            "end": "2025-12-14T04:48:00Z",
-            "breakdown_start": "2025-12-15T09:30:00Z",
-            "breakdown_end": "2025-12-15T12:30:00Z",
-            "reset_start": "2025-12-15T12:30:00Z",
-            "reset_end": "2025-12-15T15:30:00Z"
+            "start": "2025-12-11T11:30:00Z",
+            "end": "2025-12-15T23:18:00Z",
+            "breakdown_start": "2025-12-16T09:30:00Z",
+            "breakdown_end": "2025-12-16T12:30:00Z",
+            "reset_start": "2025-12-16T12:30:00Z",
+            "reset_end": "2025-12-16T15:30:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_delta-fat-01-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2025-12-09T18:24:21Z",
-              "end": "2025-12-09T19:54:21Z"
+              "start": "2025-12-11T12:54:21Z",
+              "end": "2025-12-11T14:24:21Z"
             },
             {
               "id": "thermal_chamber_delta-fat-01-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2025-12-11T17:50:16Z",
-              "end": "2025-12-11T19:20:16Z"
+              "start": "2025-12-13T12:20:16Z",
+              "end": "2025-12-13T13:50:16Z"
             },
             {
               "id": "thermal_chamber_delta-fat-01-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2025-12-13T02:10:40Z",
-              "end": "2025-12-13T03:40:40Z"
+              "start": "2025-12-14T20:40:40Z",
+              "end": "2025-12-14T22:10:40Z"
             },
             {
               "id": "thermal_chamber_delta-fat-01-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2025-12-13T21:34:55Z",
-              "end": "2025-12-13T23:04:55Z"
+              "start": "2025-12-15T16:04:55Z",
+              "end": "2025-12-15T17:34:55Z"
             },
             {
               "id": "thermal_chamber_delta-fat-01-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2025-12-15T09:30:00Z",
-              "end": "2025-12-15T12:30:00Z"
+              "start": "2025-12-16T09:30:00Z",
+              "end": "2025-12-16T12:30:00Z"
             },
             {
               "id": "thermal_chamber_delta-fat-01-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2025-12-15T12:30:00Z",
-              "end": "2025-12-15T15:30:00Z"
+              "start": "2025-12-16T12:30:00Z",
+              "end": "2025-12-16T15:30:00Z"
             }
           ],
           "events": [
@@ -4356,35 +4244,35 @@
               "id": "thermal_chamber_delta-fat-01-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2025-12-09T17:00:00Z",
+              "timestamp": "2025-12-11T11:30:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_delta-fat-01-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2025-12-14T04:48:00Z",
+              "timestamp": "2025-12-15T23:18:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_delta-fat-01-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2025-12-15T09:30:00Z",
+              "timestamp": "2025-12-16T09:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-01-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2025-12-15T12:30:00Z",
+              "timestamp": "2025-12-16T12:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-01-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2025-12-15T15:30:00Z",
+              "timestamp": "2025-12-16T15:30:00Z",
               "state": "reset"
             }
           ]
@@ -4395,12 +4283,12 @@
           "title": "Delta FAT 02",
           "state": "complete",
           "result": "pass",
-          "start": "2025-12-17T11:30:00Z",
-          "end": "2025-12-21T23:18:00Z",
-          "breakdown_start": "2025-12-22T09:00:00Z",
-          "breakdown_end": "2025-12-22T12:00:00Z",
-          "reset_start": "2025-12-22T12:00:00Z",
-          "reset_end": "2025-12-22T15:00:00Z",
+          "start": "2025-12-18T11:30:00Z",
+          "end": "2025-12-22T23:18:00Z",
+          "breakdown_start": "2025-12-23T09:00:00Z",
+          "breakdown_end": "2025-12-23T12:00:00Z",
+          "reset_start": "2025-12-23T12:00:00Z",
+          "reset_end": "2025-12-23T15:00:00Z",
           "manifest": {
             "id": "thermal_chamber_delta-fat-02-manifest",
             "label": "Delta item manifest",
@@ -4412,55 +4300,55 @@
             "operator_next": "archive evidence",
             "state": "complete",
             "result": "pass",
-            "start": "2025-12-17T11:30:00Z",
-            "end": "2025-12-21T23:18:00Z",
-            "breakdown_start": "2025-12-22T09:00:00Z",
-            "breakdown_end": "2025-12-22T12:00:00Z",
-            "reset_start": "2025-12-22T12:00:00Z",
-            "reset_end": "2025-12-22T15:00:00Z"
+            "start": "2025-12-18T11:30:00Z",
+            "end": "2025-12-22T23:18:00Z",
+            "breakdown_start": "2025-12-23T09:00:00Z",
+            "breakdown_end": "2025-12-23T12:00:00Z",
+            "reset_start": "2025-12-23T12:00:00Z",
+            "reset_end": "2025-12-23T15:00:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_delta-fat-02-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2025-12-17T12:54:21Z",
-              "end": "2025-12-17T14:24:21Z"
+              "start": "2025-12-18T12:54:21Z",
+              "end": "2025-12-18T14:24:21Z"
             },
             {
               "id": "thermal_chamber_delta-fat-02-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2025-12-19T12:20:16Z",
-              "end": "2025-12-19T13:50:16Z"
+              "start": "2025-12-20T12:20:16Z",
+              "end": "2025-12-20T13:50:16Z"
             },
             {
               "id": "thermal_chamber_delta-fat-02-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2025-12-20T20:40:40Z",
-              "end": "2025-12-20T22:10:40Z"
+              "start": "2025-12-21T20:40:40Z",
+              "end": "2025-12-21T22:10:40Z"
             },
             {
               "id": "thermal_chamber_delta-fat-02-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2025-12-21T16:04:55Z",
-              "end": "2025-12-21T17:34:55Z"
+              "start": "2025-12-22T16:04:55Z",
+              "end": "2025-12-22T17:34:55Z"
             },
             {
               "id": "thermal_chamber_delta-fat-02-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2025-12-22T09:00:00Z",
-              "end": "2025-12-22T12:00:00Z"
+              "start": "2025-12-23T09:00:00Z",
+              "end": "2025-12-23T12:00:00Z"
             },
             {
               "id": "thermal_chamber_delta-fat-02-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2025-12-22T12:00:00Z",
-              "end": "2025-12-22T15:00:00Z"
+              "start": "2025-12-23T12:00:00Z",
+              "end": "2025-12-23T15:00:00Z"
             }
           ],
           "events": [
@@ -4468,35 +4356,35 @@
               "id": "thermal_chamber_delta-fat-02-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2025-12-17T11:30:00Z",
+              "timestamp": "2025-12-18T11:30:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_delta-fat-02-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2025-12-21T23:18:00Z",
+              "timestamp": "2025-12-22T23:18:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_delta-fat-02-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2025-12-22T09:00:00Z",
+              "timestamp": "2025-12-23T09:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-02-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2025-12-22T12:00:00Z",
+              "timestamp": "2025-12-23T12:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-02-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2025-12-22T15:00:00Z",
+              "timestamp": "2025-12-23T15:00:00Z",
               "state": "reset"
             }
           ]
@@ -4507,12 +4395,12 @@
           "title": "Delta FAT 03",
           "state": "complete",
           "result": "pass",
-          "start": "2025-12-24T13:00:00Z",
-          "end": "2025-12-29T00:48:00Z",
-          "breakdown_start": "2025-12-29T08:30:00Z",
-          "breakdown_end": "2025-12-29T11:30:00Z",
-          "reset_start": "2025-12-29T11:30:00Z",
-          "reset_end": "2025-12-29T14:30:00Z",
+          "start": "2025-12-25T13:00:00Z",
+          "end": "2025-12-30T00:48:00Z",
+          "breakdown_start": "2025-12-30T08:30:00Z",
+          "breakdown_end": "2025-12-30T11:30:00Z",
+          "reset_start": "2025-12-30T11:30:00Z",
+          "reset_end": "2025-12-30T14:30:00Z",
           "manifest": {
             "id": "thermal_chamber_delta-fat-03-manifest",
             "label": "Delta item manifest",
@@ -4524,55 +4412,55 @@
             "operator_next": "archive evidence",
             "state": "complete",
             "result": "pass",
-            "start": "2025-12-24T13:00:00Z",
-            "end": "2025-12-29T00:48:00Z",
-            "breakdown_start": "2025-12-29T08:30:00Z",
-            "breakdown_end": "2025-12-29T11:30:00Z",
-            "reset_start": "2025-12-29T11:30:00Z",
-            "reset_end": "2025-12-29T14:30:00Z"
+            "start": "2025-12-25T13:00:00Z",
+            "end": "2025-12-30T00:48:00Z",
+            "breakdown_start": "2025-12-30T08:30:00Z",
+            "breakdown_end": "2025-12-30T11:30:00Z",
+            "reset_start": "2025-12-30T11:30:00Z",
+            "reset_end": "2025-12-30T14:30:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_delta-fat-03-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2025-12-24T14:24:21Z",
-              "end": "2025-12-24T15:54:21Z"
+              "start": "2025-12-25T14:24:21Z",
+              "end": "2025-12-25T15:54:21Z"
             },
             {
               "id": "thermal_chamber_delta-fat-03-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2025-12-26T13:50:16Z",
-              "end": "2025-12-26T15:20:16Z"
+              "start": "2025-12-27T13:50:16Z",
+              "end": "2025-12-27T15:20:16Z"
             },
             {
               "id": "thermal_chamber_delta-fat-03-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2025-12-27T22:10:40Z",
-              "end": "2025-12-27T23:40:40Z"
+              "start": "2025-12-28T22:10:40Z",
+              "end": "2025-12-28T23:40:40Z"
             },
             {
               "id": "thermal_chamber_delta-fat-03-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2025-12-28T17:34:55Z",
-              "end": "2025-12-28T19:04:55Z"
+              "start": "2025-12-29T17:34:55Z",
+              "end": "2025-12-29T19:04:55Z"
             },
             {
               "id": "thermal_chamber_delta-fat-03-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2025-12-29T08:30:00Z",
-              "end": "2025-12-29T11:30:00Z"
+              "start": "2025-12-30T08:30:00Z",
+              "end": "2025-12-30T11:30:00Z"
             },
             {
               "id": "thermal_chamber_delta-fat-03-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2025-12-29T11:30:00Z",
-              "end": "2025-12-29T14:30:00Z"
+              "start": "2025-12-30T11:30:00Z",
+              "end": "2025-12-30T14:30:00Z"
             }
           ],
           "events": [
@@ -4580,35 +4468,35 @@
               "id": "thermal_chamber_delta-fat-03-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2025-12-24T13:00:00Z",
+              "timestamp": "2025-12-25T13:00:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_delta-fat-03-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2025-12-29T00:48:00Z",
+              "timestamp": "2025-12-30T00:48:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_delta-fat-03-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2025-12-29T08:30:00Z",
+              "timestamp": "2025-12-30T08:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-03-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2025-12-29T11:30:00Z",
+              "timestamp": "2025-12-30T11:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-03-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2025-12-29T14:30:00Z",
+              "timestamp": "2025-12-30T14:30:00Z",
               "state": "reset"
             }
           ]
@@ -4619,12 +4507,12 @@
           "title": "Delta FAT 04",
           "state": "complete",
           "result": "pass",
-          "start": "2025-12-30T15:00:00Z",
-          "end": "2026-01-04T02:48:00Z",
-          "breakdown_start": "2026-01-05T08:00:00Z",
-          "breakdown_end": "2026-01-05T11:00:00Z",
-          "reset_start": "2026-01-05T11:00:00Z",
-          "reset_end": "2026-01-05T14:00:00Z",
+          "start": "2026-01-02T11:30:00Z",
+          "end": "2026-01-06T23:18:00Z",
+          "breakdown_start": "2026-01-07T08:00:00Z",
+          "breakdown_end": "2026-01-07T11:00:00Z",
+          "reset_start": "2026-01-07T11:00:00Z",
+          "reset_end": "2026-01-07T14:00:00Z",
           "manifest": {
             "id": "thermal_chamber_delta-fat-04-manifest",
             "label": "Delta item manifest",
@@ -4636,55 +4524,55 @@
             "operator_next": "archive evidence",
             "state": "complete",
             "result": "pass",
-            "start": "2025-12-30T15:00:00Z",
-            "end": "2026-01-04T02:48:00Z",
-            "breakdown_start": "2026-01-05T08:00:00Z",
-            "breakdown_end": "2026-01-05T11:00:00Z",
-            "reset_start": "2026-01-05T11:00:00Z",
-            "reset_end": "2026-01-05T14:00:00Z"
+            "start": "2026-01-02T11:30:00Z",
+            "end": "2026-01-06T23:18:00Z",
+            "breakdown_start": "2026-01-07T08:00:00Z",
+            "breakdown_end": "2026-01-07T11:00:00Z",
+            "reset_start": "2026-01-07T11:00:00Z",
+            "reset_end": "2026-01-07T14:00:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_delta-fat-04-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2025-12-30T16:24:21Z",
-              "end": "2025-12-30T17:54:21Z"
+              "start": "2026-01-02T12:54:21Z",
+              "end": "2026-01-02T14:24:21Z"
             },
             {
               "id": "thermal_chamber_delta-fat-04-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-01T15:50:16Z",
-              "end": "2026-01-01T17:20:16Z"
+              "start": "2026-01-04T12:20:16Z",
+              "end": "2026-01-04T13:50:16Z"
             },
             {
               "id": "thermal_chamber_delta-fat-04-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-03T00:10:40Z",
-              "end": "2026-01-03T01:40:40Z"
+              "start": "2026-01-05T20:40:40Z",
+              "end": "2026-01-05T22:10:40Z"
             },
             {
               "id": "thermal_chamber_delta-fat-04-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-03T19:34:55Z",
-              "end": "2026-01-03T21:04:55Z"
+              "start": "2026-01-06T16:04:55Z",
+              "end": "2026-01-06T17:34:55Z"
             },
             {
               "id": "thermal_chamber_delta-fat-04-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-01-05T08:00:00Z",
-              "end": "2026-01-05T11:00:00Z"
+              "start": "2026-01-07T08:00:00Z",
+              "end": "2026-01-07T11:00:00Z"
             },
             {
               "id": "thermal_chamber_delta-fat-04-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-01-05T11:00:00Z",
-              "end": "2026-01-05T14:00:00Z"
+              "start": "2026-01-07T11:00:00Z",
+              "end": "2026-01-07T14:00:00Z"
             }
           ],
           "events": [
@@ -4692,35 +4580,35 @@
               "id": "thermal_chamber_delta-fat-04-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2025-12-30T15:00:00Z",
+              "timestamp": "2026-01-02T11:30:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_delta-fat-04-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-04T02:48:00Z",
+              "timestamp": "2026-01-06T23:18:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_delta-fat-04-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-01-05T08:00:00Z",
+              "timestamp": "2026-01-07T08:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-04-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-01-05T11:00:00Z",
+              "timestamp": "2026-01-07T11:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-04-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-01-05T14:00:00Z",
+              "timestamp": "2026-01-07T14:00:00Z",
               "state": "reset"
             }
           ]
@@ -4731,12 +4619,12 @@
           "title": "Delta FAT 05",
           "state": "complete",
           "result": "pass",
-          "start": "2026-01-05T17:00:00Z",
-          "end": "2026-01-10T04:48:00Z",
-          "breakdown_start": "2026-01-12T09:30:00Z",
-          "breakdown_end": "2026-01-12T12:30:00Z",
-          "reset_start": "2026-01-12T12:30:00Z",
-          "reset_end": "2026-01-12T15:30:00Z",
+          "start": "2026-01-09T11:30:00Z",
+          "end": "2026-01-13T23:18:00Z",
+          "breakdown_start": "2026-01-14T09:30:00Z",
+          "breakdown_end": "2026-01-14T12:30:00Z",
+          "reset_start": "2026-01-14T12:30:00Z",
+          "reset_end": "2026-01-14T15:30:00Z",
           "manifest": {
             "id": "thermal_chamber_delta-fat-05-manifest",
             "label": "Delta item manifest",
@@ -4748,55 +4636,55 @@
             "operator_next": "archive evidence",
             "state": "complete",
             "result": "pass",
-            "start": "2026-01-05T17:00:00Z",
-            "end": "2026-01-10T04:48:00Z",
-            "breakdown_start": "2026-01-12T09:30:00Z",
-            "breakdown_end": "2026-01-12T12:30:00Z",
-            "reset_start": "2026-01-12T12:30:00Z",
-            "reset_end": "2026-01-12T15:30:00Z"
+            "start": "2026-01-09T11:30:00Z",
+            "end": "2026-01-13T23:18:00Z",
+            "breakdown_start": "2026-01-14T09:30:00Z",
+            "breakdown_end": "2026-01-14T12:30:00Z",
+            "reset_start": "2026-01-14T12:30:00Z",
+            "reset_end": "2026-01-14T15:30:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_delta-fat-05-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-05T18:24:21Z",
-              "end": "2026-01-05T19:54:21Z"
+              "start": "2026-01-09T12:54:21Z",
+              "end": "2026-01-09T14:24:21Z"
             },
             {
               "id": "thermal_chamber_delta-fat-05-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-07T17:50:16Z",
-              "end": "2026-01-07T19:20:16Z"
+              "start": "2026-01-11T12:20:16Z",
+              "end": "2026-01-11T13:50:16Z"
             },
             {
               "id": "thermal_chamber_delta-fat-05-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-09T02:10:40Z",
-              "end": "2026-01-09T03:40:40Z"
+              "start": "2026-01-12T20:40:40Z",
+              "end": "2026-01-12T22:10:40Z"
             },
             {
               "id": "thermal_chamber_delta-fat-05-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-09T21:34:55Z",
-              "end": "2026-01-09T23:04:55Z"
+              "start": "2026-01-13T16:04:55Z",
+              "end": "2026-01-13T17:34:55Z"
             },
             {
               "id": "thermal_chamber_delta-fat-05-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-01-12T09:30:00Z",
-              "end": "2026-01-12T12:30:00Z"
+              "start": "2026-01-14T09:30:00Z",
+              "end": "2026-01-14T12:30:00Z"
             },
             {
               "id": "thermal_chamber_delta-fat-05-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-01-12T12:30:00Z",
-              "end": "2026-01-12T15:30:00Z"
+              "start": "2026-01-14T12:30:00Z",
+              "end": "2026-01-14T15:30:00Z"
             }
           ],
           "events": [
@@ -4804,35 +4692,35 @@
               "id": "thermal_chamber_delta-fat-05-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-05T17:00:00Z",
+              "timestamp": "2026-01-09T11:30:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_delta-fat-05-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-10T04:48:00Z",
+              "timestamp": "2026-01-13T23:18:00Z",
               "state": "complete"
             },
             {
               "id": "thermal_chamber_delta-fat-05-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-01-12T09:30:00Z",
+              "timestamp": "2026-01-14T09:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-05-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-01-12T12:30:00Z",
+              "timestamp": "2026-01-14T12:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-05-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-01-12T15:30:00Z",
+              "timestamp": "2026-01-14T15:30:00Z",
               "state": "reset"
             }
           ]
@@ -4841,14 +4729,14 @@
           "id": "thermal_chamber_delta-fat-06",
           "campaign_id": "thermal_acceptance_fat",
           "title": "Delta FAT 06",
-          "state": "running",
-          "result": "in_progress",
-          "start": "2026-01-14T11:30:00Z",
-          "end": "2026-01-18T23:18:00Z",
-          "breakdown_start": "2026-01-19T09:00:00Z",
-          "breakdown_end": "2026-01-19T12:00:00Z",
-          "reset_start": "2026-01-19T12:00:00Z",
-          "reset_end": "2026-01-19T15:00:00Z",
+          "state": "scheduled",
+          "result": "pending",
+          "start": "2026-01-16T11:30:00Z",
+          "end": "2026-01-20T23:18:00Z",
+          "breakdown_start": "2026-01-21T09:00:00Z",
+          "breakdown_end": "2026-01-21T12:00:00Z",
+          "reset_start": "2026-01-21T12:00:00Z",
+          "reset_end": "2026-01-21T15:00:00Z",
           "manifest": {
             "id": "thermal_chamber_delta-fat-06-manifest",
             "label": "Delta item manifest",
@@ -4857,58 +4745,58 @@
             "facility": "TC-D",
             "chamber_name": "Delta",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "monitor dwell gate",
-            "state": "running",
-            "result": "in_progress",
-            "start": "2026-01-14T11:30:00Z",
-            "end": "2026-01-18T23:18:00Z",
-            "breakdown_start": "2026-01-19T09:00:00Z",
-            "breakdown_end": "2026-01-19T12:00:00Z",
-            "reset_start": "2026-01-19T12:00:00Z",
-            "reset_end": "2026-01-19T15:00:00Z"
+            "operator_next": "prepare breakdown slot Wed 09:00",
+            "state": "scheduled",
+            "result": "pending",
+            "start": "2026-01-16T11:30:00Z",
+            "end": "2026-01-20T23:18:00Z",
+            "breakdown_start": "2026-01-21T09:00:00Z",
+            "breakdown_end": "2026-01-21T12:00:00Z",
+            "reset_start": "2026-01-21T12:00:00Z",
+            "reset_end": "2026-01-21T15:00:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_delta-fat-06-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-14T12:54:21Z",
-              "end": "2026-01-14T14:24:21Z"
+              "start": "2026-01-16T12:54:21Z",
+              "end": "2026-01-16T14:24:21Z"
             },
             {
               "id": "thermal_chamber_delta-fat-06-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-16T12:20:16Z",
-              "end": "2026-01-16T13:50:16Z"
+              "start": "2026-01-18T12:20:16Z",
+              "end": "2026-01-18T13:50:16Z"
             },
             {
               "id": "thermal_chamber_delta-fat-06-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-17T20:40:40Z",
-              "end": "2026-01-17T22:10:40Z"
+              "start": "2026-01-19T20:40:40Z",
+              "end": "2026-01-19T22:10:40Z"
             },
             {
               "id": "thermal_chamber_delta-fat-06-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-18T16:04:55Z",
-              "end": "2026-01-18T17:34:55Z"
+              "start": "2026-01-20T16:04:55Z",
+              "end": "2026-01-20T17:34:55Z"
             },
             {
               "id": "thermal_chamber_delta-fat-06-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-01-19T09:00:00Z",
-              "end": "2026-01-19T12:00:00Z"
+              "start": "2026-01-21T09:00:00Z",
+              "end": "2026-01-21T12:00:00Z"
             },
             {
               "id": "thermal_chamber_delta-fat-06-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-01-19T12:00:00Z",
-              "end": "2026-01-19T15:00:00Z"
+              "start": "2026-01-21T12:00:00Z",
+              "end": "2026-01-21T15:00:00Z"
             }
           ],
           "events": [
@@ -4916,35 +4804,35 @@
               "id": "thermal_chamber_delta-fat-06-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-14T11:30:00Z",
-              "state": "running"
+              "timestamp": "2026-01-16T11:30:00Z",
+              "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-06-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-18T23:18:00Z",
-              "state": "running"
+              "timestamp": "2026-01-20T23:18:00Z",
+              "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-06-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-01-19T09:00:00Z",
+              "timestamp": "2026-01-21T09:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-06-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-01-19T12:00:00Z",
+              "timestamp": "2026-01-21T12:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-06-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-01-19T15:00:00Z",
+              "timestamp": "2026-01-21T15:00:00Z",
               "state": "reset"
             }
           ]
@@ -4955,12 +4843,12 @@
           "title": "Delta FAT 07",
           "state": "scheduled",
           "result": "pending",
-          "start": "2026-01-21T13:00:00Z",
-          "end": "2026-01-26T00:48:00Z",
-          "breakdown_start": "2026-01-26T08:30:00Z",
-          "breakdown_end": "2026-01-26T11:30:00Z",
-          "reset_start": "2026-01-26T11:30:00Z",
-          "reset_end": "2026-01-26T14:30:00Z",
+          "start": "2026-01-23T13:00:00Z",
+          "end": "2026-01-28T00:48:00Z",
+          "breakdown_start": "2026-01-28T08:30:00Z",
+          "breakdown_end": "2026-01-28T11:30:00Z",
+          "reset_start": "2026-01-28T11:30:00Z",
+          "reset_end": "2026-01-28T14:30:00Z",
           "manifest": {
             "id": "thermal_chamber_delta-fat-07-manifest",
             "label": "Delta item manifest",
@@ -4969,58 +4857,58 @@
             "facility": "TC-D",
             "chamber_name": "Delta",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare breakdown slot Mon 08:30",
+            "operator_next": "prepare breakdown slot Wed 08:30",
             "state": "scheduled",
             "result": "pending",
-            "start": "2026-01-21T13:00:00Z",
-            "end": "2026-01-26T00:48:00Z",
-            "breakdown_start": "2026-01-26T08:30:00Z",
-            "breakdown_end": "2026-01-26T11:30:00Z",
-            "reset_start": "2026-01-26T11:30:00Z",
-            "reset_end": "2026-01-26T14:30:00Z"
+            "start": "2026-01-23T13:00:00Z",
+            "end": "2026-01-28T00:48:00Z",
+            "breakdown_start": "2026-01-28T08:30:00Z",
+            "breakdown_end": "2026-01-28T11:30:00Z",
+            "reset_start": "2026-01-28T11:30:00Z",
+            "reset_end": "2026-01-28T14:30:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_delta-fat-07-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-21T14:24:21Z",
-              "end": "2026-01-21T15:54:21Z"
+              "start": "2026-01-23T14:24:21Z",
+              "end": "2026-01-23T15:54:21Z"
             },
             {
               "id": "thermal_chamber_delta-fat-07-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-23T13:50:16Z",
-              "end": "2026-01-23T15:20:16Z"
+              "start": "2026-01-25T13:50:16Z",
+              "end": "2026-01-25T15:20:16Z"
             },
             {
               "id": "thermal_chamber_delta-fat-07-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-24T22:10:40Z",
-              "end": "2026-01-24T23:40:40Z"
+              "start": "2026-01-26T22:10:40Z",
+              "end": "2026-01-26T23:40:40Z"
             },
             {
               "id": "thermal_chamber_delta-fat-07-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-25T17:34:55Z",
-              "end": "2026-01-25T19:04:55Z"
+              "start": "2026-01-27T17:34:55Z",
+              "end": "2026-01-27T19:04:55Z"
             },
             {
               "id": "thermal_chamber_delta-fat-07-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-01-26T08:30:00Z",
-              "end": "2026-01-26T11:30:00Z"
+              "start": "2026-01-28T08:30:00Z",
+              "end": "2026-01-28T11:30:00Z"
             },
             {
               "id": "thermal_chamber_delta-fat-07-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-01-26T11:30:00Z",
-              "end": "2026-01-26T14:30:00Z"
+              "start": "2026-01-28T11:30:00Z",
+              "end": "2026-01-28T14:30:00Z"
             }
           ],
           "events": [
@@ -5028,35 +4916,35 @@
               "id": "thermal_chamber_delta-fat-07-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-21T13:00:00Z",
+              "timestamp": "2026-01-23T13:00:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-07-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-01-26T00:48:00Z",
+              "timestamp": "2026-01-28T00:48:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-07-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-01-26T08:30:00Z",
+              "timestamp": "2026-01-28T08:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-07-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-01-26T11:30:00Z",
+              "timestamp": "2026-01-28T11:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-07-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-01-26T14:30:00Z",
+              "timestamp": "2026-01-28T14:30:00Z",
               "state": "reset"
             }
           ]
@@ -5067,12 +4955,12 @@
           "title": "Delta FAT 08",
           "state": "scheduled",
           "result": "pending",
-          "start": "2026-01-27T15:00:00Z",
-          "end": "2026-02-01T02:48:00Z",
-          "breakdown_start": "2026-02-02T08:00:00Z",
-          "breakdown_end": "2026-02-02T11:00:00Z",
-          "reset_start": "2026-02-02T11:00:00Z",
-          "reset_end": "2026-02-02T14:00:00Z",
+          "start": "2026-01-29T15:00:00Z",
+          "end": "2026-02-03T02:48:00Z",
+          "breakdown_start": "2026-02-03T08:00:00Z",
+          "breakdown_end": "2026-02-03T11:00:00Z",
+          "reset_start": "2026-02-03T11:00:00Z",
+          "reset_end": "2026-02-03T14:00:00Z",
           "manifest": {
             "id": "thermal_chamber_delta-fat-08-manifest",
             "label": "Delta item manifest",
@@ -5081,58 +4969,58 @@
             "facility": "TC-D",
             "chamber_name": "Delta",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare breakdown slot Mon 08:00",
+            "operator_next": "prepare breakdown slot Tue 08:00",
             "state": "scheduled",
             "result": "pending",
-            "start": "2026-01-27T15:00:00Z",
-            "end": "2026-02-01T02:48:00Z",
-            "breakdown_start": "2026-02-02T08:00:00Z",
-            "breakdown_end": "2026-02-02T11:00:00Z",
-            "reset_start": "2026-02-02T11:00:00Z",
-            "reset_end": "2026-02-02T14:00:00Z"
+            "start": "2026-01-29T15:00:00Z",
+            "end": "2026-02-03T02:48:00Z",
+            "breakdown_start": "2026-02-03T08:00:00Z",
+            "breakdown_end": "2026-02-03T11:00:00Z",
+            "reset_start": "2026-02-03T11:00:00Z",
+            "reset_end": "2026-02-03T14:00:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_delta-fat-08-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-01-27T16:24:21Z",
-              "end": "2026-01-27T17:54:21Z"
+              "start": "2026-01-29T16:24:21Z",
+              "end": "2026-01-29T17:54:21Z"
             },
             {
               "id": "thermal_chamber_delta-fat-08-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-29T15:50:16Z",
-              "end": "2026-01-29T17:20:16Z"
+              "start": "2026-01-31T15:50:16Z",
+              "end": "2026-01-31T17:20:16Z"
             },
             {
               "id": "thermal_chamber_delta-fat-08-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-01-31T00:10:40Z",
-              "end": "2026-01-31T01:40:40Z"
+              "start": "2026-02-02T00:10:40Z",
+              "end": "2026-02-02T01:40:40Z"
             },
             {
               "id": "thermal_chamber_delta-fat-08-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-01-31T19:34:55Z",
-              "end": "2026-01-31T21:04:55Z"
+              "start": "2026-02-02T19:34:55Z",
+              "end": "2026-02-02T21:04:55Z"
             },
             {
               "id": "thermal_chamber_delta-fat-08-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-02-02T08:00:00Z",
-              "end": "2026-02-02T11:00:00Z"
+              "start": "2026-02-03T08:00:00Z",
+              "end": "2026-02-03T11:00:00Z"
             },
             {
               "id": "thermal_chamber_delta-fat-08-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-02-02T11:00:00Z",
-              "end": "2026-02-02T14:00:00Z"
+              "start": "2026-02-03T11:00:00Z",
+              "end": "2026-02-03T14:00:00Z"
             }
           ],
           "events": [
@@ -5140,35 +5028,35 @@
               "id": "thermal_chamber_delta-fat-08-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-01-27T15:00:00Z",
+              "timestamp": "2026-01-29T15:00:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-08-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-02-01T02:48:00Z",
+              "timestamp": "2026-02-03T02:48:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-08-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-02-02T08:00:00Z",
+              "timestamp": "2026-02-03T08:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-08-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-02-02T11:00:00Z",
+              "timestamp": "2026-02-03T11:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-08-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-02-02T14:00:00Z",
+              "timestamp": "2026-02-03T14:00:00Z",
               "state": "reset"
             }
           ]
@@ -5179,12 +5067,12 @@
           "title": "Delta FAT 09",
           "state": "scheduled",
           "result": "pending",
-          "start": "2026-02-02T17:00:00Z",
-          "end": "2026-02-07T04:48:00Z",
-          "breakdown_start": "2026-02-09T09:30:00Z",
-          "breakdown_end": "2026-02-09T12:30:00Z",
-          "reset_start": "2026-02-09T12:30:00Z",
-          "reset_end": "2026-02-09T15:30:00Z",
+          "start": "2026-02-05T13:00:00Z",
+          "end": "2026-02-10T00:48:00Z",
+          "breakdown_start": "2026-02-10T09:30:00Z",
+          "breakdown_end": "2026-02-10T12:30:00Z",
+          "reset_start": "2026-02-10T12:30:00Z",
+          "reset_end": "2026-02-10T15:30:00Z",
           "manifest": {
             "id": "thermal_chamber_delta-fat-09-manifest",
             "label": "Delta item manifest",
@@ -5193,58 +5081,58 @@
             "facility": "TC-D",
             "chamber_name": "Delta",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare breakdown slot Mon 09:30",
+            "operator_next": "prepare breakdown slot Tue 09:30",
             "state": "scheduled",
             "result": "pending",
-            "start": "2026-02-02T17:00:00Z",
-            "end": "2026-02-07T04:48:00Z",
-            "breakdown_start": "2026-02-09T09:30:00Z",
-            "breakdown_end": "2026-02-09T12:30:00Z",
-            "reset_start": "2026-02-09T12:30:00Z",
-            "reset_end": "2026-02-09T15:30:00Z"
+            "start": "2026-02-05T13:00:00Z",
+            "end": "2026-02-10T00:48:00Z",
+            "breakdown_start": "2026-02-10T09:30:00Z",
+            "breakdown_end": "2026-02-10T12:30:00Z",
+            "reset_start": "2026-02-10T12:30:00Z",
+            "reset_end": "2026-02-10T15:30:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_delta-fat-09-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-02-02T18:24:21Z",
-              "end": "2026-02-02T19:54:21Z"
+              "start": "2026-02-05T14:24:21Z",
+              "end": "2026-02-05T15:54:21Z"
             },
             {
               "id": "thermal_chamber_delta-fat-09-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-02-04T17:50:16Z",
-              "end": "2026-02-04T19:20:16Z"
+              "start": "2026-02-07T13:50:16Z",
+              "end": "2026-02-07T15:20:16Z"
             },
             {
               "id": "thermal_chamber_delta-fat-09-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-02-06T02:10:40Z",
-              "end": "2026-02-06T03:40:40Z"
+              "start": "2026-02-08T22:10:40Z",
+              "end": "2026-02-08T23:40:40Z"
             },
             {
               "id": "thermal_chamber_delta-fat-09-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-02-06T21:34:55Z",
-              "end": "2026-02-06T23:04:55Z"
+              "start": "2026-02-09T17:34:55Z",
+              "end": "2026-02-09T19:04:55Z"
             },
             {
               "id": "thermal_chamber_delta-fat-09-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-02-09T09:30:00Z",
-              "end": "2026-02-09T12:30:00Z"
+              "start": "2026-02-10T09:30:00Z",
+              "end": "2026-02-10T12:30:00Z"
             },
             {
               "id": "thermal_chamber_delta-fat-09-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-02-09T12:30:00Z",
-              "end": "2026-02-09T15:30:00Z"
+              "start": "2026-02-10T12:30:00Z",
+              "end": "2026-02-10T15:30:00Z"
             }
           ],
           "events": [
@@ -5252,35 +5140,35 @@
               "id": "thermal_chamber_delta-fat-09-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-02-02T17:00:00Z",
+              "timestamp": "2026-02-05T13:00:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-09-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-02-07T04:48:00Z",
+              "timestamp": "2026-02-10T00:48:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-09-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-02-09T09:30:00Z",
+              "timestamp": "2026-02-10T09:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-09-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-02-09T12:30:00Z",
+              "timestamp": "2026-02-10T12:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-09-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-02-09T15:30:00Z",
+              "timestamp": "2026-02-10T15:30:00Z",
               "state": "reset"
             }
           ]
@@ -5291,12 +5179,12 @@
           "title": "Delta FAT 10",
           "state": "scheduled",
           "result": "pending",
-          "start": "2026-02-11T11:30:00Z",
-          "end": "2026-02-15T23:18:00Z",
-          "breakdown_start": "2026-02-16T09:00:00Z",
-          "breakdown_end": "2026-02-16T12:00:00Z",
-          "reset_start": "2026-02-16T12:00:00Z",
-          "reset_end": "2026-02-16T15:00:00Z",
+          "start": "2026-02-12T11:30:00Z",
+          "end": "2026-02-16T23:18:00Z",
+          "breakdown_start": "2026-02-17T09:00:00Z",
+          "breakdown_end": "2026-02-17T12:00:00Z",
+          "reset_start": "2026-02-17T12:00:00Z",
+          "reset_end": "2026-02-17T15:00:00Z",
           "manifest": {
             "id": "thermal_chamber_delta-fat-10-manifest",
             "label": "Delta item manifest",
@@ -5305,58 +5193,58 @@
             "facility": "TC-D",
             "chamber_name": "Delta",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare breakdown slot Mon 09:00",
+            "operator_next": "prepare breakdown slot Tue 09:00",
             "state": "scheduled",
             "result": "pending",
-            "start": "2026-02-11T11:30:00Z",
-            "end": "2026-02-15T23:18:00Z",
-            "breakdown_start": "2026-02-16T09:00:00Z",
-            "breakdown_end": "2026-02-16T12:00:00Z",
-            "reset_start": "2026-02-16T12:00:00Z",
-            "reset_end": "2026-02-16T15:00:00Z"
+            "start": "2026-02-12T11:30:00Z",
+            "end": "2026-02-16T23:18:00Z",
+            "breakdown_start": "2026-02-17T09:00:00Z",
+            "breakdown_end": "2026-02-17T12:00:00Z",
+            "reset_start": "2026-02-17T12:00:00Z",
+            "reset_end": "2026-02-17T15:00:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_delta-fat-10-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-02-11T12:54:21Z",
-              "end": "2026-02-11T14:24:21Z"
+              "start": "2026-02-12T12:54:21Z",
+              "end": "2026-02-12T14:24:21Z"
             },
             {
               "id": "thermal_chamber_delta-fat-10-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-02-13T12:20:16Z",
-              "end": "2026-02-13T13:50:16Z"
+              "start": "2026-02-14T12:20:16Z",
+              "end": "2026-02-14T13:50:16Z"
             },
             {
               "id": "thermal_chamber_delta-fat-10-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-02-14T20:40:40Z",
-              "end": "2026-02-14T22:10:40Z"
+              "start": "2026-02-15T20:40:40Z",
+              "end": "2026-02-15T22:10:40Z"
             },
             {
               "id": "thermal_chamber_delta-fat-10-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-02-15T16:04:55Z",
-              "end": "2026-02-15T17:34:55Z"
+              "start": "2026-02-16T16:04:55Z",
+              "end": "2026-02-16T17:34:55Z"
             },
             {
               "id": "thermal_chamber_delta-fat-10-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-02-16T09:00:00Z",
-              "end": "2026-02-16T12:00:00Z"
+              "start": "2026-02-17T09:00:00Z",
+              "end": "2026-02-17T12:00:00Z"
             },
             {
               "id": "thermal_chamber_delta-fat-10-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-02-16T12:00:00Z",
-              "end": "2026-02-16T15:00:00Z"
+              "start": "2026-02-17T12:00:00Z",
+              "end": "2026-02-17T15:00:00Z"
             }
           ],
           "events": [
@@ -5364,35 +5252,35 @@
               "id": "thermal_chamber_delta-fat-10-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-02-11T11:30:00Z",
+              "timestamp": "2026-02-12T11:30:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-10-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-02-15T23:18:00Z",
+              "timestamp": "2026-02-16T23:18:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-10-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-02-16T09:00:00Z",
+              "timestamp": "2026-02-17T09:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-10-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-02-16T12:00:00Z",
+              "timestamp": "2026-02-17T12:00:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-10-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-02-16T15:00:00Z",
+              "timestamp": "2026-02-17T15:00:00Z",
               "state": "reset"
             }
           ]
@@ -5403,12 +5291,12 @@
           "title": "Delta FAT 11",
           "state": "scheduled",
           "result": "pending",
-          "start": "2026-02-18T13:00:00Z",
-          "end": "2026-02-23T00:48:00Z",
-          "breakdown_start": "2026-02-23T08:30:00Z",
-          "breakdown_end": "2026-02-23T11:30:00Z",
-          "reset_start": "2026-02-23T11:30:00Z",
-          "reset_end": "2026-02-23T14:30:00Z",
+          "start": "2026-02-19T13:00:00Z",
+          "end": "2026-02-24T00:48:00Z",
+          "breakdown_start": "2026-02-24T08:30:00Z",
+          "breakdown_end": "2026-02-24T11:30:00Z",
+          "reset_start": "2026-02-24T11:30:00Z",
+          "reset_end": "2026-02-24T14:30:00Z",
           "manifest": {
             "id": "thermal_chamber_delta-fat-11-manifest",
             "label": "Delta item manifest",
@@ -5417,58 +5305,58 @@
             "facility": "TC-D",
             "chamber_name": "Delta",
             "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare breakdown slot Mon 08:30",
+            "operator_next": "prepare breakdown slot Tue 08:30",
             "state": "scheduled",
             "result": "pending",
-            "start": "2026-02-18T13:00:00Z",
-            "end": "2026-02-23T00:48:00Z",
-            "breakdown_start": "2026-02-23T08:30:00Z",
-            "breakdown_end": "2026-02-23T11:30:00Z",
-            "reset_start": "2026-02-23T11:30:00Z",
-            "reset_end": "2026-02-23T14:30:00Z"
+            "start": "2026-02-19T13:00:00Z",
+            "end": "2026-02-24T00:48:00Z",
+            "breakdown_start": "2026-02-24T08:30:00Z",
+            "breakdown_end": "2026-02-24T11:30:00Z",
+            "reset_start": "2026-02-24T11:30:00Z",
+            "reset_end": "2026-02-24T14:30:00Z"
           },
           "interaction_windows": [
             {
               "id": "thermal_chamber_delta-fat-11-setup",
               "label": "Setup review",
               "kind": "operator_gate",
-              "start": "2026-02-18T14:24:21Z",
-              "end": "2026-02-18T15:54:21Z"
+              "start": "2026-02-19T14:24:21Z",
+              "end": "2026-02-19T15:54:21Z"
             },
             {
               "id": "thermal_chamber_delta-fat-11-cold",
               "label": "Cold dwell gate",
               "kind": "operator_gate",
-              "start": "2026-02-20T13:50:16Z",
-              "end": "2026-02-20T15:20:16Z"
+              "start": "2026-02-21T13:50:16Z",
+              "end": "2026-02-21T15:20:16Z"
             },
             {
               "id": "thermal_chamber_delta-fat-11-hot",
               "label": "Hot dwell gate",
               "kind": "operator_gate",
-              "start": "2026-02-21T22:10:40Z",
-              "end": "2026-02-21T23:40:40Z"
+              "start": "2026-02-22T22:10:40Z",
+              "end": "2026-02-22T23:40:40Z"
             },
             {
               "id": "thermal_chamber_delta-fat-11-closeout",
               "label": "Closeout evidence",
               "kind": "operator_gate",
-              "start": "2026-02-22T17:34:55Z",
-              "end": "2026-02-22T19:04:55Z"
+              "start": "2026-02-23T17:34:55Z",
+              "end": "2026-02-23T19:04:55Z"
             },
             {
               "id": "thermal_chamber_delta-fat-11-breakdown-window",
               "label": "Breakdown",
               "kind": "operator_breakdown",
-              "start": "2026-02-23T08:30:00Z",
-              "end": "2026-02-23T11:30:00Z"
+              "start": "2026-02-24T08:30:00Z",
+              "end": "2026-02-24T11:30:00Z"
             },
             {
               "id": "thermal_chamber_delta-fat-11-reset-window",
               "label": "Reset",
               "kind": "operator_reset",
-              "start": "2026-02-23T11:30:00Z",
-              "end": "2026-02-23T14:30:00Z"
+              "start": "2026-02-24T11:30:00Z",
+              "end": "2026-02-24T14:30:00Z"
             }
           ],
           "events": [
@@ -5476,147 +5364,35 @@
               "id": "thermal_chamber_delta-fat-11-start",
               "label": "FAT start",
               "kind": "start",
-              "timestamp": "2026-02-18T13:00:00Z",
+              "timestamp": "2026-02-19T13:00:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-11-end",
               "label": "FAT closeout",
               "kind": "closeout",
-              "timestamp": "2026-02-23T00:48:00Z",
+              "timestamp": "2026-02-24T00:48:00Z",
               "state": "scheduled"
             },
             {
               "id": "thermal_chamber_delta-fat-11-breakdown-start",
               "label": "Breakdown start",
               "kind": "breakdown",
-              "timestamp": "2026-02-23T08:30:00Z",
+              "timestamp": "2026-02-24T08:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-11-reset-start",
               "label": "Reset start",
               "kind": "reset",
-              "timestamp": "2026-02-23T11:30:00Z",
+              "timestamp": "2026-02-24T11:30:00Z",
               "state": "operator"
             },
             {
               "id": "thermal_chamber_delta-fat-11-reset-ready",
               "label": "Reset ready",
               "kind": "reset_ready",
-              "timestamp": "2026-02-23T14:30:00Z",
-              "state": "reset"
-            }
-          ]
-        },
-        {
-          "id": "thermal_chamber_delta-fat-12",
-          "campaign_id": "thermal_acceptance_fat",
-          "title": "Delta FAT 12",
-          "state": "scheduled",
-          "result": "pending",
-          "start": "2026-02-24T15:00:00Z",
-          "end": "2026-03-01T02:48:00Z",
-          "breakdown_start": "2026-03-02T08:00:00Z",
-          "breakdown_end": "2026-03-02T11:00:00Z",
-          "reset_start": "2026-03-02T11:00:00Z",
-          "reset_end": "2026-03-02T14:00:00Z",
-          "manifest": {
-            "id": "thermal_chamber_delta-fat-12-manifest",
-            "label": "Delta item manifest",
-            "article": "DUT 73-D",
-            "serial_number": "DUT-D-3021",
-            "facility": "TC-D",
-            "chamber_name": "Delta",
-            "campaign_id": "thermal_acceptance_fat",
-            "operator_next": "prepare breakdown slot Mon 08:00",
-            "state": "scheduled",
-            "result": "pending",
-            "start": "2026-02-24T15:00:00Z",
-            "end": "2026-03-01T02:48:00Z",
-            "breakdown_start": "2026-03-02T08:00:00Z",
-            "breakdown_end": "2026-03-02T11:00:00Z",
-            "reset_start": "2026-03-02T11:00:00Z",
-            "reset_end": "2026-03-02T14:00:00Z"
-          },
-          "interaction_windows": [
-            {
-              "id": "thermal_chamber_delta-fat-12-setup",
-              "label": "Setup review",
-              "kind": "operator_gate",
-              "start": "2026-02-24T16:24:21Z",
-              "end": "2026-02-24T17:54:21Z"
-            },
-            {
-              "id": "thermal_chamber_delta-fat-12-cold",
-              "label": "Cold dwell gate",
-              "kind": "operator_gate",
-              "start": "2026-02-26T15:50:16Z",
-              "end": "2026-02-26T17:20:16Z"
-            },
-            {
-              "id": "thermal_chamber_delta-fat-12-hot",
-              "label": "Hot dwell gate",
-              "kind": "operator_gate",
-              "start": "2026-02-28T00:10:40Z",
-              "end": "2026-02-28T01:40:40Z"
-            },
-            {
-              "id": "thermal_chamber_delta-fat-12-closeout",
-              "label": "Closeout evidence",
-              "kind": "operator_gate",
-              "start": "2026-02-28T19:34:55Z",
-              "end": "2026-02-28T21:04:55Z"
-            },
-            {
-              "id": "thermal_chamber_delta-fat-12-breakdown-window",
-              "label": "Breakdown",
-              "kind": "operator_breakdown",
-              "start": "2026-03-02T08:00:00Z",
-              "end": "2026-03-02T11:00:00Z"
-            },
-            {
-              "id": "thermal_chamber_delta-fat-12-reset-window",
-              "label": "Reset",
-              "kind": "operator_reset",
-              "start": "2026-03-02T11:00:00Z",
-              "end": "2026-03-02T14:00:00Z"
-            }
-          ],
-          "events": [
-            {
-              "id": "thermal_chamber_delta-fat-12-start",
-              "label": "FAT start",
-              "kind": "start",
-              "timestamp": "2026-02-24T15:00:00Z",
-              "state": "scheduled"
-            },
-            {
-              "id": "thermal_chamber_delta-fat-12-end",
-              "label": "FAT closeout",
-              "kind": "closeout",
-              "timestamp": "2026-03-01T02:48:00Z",
-              "state": "scheduled"
-            },
-            {
-              "id": "thermal_chamber_delta-fat-12-breakdown-start",
-              "label": "Breakdown start",
-              "kind": "breakdown",
-              "timestamp": "2026-03-02T08:00:00Z",
-              "state": "operator"
-            },
-            {
-              "id": "thermal_chamber_delta-fat-12-reset-start",
-              "label": "Reset start",
-              "kind": "reset",
-              "timestamp": "2026-03-02T11:00:00Z",
-              "state": "operator"
-            },
-            {
-              "id": "thermal_chamber_delta-fat-12-reset-ready",
-              "label": "Reset ready",
-              "kind": "reset_ready",
-              "timestamp": "2026-03-02T14:00:00Z",
+              "timestamp": "2026-02-24T14:30:00Z",
               "state": "reset"
             }
           ]

@@ -1315,6 +1315,7 @@ func TestBuildProducesCommandCenterFATWorkdayLadder(t *testing.T) {
 	if len(model.WeekendBands) < 12 {
 		t.Fatalf("weekend bands = %d, want full materialized horizon", len(model.WeekendBands))
 	}
+	assertCommandCenterDailyOperatorLoad(t, model)
 }
 
 func assertCommandCenterSpacing(t *testing.T, model contracts.CommandCenterFAT) {
@@ -1346,6 +1347,33 @@ func assertCommandCenterSpacing(t *testing.T, model contracts.CommandCenterFAT) 
 	}
 	check("start", starts)
 	check("finish", finishes)
+}
+
+func assertCommandCenterDailyOperatorLoad(t *testing.T, model contracts.CommandCenterFAT) {
+	t.Helper()
+	windowStart := mustTime(model.WindowStart)
+	windowEnd := mustTime(model.WindowEnd)
+	check := func(kind string, eventTime func(contracts.CommandCenterRun) time.Time) {
+		counts := map[string]int{}
+		for _, lane := range model.Lanes {
+			for _, run := range lane.Runs {
+				event := eventTime(run)
+				if event.Before(windowStart) || event.After(windowEnd) {
+					continue
+				}
+				counts[event.Format("2006-01-02")]++
+			}
+		}
+		for day, count := range counts {
+			if count > 2 {
+				t.Fatalf("command center %s operator load bunches %d events on %s, want <= 2", kind, count, day)
+			}
+		}
+	}
+	check("start", func(run contracts.CommandCenterRun) time.Time { return mustTime(run.Start) })
+	check("finish", func(run contracts.CommandCenterRun) time.Time { return mustTime(run.End) })
+	check("breakdown", func(run contracts.CommandCenterRun) time.Time { return mustTime(run.BreakdownStart) })
+	check("reset", func(run contracts.CommandCenterRun) time.Time { return mustTime(run.ResetStart) })
 }
 
 func TestBuildProducesCommandCenterFATGraphWallContract(t *testing.T) {

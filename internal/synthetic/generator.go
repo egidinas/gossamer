@@ -1069,11 +1069,13 @@ func buildCommandCenterFAT(env contracts.Envelope, runDuration time.Duration) co
 	lanes := make([]contracts.CommandCenterLane, 0, len(chambers))
 	assignedStarts := []time.Time{}
 	assignedFinishes := []time.Time{}
+	assignedBreakdowns := []time.Time{}
+	assignedResets := []time.Time{}
 	for laneIndex, chamber := range chambers {
 		start := commandCenterTestStartAfterPrep(workdayAt(dataStart.AddDate(0, 0, chamber.offsetDays), commandCenterPreferredStartHour(laneIndex, 0)), laneIndex, 0)
 		runs := []contracts.CommandCenterRun{}
 		for runIndex := 0; runIndex < 256; runIndex++ {
-			start = commandCenterDeconflictStart(start, runDuration, assignedStarts, assignedFinishes)
+			start = commandCenterDeconflictStart(start, runDuration, laneIndex, runIndex, assignedStarts, assignedFinishes, assignedBreakdowns, assignedResets)
 			runEnd := start.Add(runDuration)
 			breakdownStart, breakdownEnd, resetStart, resetEnd := commandCenterOperatorWindows(runEnd, laneIndex, runIndex)
 			state, result := commandCenterState(start, runEnd)
@@ -1082,6 +1084,8 @@ func buildCommandCenterFAT(env contracts.Envelope, runDuration time.Duration) co
 			}
 			assignedStarts = append(assignedStarts, start)
 			assignedFinishes = append(assignedFinishes, runEnd)
+			assignedBreakdowns = append(assignedBreakdowns, breakdownStart)
+			assignedResets = append(assignedResets, resetStart)
 			if start.After(dataEnd.Add(runDuration)) {
 				break
 			}
@@ -1464,11 +1468,17 @@ func commandCenterEarliestPrep(t time.Time) time.Time {
 	return t
 }
 
-func commandCenterDeconflictStart(start time.Time, runDuration time.Duration, assignedStarts, assignedFinishes []time.Time) time.Time {
+func commandCenterDeconflictStart(start time.Time, runDuration time.Duration, laneIndex, runIndex int, assignedStarts, assignedFinishes, assignedBreakdowns, assignedResets []time.Time) time.Time {
 	candidate := commandCenterBusinessTestStart(start)
 	for attempts := 0; attempts < 128; attempts++ {
 		finish := candidate.Add(runDuration)
-		if commandCenterSpaced(candidate, assignedStarts, 90*time.Minute) && commandCenterSpaced(finish, assignedFinishes, 90*time.Minute) {
+		breakdownStart, _, resetStart, _ := commandCenterOperatorWindows(finish, laneIndex, runIndex)
+		if commandCenterSpaced(candidate, assignedStarts, 90*time.Minute) &&
+			commandCenterSpaced(finish, assignedFinishes, 90*time.Minute) &&
+			commandCenterDailyRoom(candidate, assignedStarts, 2) &&
+			commandCenterDailyRoom(finish, assignedFinishes, 2) &&
+			commandCenterDailyRoom(breakdownStart, assignedBreakdowns, 2) &&
+			commandCenterDailyRoom(resetStart, assignedResets, 2) {
 			return candidate
 		}
 		candidate = commandCenterBusinessTestStart(addBusinessDuration(candidate, 90*time.Minute))
@@ -1502,6 +1512,17 @@ func commandCenterSpaced(candidate time.Time, assigned []time.Time, minGap time.
 		}
 	}
 	return true
+}
+
+func commandCenterDailyRoom(candidate time.Time, assigned []time.Time, maxPerDay int) bool {
+	day := candidate.Format("2006-01-02")
+	count := 0
+	for _, other := range assigned {
+		if other.Format("2006-01-02") == day {
+			count++
+		}
+	}
+	return count < maxPerDay
 }
 
 func commandCenterOperatorWindows(runEnd time.Time, laneIndex, runIndex int) (time.Time, time.Time, time.Time, time.Time) {
