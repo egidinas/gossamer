@@ -14,6 +14,7 @@ export function CommandAuthorityView({
   onRelease: () => void;
   onCommand: () => void;
 }) {
+  const log = state.operator_log ?? [];
   return (
     <OperatorPanel title="Command Authority" meta="in-memory demo state">
       <div className="command-grid">
@@ -35,6 +36,23 @@ export function CommandAuthorityView({
         <button onClick={onRelease} title="Release lease"><Unlock size={16} /> Release</button>
         <button onClick={onCommand} title="Send mock command"><Send size={16} /> Mock command</button>
       </div>
+      {log.length > 0 && (
+        <table className="operator-log-table">
+          <thead>
+            <tr><th>Time (UTC)</th><th>Operator</th><th>Action</th><th>Detail</th></tr>
+          </thead>
+          <tbody>
+            {[...log].reverse().map((entry, i) => (
+              <tr key={i}>
+                <td><code className="requirement-expression">{entry.t.replace("T", " ").replace("Z", "")}</code></td>
+                <td>{entry.operator}</td>
+                <td><StatusBadge value={entry.action} /></td>
+                <td>{entry.detail}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </OperatorPanel>
   );
 }

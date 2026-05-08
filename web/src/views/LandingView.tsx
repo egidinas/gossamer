@@ -97,9 +97,20 @@ export function LandingView({ manifest, campaigns }: { manifest: Manifest; campa
       </OperatorPanel>
       <OperatorPanel title="Environmental-Test Execution Models" meta={manifest.test_article}>
         <div className="metric-grid">
-          <div><span className="label">Acceptance FAT</span><strong>4 cycles</strong></div>
-          <div><span className="label">TVac Qualification</span><strong>8 cycles</strong></div>
-          <div><span className="label">Current campaigns</span><strong>{campaigns.length}</strong></div>
+          {campaigns.map((c) => {
+            const reqs = c.requirements ?? [];
+            const pass = reqs.filter((r) => r.result === "pass").length;
+            const anomalies = (c.anomalies ?? []).length;
+            const openAnomalies = (c.anomalies ?? []).filter((a) => a.status !== "closed").length;
+            return (
+              <div key={c.id}>
+                <span className="label">{c.name ?? c.id}</span>
+                <strong><span style={{ color: "var(--color-pass)" }}>{c.result ?? "—"}</span></strong>
+                {reqs.length > 0 && <small>{pass}/{reqs.length} reqs</small>}
+                {anomalies > 0 && <small>{openAnomalies > 0 ? `${openAnomalies} open anomaly` : `${anomalies} anomaly closed`}</small>}
+              </div>
+            );
+          })}
           <div><span className="label">Evidence model</span><strong>{manifest.synthetic_only ? "traceable" : "live"}</strong></div>
         </div>
       </OperatorPanel>

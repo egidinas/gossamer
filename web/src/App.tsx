@@ -75,12 +75,16 @@ const bootCampaigns: Campaign[] = [
     id: "thermal_acceptance_fat",
     name: "Thermal Chamber FAT",
     level: "acceptance",
-    state: "running",
+    state: "complete",
     result: "pass",
     article: "Reference DUT",
     facility: "thermal_chamber_a",
-    requirements: [],
-    anomalies: [],
+    requirements: Array.from({ length: 13 }, (_, i) => ({ id: `REQ-FAT-${i + 1}`, title: "", description: "", result: "pass", evidence: [], rationale: "" })),
+    anomalies: [
+      { id: "ANOM-FAT-001", title: "Cycle 2 cold ramp overshoot", severity: "minor", status: "closed", evidence_ref: "", disposition: "" },
+      { id: "ANOM-FAT-002", title: "TM packet counter gap during hot soak", severity: "minor", status: "closed", evidence_ref: "", disposition: "" },
+      { id: "ANOM-FAT-003", title: "Facility interlock trip cycle 3", severity: "low", status: "closed", evidence_ref: "", disposition: "" }
+    ],
     synthetic_note: "Reference campaign model with backend-owned telemetry, evidence, and graph contracts."
   },
   {
@@ -93,8 +97,14 @@ const bootCampaigns: Campaign[] = [
     result: "inconclusive",
     article: "Reference DUT",
     facility: "tvac_chamber_q1",
-    requirements: [],
-    anomalies: [],
+    requirements: [
+      ...Array.from({ length: 10 }, (_, i) => ({ id: `REQ-TVAC-${i + 1}`, title: "", description: "", result: "pass", evidence: [], rationale: "" })),
+      ...Array.from({ length: 3 },  (_, i) => ({ id: `REQ-TVAC-INC-${i + 1}`, title: "", description: "", result: "inconclusive", evidence: [], rationale: "" }))
+    ],
+    anomalies: [
+      { id: "ANOM-TVAC-001", title: "Roughing pump degradation", severity: "medium", status: "needs_disposition", evidence_ref: "", disposition: "" },
+      { id: "ANOM-TVAC-002", title: "RF link margin cold-operational delta", severity: "minor", status: "closed", evidence_ref: "", disposition: "" }
+    ],
     synthetic_note: "Reference campaign model with backend-owned telemetry, evidence, and graph contracts."
   }
 ];
@@ -330,36 +340,6 @@ function routeLabel(route: Route): string {
 }
 
 function campaignFromTileManifest(tile: TileCampaignManifest): Campaign {
-  const bootCampaigns: Campaign[] = [
-    {
-      schema_version: 1,
-      generated_at: bootGeneratedAt,
-      id: "thermal_acceptance_fat",
-      name: "Thermal Chamber FAT",
-      level: "acceptance",
-      state: "running",
-      result: "pass",
-      article: "Reference DUT",
-      facility: "thermal_chamber_a",
-      requirements: [],
-      anomalies: [],
-      synthetic_note: "Reference campaign model with backend-owned telemetry, evidence, and graph contracts."
-    },
-    {
-      schema_version: 1,
-      generated_at: bootGeneratedAt,
-      id: "tvac_qualification",
-      name: "TVac Qualification",
-      level: "qualification",
-      state: "running",
-      result: "inconclusive",
-      article: "Reference DUT",
-      facility: "tvac_chamber_q1",
-      requirements: [],
-      anomalies: [],
-      synthetic_note: "Reference campaign model with backend-owned telemetry, evidence, and graph contracts."
-    }
-  ];
   const boot = bootCampaigns.find((campaign) => campaign.id === tile.campaign_id);
   if (boot) {
     return {

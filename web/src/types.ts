@@ -43,6 +43,10 @@ export type Source = {
   provenance: string;
   evidence_suitability: string;
   signals: string[];
+  sensor_type?: string;
+  uncertainty_pct?: number;
+  last_calibration?: string;
+  calibration_reference?: string;
 };
 
 export type SourceCatalogue = Envelope & {
@@ -870,11 +874,19 @@ export type TelemetrySample = {
   quality: string;
 };
 
+export type OperatorLogEntry = {
+  t: string;
+  operator: string;
+  action: string;
+  detail: string;
+};
+
 export type CommandAuthorityState = Envelope & {
   lease_owner: string;
   lease_state: string;
   allowed_commands: string[];
   last_command: string;
+  operator_log?: OperatorLogEntry[];
 };
 
 export type EvidenceReport = Envelope & {

@@ -164,7 +164,10 @@ export function formatLegendValue(series: TileSeries, value: number) {
   const unit = series.unit || unitForAxis(series.axis_id);
   if (series.axis_id === "pressure_mbar") return `${formatPressure(value)} mbar`;
   if (series.axis_id === "pressure_rate") return `${formatScientific(value)} mbar/min`;
-  if (series.axis_id === "counter") return `${Math.round(value).toLocaleString()}`;
+  if (series.axis_id === "counter") {
+    const u = series.unit || series.units || "";
+    return u ? `${Math.round(value).toLocaleString()} ${u}` : Math.round(value).toLocaleString();
+  }
   if (series.axis_id === "percent") return `${value.toFixed(0)}%`;
   if (unit === "degC") return `${value.toFixed(1)} degC`;
   if (unit === "W") return `${value.toFixed(1)} W`;
@@ -194,5 +197,10 @@ export function unitForAxis(axisID?: string) {
   if (axisID === "pressure_bar") return "bar";
   if (axisID === "pressure_rate") return "mbar/min";
   if (axisID === "percent") return "%";
+  if (axisID === "voltage_v") return "V";
+  if (axisID === "current_a") return "A";
+  if (axisID === "rf_db" || axisID === "link_db" || axisID === "signal_db") return "dB";
+  if (axisID === "frequency_hz") return "Hz";
+  if (axisID === "ohm") return "Ω";
   return "";
 }

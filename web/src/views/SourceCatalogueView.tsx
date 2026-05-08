@@ -30,7 +30,7 @@ export function SourceCatalogueView({ catalogue }: { catalogue: SourceCatalogue 
     <OperatorPanel title="Source Catalogue" meta={`${catalogue.sources.length} sources`}>
       <table>
         <thead>
-          <tr><th>Source</th><th>Node (origin)</th><th>Served by</th><th>Owner</th><th>Bus</th><th>Freshness</th><th>Quality</th><th>Evidence</th></tr>
+          <tr><th>Source</th><th>Node (origin)</th><th>Served by</th><th>Owner</th><th>Bus</th><th>Freshness</th><th>Quality</th><th>Evidence</th><th>Sensor type</th><th>Uncertainty</th><th>Last cal.</th><th>Cal. ref.</th></tr>
         </thead>
         <tbody>
           {catalogue.sources.map((source) => (
@@ -43,6 +43,10 @@ export function SourceCatalogueView({ catalogue }: { catalogue: SourceCatalogue 
               <td>{source.freshness_ms} ms</td>
               <td><StatusBadge value={source.quality} /></td>
               <td>{source.evidence_suitability}</td>
+              <td>{source.sensor_type ?? "—"}</td>
+              <td>{source.uncertainty_pct != null ? `±${source.uncertainty_pct} %` : "—"}</td>
+              <td>{source.last_calibration ?? "—"}</td>
+              <td>{source.calibration_reference ? <code className="requirement-expression">{source.calibration_reference}</code> : "—"}</td>
             </tr>
           ))}
         </tbody>

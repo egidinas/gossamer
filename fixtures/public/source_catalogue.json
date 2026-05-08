@@ -17,7 +17,11 @@
         "eps_bus_voltage_v",
         "eps_bus_current_a",
         "dut_self_heat_w"
-      ]
+      ],
+      "sensor_type": "Current shunt + ADC (16-bit)",
+      "uncertainty_pct": 0.5,
+      "last_calibration": "2025-11-04",
+      "calibration_reference": "CAL-EGSE-PWR-2025-44"
     },
     {
       "id": "dut_control",
@@ -50,7 +54,11 @@
       "signals": [
         "rf_link_margin_db",
         "tm_packet_counter"
-      ]
+      ],
+      "sensor_type": "RF power meter (spectrum analyser tap)",
+      "uncertainty_pct": 0.8,
+      "last_calibration": "2025-11-20",
+      "calibration_reference": "CAL-RF-LM-2025-22"
     },
     {
       "id": "dut_thermal",
@@ -72,7 +80,11 @@
         "dut_lazy_air_flux_w",
         "dut_lazy_interface_flux_w",
         "dut_lazy_shroud_flux_w"
-      ]
+      ],
+      "sensor_type": "Thermal model (RC network, 2nd-order)",
+      "uncertainty_pct": 1.8,
+      "last_calibration": "2025-10-12",
+      "calibration_reference": "CAL-TMM-DUT-2025-09"
     },
     {
       "id": "chamber_thermal_fat",
@@ -99,7 +111,11 @@
         "thermal_shroud_gradient_deg_c",
         "huber_table_deg_c",
         "ln2_valve_duty_pct"
-      ]
+      ],
+      "sensor_type": "Pt100 RTD (4-wire)",
+      "uncertainty_pct": 0.3,
+      "last_calibration": "2025-12-01",
+      "calibration_reference": "CAL-CHAMBER-A-RTD-2025-12"
     },
     {
       "id": "chamber_infra_fat",
@@ -219,7 +235,7 @@
     },
     {
       "id": "tvac_plc",
-      "label": "TVac PLC (Cryo \u0026 Vacuum)",
+      "label": "TVac PLC (Cryo & Vacuum)",
       "node_id": "tvac_plc_q1",
       "served_by": "tvac_computer_1",
       "owner": "facility_operator_role",
@@ -282,7 +298,11 @@
       "signals": [
         "tvac_pressure_mbar",
         "tvac_pressure_pa"
-      ]
+      ],
+      "sensor_type": "Capacitance diaphragm + cold cathode ion gauge",
+      "uncertainty_pct": 5.0,
+      "last_calibration": "2025-09-18",
+      "calibration_reference": "CAL-TVAC-Q1-PRESS-2025-09"
     },
     {
       "id": "chamber_infra_tvac",
@@ -375,7 +395,8 @@
       "signals": [
         "source_freshness_ms",
         "facility_interlock_state"
-      ]
+      ],
+      "sensor_type": "Software monitor (latency probe)"
     },
     {
       "id": "nas_exports",
@@ -394,11 +415,12 @@
         "latest_export_timestamp",
         "oldest_export_timestamp",
         "legacy_file_count"
-      ]
+      ],
+      "sensor_type": "File system probe"
     },
     {
       "id": "librarian_index",
-      "label": "Librarian (multi-format index \u0026 live translation)",
+      "label": "Librarian (multi-format index & live translation)",
       "node_id": "librarian_a",
       "served_by": "gateway_a",
       "owner": "test_conductor_role",

@@ -615,7 +615,32 @@
     "fixtures/public/graph_models/thermal_acceptance_fat.json",
     "fixtures/public/telemetry/thermal_acceptance_fat.arrow"
   ],
-  "anomalies": [],
+  "anomalies": [
+    {
+      "id": "ANOM-FAT-001",
+      "title": "Cycle 2 cold ramp overshoot: −38.4 °C vs −35.0 °C target",
+      "severity": "minor",
+      "status": "closed",
+      "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-2-cold-ramp",
+      "disposition": "Overshoot of 3.4 K occurred on the second cold ramp due to PLC integrator wind-up after a 4-minute hold at −20 °C. DUT remained within survival band (−45 °C limit). No functional impact observed. Root cause: PLC ramp-rate parameter mismatch between pre-test config and as-run config. Corrected for cycle 3 onward. Closed per test conductor authority, ref. TCR-FAT-2026-007."
+    },
+    {
+      "id": "ANOM-FAT-002",
+      "title": "TM packet counter gap: 47-packet window during hot soak cycle 1",
+      "severity": "minor",
+      "status": "closed",
+      "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-1-hot-soak",
+      "disposition": "TC/TM handler experienced a 94 ms watchdog reset at T+16:42 (hot soak, cycle 1). Packet counter shows 47-packet gap; no data loss confirmed — FIFO recovered on reconnect and gap timestamps were reconstructed from onboard log. Consistent with known OBC thermal sensitivity above +60 °C ambient. Accepted under REQ-THERMAL-MARGIN-DUT with margin note. Closed."
+    },
+    {
+      "id": "ANOM-FAT-003",
+      "title": "Facility interlock trip: chamber heater fault flag at cycle 3 start",
+      "severity": "low",
+      "status": "closed",
+      "evidence_ref": "telemetry/thermal_acceptance_fat.arrow#cycle-3-interlock",
+      "disposition": "Chamber heater fault flag asserted for 8 seconds at the start of cycle 3 ramp-up. Caused by an open-circuit reading on heater bank 2 thermocouple (TC-H2) due to a loose connector. TC-H2 replaced during a 22-minute facility hold. Test resumed from hold state; no re-soak required because DUT had not yet reached the hot threshold. Evidence continuity preserved; hold interval annotated in telemetry. Closed."
+    }
+  ],
   "thermal_program": {
     "id": "thermal_acceptance_fat_program",
     "kind": "thermal_chamber_fat",

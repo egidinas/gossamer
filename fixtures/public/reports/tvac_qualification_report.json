@@ -618,11 +618,19 @@
   "anomalies": [
     {
       "id": "ANOM-TVAC-001",
-      "title": "Pressure-source degradation during cold dwell",
+      "title": "Roughing pump degradation: base pressure 1.8 × 10⁻⁴ mbar vs 5 × 10⁻⁵ mbar target",
       "severity": "medium",
       "status": "needs_disposition",
-      "evidence_ref": "telemetry/tvac_qualification.arrow#sample-32",
-      "disposition": "Review required before closure."
+      "evidence_ref": "telemetry/tvac_qualification.arrow#pressure-ramp-cycle-3",
+      "disposition": "Chamber base pressure achieved only 1.8 × 10⁻⁴ mbar on cycle 3 (target 5 × 10⁻⁵ mbar). Cryo-pump cold-head temperature log shows +4 K drift from nominal, consistent with early helium compressor wear. DUT remained above minimum required vacuum level per REQ-TVAC-PRESSURE for all functional gates; no test objectives missed. Facility maintenance team notified; compressor scheduled for service post-campaign. Open pending compressor service report and re-verification of base pressure specification compliance."
+    },
+    {
+      "id": "ANOM-TVAC-002",
+      "title": "RF link margin anomaly: −1.2 dB below model at cold-operational gate, cycles 5–7",
+      "severity": "minor",
+      "status": "closed",
+      "evidence_ref": "telemetry/tvac_qualification.arrow#functional-cold-c05",
+      "disposition": "RF link margin measured −1.2 dB below thermal model prediction during cold-operational functional gates on cycles 5, 6, and 7. Margin remained positive (≥ +3.1 dB measured vs +2.0 dB requirement). Delta attributed to PCB dielectric loss increase at −48 °C, which was not included in the pre-test link budget. Analysis added to thermal design model; requirement compliance confirmed. Closed with design-model update note, ref. TDM-ECO-2026-014."
     }
   ],
   "thermal_program": {

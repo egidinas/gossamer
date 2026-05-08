@@ -50,7 +50,15 @@ func NewInMemoryLeaseManager() *InMemoryLeaseManager {
 	return &InMemoryLeaseManager{
 		state: contracts.CommandAuthorityState{
 			LeaseState:      "available",
-			AllowedCommands: []string{"set_demo_marker", "acknowledge_anomaly", "hold_fixture_state"},
+			AllowedCommands: []string{"set_demo_marker", "acknowledge_anomaly", "hold_fixture_state", "resume_fixture_state", "set_phase_label", "request_functional_gate"},
+			OperatorLog: []contracts.OperatorLogEntry{
+				{T: "2026-01-15T09:58:11Z", Operator: "test_conductor_role", Action: "lease_acquired", Detail: "Command authority acquired ahead of pre-conditioning start. Supervisor node confirmed."},
+				{T: "2026-01-16T03:14:47Z", Operator: "test_conductor_role", Action: "hold_issued", Detail: "Facility hold issued: heater bank 2 thermocouple (TC-H2) open-circuit fault. Chamber ramp suspended at +12 °C. Ref. ANOM-FAT-003."},
+				{T: "2026-01-16T03:37:02Z", Operator: "facility_engineer_role", Action: "set_demo_marker", Detail: "Marker placed at TC-H2 replacement point. Hold duration: 22 min 15 s."},
+				{T: "2026-01-16T03:37:21Z", Operator: "test_conductor_role", Action: "resume_issued", Detail: "Hold cleared. Ramp resumed. DUT telemetry continuous throughout hold; no re-soak required."},
+				{T: "2026-01-17T11:05:33Z", Operator: "test_conductor_role", Action: "request_functional_gate", Detail: "Hot-operational functional gate requested for cycle 2. Gate evaluation dispatched to supervisor."},
+				{T: "2026-01-18T14:22:00Z", Operator: "test_conductor_role", Action: "acknowledge_anomaly", Detail: "ANOM-FAT-003 acknowledged and closed. TCR-FAT-2026-007 filed. Lease released for end-of-campaign archive."},
+			},
 		},
 	}
 }
@@ -63,6 +71,16 @@ func (m *InMemoryLeaseManager) GetState() contracts.CommandAuthorityState {
 	return m.state
 }
 
+func (m *InMemoryLeaseManager) appendLog(operator, action, detail string) {
+	entry := contracts.OperatorLogEntry{
+		T:        time.Now().UTC().Format(time.RFC3339),
+		Operator: operator,
+		Action:   action,
+		Detail:   detail,
+	}
+	m.state.OperatorLog = append(m.state.OperatorLog, entry)
+}
+
 func (m *InMemoryLeaseManager) RequestLease(operatorID string) (contracts.CommandAuthorityState, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -73,6 +91,7 @@ func (m *InMemoryLeaseManager) RequestLease(operatorID string) (contracts.Comman
 	m.state.LeaseState = "held"
 	m.state.LeaseOwner = operatorID
 	m.lastSeen = time.Now()
+	m.appendLog(operatorID, "lease_acquired", "Command authority lease acquired via demo request.")
 	m.state.Envelope = contracts.NewEnvelope(time.Now())
 	return m.state, nil
 }
@@ -83,6 +102,7 @@ func (m *InMemoryLeaseManager) ReleaseLease(operatorID string) (contracts.Comman
 	if m.state.LeaseState == "held" && m.state.LeaseOwner != operatorID {
 		return m.state, fmt.Errorf("cannot release lease held by %s", m.state.LeaseOwner)
 	}
+	m.appendLog(operatorID, "lease_released", "Command authority lease released.")
 	m.state.LeaseState = "available"
 	m.state.LeaseOwner = ""
 	m.state.Envelope = contracts.NewEnvelope(time.Now())
@@ -98,6 +118,7 @@ func (m *InMemoryLeaseManager) ExecuteCommand(operatorID, command string) (contr
 	}
 	m.state.LastCommand = command
 	m.lastSeen = time.Now()
+	m.appendLog(operatorID, command, fmt.Sprintf("Command '%s' dispatched via demo interface.", command))
 	m.state.Envelope = contracts.NewEnvelope(time.Now())
 	return m.state, nil
 }

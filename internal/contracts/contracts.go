@@ -918,12 +918,20 @@ type EvidenceReport struct {
 	SyntheticDataNote    string                `json:"synthetic_data_note"`
 }
 
+type OperatorLogEntry struct {
+	T        string `json:"t"`
+	Operator string `json:"operator"`
+	Action   string `json:"action"`
+	Detail   string `json:"detail"`
+}
+
 type CommandAuthorityState struct {
 	Envelope
-	LeaseOwner      string   `json:"lease_owner"`
-	LeaseState      string   `json:"lease_state"`
-	AllowedCommands []string `json:"allowed_commands"`
-	LastCommand     string   `json:"last_command"`
+	LeaseOwner      string              `json:"lease_owner"`
+	LeaseState      string              `json:"lease_state"`
+	AllowedCommands []string            `json:"allowed_commands"`
+	LastCommand     string              `json:"last_command"`
+	OperatorLog     []OperatorLogEntry  `json:"operator_log,omitempty"`
 }
 
 // FileSignalGroup groups signals from a single node/source for the file viewer.
