@@ -1348,20 +1348,18 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
     const attachedMarker = marker.kind === "functional_gate" || marker.kind === "stability" || marker.kind === "stability_achieved";
     const anchor = attachedMarker ? markerAnchor(plot, tile, markerTime, top, height) : null;
     const anchorY = anchor?.y ?? top + 10;
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
-    ctx.lineWidth = operatorMarker ? 2.2 : attachedMarker ? 1.6 : 1.1;
-    ctx.setLineDash(marker.role === "interlock" ? [5, 4] : marker.kind === "operator_reset_ready" ? [7, 4] : []);
-    ctx.beginPath();
-    ctx.moveTo(x, attachedMarker ? Math.max(top + 2, anchorY - 42) : top + 2);
-    ctx.lineTo(x, top + height - 2);
-    ctx.stroke();
-    ctx.setLineDash([]);
     if (operatorMarker) {
       const y = top + 18 + (marker.kind === "operator_reset" ? 34 : marker.kind === "operator_reset_ready" ? 68 : 0);
       ctx.save();
       ctx.shadowColor = "rgba(0,0,0,0.72)";
       ctx.shadowBlur = 7;
+      ctx.fillStyle = "rgba(2,6,11,0.88)";
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(x, y, 14, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
       ctx.beginPath();
       if (marker.kind === "operator_breakdown") {
         ctx.moveTo(x, y - 9);
@@ -1397,14 +1395,24 @@ function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphMode
       lines.forEach((line, lineIndex) => ctx.fillText(line, labelX + 7, labelY + 15 + lineIndex * 14));
       ctx.restore();
     } else if (attachedMarker) {
+      ctx.save();
+      ctx.fillStyle = "rgba(2,6,11,0.86)";
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.arc(x, anchorY - (marker.kind === "functional_gate" ? 5 : 0), marker.kind === "functional_gate" ? 10 : 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+      ctx.fillStyle = color;
       ctx.beginPath();
       if (marker.kind === "functional_gate") {
         ctx.moveTo(x, anchorY);
-        ctx.lineTo(x - 5, anchorY - 9);
-        ctx.lineTo(x + 5, anchorY - 9);
+        ctx.lineTo(x - 7, anchorY - 12);
+        ctx.lineTo(x + 7, anchorY - 12);
         ctx.closePath();
       } else {
-        ctx.arc(x, anchorY, 4.2, 0, Math.PI * 2);
+        ctx.arc(x, anchorY, 5.6, 0, Math.PI * 2);
       }
       ctx.fill();
       const label = shortGateLabel(marker.label);

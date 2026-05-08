@@ -1351,6 +1351,21 @@ func assertCommandCenterSpacing(t *testing.T, model contracts.CommandCenterFAT) 
 func TestBuildProducesCommandCenterFATGraphWallContract(t *testing.T) {
 	set := Build()
 	model := set.CommandCenterFAT
+	graph := set.GraphModels[CommandCenterGraphCampaignID]
+	if graph.ThermalProgram == nil {
+		t.Fatal("command center missing source thermal program")
+	}
+	baseStart := mustTime(graph.ThermalProgram.Cycles[0].Start)
+	lastCycle := graph.ThermalProgram.Cycles[len(graph.ThermalProgram.Cycles)-1]
+	ambientRecoveryCompleteOffset := mustTime(lastCycle.End).Sub(baseStart)
+	postGate := functionalGateByID(graph.ThermalProgram, "POST")
+	if postGate.ID == "" {
+		t.Fatal("command center source program missing final ambient POST FT gate")
+	}
+	postGateOffset := mustTime(postGate.Timestamp).Sub(baseStart)
+	if postGateOffset <= ambientRecoveryCompleteOffset {
+		t.Fatalf("source final POST FT offset %s must occur after ambient recovery completes at %s", postGateOffset, ambientRecoveryCompleteOffset)
+	}
 	if model.GraphCampaignID != "command_center_fat" {
 		t.Fatalf("graph campaign id = %q, want command_center_fat", model.GraphCampaignID)
 	}
@@ -1428,6 +1443,20 @@ func TestBuildProducesCommandCenterFATGraphWallContract(t *testing.T) {
 			ready := markersByID[run.ID+"-operator-reset-ready"]
 			if ready.Timestamp != run.ResetEnd || ready.Kind != "operator_reset_ready" || ready.Role != "operator_interaction" {
 				t.Fatalf("%s reset ready marker = %#v, want timestamp %s operator interaction", run.ID, ready, run.ResetEnd)
+			}
+			runStart := mustTime(run.Start)
+			runEnd := mustTime(run.End)
+			ambientRecoveryComplete := runStart.Add(ambientRecoveryCompleteOffset)
+			finalPostFT := runStart.Add(postGateOffset)
+			if !finalPostFT.After(ambientRecoveryComplete) {
+				t.Fatalf("%s final POST FT at %s must occur after ambient recovery completes at %s", run.ID, finalPostFT.Format(time.RFC3339), ambientRecoveryComplete.Format(time.RFC3339))
+			}
+			if finalPostFT.After(runEnd) {
+				t.Fatalf("%s ends at %s before final ambient POST FT at %s", run.ID, run.End, finalPostFT.Format(time.RFC3339))
+			}
+			finalMarker := markersByID[run.ID+"-FUNC-POST"]
+			if finalMarker.Timestamp != finalPostFT.Format(time.RFC3339) || finalMarker.Kind != "functional_gate" || finalMarker.Result != "pass" {
+				t.Fatalf("%s final POST FT marker = %#v, want pass marker at %s", run.ID, finalMarker, finalPostFT.Format(time.RFC3339))
 			}
 		}
 	}
