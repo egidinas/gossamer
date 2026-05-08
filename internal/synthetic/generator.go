@@ -272,7 +272,7 @@ func buildThermalProgram(campaignID, facility string, cycleCount int, coldTarget
 	kind := "thermal_chamber_fat"
 	label := "Thermal Chamber FAT - 4 cycle acceptance profile"
 	commandedRampRateDegCMin := 1.0
-	fixedDwellMinutes := 60
+	fixedDwellMinutes := 50
 	survivalMarginK := 5.0
 	preContextMinutes := 720
 	rampRate := commandedRampRateDegCMin
@@ -357,6 +357,7 @@ func buildThermalProgram(campaignID, facility string, cycleCount int, coldTarget
 				addDwell(cycle, "COLD-SURVIVAL", "Cold survival dwell", "cold_survival", coldSurvivalTarget),
 				addRamp(cycle, "RAMP-COLD-OPERATIONAL", "Warm up to cold operational", "ramp_cold", coldTarget),
 				addDwell(cycle, "COLD-OPERATIONAL", "Cold operational dwell", "cold_operational", coldTarget),
+				addRamp(cycle, "RAMP-AMBIENT", "Return to ambient", "ambient_recovery", 22),
 			)
 		} else {
 			phases = append(phases,
@@ -364,6 +365,7 @@ func buildThermalProgram(campaignID, facility string, cycleCount int, coldTarget
 				addDwell(cycle, "HOT-OPERATIONAL", "Hot operational dwell", "hot_operational", hotTarget),
 				addRamp(cycle, "RAMP-COLD", "Ramp to cold operational", "ramp_cold", coldTarget),
 				addDwell(cycle, "COLD-OPERATIONAL", "Cold operational dwell", "cold_operational", coldTarget),
+				addRamp(cycle, "RAMP-AMBIENT", "Return to ambient", "ambient_recovery", 22),
 			)
 		}
 		program.Cycles = append(program.Cycles, contracts.ThermalCycle{
@@ -474,17 +476,9 @@ func isOperationalDwellPhase(kind string) bool {
 
 func thermalContextDuration(program *contracts.ThermalProgram) time.Duration {
 	if program == nil || len(program.Cycles) == 0 {
-		return 90 * time.Minute
+		return 8 * time.Hour
 	}
-	cycling := mustTime(program.Cycles[len(program.Cycles)-1].End).Sub(mustTime(program.Cycles[0].Start))
-	context := time.Duration(float64(cycling) * 0.10)
-	if context < 90*time.Minute {
-		return 90 * time.Minute
-	}
-	if context > 90*time.Minute {
-		return 90 * time.Minute
-	}
-	return context
+	return 8 * time.Hour
 }
 
 func deterministicOperatorDelay(campaignID string, cycle int, gate string, stableAt time.Time, program *contracts.ThermalProgram) time.Duration {
@@ -813,7 +807,7 @@ func buildGraphWall(env contracts.Envelope, campaignID string, hero contracts.He
 		graphSignal("trace.source_freshness", "Source freshness", "ms", "demo_quality", "source_quality", "measurement", "tmtc", "bus_ms", "tmtc_response"),
 	}))
 	stateSignals := []contracts.GraphWallSignal{
-		enumSignal("trace.phase_enum", "Thermal phase", "thermal_program", "enum", "testbed_dynamics", map[string]string{"0": "ambient pre", "1": "ramp cold", "2": "cold op", "3": "ramp hot", "4": "hot op", "5": "hot survival", "6": "cold survival", "7": "vacuum ambient", "8": "ambient post"}),
+		enumSignal("trace.phase_enum", "Thermal phase", "thermal_program", "enum", "testbed_dynamics", map[string]string{"0": "ambient pre", "1": "ramp cold", "2": "cold op", "3": "ramp hot", "4": "hot op", "5": "hot survival", "6": "cold survival", "7": "vacuum ambient", "8": "ambient recovery", "9": "ambient post"}),
 		enumSignal("trace.functional_gate_active", "Functional gate active", "test_conductor", "bool", "testbed_dynamics", map[string]string{"0": "inactive", "1": "active"}),
 		enumSignal("trace.stability_reached", "Stability reached", "thermal_program", "bool", "testbed_dynamics", map[string]string{"0": "stabilizing", "1": "stable"}),
 		enumSignal("trace.dwell_active", "Dwell active", "thermal_program", "bool", "testbed_dynamics", map[string]string{"0": "idle", "1": "dwelling"}),
@@ -1049,7 +1043,7 @@ func buildCommandCenterFATBundle(env contracts.Envelope) (contracts.CommandCente
 	baseProgram := buildThermalProgram(CommandCenterGraphCampaignID, "multi_chamber_fat", 4, -35, 65)
 	baseSim := environmentalsim.Simulate(CommandCenterGraphCampaignID, baseProgram, FixedTime)
 	baseStart := mustTime(baseProgram.Cycles[0].Start)
-	baseEnd := mustTime(baseProgram.Cycles[len(baseProgram.Cycles)-1].End)
+	baseEnd := mustTime(baseProgram.Cycles[len(baseProgram.Cycles)-1].End).Add(thermalContextDuration(baseProgram))
 	runDuration := baseEnd.Sub(baseStart)
 	model := buildCommandCenterFAT(env, runDuration)
 	samples, graph := buildCommandCenterGraphModel(env, model, baseProgram, baseSim, baseStart)
@@ -1059,12 +1053,10 @@ func buildCommandCenterFATBundle(env contracts.Envelope) (contracts.CommandCente
 }
 
 func buildCommandCenterFAT(env contracts.Envelope, runDuration time.Duration) contracts.CommandCenterFAT {
-	windowStart := time.Date(FixedTime.Year(), FixedTime.Month(), FixedTime.Day(), 0, 0, 0, 0, time.UTC)
-	for windowStart.Weekday() != time.Monday {
-		windowStart = windowStart.AddDate(0, 0, -1)
-	}
-	windowStart = windowStart.AddDate(0, 0, -7)
-	windowEnd := windowStart.AddDate(0, 0, 21)
+	windowStart := time.Date(FixedTime.Year(), FixedTime.Month(), FixedTime.Day(), 0, 0, 0, 0, time.UTC).AddDate(0, 0, -14)
+	windowEnd := windowStart.AddDate(0, 0, 28)
+	dataStart := windowStart.AddDate(0, 0, -28)
+	dataEnd := windowEnd.AddDate(0, 0, 28)
 	chambers := []struct {
 		id, name, facility string
 		offsetDays         int
@@ -1078,16 +1070,21 @@ func buildCommandCenterFAT(env contracts.Envelope, runDuration time.Duration) co
 	assignedStarts := []time.Time{}
 	assignedFinishes := []time.Time{}
 	for laneIndex, chamber := range chambers {
-		start := commandCenterTestStartAfterPrep(workdayAt(windowStart.AddDate(0, 0, chamber.offsetDays), commandCenterPreferredStartHour(laneIndex, 0)), laneIndex, 0)
+		start := commandCenterTestStartAfterPrep(workdayAt(dataStart.AddDate(0, 0, chamber.offsetDays), commandCenterPreferredStartHour(laneIndex, 0)), laneIndex, 0)
 		runs := []contracts.CommandCenterRun{}
-		for runIndex := 0; runIndex < 3; runIndex++ {
+		for runIndex := 0; runIndex < 256; runIndex++ {
 			start = commandCenterDeconflictStart(start, runDuration, assignedStarts, assignedFinishes)
 			runEnd := start.Add(runDuration)
 			resetStart, resetEnd := commandCenterBreakdownWindow(runEnd, laneIndex, runIndex)
 			state, result := commandCenterState(start, runEnd)
-			runs = append(runs, buildCommandCenterRun(chamber.id, chamber.name, chamber.facility, laneIndex, runIndex, start, runEnd, resetStart, resetEnd, state, result))
+			if runEnd.After(dataStart) && start.Before(dataEnd) {
+				runs = append(runs, buildCommandCenterRun(chamber.id, chamber.name, chamber.facility, laneIndex, runIndex, start, runEnd, resetStart, resetEnd, state, result))
+			}
 			assignedStarts = append(assignedStarts, start)
 			assignedFinishes = append(assignedFinishes, runEnd)
+			if start.After(dataEnd.Add(runDuration)) {
+				break
+			}
 			start = commandCenterTestStartAfterPrep(resetEnd, laneIndex, runIndex+1)
 		}
 		lanes = append(lanes, contracts.CommandCenterLane{
@@ -1103,13 +1100,16 @@ func buildCommandCenterFAT(env contracts.Envelope, runDuration time.Duration) co
 		Envelope:         env,
 		ID:               "command_center_fat",
 		Title:            "Command Center FAT",
-		Summary:          "Four thermal chamber FAT swimlanes over a three-week operational window. Starts are constrained to workdays; resets resume on Monday after weekend finishes.",
+		Summary:          "Four thermal chamber FAT swimlanes over a four-week operational window. The live cursor sits near the center with two weeks of as-run history and two weeks of forecast planning.",
 		Now:              FixedTime.Format(time.RFC3339),
 		WindowStart:      windowStart.Format(time.RFC3339),
 		WindowEnd:        windowEnd.Format(time.RFC3339),
+		DataStart:        dataStart.Format(time.RFC3339),
+		DataEnd:          dataEnd.Format(time.RFC3339),
+		SchedulePolicy:   "deterministic_tiled_fat_horizon_v1",
 		WorkdayStartHour: 8,
 		WorkdayEndHour:   18,
-		WeekendBands:     weekendBands(windowStart, windowEnd),
+		WeekendBands:     weekendBands(dataStart, dataEnd),
 		Lanes:            lanes,
 		GraphCampaignID:  CommandCenterGraphCampaignID,
 	}
@@ -1157,21 +1157,23 @@ func buildCommandCenterRun(chamberID, chamberName, facility string, laneIndex, r
 }
 
 func buildCommandCenterGraphModel(env contracts.Envelope, commandCenter contracts.CommandCenterFAT, baseProgram *contracts.ThermalProgram, baseSim environmentalsim.Result, baseStart time.Time) ([]contracts.TelemetrySample, contracts.GraphModel) {
-	windowStart := mustTime(commandCenter.WindowStart)
-	windowEnd := mustTime(commandCenter.WindowEnd)
+	windowStart := mustTime(commandCenter.DataStart)
+	windowEnd := mustTime(commandCenter.DataEnd)
 	hero := contracts.HeroGraphModel{
 		ID:         CommandCenterGraphCampaignID + "_hero",
 		Title:      "Command Center FAT chamber lanes",
 		Owner:      "test_conductor_role",
 		Provenance: baseSim.Provenance.Source,
 		TimeAxis: contracts.GraphTimeAxis{
-			Start:        commandCenter.WindowStart,
-			End:          commandCenter.WindowEnd,
-			Anchor:       commandCenter.Now,
-			Now:          commandCenter.Now,
-			RangeSeconds: int(windowEnd.Sub(windowStart).Seconds()),
-			Clamp:        true,
-			LatestPolicy: "actual until command center now, ghost after cursor",
+			Start:              commandCenter.DataStart,
+			End:                commandCenter.DataEnd,
+			Anchor:             commandCenter.Now,
+			Now:                commandCenter.Now,
+			DefaultWindowStart: commandCenter.WindowStart,
+			DefaultWindowEnd:   commandCenter.WindowEnd,
+			RangeSeconds:       int(windowEnd.Sub(windowStart).Seconds()),
+			Clamp:              true,
+			LatestPolicy:       "actual until command center now, ghost after cursor",
 		},
 		Axes: []contracts.GraphYAxis{
 			{ID: "temperature_c", Label: "Temperature", Units: "degC", Scale: "linear", Min: -55, Max: 82, Side: "left", Format: "fixed_1"},
@@ -1215,11 +1217,16 @@ func buildCommandCenterGraphModel(env contracts.Envelope, commandCenter contract
 			runEnd := mustTime(run.End)
 			hero.PhaseBands = append(hero.PhaseBands, contracts.GraphBand{ID: run.ID + "-window", Label: run.Title, Kind: "test_window", Start: run.Start, End: run.End, Result: run.Result})
 			hero.PhaseBands = append(hero.PhaseBands, contracts.GraphBand{ID: run.ID + "-reset", Label: lane.ChamberName + " reset", Kind: "reset", Start: run.ResetStart, End: run.ResetEnd, Result: "planned"})
-			for _, band := range shiftedGraphBands(baseSim.HeroGraph.PhaseBands, run.ID, runStart, baseStart) {
-				hero.PhaseBands = append(hero.PhaseBands, band)
-			}
-			for _, band := range shiftedGraphBands(baseSim.HeroGraph.DwellWindows, run.ID, runStart, baseStart) {
-				hero.DwellWindows = append(hero.DwellWindows, band)
+			for _, cycle := range baseProgram.Cycles {
+				hero.PhaseBands = append(hero.PhaseBands, contracts.GraphBand{
+					ID:         fmt.Sprintf("%s-cycle-%02d", run.ID, cycle.Index),
+					Label:      fmt.Sprintf("%s cycle %d", lane.ChamberName, cycle.Index),
+					Kind:       "thermal_cycle",
+					Start:      shiftTime(mustTime(cycle.Start), runStart, baseStart).Format(time.RFC3339),
+					End:        shiftTime(mustTime(cycle.End), runStart, baseStart).Format(time.RFC3339),
+					CycleIndex: cycle.Index + laneIndex*10 + runIndex,
+					Result:     run.Result,
+				})
 			}
 			for _, gate := range baseProgram.FunctionalGates {
 				ts := shiftTime(mustTime(gate.Timestamp), runStart, baseStart)
@@ -1373,17 +1380,6 @@ func sampleValueByIndex(points []contracts.GraphPoint, index int, fallback float
 		return points[index].Value
 	}
 	return fallback
-}
-
-func shiftedGraphBands(bands []contracts.GraphBand, prefix string, runStart, baseStart time.Time) []contracts.GraphBand {
-	out := make([]contracts.GraphBand, 0, len(bands))
-	for _, band := range bands {
-		band.ID = prefix + "-" + band.ID
-		band.Start = shiftTime(mustTime(band.Start), runStart, baseStart).Format(time.RFC3339)
-		band.End = shiftTime(mustTime(band.End), runStart, baseStart).Format(time.RFC3339)
-		out = append(out, band)
-	}
-	return out
 }
 
 func shiftTime(t, runStart, baseStart time.Time) time.Time {

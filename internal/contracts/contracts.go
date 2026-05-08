@@ -250,13 +250,15 @@ type SimulationProvenance struct {
 }
 
 type GraphTimeAxis struct {
-	Start        string `json:"start"`
-	End          string `json:"end"`
-	Anchor       string `json:"anchor"`
-	Now          string `json:"now,omitempty"`
-	RangeSeconds int    `json:"range_seconds"`
-	Clamp        bool   `json:"clamp"`
-	LatestPolicy string `json:"latest_policy"`
+	Start              string `json:"start"`
+	End                string `json:"end"`
+	Anchor             string `json:"anchor"`
+	Now                string `json:"now,omitempty"`
+	DefaultWindowStart string `json:"default_window_start,omitempty"`
+	DefaultWindowEnd   string `json:"default_window_end,omitempty"`
+	RangeSeconds       int    `json:"range_seconds"`
+	Clamp              bool   `json:"clamp"`
+	LatestPolicy       string `json:"latest_policy"`
 }
 
 type ExecutionState struct {
@@ -831,6 +833,9 @@ type CommandCenterFAT struct {
 	Now              string              `json:"now"`
 	WindowStart      string              `json:"window_start"`
 	WindowEnd        string              `json:"window_end"`
+	DataStart        string              `json:"data_start,omitempty"`
+	DataEnd          string              `json:"data_end,omitempty"`
+	SchedulePolicy   string              `json:"schedule_policy,omitempty"`
 	WorkdayStartHour int                 `json:"workday_start_hour"`
 	WorkdayEndHour   int                 `json:"workday_end_hour"`
 	WeekendBands     []CommandCenterBand `json:"weekend_bands"`

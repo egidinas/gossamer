@@ -189,7 +189,8 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
   const [peekTimeMs, setPeekTimeMs] = useState<number | undefined>(undefined);
   const [timeAxisBounds, setTimeAxisBounds] = useState<{ left: number; right: number } | undefined>(undefined);
   const fullTimeRange = useMemo(() => graphTimeRange(heroGraph), [heroGraph]);
-  const [viewRange, setViewRange] = useState<TimeRange>(fullTimeRange);
+  const defaultTimeRange = useMemo(() => defaultGraphTimeRange(heroGraph, fullTimeRange), [heroGraph, fullTimeRange]);
+  const [viewRange, setViewRange] = useState<TimeRange>(defaultTimeRange);
   const scrollFrameRef = useRef<HTMLDivElement | null>(null);
   const requestedTiles = useRef<Set<string>>(new Set());
   const loadGeneration = useRef(0);
@@ -201,7 +202,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
   useEffect(() => {
     let cancelled = false;
     loadGeneration.current += 1;
-    setViewRange(fullTimeRange);
+    setViewRange(defaultTimeRange);
     setManifest(null);
     setTiles({});
     setPinOverrides({});
@@ -219,7 +220,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
     return () => {
       cancelled = true;
     };
-  }, [campaignId, fullTimeRange]);
+  }, [campaignId, defaultTimeRange]);
 
   const manifestCards = useMemo(() => new Map((manifest?.cards ?? []).map((card) => [card.card_id, card])), [manifest]);
   const firstSectionID = wall.sections[0]?.id;
@@ -354,6 +355,15 @@ function graphTimeRange(heroGraph: HeroGraphModel): TimeRange {
     start: Number.isFinite(start) ? start : 0,
     end: Number.isFinite(end) && end > start ? end : start + 1,
   };
+}
+
+function defaultGraphTimeRange(heroGraph: HeroGraphModel, fullRange: TimeRange): TimeRange {
+  const start = Date.parse(heroGraph.time_axis.default_window_start ?? "");
+  const end = Date.parse(heroGraph.time_axis.default_window_end ?? "");
+  if (Number.isFinite(start) && Number.isFinite(end) && end > start) {
+    return clampRange({ start, end }, fullRange, 60_000);
+  }
+  return fullRange;
 }
 
 function tileCardPriority(a: GraphTileCardRef, b: GraphTileCardRef) {

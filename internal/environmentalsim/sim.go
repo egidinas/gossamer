@@ -157,6 +157,12 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 		if phase == "ramp_cold" && math.Abs(command-program.ColdTargetDegC) < 8 {
 			tauAir = 32.0
 		}
+		if phase == "ambient_recovery" {
+			tauAir = 28.0
+		}
+		if campaignID == "tvac_qualification" && phase == "ramp_hot" {
+			tauAir = 30.0
+		}
 		if isThermalDwellPhase(phase) {
 			tauAir = 11.0
 		}
@@ -458,7 +464,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 				t := phaseStart.Add(time.Duration(i) * dt)
 				f := float64(i) / float64(steps)
 				command := phase.TargetDegC
-				if phase.Kind == "ramp_cold" || phase.Kind == "ramp_hot" {
+				if phase.Kind == "ramp_cold" || phase.Kind == "ramp_hot" || phase.Kind == "ambient_recovery" {
 					command = from + (phase.TargetDegC-from)*smoothRamp(f)
 				}
 				ghost := thermalGhostCommand(program, phase, from, command, t)
@@ -1452,8 +1458,10 @@ func thermalPhaseCode(phase string) float64 {
 		return 6
 	case "ambient_postcheck_vacuum":
 		return 7
-	case "ambient_postcheck":
+	case "ambient_recovery":
 		return 8
+	case "ambient_postcheck":
+		return 9
 	default:
 		return 0
 	}
@@ -1541,19 +1549,9 @@ func dwellStateName(active, complete bool) string {
 
 func thermalContextDuration(program *contracts.ThermalProgram) time.Duration {
 	if program == nil || len(program.Cycles) == 0 {
-		return 90 * time.Minute
+		return 8 * time.Hour
 	}
-	start := mustTime(program.Cycles[0].Start)
-	end := mustTime(program.Cycles[len(program.Cycles)-1].End)
-	duration := end.Sub(start)
-	context := duration / 10
-	if context < 90*time.Minute {
-		return 90 * time.Minute
-	}
-	if context > 90*time.Minute {
-		return 90 * time.Minute
-	}
-	return context
+	return 8 * time.Hour
 }
 
 func smoothRamp(f float64) float64 {

@@ -41,7 +41,7 @@ func TestThermalCampaignsExposeExplicitCyclePrograms(t *testing.T) {
 		wantMargin float64
 	}{
 		{campaignID: "thermal_acceptance_fat", wantCycles: 4, wantKind: "thermal_chamber_fat", minHours: 88, maxHours: 108, wantMargin: 5},
-		{campaignID: "tvac_qualification", wantCycles: 8, wantKind: "tvac_qualification", minHours: 300, maxHours: 335, wantMargin: 10},
+		{campaignID: "tvac_qualification", wantCycles: 8, wantKind: "tvac_qualification", minHours: 280, maxHours: 320, wantMargin: 10},
 	}
 
 	for _, tc := range cases {
@@ -73,6 +73,16 @@ func TestThermalCampaignsExposeExplicitCyclePrograms(t *testing.T) {
 			}
 			if len(cycle.Phases) < 4 {
 				t.Fatalf("%s cycle %d has %d phases, want hot/cold ramps and dwells", tc.campaignID, cycle.Index, len(cycle.Phases))
+			}
+			lastPhase := cycle.Phases[len(cycle.Phases)-1]
+			if lastPhase.Kind != "ambient_recovery" {
+				t.Fatalf("%s cycle %d final phase kind = %q, want ambient_recovery", tc.campaignID, cycle.Index, lastPhase.Kind)
+			}
+			if math.Abs(lastPhase.TargetDegC-22) > 0.01 {
+				t.Fatalf("%s cycle %d final target = %.1f C, want ambient 22 C", tc.campaignID, cycle.Index, lastPhase.TargetDegC)
+			}
+			if cycle.End != lastPhase.End {
+				t.Fatalf("%s cycle %d ends at %s, want final ambient phase end %s", tc.campaignID, cycle.Index, cycle.End, lastPhase.End)
 			}
 			for _, phase := range cycle.Phases {
 				start, err := time.Parse(time.RFC3339, phase.Start)
@@ -121,6 +131,10 @@ func TestThermalCampaignsExposeExplicitCyclePrograms(t *testing.T) {
 		}
 		if preGate.ID == "" || postGate.ID == "" {
 			t.Fatalf("%s missing ambient start or final post gate", tc.campaignID)
+		}
+		lastCycle := campaign.ThermalProgram.Cycles[len(campaign.ThermalProgram.Cycles)-1]
+		if !mustParseTime(t, postGate.Timestamp).After(mustParseTime(t, lastCycle.End)) {
+			t.Fatalf("%s final post gate at %s must occur after cycle returns to ambient at %s", tc.campaignID, postGate.Timestamp, lastCycle.End)
 		}
 		ambientHours := mustParseTime(t, postGate.Timestamp).Sub(mustParseTime(t, preGate.Timestamp)).Hours()
 		if ambientHours < tc.minHours || ambientHours > tc.maxHours {
@@ -181,6 +195,55 @@ func TestThermalCampaignsExposeExplicitCyclePrograms(t *testing.T) {
 				if !functionalGateNamed(campaign.ThermalProgram, wantGate) {
 					t.Fatalf("%s missing TVac pressure/ambient gate %q", tc.campaignID, wantGate)
 				}
+			}
+		}
+	}
+}
+
+func TestThermalFinalFunctionalGateRunsAtAmbientCommand(t *testing.T) {
+	set := Build()
+	for _, campaignID := range []string{"thermal_acceptance_fat", "tvac_qualification"} {
+		campaign := set.Campaigns[campaignID]
+		postGate := functionalGateByID(campaign.ThermalProgram, "POST")
+		if postGate.ID == "" {
+			t.Fatalf("%s missing final post gate", campaignID)
+		}
+		gateAt := mustParseTime(t, postGate.Timestamp)
+		var nearest contracts.TelemetrySample
+		best := time.Duration(math.MaxInt64)
+		for _, sample := range set.Telemetry[campaignID] {
+			ts := mustParseTime(t, sample.Timestamp)
+			delta := ts.Sub(gateAt)
+			if delta < 0 {
+				delta = -delta
+			}
+			if delta < best {
+				best = delta
+				nearest = sample
+			}
+		}
+		if best > 10*time.Minute {
+			t.Fatalf("%s nearest post-gate telemetry is %s away, want <= 10m", campaignID, best)
+		}
+		if got := nearest.States["thermal_phase"]; got != "ambient_postcheck" {
+			t.Fatalf("%s post gate sample phase = %q, want ambient_postcheck", campaignID, got)
+		}
+		for _, signal := range []string{"chamber_setpoint_deg_c", "chamber_air_deg_c"} {
+			value, ok := nearest.Signals[signal]
+			if !ok {
+				t.Fatalf("%s post gate sample missing %s", campaignID, signal)
+			}
+			if math.Abs(value-22) > 3 {
+				t.Fatalf("%s %s at final post gate = %.2f C, want ambient within 3 C", campaignID, signal, value)
+			}
+		}
+		for _, signal := range []string{"thermal_zone_1_deg_c", "thermal_zone_2_deg_c"} {
+			value, ok := nearest.Signals[signal]
+			if !ok {
+				t.Fatalf("%s post gate sample missing %s", campaignID, signal)
+			}
+			if value < 15 || value > 38 {
+				t.Fatalf("%s %s at final post gate = %.2f C, want powered ambient FT range", campaignID, signal, value)
 			}
 		}
 	}
@@ -1156,8 +1219,8 @@ func TestBuildProducesCommandCenterFATWorkdayLadder(t *testing.T) {
 		if lane.GraphCardID == "" {
 			t.Fatalf("%s missing graph card id", lane.ChamberName)
 		}
-		if len(lane.Runs) != 3 {
-			t.Fatalf("%s runs = %d, want 3", lane.ChamberName, len(lane.Runs))
+		if len(lane.Runs) < 10 {
+			t.Fatalf("%s runs = %d, want tiled schedule across materialized horizon", lane.ChamberName, len(lane.Runs))
 		}
 		for runIndex, run := range lane.Runs {
 			start := mustTime(run.Start)
@@ -1201,15 +1264,48 @@ func TestBuildProducesCommandCenterFATWorkdayLadder(t *testing.T) {
 				if start.Before(ready) {
 					t.Fatalf("%s starts before prior reset is ready: %s < %s", run.ID, run.Start, previous.ResetEnd)
 				}
-				if ready.Weekday() != time.Saturday && ready.Weekday() != time.Sunday && ready.Hour() < 12 && !sameUTCDate(start, ready) {
+				if ready.Weekday() != time.Saturday && ready.Weekday() != time.Sunday && ready.Hour() < 12 && !sameUTCDate(start, ready) && !commandCenterHasCompetition(model, lane.ID, ready, start) {
 					t.Fatalf("%s ready during morning at %s but restarts at %s", run.ID, previous.ResetEnd, run.Start)
 				}
 			}
 		}
 	}
 	assertCommandCenterSpacing(t, model)
-	if len(model.WeekendBands) != 3 {
-		t.Fatalf("weekend bands = %d, want 3", len(model.WeekendBands))
+	windowStart := mustTime(model.WindowStart)
+	windowEnd := mustTime(model.WindowEnd)
+	dataStart := mustTime(model.DataStart)
+	dataEnd := mustTime(model.DataEnd)
+	now := mustTime(model.Now)
+	if got := now.Sub(windowStart); got < 14*24*time.Hour || got >= 15*24*time.Hour {
+		t.Fatalf("command center past window = %s, want two full weeks before present", got)
+	}
+	if got := windowEnd.Sub(now); got <= 13*24*time.Hour || got > 14*24*time.Hour {
+		t.Fatalf("command center future window = %s, want nearly two full weeks after present", got)
+	}
+	if !dataStart.Before(windowStart) || !dataEnd.After(windowEnd) {
+		t.Fatalf("data horizon %s..%s must extend display window %s..%s", model.DataStart, model.DataEnd, model.WindowStart, model.WindowEnd)
+	}
+	if model.SchedulePolicy != "deterministic_tiled_fat_horizon_v1" {
+		t.Fatalf("schedule policy = %q, want deterministic tiled horizon", model.SchedulePolicy)
+	}
+	var crossesLeft, crossesRight bool
+	for _, lane := range model.Lanes {
+		for _, run := range lane.Runs {
+			start := mustTime(run.Start)
+			end := mustTime(run.End)
+			if start.Before(windowStart) && end.After(windowStart) {
+				crossesLeft = true
+			}
+			if start.Before(windowEnd) && end.After(windowEnd) {
+				crossesRight = true
+			}
+		}
+	}
+	if !crossesLeft || !crossesRight {
+		t.Fatalf("default window needs partial boundary runs, left=%t right=%t", crossesLeft, crossesRight)
+	}
+	if len(model.WeekendBands) < 12 {
+		t.Fatalf("weekend bands = %d, want full materialized horizon", len(model.WeekendBands))
 	}
 }
 
@@ -1259,11 +1355,14 @@ func TestBuildProducesCommandCenterFATGraphWallContract(t *testing.T) {
 	if model.GraphWall.SourceMode != "arrow_backend_owned" {
 		t.Fatalf("source mode = %q, want arrow_backend_owned", model.GraphWall.SourceMode)
 	}
-	if model.GraphWall.TimeRange.Start != model.WindowStart || model.GraphWall.TimeRange.End != model.WindowEnd {
-		t.Fatalf("graph wall range = %s..%s, want command center window %s..%s", model.GraphWall.TimeRange.Start, model.GraphWall.TimeRange.End, model.WindowStart, model.WindowEnd)
+	if model.GraphWall.TimeRange.Start != model.DataStart || model.GraphWall.TimeRange.End != model.DataEnd {
+		t.Fatalf("graph wall range = %s..%s, want command center data horizon %s..%s", model.GraphWall.TimeRange.Start, model.GraphWall.TimeRange.End, model.DataStart, model.DataEnd)
 	}
-	if model.HeroGraph.TimeAxis.Start != model.WindowStart || model.HeroGraph.TimeAxis.End != model.WindowEnd {
-		t.Fatalf("hero axis = %s..%s, want command center window %s..%s", model.HeroGraph.TimeAxis.Start, model.HeroGraph.TimeAxis.End, model.WindowStart, model.WindowEnd)
+	if model.HeroGraph.TimeAxis.Start != model.DataStart || model.HeroGraph.TimeAxis.End != model.DataEnd {
+		t.Fatalf("hero axis = %s..%s, want command center data horizon %s..%s", model.HeroGraph.TimeAxis.Start, model.HeroGraph.TimeAxis.End, model.DataStart, model.DataEnd)
+	}
+	if model.HeroGraph.TimeAxis.DefaultWindowStart != model.WindowStart || model.HeroGraph.TimeAxis.DefaultWindowEnd != model.WindowEnd {
+		t.Fatalf("hero default window = %s..%s, want %s..%s", model.HeroGraph.TimeAxis.DefaultWindowStart, model.HeroGraph.TimeAxis.DefaultWindowEnd, model.WindowStart, model.WindowEnd)
 	}
 	if model.HeroGraph.TimeAxis.Now != model.Now {
 		t.Fatalf("hero now = %q, want %q", model.HeroGraph.TimeAxis.Now, model.Now)
@@ -1368,6 +1467,33 @@ func sameUTCDate(a, b time.Time) bool {
 	ay, am, ad := a.Date()
 	by, bm, bd := b.Date()
 	return ay == by && am == bm && ad == bd
+}
+
+func commandCenterHasCompetition(model contracts.CommandCenterFAT, laneID string, from, until time.Time) bool {
+	if !until.After(from) {
+		return false
+	}
+	windowStart := from.Add(-90 * time.Minute)
+	windowEnd := until.Add(90 * time.Minute)
+	for _, lane := range model.Lanes {
+		for _, run := range lane.Runs {
+			if lane.ID == laneID && !mustTime(run.ResetEnd).Before(from) && !mustTime(run.Start).After(until) {
+				continue
+			}
+			events := []time.Time{
+				mustTime(run.Start),
+				mustTime(run.End),
+				mustTime(run.ResetStart),
+				mustTime(run.ResetEnd),
+			}
+			for _, event := range events {
+				if event.After(windowStart) && event.Before(windowEnd) {
+					return true
+				}
+			}
+		}
+	}
+	return false
 }
 
 func hasPointAfter(points []struct {

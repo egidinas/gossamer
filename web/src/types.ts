@@ -210,6 +210,8 @@ export type GraphTimeAxis = {
   end: string;
   anchor: string;
   now?: string;
+  default_window_start?: string;
+  default_window_end?: string;
   range_seconds: number;
   clamp: boolean;
   latest_policy: string;
@@ -800,6 +802,9 @@ export type CommandCenterFAT = Envelope & {
   now: string;
   window_start: string;
   window_end: string;
+  data_start?: string;
+  data_end?: string;
+  schedule_policy?: string;
   workday_start_hour: number;
   workday_end_hour: number;
   graph_campaign_id?: string;
