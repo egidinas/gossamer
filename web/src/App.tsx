@@ -1,7 +1,7 @@
 import { Activity, CalendarDays, FileCheck, Home, ShieldCheck, User } from "lucide-react";
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { api } from "./api";
-import type { BusVirtualizationTap, Campaign, CommandAuthorityState, CommandCenterFAT, EvidenceReport, GraphModel, Manifest, SourceCatalogue, SupervisorOverview, Topology } from "./types";
+import type { BusVirtualizationTap, Campaign, CommandAuthorityState, CommandCenterFAT, EvidenceReport, GraphModel, Manifest, SourceCatalogue, SupervisorOverview, TileCampaignManifest, Topology } from "./types";
 import { LandingView } from "./views/LandingView";
 
 const MissionMapView = lazy(() => import("./views/MissionMapView").then((module) => ({ default: module.MissionMapView })));
@@ -27,8 +27,8 @@ const routes: Array<{ id: Route; label: string; icon: typeof Activity; published
   { id: "acceptance", label: "Acceptance FAT", icon: Activity, published: true },
   { id: "command-center-fat", label: "Command Center", icon: CalendarDays, published: true },
   { id: "qualification", label: "Qualification TVac", icon: Activity, published: true },
-  { id: "report", label: "Evidence", icon: ShieldCheck, published: true },
-  { id: "profile", label: "Profile", icon: User, published: true },
+  { id: "report", label: "Evidence", icon: ShieldCheck, published: false },
+  { id: "profile", label: "Profile", icon: User, published: false },
   { id: "mission-map", label: "Mission", icon: FileCheck, published: false },
   { id: "supervisor", label: "Test Campaign", icon: Activity, published: false },
   { id: "graph-wall", label: "Graphs", icon: Activity, published: false },
@@ -122,7 +122,7 @@ export function App() {
   const [manifest, setManifest] = useState<Manifest>(bootManifest);
   const [topology, setTopology] = useState<Topology | null>(null);
   const [sources, setSources] = useState<SourceCatalogue | null>(null);
-  const [supervisor, setSupervisor] = useState<SupervisorOverview>(bootSupervisor);
+  const [supervisor] = useState<SupervisorOverview>(bootSupervisor);
   const [busTap, setBusTap] = useState<BusVirtualizationTap | null>(null);
   const [campaigns, setCampaigns] = useState<Campaign[]>(bootCampaigns);
   const [activeCampaign, setActiveCampaign] = useState("thermal_acceptance_fat");
@@ -150,11 +150,14 @@ export function App() {
 
   useEffect(() => {
     scheduleIdle(() => {
-      Promise.all([api.manifest(), api.supervisor(), api.campaigns()])
-      .then(([m, so, c]) => {
-        setManifest(m);
-        setSupervisor(so);
-        setCampaigns(c.campaigns);
+      api.currentBundle()
+      .then((bundle) => {
+        setManifest({
+          ...bootManifest,
+          generated_at: bundle.generated_at,
+          campaigns: bundle.campaigns.map((campaign) => campaign.campaign_id)
+        });
+        setCampaigns(bundle.campaigns.map(campaignFromTileManifest));
       })
       .catch((err: Error) => setError(err.message));
     });
@@ -191,11 +194,8 @@ export function App() {
       api.busTap().then(setBusTap).catch((err: Error) => setError(err.message));
       return;
     }
-    Promise.all([api.campaign(requestedCampaign), api.graphShell(requestedCampaign)])
-      .then(([campaign, graphModel]) => {
-        setCampaigns((existing) => existing.map((item) => item.id === campaign.id ? campaign : item));
-        setGraph(graphModel);
-      })
+    api.graphShell(requestedCampaign)
+      .then(setGraph)
       .catch((err: Error) => setError(err.message));
   }, [requestedCampaign, route]);
 
@@ -227,14 +227,14 @@ export function App() {
     <main className="shell">
       <header className="topbar">
         <div className="brand-lockup">
-          <img className="brand-mark" src="/assets/gossamer/gossamer-mark.webp" alt="" />
+          <span className="brand-mark" aria-hidden="true">G</span>
           <div>
             <h1>Gossamer</h1>
             <p>{manifest.description}</p>
           </div>
         </div>
         <address className="topbar-owner" aria-label="Gossamer author and contact">
-          <a className="owner-name" href="#profile">Dr. Jonathan Meyer</a>
+          <span className="owner-name">Dr. Jonathan Meyer</span>
           <a href="mailto:jonathan@jmeyer.space">jonathan@jmeyer.space</a>
         </address>
         <nav className="nav">
@@ -285,9 +285,6 @@ export function App() {
       {/* source easter egg: every confident plot should be able to point back to the sample that made it move. */}
       <footer className="site-footer">
         <span>Dr. Jonathan Meyer · jonathan@jmeyer.space</span>
-        <a href="#acceptance">Physical model and components: FAT</a>
-        <a href="#command-center-fat">Command center FAT ladder</a>
-        <a href="#qualification">Physical model and components: TVac</a>
         <a href="https://github.com/egidinas/gossamer" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
       </footer>
     </main>
@@ -322,4 +319,30 @@ function scheduleIdle(work: () => void) {
     return;
   }
   globalThis.setTimeout(work, 0);
+}
+
+function campaignFromTileManifest(tile: TileCampaignManifest): Campaign {
+  const boot = bootCampaigns.find((campaign) => campaign.id === tile.campaign_id);
+  if (boot) {
+    return {
+      ...boot,
+      generated_at: bootManifest.generated_at,
+      name: tile.title
+    };
+  }
+  const isCommandCenter = tile.campaign_id === "command_center_fat";
+  return {
+    schema_version: 1,
+    generated_at: bootManifest.generated_at,
+    id: tile.campaign_id,
+    name: tile.title,
+    level: isCommandCenter ? "acceptance-command-center" : "acceptance",
+    state: "running",
+    result: "inconclusive",
+    article: "Reference DUT",
+    facility: isCommandCenter ? "multi_chamber_fat" : "thermal_chamber",
+    requirements: [],
+    anomalies: [],
+    synthetic_note: "Static current-bundle campaign published from build-time simulation."
+  };
 }

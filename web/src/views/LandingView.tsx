@@ -1,6 +1,33 @@
-import { Activity, Archive, Database, GitBranch, MonitorUp, ShieldCheck } from "lucide-react";
+import { Activity, Archive, CalendarDays, Database, GitBranch, MonitorUp, ShieldCheck } from "lucide-react";
 import type { Campaign, Manifest } from "../types";
 import { OperatorPanel } from "../components/OperatorPanel";
+
+const experiences = [
+  {
+    href: "#acceptance",
+    title: "Acceptance FAT",
+    meta: "thermal chamber as-run",
+    kind: "acceptance",
+    icon: Activity,
+    stats: ["4 cycles", "ambient FT", "DUT/chamber"]
+  },
+  {
+    href: "#command-center-fat",
+    title: "Operator Center",
+    meta: "four chamber ladder",
+    kind: "command",
+    icon: CalendarDays,
+    stats: ["4 chambers", "4 weeks", "reset markers"]
+  },
+  {
+    href: "#qualification",
+    title: "Qualification TVac",
+    meta: "thermal-vacuum profile",
+    kind: "qualification",
+    icon: Activity,
+    stats: ["8 cycles", "pressure log", "outgassing"]
+  }
+];
 
 export function LandingView({ manifest, campaigns }: { manifest: Manifest; campaigns: Campaign[] }) {
   return (
@@ -20,31 +47,47 @@ export function LandingView({ manifest, campaigns }: { manifest: Manifest; campa
           </p>
           <div className="landing-data-flow" aria-label="data flow">
             <span><Database size={15} /> Facility/DUT nodes</span>
-            <span><Archive size={15} /> Legacy imports</span>
+            <span><CalendarDays size={15} /> Chamber schedule</span>
             <span><GitBranch size={15} /> Tile-backed pool</span>
             <span><MonitorUp size={15} /> Operator display</span>
           </div>
         </div>
-        <div className="hero-actions">
-          <a href="#acceptance"><Activity size={17} /> Acceptance FAT</a>
-          <a href="#qualification"><Activity size={17} /> Qualification TVac</a>
-        </div>
       </section>
-      <OperatorPanel title="Shared Telemetry Pool" meta="live, historical, and legacy-translated">
-        <div className="landing-architecture">
-          <img src="/assets/gossamer/telemetry-architecture.webp" alt="Architecture diagram showing decentralized test nodes feeding a shared telemetry pool and common operator UI" loading="eager" />
-          <div>
-            <span className="eyebrow">data where it is produced</span>
-            <p>
-              The central idea is not that environmental test data becomes simple. It is that carefully declared sources,
-              translation provenance, tile contracts, and evidence links can make current, historical, and legacy data visible
-              through one shared interface.
-            </p>
-            <p>
-              That is why the FAT and TVac pages are presented as campaign artifacts: the same pool can support live operation,
-              stakeholder visibility, later exploration, and audit-oriented evidence review.
-            </p>
-          </div>
+      <OperatorPanel title="Complete Operator Surfaces" meta="static current bundle">
+        <div className="landing-experience-grid">
+          {experiences.map((experience) => {
+            const Icon = experience.icon;
+            return (
+              <a className="landing-experience-card" href={experience.href} key={experience.href} data-preview-kind={experience.kind}>
+                <div className="landing-preview-screen" aria-hidden="true">
+                  <div className="preview-topline">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                  <div className="preview-plot">
+                    <i className="preview-gridline" style={{ left: "22%" }} />
+                    <i className="preview-gridline" style={{ left: "49%" }} />
+                    <i className="preview-gridline" style={{ left: "76%" }} />
+                    <b className="preview-trace preview-command" />
+                    <b className="preview-trace preview-actual" />
+                    <b className="preview-trace preview-dut" />
+                    <em className="preview-marker" style={{ left: "68%" }} />
+                  </div>
+                  <div className="preview-footer">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                </div>
+                <div className="landing-experience-copy">
+                  <span><Icon size={16} /> {experience.meta}</span>
+                  <strong>{experience.title}</strong>
+                  <small>{experience.stats.join(" / ")}</small>
+                </div>
+              </a>
+            );
+          })}
         </div>
       </OperatorPanel>
       <OperatorPanel title="Environmental-Test Execution Models" meta={manifest.test_article}>
@@ -53,6 +96,26 @@ export function LandingView({ manifest, campaigns }: { manifest: Manifest; campa
           <div><span className="label">TVac Qualification</span><strong>8 cycles</strong></div>
           <div><span className="label">Current campaigns</span><strong>{campaigns.length}</strong></div>
           <div><span className="label">Evidence model</span><strong>{manifest.synthetic_only ? "traceable" : "live"}</strong></div>
+        </div>
+      </OperatorPanel>
+      <OperatorPanel title="Underlying System" meta="single static bundle, browser-native graphing">
+        <div className="landing-system-grid">
+          <div>
+            <strong>Build-time simulation</strong>
+            <span>Physics and scheduling run before deployment, so expensive generation can produce dense as-run traces, ghost projections, markers, manifests, and campaign shells.</span>
+          </div>
+          <div>
+            <strong>Arrow telemetry payloads</strong>
+            <span>The deployed graph pages hydrate from compressed Apache Arrow files and materialize only the requested card/window into browser-native uPlot series.</span>
+          </div>
+          <div>
+            <strong>Shared time contract</strong>
+            <span>Acceptance FAT, Operator Center, and Qualification TVac use the same graph shell, tile manifest, marker, band, and source-provenance contracts.</span>
+          </div>
+          <div>
+            <strong>Operator semantics</strong>
+            <span>Functional-test gates, ambient verification, reset/breakdown windows, source quality, pressure/outgassing ranges, and requirement progress are explicit data, not UI guesses.</span>
+          </div>
         </div>
       </OperatorPanel>
       <OperatorPanel title="What The Interface Makes Inspectable" meta="show the chain from source to evidence">

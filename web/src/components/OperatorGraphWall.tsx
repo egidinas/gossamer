@@ -409,26 +409,8 @@ function useAnimatedReplayTime(campaignId: string, heroGraph: HeroGraphModel) {
   }, [baseNow, heroGraph.id]);
 
   useEffect(() => {
-    if (typeof EventSource === "undefined") return;
-    if (!Number.isFinite(baseNow) || !Number.isFinite(startMs) || !Number.isFinite(endMs)) return;
-    const stream = new EventSource(api.liveCursorPath(campaignId));
-    stream.addEventListener("cursor", (event) => {
-      try {
-        const payload = JSON.parse((event as MessageEvent).data) as { now?: string };
-        const next = Date.parse(payload.now ?? "");
-        if (!Number.isFinite(next)) return;
-        setStreaming(true);
-        setNow(Math.min(endMs, Math.max(startMs, next)));
-      } catch (err) {
-        console.error(err);
-      }
-    });
-    stream.onerror = () => {
-      setStreaming(false);
-      stream.close();
-    };
-    return () => stream.close();
-  }, [baseNow, campaignId, endMs, startMs]);
+    setStreaming(false);
+  }, [campaignId]);
 
   useEffect(() => {
     if (streaming) return;

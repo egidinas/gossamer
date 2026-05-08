@@ -1691,32 +1691,32 @@
         "id": "thermal_chamber_charlie-fat-03-window",
         "label": "Charlie FAT 03",
         "kind": "test_window",
-        "start": "2025-12-24T11:30:00Z",
-        "end": "2025-12-28T23:18:00Z",
+        "start": "2025-12-26T11:30:00Z",
+        "end": "2025-12-30T23:18:00Z",
         "result": "pass"
       },
       {
         "id": "thermal_chamber_charlie-fat-03-breakdown",
         "label": "Charlie breakdown",
         "kind": "breakdown",
-        "start": "2025-12-29T08:00:00Z",
-        "end": "2025-12-29T11:00:00Z",
+        "start": "2025-12-31T08:00:00Z",
+        "end": "2025-12-31T11:00:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_charlie-fat-03-reset",
         "label": "Charlie reset",
         "kind": "reset",
-        "start": "2025-12-29T11:00:00Z",
-        "end": "2025-12-29T14:00:00Z",
+        "start": "2025-12-31T11:00:00Z",
+        "end": "2025-12-31T14:00:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_charlie-fat-04-window",
         "label": "Charlie FAT 04",
         "kind": "test_window",
-        "start": "2026-01-02T11:30:00Z",
-        "end": "2026-01-06T23:18:00Z",
+        "start": "2026-01-02T13:00:00Z",
+        "end": "2026-01-07T00:48:00Z",
         "result": "pass"
       },
       {
@@ -1859,312 +1859,312 @@
         "id": "thermal_chamber_charlie-fat-10-window",
         "label": "Charlie FAT 10",
         "kind": "test_window",
-        "start": "2026-02-11T17:00:00Z",
-        "end": "2026-02-16T04:48:00Z",
+        "start": "2026-02-13T11:30:00Z",
+        "end": "2026-02-17T23:18:00Z",
         "result": "pending"
       },
       {
         "id": "thermal_chamber_charlie-fat-10-breakdown",
         "label": "Charlie breakdown",
         "kind": "breakdown",
-        "start": "2026-02-16T08:30:00Z",
-        "end": "2026-02-16T11:30:00Z",
+        "start": "2026-02-18T08:30:00Z",
+        "end": "2026-02-18T11:30:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_charlie-fat-10-reset",
         "label": "Charlie reset",
         "kind": "reset",
-        "start": "2026-02-16T11:30:00Z",
-        "end": "2026-02-16T14:30:00Z",
+        "start": "2026-02-18T11:30:00Z",
+        "end": "2026-02-18T14:30:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_charlie-fat-11-window",
         "label": "Charlie FAT 11",
         "kind": "test_window",
-        "start": "2026-02-18T11:30:00Z",
-        "end": "2026-02-22T23:18:00Z",
+        "start": "2026-02-20T11:30:00Z",
+        "end": "2026-02-24T23:18:00Z",
         "result": "pending"
       },
       {
         "id": "thermal_chamber_charlie-fat-11-breakdown",
         "label": "Charlie breakdown",
         "kind": "breakdown",
-        "start": "2026-02-23T08:00:00Z",
-        "end": "2026-02-23T11:00:00Z",
+        "start": "2026-02-25T08:00:00Z",
+        "end": "2026-02-25T11:00:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_charlie-fat-11-reset",
         "label": "Charlie reset",
         "kind": "reset",
-        "start": "2026-02-23T11:00:00Z",
-        "end": "2026-02-23T14:00:00Z",
+        "start": "2026-02-25T11:00:00Z",
+        "end": "2026-02-25T14:00:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-01-window",
         "label": "Delta FAT 01",
         "kind": "test_window",
-        "start": "2025-12-09T17:00:00Z",
-        "end": "2025-12-14T04:48:00Z",
+        "start": "2025-12-11T11:30:00Z",
+        "end": "2025-12-15T23:18:00Z",
         "result": "pass"
       },
       {
         "id": "thermal_chamber_delta-fat-01-breakdown",
         "label": "Delta breakdown",
         "kind": "breakdown",
-        "start": "2025-12-15T09:30:00Z",
-        "end": "2025-12-15T12:30:00Z",
+        "start": "2025-12-16T09:30:00Z",
+        "end": "2025-12-16T12:30:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-01-reset",
         "label": "Delta reset",
         "kind": "reset",
-        "start": "2025-12-15T12:30:00Z",
-        "end": "2025-12-15T15:30:00Z",
+        "start": "2025-12-16T12:30:00Z",
+        "end": "2025-12-16T15:30:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-02-window",
         "label": "Delta FAT 02",
         "kind": "test_window",
-        "start": "2025-12-17T13:00:00Z",
-        "end": "2025-12-22T00:48:00Z",
+        "start": "2025-12-18T11:30:00Z",
+        "end": "2025-12-22T23:18:00Z",
         "result": "pass"
       },
       {
         "id": "thermal_chamber_delta-fat-02-breakdown",
         "label": "Delta breakdown",
         "kind": "breakdown",
-        "start": "2025-12-22T09:00:00Z",
-        "end": "2025-12-22T12:00:00Z",
+        "start": "2025-12-23T09:00:00Z",
+        "end": "2025-12-23T12:00:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-02-reset",
         "label": "Delta reset",
         "kind": "reset",
-        "start": "2025-12-22T12:00:00Z",
-        "end": "2025-12-22T15:00:00Z",
+        "start": "2025-12-23T12:00:00Z",
+        "end": "2025-12-23T15:00:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-03-window",
         "label": "Delta FAT 03",
         "kind": "test_window",
-        "start": "2025-12-26T11:30:00Z",
-        "end": "2025-12-30T23:18:00Z",
+        "start": "2025-12-25T13:00:00Z",
+        "end": "2025-12-30T00:48:00Z",
         "result": "pass"
       },
       {
         "id": "thermal_chamber_delta-fat-03-breakdown",
         "label": "Delta breakdown",
         "kind": "breakdown",
-        "start": "2025-12-31T08:30:00Z",
-        "end": "2025-12-31T11:30:00Z",
+        "start": "2025-12-30T08:30:00Z",
+        "end": "2025-12-30T11:30:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-03-reset",
         "label": "Delta reset",
         "kind": "reset",
-        "start": "2025-12-31T11:30:00Z",
-        "end": "2025-12-31T14:30:00Z",
+        "start": "2025-12-30T11:30:00Z",
+        "end": "2025-12-30T14:30:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-04-window",
         "label": "Delta FAT 04",
         "kind": "test_window",
-        "start": "2026-01-01T15:00:00Z",
-        "end": "2026-01-06T02:48:00Z",
+        "start": "2026-01-02T11:30:00Z",
+        "end": "2026-01-06T23:18:00Z",
         "result": "pass"
       },
       {
         "id": "thermal_chamber_delta-fat-04-breakdown",
         "label": "Delta breakdown",
         "kind": "breakdown",
-        "start": "2026-01-06T08:00:00Z",
-        "end": "2026-01-06T11:00:00Z",
+        "start": "2026-01-07T08:00:00Z",
+        "end": "2026-01-07T11:00:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-04-reset",
         "label": "Delta reset",
         "kind": "reset",
-        "start": "2026-01-06T11:00:00Z",
-        "end": "2026-01-06T14:00:00Z",
+        "start": "2026-01-07T11:00:00Z",
+        "end": "2026-01-07T14:00:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-05-window",
         "label": "Delta FAT 05",
         "kind": "test_window",
-        "start": "2026-01-06T17:00:00Z",
-        "end": "2026-01-11T04:48:00Z",
+        "start": "2026-01-09T11:30:00Z",
+        "end": "2026-01-13T23:18:00Z",
         "result": "pass"
       },
       {
         "id": "thermal_chamber_delta-fat-05-breakdown",
         "label": "Delta breakdown",
         "kind": "breakdown",
-        "start": "2026-01-12T09:30:00Z",
-        "end": "2026-01-12T12:30:00Z",
+        "start": "2026-01-14T09:30:00Z",
+        "end": "2026-01-14T12:30:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-05-reset",
         "label": "Delta reset",
         "kind": "reset",
-        "start": "2026-01-12T12:30:00Z",
-        "end": "2026-01-12T15:30:00Z",
+        "start": "2026-01-14T12:30:00Z",
+        "end": "2026-01-14T15:30:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-06-window",
         "label": "Delta FAT 06",
         "kind": "test_window",
-        "start": "2026-01-14T11:30:00Z",
-        "end": "2026-01-18T23:18:00Z",
-        "result": "in_progress"
+        "start": "2026-01-16T11:30:00Z",
+        "end": "2026-01-20T23:18:00Z",
+        "result": "pending"
       },
       {
         "id": "thermal_chamber_delta-fat-06-breakdown",
         "label": "Delta breakdown",
         "kind": "breakdown",
-        "start": "2026-01-19T09:00:00Z",
-        "end": "2026-01-19T12:00:00Z",
+        "start": "2026-01-21T09:00:00Z",
+        "end": "2026-01-21T12:00:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-06-reset",
         "label": "Delta reset",
         "kind": "reset",
-        "start": "2026-01-19T12:00:00Z",
-        "end": "2026-01-19T15:00:00Z",
+        "start": "2026-01-21T12:00:00Z",
+        "end": "2026-01-21T15:00:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-07-window",
         "label": "Delta FAT 07",
         "kind": "test_window",
-        "start": "2026-01-21T13:00:00Z",
-        "end": "2026-01-26T00:48:00Z",
+        "start": "2026-01-23T13:00:00Z",
+        "end": "2026-01-28T00:48:00Z",
         "result": "pending"
       },
       {
         "id": "thermal_chamber_delta-fat-07-breakdown",
         "label": "Delta breakdown",
         "kind": "breakdown",
-        "start": "2026-01-26T08:30:00Z",
-        "end": "2026-01-26T11:30:00Z",
+        "start": "2026-01-28T08:30:00Z",
+        "end": "2026-01-28T11:30:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-07-reset",
         "label": "Delta reset",
         "kind": "reset",
-        "start": "2026-01-26T11:30:00Z",
-        "end": "2026-01-26T14:30:00Z",
+        "start": "2026-01-28T11:30:00Z",
+        "end": "2026-01-28T14:30:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-08-window",
         "label": "Delta FAT 08",
         "kind": "test_window",
-        "start": "2026-01-27T15:00:00Z",
-        "end": "2026-02-01T02:48:00Z",
+        "start": "2026-01-29T15:00:00Z",
+        "end": "2026-02-03T02:48:00Z",
         "result": "pending"
       },
       {
         "id": "thermal_chamber_delta-fat-08-breakdown",
         "label": "Delta breakdown",
         "kind": "breakdown",
-        "start": "2026-02-02T08:00:00Z",
-        "end": "2026-02-02T11:00:00Z",
+        "start": "2026-02-03T08:00:00Z",
+        "end": "2026-02-03T11:00:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-08-reset",
         "label": "Delta reset",
         "kind": "reset",
-        "start": "2026-02-02T11:00:00Z",
-        "end": "2026-02-02T14:00:00Z",
+        "start": "2026-02-03T11:00:00Z",
+        "end": "2026-02-03T14:00:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-09-window",
         "label": "Delta FAT 09",
         "kind": "test_window",
-        "start": "2026-02-02T17:00:00Z",
-        "end": "2026-02-07T04:48:00Z",
+        "start": "2026-02-05T13:00:00Z",
+        "end": "2026-02-10T00:48:00Z",
         "result": "pending"
       },
       {
         "id": "thermal_chamber_delta-fat-09-breakdown",
         "label": "Delta breakdown",
         "kind": "breakdown",
-        "start": "2026-02-09T09:30:00Z",
-        "end": "2026-02-09T12:30:00Z",
+        "start": "2026-02-10T09:30:00Z",
+        "end": "2026-02-10T12:30:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-09-reset",
         "label": "Delta reset",
         "kind": "reset",
-        "start": "2026-02-09T12:30:00Z",
-        "end": "2026-02-09T15:30:00Z",
+        "start": "2026-02-10T12:30:00Z",
+        "end": "2026-02-10T15:30:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-10-window",
         "label": "Delta FAT 10",
         "kind": "test_window",
-        "start": "2026-02-13T11:30:00Z",
-        "end": "2026-02-17T23:18:00Z",
+        "start": "2026-02-12T11:30:00Z",
+        "end": "2026-02-16T23:18:00Z",
         "result": "pending"
       },
       {
         "id": "thermal_chamber_delta-fat-10-breakdown",
         "label": "Delta breakdown",
         "kind": "breakdown",
-        "start": "2026-02-18T09:00:00Z",
-        "end": "2026-02-18T12:00:00Z",
+        "start": "2026-02-17T09:00:00Z",
+        "end": "2026-02-17T12:00:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-10-reset",
         "label": "Delta reset",
         "kind": "reset",
-        "start": "2026-02-18T12:00:00Z",
-        "end": "2026-02-18T15:00:00Z",
+        "start": "2026-02-17T12:00:00Z",
+        "end": "2026-02-17T15:00:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-11-window",
         "label": "Delta FAT 11",
         "kind": "test_window",
-        "start": "2026-02-20T13:00:00Z",
-        "end": "2026-02-25T00:48:00Z",
+        "start": "2026-02-19T13:00:00Z",
+        "end": "2026-02-24T00:48:00Z",
         "result": "pending"
       },
       {
         "id": "thermal_chamber_delta-fat-11-breakdown",
         "label": "Delta breakdown",
         "kind": "breakdown",
-        "start": "2026-02-25T08:30:00Z",
-        "end": "2026-02-25T11:30:00Z",
+        "start": "2026-02-24T08:30:00Z",
+        "end": "2026-02-24T11:30:00Z",
         "result": "operator"
       },
       {
         "id": "thermal_chamber_delta-fat-11-reset",
         "label": "Delta reset",
         "kind": "reset",
-        "start": "2026-02-25T11:30:00Z",
-        "end": "2026-02-25T14:30:00Z",
+        "start": "2026-02-24T11:30:00Z",
+        "end": "2026-02-24T14:30:00Z",
         "result": "operator"
       },
       {
@@ -2398,15 +2398,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-01-FUNC-C01-HOT",
-        "label": "Delta Hot survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-10T07:19:00Z",
-        "cycle_index": 31,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-01-FUNC-C02-COLD",
         "label": "Bravo Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
@@ -2422,15 +2413,6 @@
         "role": "event",
         "timestamp": "2025-12-10T22:54:00Z",
         "cycle_index": 21,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-01-FUNC-C01-COLD",
-        "label": "Delta Cold survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-11T00:54:00Z",
-        "cycle_index": 31,
         "result": "pass"
       },
       {
@@ -2452,15 +2434,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-01-FUNC-C02-HOT",
-        "label": "Delta Cycle 2 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-11T11:04:00Z",
-        "cycle_index": 32,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-01-FUNC-C03-COLD",
         "label": "Bravo Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
@@ -2479,12 +2452,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-01-FUNC-C02-COLD",
-        "label": "Delta Cycle 2 cold dwell functional test",
+        "id": "thermal_chamber_delta-fat-01-FUNC-C01-HOT",
+        "label": "Delta Hot survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2025-12-11T23:08:00Z",
-        "cycle_index": 32,
+        "timestamp": "2025-12-12T01:49:00Z",
+        "cycle_index": 31,
         "result": "pass"
       },
       {
@@ -2515,15 +2488,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-01-FUNC-C03-HOT",
-        "label": "Delta Cycle 3 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-12T09:18:00Z",
-        "cycle_index": 33,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-01-FUNC-C04-COLD",
         "label": "Bravo Cycle 4 cold dwell functional test",
         "kind": "functional_gate",
@@ -2542,21 +2506,21 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-01-FUNC-C01-COLD",
+        "label": "Delta Cold survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-12T19:24:00Z",
+        "cycle_index": 31,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_alpha-fat-02-FUNC-C01-COLD",
         "label": "Alpha Cold survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-12T20:54:00Z",
         "cycle_index": 2,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-01-FUNC-C03-COLD",
-        "label": "Delta Cycle 3 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-12T21:22:00Z",
-        "cycle_index": 33,
         "result": "pass"
       },
       {
@@ -2578,21 +2542,21 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-01-FUNC-C02-HOT",
+        "label": "Delta Cycle 2 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-13T05:34:00Z",
+        "cycle_index": 32,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_alpha-fat-02-FUNC-C02-HOT",
         "label": "Alpha Cycle 2 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-13T07:04:00Z",
         "cycle_index": 3,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-01-FUNC-C04-HOT",
-        "label": "Delta Cycle 4 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-13T07:32:00Z",
-        "cycle_index": 34,
         "result": "pass"
       },
       {
@@ -2605,21 +2569,21 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-01-FUNC-C02-COLD",
+        "label": "Delta Cycle 2 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-13T17:38:00Z",
+        "cycle_index": 32,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_alpha-fat-02-FUNC-C02-COLD",
         "label": "Alpha Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-13T19:08:00Z",
         "cycle_index": 3,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-01-FUNC-C04-COLD",
-        "label": "Delta Cycle 4 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-13T19:36:00Z",
-        "cycle_index": 34,
         "result": "pass"
       },
       {
@@ -2632,12 +2596,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-01-FUNC-POST",
-        "label": "Delta Post-environment functional test",
+        "id": "thermal_chamber_delta-fat-01-FUNC-C03-HOT",
+        "label": "Delta Cycle 3 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2025-12-14T04:18:00Z",
-        "cycle_index": 30,
+        "timestamp": "2025-12-14T03:48:00Z",
+        "cycle_index": 33,
         "result": "pass"
       },
       {
@@ -2650,12 +2614,30 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-01-FUNC-C03-COLD",
+        "label": "Delta Cycle 3 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-14T15:52:00Z",
+        "cycle_index": 33,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_alpha-fat-02-FUNC-C03-COLD",
         "label": "Alpha Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-14T17:22:00Z",
         "cycle_index": 4,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-01-FUNC-C04-HOT",
+        "label": "Delta Cycle 4 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-15T02:02:00Z",
+        "cycle_index": 34,
         "result": "pass"
       },
       {
@@ -2686,15 +2668,6 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-01-operator-breakdown-start",
-        "label": "Delta breakdown start",
-        "kind": "operator_breakdown",
-        "role": "operator_interaction",
-        "timestamp": "2025-12-15T09:30:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-01-operator-reset-start",
         "label": "Bravo reset start",
         "kind": "operator_reset",
@@ -2713,13 +2686,13 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-01-operator-reset-start",
-        "label": "Delta reset start",
-        "kind": "operator_reset",
-        "role": "operator_interaction",
-        "timestamp": "2025-12-15T12:30:00Z",
-        "result": "action_required",
-        "severity": "operator"
+        "id": "thermal_chamber_delta-fat-01-FUNC-C04-COLD",
+        "label": "Delta Cycle 4 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-15T14:06:00Z",
+        "cycle_index": 34,
+        "result": "pass"
       },
       {
         "id": "thermal_chamber_bravo-fat-01-operator-reset-ready",
@@ -2740,21 +2713,21 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-01-operator-reset-ready",
-        "label": "Delta reset ready",
-        "kind": "operator_reset_ready",
-        "role": "operator_interaction",
-        "timestamp": "2025-12-15T15:30:00Z",
-        "result": "ready",
-        "severity": "operator"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-02-FUNC-C04-COLD",
         "label": "Alpha Cycle 4 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-15T15:36:00Z",
         "cycle_index": 5,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-01-FUNC-POST",
+        "label": "Delta Post-environment functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-15T22:48:00Z",
+        "cycle_index": 30,
         "result": "pass"
       },
       {
@@ -2776,12 +2749,39 @@
         "severity": "operator"
       },
       {
+        "id": "thermal_chamber_delta-fat-01-operator-breakdown-start",
+        "label": "Delta breakdown start",
+        "kind": "operator_breakdown",
+        "role": "operator_interaction",
+        "timestamp": "2025-12-16T09:30:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
         "id": "thermal_chamber_alpha-fat-02-operator-reset-start",
         "label": "Alpha reset start",
         "kind": "operator_reset",
         "role": "operator_interaction",
         "timestamp": "2025-12-16T12:30:00Z",
         "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-01-operator-reset-start",
+        "label": "Delta reset start",
+        "kind": "operator_reset",
+        "role": "operator_interaction",
+        "timestamp": "2025-12-16T12:30:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-01-operator-reset-ready",
+        "label": "Delta reset ready",
+        "kind": "operator_reset_ready",
+        "role": "operator_interaction",
+        "timestamp": "2025-12-16T15:30:00Z",
+        "result": "ready",
         "severity": "operator"
       },
       {
@@ -2830,15 +2830,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-02-FUNC-C01-HOT",
-        "label": "Delta Hot survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-18T03:19:00Z",
-        "cycle_index": 32,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-02-FUNC-C02-HOT",
         "label": "Bravo Cycle 2 hot dwell functional test",
         "kind": "functional_gate",
@@ -2854,15 +2845,6 @@
         "role": "event",
         "timestamp": "2025-12-18T11:04:00Z",
         "cycle_index": 23,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-02-FUNC-C01-COLD",
-        "label": "Delta Cold survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-18T20:54:00Z",
-        "cycle_index": 32,
         "result": "pass"
       },
       {
@@ -2884,21 +2866,21 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-02-FUNC-C01-HOT",
+        "label": "Delta Hot survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-19T01:49:00Z",
+        "cycle_index": 32,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_alpha-fat-03-FUNC-C01-HOT",
         "label": "Alpha Hot survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-19T05:19:00Z",
         "cycle_index": 3,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-02-FUNC-C02-HOT",
-        "label": "Delta Cycle 2 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-19T07:04:00Z",
-        "cycle_index": 33,
         "result": "pass"
       },
       {
@@ -2920,21 +2902,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-02-FUNC-C02-COLD",
-        "label": "Delta Cycle 2 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-19T19:08:00Z",
-        "cycle_index": 33,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-02-FUNC-C03-COLD",
         "label": "Bravo Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-19T19:22:00Z",
         "cycle_index": 14,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-02-FUNC-C01-COLD",
+        "label": "Delta Cold survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-19T19:24:00Z",
+        "cycle_index": 32,
         "result": "pass"
       },
       {
@@ -2956,21 +2938,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-02-FUNC-C03-HOT",
-        "label": "Delta Cycle 3 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-20T05:18:00Z",
-        "cycle_index": 34,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-02-FUNC-C04-HOT",
         "label": "Bravo Cycle 4 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-20T05:32:00Z",
         "cycle_index": 15,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-02-FUNC-C02-HOT",
+        "label": "Delta Cycle 2 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-20T05:34:00Z",
+        "cycle_index": 33,
         "result": "pass"
       },
       {
@@ -2992,21 +2974,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-02-FUNC-C03-COLD",
-        "label": "Delta Cycle 3 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-20T17:22:00Z",
-        "cycle_index": 34,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-02-FUNC-C04-COLD",
         "label": "Bravo Cycle 4 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-20T17:36:00Z",
         "cycle_index": 15,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-02-FUNC-C02-COLD",
+        "label": "Delta Cycle 2 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-20T17:38:00Z",
+        "cycle_index": 33,
         "result": "pass"
       },
       {
@@ -3037,12 +3019,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-02-FUNC-C04-HOT",
-        "label": "Delta Cycle 4 hot dwell functional test",
+        "id": "thermal_chamber_delta-fat-02-FUNC-C03-HOT",
+        "label": "Delta Cycle 3 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2025-12-21T03:32:00Z",
-        "cycle_index": 35,
+        "timestamp": "2025-12-21T03:48:00Z",
+        "cycle_index": 34,
         "result": "pass"
       },
       {
@@ -3064,12 +3046,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-02-FUNC-C04-COLD",
-        "label": "Delta Cycle 4 cold dwell functional test",
+        "id": "thermal_chamber_delta-fat-02-FUNC-C03-COLD",
+        "label": "Delta Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2025-12-21T15:36:00Z",
-        "cycle_index": 35,
+        "timestamp": "2025-12-21T15:52:00Z",
+        "cycle_index": 34,
         "result": "pass"
       },
       {
@@ -3082,12 +3064,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-02-FUNC-POST",
-        "label": "Delta Post-environment functional test",
+        "id": "thermal_chamber_delta-fat-02-FUNC-C04-HOT",
+        "label": "Delta Cycle 4 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2025-12-22T00:18:00Z",
-        "cycle_index": 31,
+        "timestamp": "2025-12-22T02:02:00Z",
+        "cycle_index": 35,
         "result": "pass"
       },
       {
@@ -3118,15 +3100,6 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-02-operator-breakdown-start",
-        "label": "Delta breakdown start",
-        "kind": "operator_breakdown",
-        "role": "operator_interaction",
-        "timestamp": "2025-12-22T09:00:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-02-operator-reset-start",
         "label": "Bravo reset start",
         "kind": "operator_reset",
@@ -3145,15 +3118,6 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-02-operator-reset-start",
-        "label": "Delta reset start",
-        "kind": "operator_reset",
-        "role": "operator_interaction",
-        "timestamp": "2025-12-22T12:00:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-02-operator-reset-ready",
         "label": "Bravo reset ready",
         "kind": "operator_reset_ready",
@@ -3161,6 +3125,15 @@
         "timestamp": "2025-12-22T14:00:00Z",
         "result": "ready",
         "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-02-FUNC-C04-COLD",
+        "label": "Delta Cycle 4 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-22T14:06:00Z",
+        "cycle_index": 35,
+        "result": "pass"
       },
       {
         "id": "thermal_chamber_charlie-fat-02-operator-reset-ready",
@@ -3172,21 +3145,21 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-02-operator-reset-ready",
-        "label": "Delta reset ready",
-        "kind": "operator_reset_ready",
-        "role": "operator_interaction",
-        "timestamp": "2025-12-22T15:00:00Z",
-        "result": "ready",
-        "severity": "operator"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-03-FUNC-C04-COLD",
         "label": "Alpha Cycle 4 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-22T17:36:00Z",
         "cycle_index": 6,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-02-FUNC-POST",
+        "label": "Delta Post-environment functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-22T22:48:00Z",
+        "cycle_index": 31,
         "result": "pass"
       },
       {
@@ -3217,12 +3190,39 @@
         "severity": "operator"
       },
       {
+        "id": "thermal_chamber_delta-fat-02-operator-breakdown-start",
+        "label": "Delta breakdown start",
+        "kind": "operator_breakdown",
+        "role": "operator_interaction",
+        "timestamp": "2025-12-23T09:00:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-02-operator-reset-start",
+        "label": "Delta reset start",
+        "kind": "operator_reset",
+        "role": "operator_interaction",
+        "timestamp": "2025-12-23T12:00:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
         "id": "thermal_chamber_alpha-fat-03-operator-reset-start",
         "label": "Alpha reset start",
         "kind": "operator_reset",
         "role": "operator_interaction",
         "timestamp": "2025-12-23T12:00:00Z",
         "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-02-operator-reset-ready",
+        "label": "Delta reset ready",
+        "kind": "operator_reset_ready",
+        "role": "operator_interaction",
+        "timestamp": "2025-12-23T15:00:00Z",
+        "result": "ready",
         "severity": "operator"
       },
       {
@@ -3262,15 +3262,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-03-FUNC-C01-HOT",
-        "label": "Charlie Hot survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-25T01:49:00Z",
-        "cycle_index": 23,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-04-FUNC-C01-HOT",
         "label": "Alpha Hot survival recovery functional test",
         "kind": "functional_gate",
@@ -3286,15 +3277,6 @@
         "role": "event",
         "timestamp": "2025-12-25T09:18:00Z",
         "cycle_index": 15,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-03-FUNC-C01-COLD",
-        "label": "Charlie Cold survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-25T19:24:00Z",
-        "cycle_index": 23,
         "result": "pass"
       },
       {
@@ -3316,12 +3298,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-03-FUNC-C02-HOT",
-        "label": "Charlie Cycle 2 hot dwell functional test",
+        "id": "thermal_chamber_delta-fat-03-FUNC-C01-HOT",
+        "label": "Delta Hot survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2025-12-26T05:34:00Z",
-        "cycle_index": 24,
+        "timestamp": "2025-12-26T03:19:00Z",
+        "cycle_index": 33,
         "result": "pass"
       },
       {
@@ -3343,21 +3325,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-03-FUNC-C02-COLD",
-        "label": "Charlie Cycle 2 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-26T17:38:00Z",
-        "cycle_index": 24,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-03-FUNC-C04-COLD",
         "label": "Bravo Cycle 4 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-26T19:36:00Z",
         "cycle_index": 16,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-03-FUNC-C01-COLD",
+        "label": "Delta Cold survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-26T20:54:00Z",
+        "cycle_index": 33,
         "result": "pass"
       },
       {
@@ -3370,21 +3352,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-03-FUNC-C01-HOT",
-        "label": "Delta Hot survival recovery functional test",
+        "id": "thermal_chamber_charlie-fat-03-FUNC-C01-HOT",
+        "label": "Charlie Hot survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-27T01:49:00Z",
-        "cycle_index": 33,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-03-FUNC-C03-HOT",
-        "label": "Charlie Cycle 3 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-27T03:48:00Z",
-        "cycle_index": 25,
+        "cycle_index": 23,
         "result": "pass"
       },
       {
@@ -3397,6 +3370,15 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-03-FUNC-C02-HOT",
+        "label": "Delta Cycle 2 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-27T07:04:00Z",
+        "cycle_index": 34,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_alpha-fat-04-FUNC-C03-HOT",
         "label": "Alpha Cycle 3 hot dwell functional test",
         "kind": "functional_gate",
@@ -3406,21 +3388,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-03-FUNC-C03-COLD",
-        "label": "Charlie Cycle 3 cold dwell functional test",
+        "id": "thermal_chamber_delta-fat-03-FUNC-C02-COLD",
+        "label": "Delta Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2025-12-27T15:52:00Z",
-        "cycle_index": 25,
+        "timestamp": "2025-12-27T19:08:00Z",
+        "cycle_index": 34,
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-03-FUNC-C01-COLD",
-        "label": "Delta Cold survival recovery functional test",
+        "id": "thermal_chamber_charlie-fat-03-FUNC-C01-COLD",
+        "label": "Charlie Cold survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-27T19:24:00Z",
-        "cycle_index": 33,
+        "cycle_index": 23,
         "result": "pass"
       },
       {
@@ -3433,21 +3415,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-03-FUNC-C04-HOT",
-        "label": "Charlie Cycle 4 hot dwell functional test",
+        "id": "thermal_chamber_delta-fat-03-FUNC-C03-HOT",
+        "label": "Delta Cycle 3 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2025-12-28T02:02:00Z",
-        "cycle_index": 26,
+        "timestamp": "2025-12-28T05:18:00Z",
+        "cycle_index": 35,
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-03-FUNC-C02-HOT",
-        "label": "Delta Cycle 2 hot dwell functional test",
+        "id": "thermal_chamber_charlie-fat-03-FUNC-C02-HOT",
+        "label": "Charlie Cycle 2 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-28T05:34:00Z",
-        "cycle_index": 34,
+        "cycle_index": 24,
         "result": "pass"
       },
       {
@@ -3460,21 +3442,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-03-FUNC-C04-COLD",
-        "label": "Charlie Cycle 4 cold dwell functional test",
+        "id": "thermal_chamber_delta-fat-03-FUNC-C03-COLD",
+        "label": "Delta Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2025-12-28T14:06:00Z",
-        "cycle_index": 26,
+        "timestamp": "2025-12-28T17:22:00Z",
+        "cycle_index": 35,
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-03-FUNC-C02-COLD",
-        "label": "Delta Cycle 2 cold dwell functional test",
+        "id": "thermal_chamber_charlie-fat-03-FUNC-C02-COLD",
+        "label": "Charlie Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-28T17:38:00Z",
-        "cycle_index": 34,
+        "cycle_index": 24,
         "result": "pass"
       },
       {
@@ -3487,21 +3469,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-03-FUNC-POST",
-        "label": "Charlie Post-environment functional test",
+        "id": "thermal_chamber_delta-fat-03-FUNC-C04-HOT",
+        "label": "Delta Cycle 4 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2025-12-28T22:48:00Z",
-        "cycle_index": 22,
+        "timestamp": "2025-12-29T03:32:00Z",
+        "cycle_index": 36,
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-03-FUNC-C03-HOT",
-        "label": "Delta Cycle 3 hot dwell functional test",
+        "id": "thermal_chamber_charlie-fat-03-FUNC-C03-HOT",
+        "label": "Charlie Cycle 3 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2025-12-29T03:48:00Z",
-        "cycle_index": 35,
+        "cycle_index": 25,
         "result": "pass"
       },
       {
@@ -3512,15 +3494,6 @@
         "timestamp": "2025-12-29T04:18:00Z",
         "cycle_index": 3,
         "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-03-operator-breakdown-start",
-        "label": "Charlie breakdown start",
-        "kind": "operator_breakdown",
-        "role": "operator_interaction",
-        "timestamp": "2025-12-29T08:00:00Z",
-        "result": "action_required",
-        "severity": "operator"
       },
       {
         "id": "thermal_chamber_alpha-fat-04-operator-breakdown-start",
@@ -3537,15 +3510,6 @@
         "kind": "operator_breakdown",
         "role": "operator_interaction",
         "timestamp": "2025-12-29T09:30:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-03-operator-reset-start",
-        "label": "Charlie reset start",
-        "kind": "operator_reset",
-        "role": "operator_interaction",
-        "timestamp": "2025-12-29T11:00:00Z",
         "result": "action_required",
         "severity": "operator"
       },
@@ -3568,15 +3532,6 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_charlie-fat-03-operator-reset-ready",
-        "label": "Charlie reset ready",
-        "kind": "operator_reset_ready",
-        "role": "operator_interaction",
-        "timestamp": "2025-12-29T14:00:00Z",
-        "result": "ready",
-        "severity": "operator"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-04-operator-reset-ready",
         "label": "Alpha reset ready",
         "kind": "operator_reset_ready",
@@ -3595,30 +3550,21 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-03-FUNC-C03-COLD",
-        "label": "Delta Cycle 3 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-29T15:52:00Z",
-        "cycle_index": 35,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-03-FUNC-C04-HOT",
-        "label": "Delta Cycle 4 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2025-12-30T02:02:00Z",
-        "cycle_index": 36,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_delta-fat-03-FUNC-C04-COLD",
         "label": "Delta Cycle 4 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2025-12-30T14:06:00Z",
+        "timestamp": "2025-12-29T15:36:00Z",
         "cycle_index": 36,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-03-FUNC-C03-COLD",
+        "label": "Charlie Cycle 3 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-29T15:52:00Z",
+        "cycle_index": 25,
         "result": "pass"
       },
       {
@@ -3626,8 +3572,17 @@
         "label": "Delta Post-environment functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2025-12-30T22:48:00Z",
+        "timestamp": "2025-12-30T00:18:00Z",
         "cycle_index": 32,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-03-FUNC-C04-HOT",
+        "label": "Charlie Cycle 4 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-30T02:02:00Z",
+        "cycle_index": 26,
         "result": "pass"
       },
       {
@@ -3635,7 +3590,7 @@
         "label": "Delta breakdown start",
         "kind": "operator_breakdown",
         "role": "operator_interaction",
-        "timestamp": "2025-12-31T08:30:00Z",
+        "timestamp": "2025-12-30T08:30:00Z",
         "result": "action_required",
         "severity": "operator"
       },
@@ -3644,16 +3599,61 @@
         "label": "Delta reset start",
         "kind": "operator_reset",
         "role": "operator_interaction",
-        "timestamp": "2025-12-31T11:30:00Z",
+        "timestamp": "2025-12-30T11:30:00Z",
         "result": "action_required",
         "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-03-FUNC-C04-COLD",
+        "label": "Charlie Cycle 4 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-30T14:06:00Z",
+        "cycle_index": 26,
+        "result": "pass"
       },
       {
         "id": "thermal_chamber_delta-fat-03-operator-reset-ready",
         "label": "Delta reset ready",
         "kind": "operator_reset_ready",
         "role": "operator_interaction",
-        "timestamp": "2025-12-31T14:30:00Z",
+        "timestamp": "2025-12-30T14:30:00Z",
+        "result": "ready",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-03-FUNC-POST",
+        "label": "Charlie Post-environment functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2025-12-30T22:48:00Z",
+        "cycle_index": 22,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-03-operator-breakdown-start",
+        "label": "Charlie breakdown start",
+        "kind": "operator_breakdown",
+        "role": "operator_interaction",
+        "timestamp": "2025-12-31T08:00:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-03-operator-reset-start",
+        "label": "Charlie reset start",
+        "kind": "operator_reset",
+        "role": "operator_interaction",
+        "timestamp": "2025-12-31T11:00:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-03-operator-reset-ready",
+        "label": "Charlie reset ready",
+        "kind": "operator_reset_ready",
+        "role": "operator_interaction",
+        "timestamp": "2025-12-31T14:00:00Z",
         "result": "ready",
         "severity": "operator"
       },
@@ -3694,15 +3694,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-04-FUNC-C01-HOT",
-        "label": "Delta Hot survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-02T05:19:00Z",
-        "cycle_index": 34,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-05-FUNC-C02-HOT",
         "label": "Alpha Cycle 2 hot dwell functional test",
         "kind": "functional_gate",
@@ -3739,11 +3730,11 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-04-FUNC-C01-COLD",
-        "label": "Delta Cold survival recovery functional test",
+        "id": "thermal_chamber_delta-fat-04-FUNC-C01-HOT",
+        "label": "Delta Hot survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-02T22:54:00Z",
+        "timestamp": "2026-01-03T01:49:00Z",
         "cycle_index": 34,
         "result": "pass"
       },
@@ -3752,7 +3743,7 @@
         "label": "Charlie Hot survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-03T01:49:00Z",
+        "timestamp": "2026-01-03T03:19:00Z",
         "cycle_index": 24,
         "result": "pass"
       },
@@ -3775,15 +3766,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-04-FUNC-C02-HOT",
-        "label": "Delta Cycle 2 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-03T09:04:00Z",
-        "cycle_index": 35,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-05-FUNC-C03-COLD",
         "label": "Alpha Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
@@ -3802,21 +3784,21 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-04-FUNC-C01-COLD",
+        "label": "Delta Cold survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-03T19:24:00Z",
+        "cycle_index": 34,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-04-FUNC-C01-COLD",
         "label": "Charlie Cold survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-03T19:24:00Z",
+        "timestamp": "2026-01-03T20:54:00Z",
         "cycle_index": 24,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-04-FUNC-C02-COLD",
-        "label": "Delta Cycle 2 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-03T21:08:00Z",
-        "cycle_index": 35,
         "result": "pass"
       },
       {
@@ -3838,21 +3820,21 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-04-FUNC-C02-HOT",
+        "label": "Delta Cycle 2 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-04T05:34:00Z",
+        "cycle_index": 35,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-04-FUNC-C02-HOT",
         "label": "Charlie Cycle 2 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-04T05:34:00Z",
+        "timestamp": "2026-01-04T07:04:00Z",
         "cycle_index": 25,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-04-FUNC-C03-HOT",
-        "label": "Delta Cycle 3 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-04T07:18:00Z",
-        "cycle_index": 36,
         "result": "pass"
       },
       {
@@ -3874,21 +3856,21 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-04-FUNC-C02-COLD",
+        "label": "Delta Cycle 2 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-04T17:38:00Z",
+        "cycle_index": 35,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-04-FUNC-C02-COLD",
         "label": "Charlie Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-04T17:38:00Z",
+        "timestamp": "2026-01-04T19:08:00Z",
         "cycle_index": 25,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-04-FUNC-C03-COLD",
-        "label": "Delta Cycle 3 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-04T19:22:00Z",
-        "cycle_index": 36,
         "result": "pass"
       },
       {
@@ -3910,21 +3892,21 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-04-FUNC-C03-HOT",
+        "label": "Delta Cycle 3 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-05T03:48:00Z",
+        "cycle_index": 36,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-04-FUNC-C03-HOT",
         "label": "Charlie Cycle 3 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-05T03:48:00Z",
+        "timestamp": "2026-01-05T05:18:00Z",
         "cycle_index": 26,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-04-FUNC-C04-HOT",
-        "label": "Delta Cycle 4 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-05T05:32:00Z",
-        "cycle_index": 37,
         "result": "pass"
       },
       {
@@ -3982,20 +3964,29 @@
         "severity": "operator"
       },
       {
+        "id": "thermal_chamber_delta-fat-04-FUNC-C03-COLD",
+        "label": "Delta Cycle 3 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-05T15:52:00Z",
+        "cycle_index": 36,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-04-FUNC-C03-COLD",
         "label": "Charlie Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-05T15:52:00Z",
+        "timestamp": "2026-01-05T17:22:00Z",
         "cycle_index": 26,
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-04-FUNC-C04-COLD",
-        "label": "Delta Cycle 4 cold dwell functional test",
+        "id": "thermal_chamber_delta-fat-04-FUNC-C04-HOT",
+        "label": "Delta Cycle 4 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-05T17:36:00Z",
+        "timestamp": "2026-01-06T02:02:00Z",
         "cycle_index": 37,
         "result": "pass"
       },
@@ -4004,7 +3995,25 @@
         "label": "Charlie Cycle 4 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-06T02:02:00Z",
+        "timestamp": "2026-01-06T03:32:00Z",
+        "cycle_index": 27,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-04-FUNC-C04-COLD",
+        "label": "Delta Cycle 4 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-06T14:06:00Z",
+        "cycle_index": 37,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-04-FUNC-C04-COLD",
+        "label": "Charlie Cycle 4 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-06T15:36:00Z",
         "cycle_index": 27,
         "result": "pass"
       },
@@ -4013,8 +4022,17 @@
         "label": "Delta Post-environment functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-06T02:18:00Z",
+        "timestamp": "2026-01-06T22:48:00Z",
         "cycle_index": 33,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-04-FUNC-POST",
+        "label": "Charlie Post-environment functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-07T00:18:00Z",
+        "cycle_index": 23,
         "result": "pass"
       },
       {
@@ -4022,7 +4040,16 @@
         "label": "Delta breakdown start",
         "kind": "operator_breakdown",
         "role": "operator_interaction",
-        "timestamp": "2026-01-06T08:00:00Z",
+        "timestamp": "2026-01-07T08:00:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-04-operator-breakdown-start",
+        "label": "Charlie breakdown start",
+        "kind": "operator_breakdown",
+        "role": "operator_interaction",
+        "timestamp": "2026-01-07T09:30:00Z",
         "result": "action_required",
         "severity": "operator"
       },
@@ -4031,52 +4058,7 @@
         "label": "Delta reset start",
         "kind": "operator_reset",
         "role": "operator_interaction",
-        "timestamp": "2026-01-06T11:00:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-04-operator-reset-ready",
-        "label": "Delta reset ready",
-        "kind": "operator_reset_ready",
-        "role": "operator_interaction",
-        "timestamp": "2026-01-06T14:00:00Z",
-        "result": "ready",
-        "severity": "operator"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-04-FUNC-C04-COLD",
-        "label": "Charlie Cycle 4 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-06T14:06:00Z",
-        "cycle_index": 27,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-04-FUNC-POST",
-        "label": "Charlie Post-environment functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-06T22:48:00Z",
-        "cycle_index": 23,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-05-FUNC-C01-HOT",
-        "label": "Delta Hot survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-07T07:19:00Z",
-        "cycle_index": 35,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-04-operator-breakdown-start",
-        "label": "Charlie breakdown start",
-        "kind": "operator_breakdown",
-        "role": "operator_interaction",
-        "timestamp": "2026-01-07T09:30:00Z",
+        "timestamp": "2026-01-07T11:00:00Z",
         "result": "action_required",
         "severity": "operator"
       },
@@ -4090,6 +4072,15 @@
         "severity": "operator"
       },
       {
+        "id": "thermal_chamber_delta-fat-04-operator-reset-ready",
+        "label": "Delta reset ready",
+        "kind": "operator_reset_ready",
+        "role": "operator_interaction",
+        "timestamp": "2026-01-07T14:00:00Z",
+        "result": "ready",
+        "severity": "operator"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-04-operator-reset-ready",
         "label": "Charlie reset ready",
         "kind": "operator_reset_ready",
@@ -4097,15 +4088,6 @@
         "timestamp": "2026-01-07T15:30:00Z",
         "result": "ready",
         "severity": "operator"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-05-FUNC-C01-COLD",
-        "label": "Delta Cold survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-08T00:54:00Z",
-        "cycle_index": 35,
-        "result": "pass"
       },
       {
         "id": "thermal_chamber_alpha-fat-06-FUNC-C01-HOT",
@@ -4123,15 +4105,6 @@
         "role": "event",
         "timestamp": "2026-01-08T04:49:00Z",
         "cycle_index": 15,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-05-FUNC-C02-HOT",
-        "label": "Delta Cycle 2 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-08T11:04:00Z",
-        "cycle_index": 36,
         "result": "pass"
       },
       {
@@ -4153,15 +4126,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-05-FUNC-C02-COLD",
-        "label": "Delta Cycle 2 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-08T23:08:00Z",
-        "cycle_index": 36,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-06-FUNC-C02-HOT",
         "label": "Alpha Cycle 2 hot dwell functional test",
         "kind": "functional_gate",
@@ -4177,15 +4141,6 @@
         "role": "event",
         "timestamp": "2026-01-09T08:34:00Z",
         "cycle_index": 16,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-05-FUNC-C03-HOT",
-        "label": "Delta Cycle 3 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-09T09:18:00Z",
-        "cycle_index": 37,
         "result": "pass"
       },
       {
@@ -4207,12 +4162,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-05-FUNC-C03-COLD",
-        "label": "Delta Cycle 3 cold dwell functional test",
+        "id": "thermal_chamber_delta-fat-05-FUNC-C01-HOT",
+        "label": "Delta Hot survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-09T21:22:00Z",
-        "cycle_index": 37,
+        "timestamp": "2026-01-10T01:49:00Z",
+        "cycle_index": 35,
         "result": "pass"
       },
       {
@@ -4243,15 +4198,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-05-FUNC-C04-HOT",
-        "label": "Delta Cycle 4 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-10T07:32:00Z",
-        "cycle_index": 38,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-06-FUNC-C03-COLD",
         "label": "Alpha Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
@@ -4270,12 +4216,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-05-FUNC-C04-COLD",
-        "label": "Delta Cycle 4 cold dwell functional test",
+        "id": "thermal_chamber_delta-fat-05-FUNC-C01-COLD",
+        "label": "Delta Cold survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-10T19:36:00Z",
-        "cycle_index": 38,
+        "timestamp": "2026-01-10T19:24:00Z",
+        "cycle_index": 35,
         "result": "pass"
       },
       {
@@ -4297,21 +4243,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-05-FUNC-POST",
-        "label": "Delta Post-environment functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-11T04:18:00Z",
-        "cycle_index": 34,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-05-FUNC-C04-HOT",
         "label": "Bravo Cycle 4 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-01-11T05:02:00Z",
         "cycle_index": 18,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-05-FUNC-C02-HOT",
+        "label": "Delta Cycle 2 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-11T05:34:00Z",
+        "cycle_index": 36,
         "result": "pass"
       },
       {
@@ -4342,6 +4288,15 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-05-FUNC-C02-COLD",
+        "label": "Delta Cycle 2 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-11T17:38:00Z",
+        "cycle_index": 36,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-05-FUNC-C02-COLD",
         "label": "Charlie Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
@@ -4369,6 +4324,15 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-05-FUNC-C03-HOT",
+        "label": "Delta Cycle 3 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-12T03:48:00Z",
+        "cycle_index": 37,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-05-FUNC-C03-HOT",
         "label": "Charlie Cycle 3 hot dwell functional test",
         "kind": "functional_gate",
@@ -4387,15 +4351,6 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-05-operator-breakdown-start",
-        "label": "Delta breakdown start",
-        "kind": "operator_breakdown",
-        "role": "operator_interaction",
-        "timestamp": "2026-01-12T09:30:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-06-operator-breakdown-start",
         "label": "Alpha breakdown start",
         "kind": "operator_breakdown",
@@ -4410,15 +4365,6 @@
         "kind": "operator_reset",
         "role": "operator_interaction",
         "timestamp": "2026-01-12T11:30:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-05-operator-reset-start",
-        "label": "Delta reset start",
-        "kind": "operator_reset",
-        "role": "operator_interaction",
-        "timestamp": "2026-01-12T12:30:00Z",
         "result": "action_required",
         "severity": "operator"
       },
@@ -4450,13 +4396,13 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-05-operator-reset-ready",
-        "label": "Delta reset ready",
-        "kind": "operator_reset_ready",
-        "role": "operator_interaction",
-        "timestamp": "2026-01-12T15:30:00Z",
-        "result": "ready",
-        "severity": "operator"
+        "id": "thermal_chamber_delta-fat-05-FUNC-C03-COLD",
+        "label": "Delta Cycle 3 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-12T15:52:00Z",
+        "cycle_index": 37,
+        "result": "pass"
       },
       {
         "id": "thermal_chamber_charlie-fat-05-FUNC-C03-COLD",
@@ -4465,6 +4411,15 @@
         "role": "event",
         "timestamp": "2026-01-12T19:22:00Z",
         "cycle_index": 27,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-05-FUNC-C04-HOT",
+        "label": "Delta Cycle 4 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-13T02:02:00Z",
+        "cycle_index": 38,
         "result": "pass"
       },
       {
@@ -4477,12 +4432,30 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-05-FUNC-C04-COLD",
+        "label": "Delta Cycle 4 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-13T14:06:00Z",
+        "cycle_index": 38,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-05-FUNC-C04-COLD",
         "label": "Charlie Cycle 4 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-01-13T17:36:00Z",
         "cycle_index": 28,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-05-FUNC-POST",
+        "label": "Delta Post-environment functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-13T22:48:00Z",
+        "cycle_index": 34,
         "result": "pass"
       },
       {
@@ -4513,11 +4486,29 @@
         "severity": "operator"
       },
       {
+        "id": "thermal_chamber_delta-fat-05-operator-breakdown-start",
+        "label": "Delta breakdown start",
+        "kind": "operator_breakdown",
+        "role": "operator_interaction",
+        "timestamp": "2026-01-14T09:30:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-05-operator-reset-start",
         "label": "Charlie reset start",
         "kind": "operator_reset",
         "role": "operator_interaction",
         "timestamp": "2026-01-14T12:00:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-05-operator-reset-start",
+        "label": "Delta reset start",
+        "kind": "operator_reset",
+        "role": "operator_interaction",
+        "timestamp": "2026-01-14T12:30:00Z",
         "result": "action_required",
         "severity": "operator"
       },
@@ -4531,21 +4522,21 @@
         "severity": "operator"
       },
       {
+        "id": "thermal_chamber_delta-fat-05-operator-reset-ready",
+        "label": "Delta reset ready",
+        "kind": "operator_reset_ready",
+        "role": "operator_interaction",
+        "timestamp": "2026-01-14T15:30:00Z",
+        "result": "ready",
+        "severity": "operator"
+      },
+      {
         "id": "thermal_chamber_bravo-fat-06-FUNC-C01-COLD",
         "label": "Bravo Cold survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-01-14T22:54:00Z",
         "cycle_index": 16,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-06-FUNC-C01-HOT",
-        "label": "Delta Hot survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-15T01:49:00Z",
-        "cycle_index": 36,
         "result": "pass"
       },
       {
@@ -4567,15 +4558,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-06-FUNC-C01-COLD",
-        "label": "Delta Cold survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-15T19:24:00Z",
-        "cycle_index": 36,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-06-FUNC-C02-COLD",
         "label": "Bravo Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
@@ -4591,15 +4573,6 @@
         "role": "event",
         "timestamp": "2026-01-15T22:54:00Z",
         "cycle_index": 7,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-06-FUNC-C02-HOT",
-        "label": "Delta Cycle 2 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-16T05:34:00Z",
-        "cycle_index": 37,
         "result": "pass"
       },
       {
@@ -4630,15 +4603,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-06-FUNC-C02-COLD",
-        "label": "Delta Cycle 2 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-16T17:38:00Z",
-        "cycle_index": 37,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-06-FUNC-C03-COLD",
         "label": "Bravo Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
@@ -4666,12 +4630,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-06-FUNC-C03-HOT",
-        "label": "Delta Cycle 3 hot dwell functional test",
+        "id": "thermal_chamber_delta-fat-06-FUNC-C01-HOT",
+        "label": "Delta Hot survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-17T03:48:00Z",
-        "cycle_index": 38,
+        "timestamp": "2026-01-17T01:49:00Z",
+        "cycle_index": 36,
         "result": "pass"
       },
       {
@@ -4702,15 +4666,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-06-FUNC-C03-COLD",
-        "label": "Delta Cycle 3 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-17T15:52:00Z",
-        "cycle_index": 38,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-06-FUNC-C04-COLD",
         "label": "Bravo Cycle 4 cold dwell functional test",
         "kind": "functional_gate",
@@ -4729,21 +4684,21 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-06-FUNC-C01-COLD",
+        "label": "Delta Cold survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-17T19:24:00Z",
+        "cycle_index": 36,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-06-FUNC-C02-COLD",
         "label": "Charlie Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-01-17T23:08:00Z",
         "cycle_index": 27,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-06-FUNC-C04-HOT",
-        "label": "Delta Cycle 4 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-18T02:02:00Z",
-        "cycle_index": 39,
         "result": "pass"
       },
       {
@@ -4765,21 +4720,21 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-06-FUNC-C02-HOT",
+        "label": "Delta Cycle 2 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-18T05:34:00Z",
+        "cycle_index": 37,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-06-FUNC-C03-HOT",
         "label": "Charlie Cycle 3 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-01-18T09:18:00Z",
         "cycle_index": 28,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-06-FUNC-C04-COLD",
-        "label": "Delta Cycle 4 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-18T14:06:00Z",
-        "cycle_index": 39,
         "result": "pass"
       },
       {
@@ -4792,6 +4747,15 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-06-FUNC-C02-COLD",
+        "label": "Delta Cycle 2 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-18T17:38:00Z",
+        "cycle_index": 37,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-06-FUNC-C03-COLD",
         "label": "Charlie Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
@@ -4801,21 +4765,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-06-FUNC-POST",
-        "label": "Delta Post-environment functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-18T22:48:00Z",
-        "cycle_index": 35,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-07-FUNC-POST",
         "label": "Alpha Post-environment functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-01-19T02:18:00Z",
         "cycle_index": 6,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-06-FUNC-C03-HOT",
+        "label": "Delta Cycle 3 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-19T03:48:00Z",
+        "cycle_index": 38,
         "result": "pass"
       },
       {
@@ -4833,15 +4797,6 @@
         "kind": "operator_breakdown",
         "role": "operator_interaction",
         "timestamp": "2026-01-19T08:00:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-06-operator-breakdown-start",
-        "label": "Delta breakdown start",
-        "kind": "operator_breakdown",
-        "role": "operator_interaction",
-        "timestamp": "2026-01-19T09:00:00Z",
         "result": "action_required",
         "severity": "operator"
       },
@@ -4873,15 +4828,6 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-06-operator-reset-start",
-        "label": "Delta reset start",
-        "kind": "operator_reset",
-        "role": "operator_interaction",
-        "timestamp": "2026-01-19T12:00:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-06-operator-reset-ready",
         "label": "Bravo reset ready",
         "kind": "operator_reset_ready",
@@ -4900,13 +4846,13 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-06-operator-reset-ready",
-        "label": "Delta reset ready",
-        "kind": "operator_reset_ready",
-        "role": "operator_interaction",
-        "timestamp": "2026-01-19T15:00:00Z",
-        "result": "ready",
-        "severity": "operator"
+        "id": "thermal_chamber_delta-fat-06-FUNC-C03-COLD",
+        "label": "Delta Cycle 3 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-19T15:52:00Z",
+        "cycle_index": 38,
+        "result": "pass"
       },
       {
         "id": "thermal_chamber_charlie-fat-06-FUNC-C04-COLD",
@@ -4915,6 +4861,15 @@
         "role": "event",
         "timestamp": "2026-01-19T19:36:00Z",
         "cycle_index": 29,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-06-FUNC-C04-HOT",
+        "label": "Delta Cycle 4 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-20T02:02:00Z",
+        "cycle_index": 39,
         "result": "pass"
       },
       {
@@ -4954,6 +4909,15 @@
         "severity": "operator"
       },
       {
+        "id": "thermal_chamber_delta-fat-06-FUNC-C04-COLD",
+        "label": "Delta Cycle 4 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-20T14:06:00Z",
+        "cycle_index": 39,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-06-operator-reset-ready",
         "label": "Charlie reset ready",
         "kind": "operator_reset_ready",
@@ -4961,6 +4925,15 @@
         "timestamp": "2026-01-20T14:30:00Z",
         "result": "ready",
         "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-06-FUNC-POST",
+        "label": "Delta Post-environment functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-20T22:48:00Z",
+        "cycle_index": 35,
+        "result": "pass"
       },
       {
         "id": "thermal_chamber_bravo-fat-07-FUNC-C01-COLD",
@@ -4981,6 +4954,15 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-06-operator-breakdown-start",
+        "label": "Delta breakdown start",
+        "kind": "operator_breakdown",
+        "role": "operator_interaction",
+        "timestamp": "2026-01-21T09:00:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
         "id": "thermal_chamber_bravo-fat-07-FUNC-C02-HOT",
         "label": "Bravo Cycle 2 hot dwell functional test",
         "kind": "functional_gate",
@@ -4988,6 +4970,24 @@
         "timestamp": "2026-01-21T11:04:00Z",
         "cycle_index": 18,
         "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-06-operator-reset-start",
+        "label": "Delta reset start",
+        "kind": "operator_reset",
+        "role": "operator_interaction",
+        "timestamp": "2026-01-21T12:00:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-06-operator-reset-ready",
+        "label": "Delta reset ready",
+        "kind": "operator_reset_ready",
+        "role": "operator_interaction",
+        "timestamp": "2026-01-21T15:00:00Z",
+        "result": "ready",
+        "severity": "operator"
       },
       {
         "id": "thermal_chamber_bravo-fat-07-FUNC-C02-COLD",
@@ -5008,15 +5008,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-07-FUNC-C01-HOT",
-        "label": "Delta Hot survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-22T03:19:00Z",
-        "cycle_index": 37,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-07-FUNC-C03-HOT",
         "label": "Bravo Cycle 3 hot dwell functional test",
         "kind": "functional_gate",
@@ -5032,15 +5023,6 @@
         "role": "event",
         "timestamp": "2026-01-22T11:04:00Z",
         "cycle_index": 9,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-07-FUNC-C01-COLD",
-        "label": "Delta Cold survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-22T20:54:00Z",
-        "cycle_index": 37,
         "result": "pass"
       },
       {
@@ -5071,15 +5053,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-07-FUNC-C02-HOT",
-        "label": "Delta Cycle 2 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-23T07:04:00Z",
-        "cycle_index": 38,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-07-FUNC-C04-HOT",
         "label": "Bravo Cycle 4 hot dwell functional test",
         "kind": "functional_gate",
@@ -5095,15 +5068,6 @@
         "role": "event",
         "timestamp": "2026-01-23T09:18:00Z",
         "cycle_index": 10,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-07-FUNC-C02-COLD",
-        "label": "Delta Cycle 2 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-23T19:08:00Z",
-        "cycle_index": 38,
         "result": "pass"
       },
       {
@@ -5134,21 +5098,21 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-07-FUNC-C01-HOT",
+        "label": "Delta Hot survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-24T03:19:00Z",
+        "cycle_index": 37,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_bravo-fat-07-FUNC-POST",
         "label": "Bravo Post-environment functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-01-24T04:18:00Z",
         "cycle_index": 16,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-07-FUNC-C03-HOT",
-        "label": "Delta Cycle 3 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-24T05:18:00Z",
-        "cycle_index": 39,
         "result": "pass"
       },
       {
@@ -5170,15 +5134,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-07-FUNC-C03-COLD",
-        "label": "Delta Cycle 3 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-24T17:22:00Z",
-        "cycle_index": 39,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_charlie-fat-07-FUNC-C02-COLD",
         "label": "Charlie Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
@@ -5197,12 +5152,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-07-FUNC-C04-HOT",
-        "label": "Delta Cycle 4 hot dwell functional test",
+        "id": "thermal_chamber_delta-fat-07-FUNC-C01-COLD",
+        "label": "Delta Cold survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-25T03:32:00Z",
-        "cycle_index": 40,
+        "timestamp": "2026-01-24T20:54:00Z",
+        "cycle_index": 37,
         "result": "pass"
       },
       {
@@ -5224,12 +5179,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-07-FUNC-C04-COLD",
-        "label": "Delta Cycle 4 cold dwell functional test",
+        "id": "thermal_chamber_delta-fat-07-FUNC-C02-HOT",
+        "label": "Delta Cycle 2 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-25T15:36:00Z",
-        "cycle_index": 40,
+        "timestamp": "2026-01-25T07:04:00Z",
+        "cycle_index": 38,
         "result": "pass"
       },
       {
@@ -5242,12 +5197,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-07-FUNC-POST",
-        "label": "Delta Post-environment functional test",
+        "id": "thermal_chamber_delta-fat-07-FUNC-C02-COLD",
+        "label": "Delta Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-26T00:18:00Z",
-        "cycle_index": 36,
+        "timestamp": "2026-01-25T19:08:00Z",
+        "cycle_index": 38,
         "result": "pass"
       },
       {
@@ -5260,13 +5215,13 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-07-operator-breakdown-start",
-        "label": "Delta breakdown start",
-        "kind": "operator_breakdown",
-        "role": "operator_interaction",
-        "timestamp": "2026-01-26T08:30:00Z",
-        "result": "action_required",
-        "severity": "operator"
+        "id": "thermal_chamber_delta-fat-07-FUNC-C03-HOT",
+        "label": "Delta Cycle 3 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-26T05:18:00Z",
+        "cycle_index": 39,
+        "result": "pass"
       },
       {
         "id": "thermal_chamber_alpha-fat-08-operator-breakdown-start",
@@ -5289,15 +5244,6 @@
       {
         "id": "thermal_chamber_alpha-fat-08-operator-reset-start",
         "label": "Alpha reset start",
-        "kind": "operator_reset",
-        "role": "operator_interaction",
-        "timestamp": "2026-01-26T11:30:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-07-operator-reset-start",
-        "label": "Delta reset start",
         "kind": "operator_reset",
         "role": "operator_interaction",
         "timestamp": "2026-01-26T11:30:00Z",
@@ -5332,15 +5278,6 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-07-operator-reset-ready",
-        "label": "Delta reset ready",
-        "kind": "operator_reset_ready",
-        "role": "operator_interaction",
-        "timestamp": "2026-01-26T14:30:00Z",
-        "result": "ready",
-        "severity": "operator"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-07-operator-reset-ready",
         "label": "Bravo reset ready",
         "kind": "operator_reset_ready",
@@ -5350,12 +5287,30 @@
         "severity": "operator"
       },
       {
+        "id": "thermal_chamber_delta-fat-07-FUNC-C03-COLD",
+        "label": "Delta Cycle 3 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-26T17:22:00Z",
+        "cycle_index": 39,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-07-FUNC-POST",
         "label": "Charlie Post-environment functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-01-26T22:48:00Z",
         "cycle_index": 26,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-07-FUNC-C04-HOT",
+        "label": "Delta Cycle 4 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-27T03:32:00Z",
+        "cycle_index": 40,
         "result": "pass"
       },
       {
@@ -5386,22 +5341,49 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-08-FUNC-C01-HOT",
-        "label": "Delta Hot survival recovery functional test",
+        "id": "thermal_chamber_delta-fat-07-FUNC-C04-COLD",
+        "label": "Delta Cycle 4 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-28T05:19:00Z",
-        "cycle_index": 38,
+        "timestamp": "2026-01-27T15:36:00Z",
+        "cycle_index": 40,
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-08-FUNC-C01-COLD",
-        "label": "Delta Cold survival recovery functional test",
+        "id": "thermal_chamber_delta-fat-07-FUNC-POST",
+        "label": "Delta Post-environment functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-01-28T22:54:00Z",
-        "cycle_index": 38,
+        "timestamp": "2026-01-28T00:18:00Z",
+        "cycle_index": 36,
         "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-07-operator-breakdown-start",
+        "label": "Delta breakdown start",
+        "kind": "operator_breakdown",
+        "role": "operator_interaction",
+        "timestamp": "2026-01-28T08:30:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-07-operator-reset-start",
+        "label": "Delta reset start",
+        "kind": "operator_reset",
+        "role": "operator_interaction",
+        "timestamp": "2026-01-28T11:30:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-07-operator-reset-ready",
+        "label": "Delta reset ready",
+        "kind": "operator_reset_ready",
+        "role": "operator_interaction",
+        "timestamp": "2026-01-28T14:30:00Z",
+        "result": "ready",
+        "severity": "operator"
       },
       {
         "id": "thermal_chamber_alpha-fat-09-FUNC-C01-HOT",
@@ -5419,15 +5401,6 @@
         "role": "event",
         "timestamp": "2026-01-29T03:19:00Z",
         "cycle_index": 18,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-08-FUNC-C02-HOT",
-        "label": "Delta Cycle 2 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-29T09:04:00Z",
-        "cycle_index": 39,
         "result": "pass"
       },
       {
@@ -5449,21 +5422,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-08-FUNC-C02-COLD",
-        "label": "Delta Cycle 2 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-29T21:08:00Z",
-        "cycle_index": 39,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_charlie-fat-08-FUNC-C01-HOT",
         "label": "Charlie Hot survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-01-30T03:19:00Z",
         "cycle_index": 28,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-08-FUNC-C01-HOT",
+        "label": "Delta Hot survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-30T05:19:00Z",
+        "cycle_index": 38,
         "result": "pass"
       },
       {
@@ -5485,15 +5458,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-08-FUNC-C03-HOT",
-        "label": "Delta Cycle 3 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-30T07:18:00Z",
-        "cycle_index": 40,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-09-FUNC-C02-COLD",
         "label": "Alpha Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
@@ -5512,21 +5476,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-08-FUNC-C03-COLD",
-        "label": "Delta Cycle 3 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-30T19:22:00Z",
-        "cycle_index": 40,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_charlie-fat-08-FUNC-C01-COLD",
         "label": "Charlie Cold survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-01-30T20:54:00Z",
         "cycle_index": 28,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-08-FUNC-C01-COLD",
+        "label": "Delta Cold survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-30T22:54:00Z",
+        "cycle_index": 38,
         "result": "pass"
       },
       {
@@ -5548,21 +5512,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-08-FUNC-C04-HOT",
-        "label": "Delta Cycle 4 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-31T05:32:00Z",
-        "cycle_index": 41,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_charlie-fat-08-FUNC-C02-HOT",
         "label": "Charlie Cycle 2 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-01-31T07:04:00Z",
         "cycle_index": 29,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-08-FUNC-C02-HOT",
+        "label": "Delta Cycle 2 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-31T09:04:00Z",
+        "cycle_index": 39,
         "result": "pass"
       },
       {
@@ -5584,15 +5548,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-08-FUNC-C04-COLD",
-        "label": "Delta Cycle 4 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-01-31T17:36:00Z",
-        "cycle_index": 41,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_charlie-fat-08-FUNC-C02-COLD",
         "label": "Charlie Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
@@ -5602,21 +5557,21 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-08-FUNC-C02-COLD",
+        "label": "Delta Cycle 2 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-01-31T21:08:00Z",
+        "cycle_index": 39,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_alpha-fat-09-FUNC-C04-HOT",
         "label": "Alpha Cycle 4 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-01T02:02:00Z",
         "cycle_index": 12,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-08-FUNC-POST",
-        "label": "Delta Post-environment functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-01T02:18:00Z",
-        "cycle_index": 37,
         "result": "pass"
       },
       {
@@ -5635,6 +5590,15 @@
         "role": "event",
         "timestamp": "2026-02-01T05:18:00Z",
         "cycle_index": 30,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-08-FUNC-C03-HOT",
+        "label": "Delta Cycle 3 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-01T07:18:00Z",
+        "cycle_index": 40,
         "result": "pass"
       },
       {
@@ -5665,6 +5629,15 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-08-FUNC-C03-COLD",
+        "label": "Delta Cycle 3 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-01T19:22:00Z",
+        "cycle_index": 40,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_alpha-fat-09-FUNC-POST",
         "label": "Alpha Post-environment functional test",
         "kind": "functional_gate",
@@ -5692,13 +5665,13 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-08-operator-breakdown-start",
-        "label": "Delta breakdown start",
-        "kind": "operator_breakdown",
-        "role": "operator_interaction",
-        "timestamp": "2026-02-02T08:00:00Z",
-        "result": "action_required",
-        "severity": "operator"
+        "id": "thermal_chamber_delta-fat-08-FUNC-C04-HOT",
+        "label": "Delta Cycle 4 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-02T05:32:00Z",
+        "cycle_index": 41,
+        "result": "pass"
       },
       {
         "id": "thermal_chamber_alpha-fat-09-operator-breakdown-start",
@@ -5728,30 +5701,12 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-08-operator-reset-start",
-        "label": "Delta reset start",
-        "kind": "operator_reset",
-        "role": "operator_interaction",
-        "timestamp": "2026-02-02T11:00:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-08-operator-reset-start",
         "label": "Bravo reset start",
         "kind": "operator_reset",
         "role": "operator_interaction",
         "timestamp": "2026-02-02T12:00:00Z",
         "result": "action_required",
-        "severity": "operator"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-08-operator-reset-ready",
-        "label": "Delta reset ready",
-        "kind": "operator_reset_ready",
-        "role": "operator_interaction",
-        "timestamp": "2026-02-02T14:00:00Z",
-        "result": "ready",
         "severity": "operator"
       },
       {
@@ -5782,6 +5737,15 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-08-FUNC-C04-COLD",
+        "label": "Delta Cycle 4 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-02T17:36:00Z",
+        "cycle_index": 41,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-08-FUNC-POST",
         "label": "Charlie Post-environment functional test",
         "kind": "functional_gate",
@@ -5791,13 +5755,22 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-09-FUNC-C01-HOT",
-        "label": "Delta Hot survival recovery functional test",
+        "id": "thermal_chamber_delta-fat-08-FUNC-POST",
+        "label": "Delta Post-environment functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-02-03T07:19:00Z",
-        "cycle_index": 39,
+        "timestamp": "2026-02-03T02:18:00Z",
+        "cycle_index": 37,
         "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-08-operator-breakdown-start",
+        "label": "Delta breakdown start",
+        "kind": "operator_breakdown",
+        "role": "operator_interaction",
+        "timestamp": "2026-02-03T08:00:00Z",
+        "result": "action_required",
+        "severity": "operator"
       },
       {
         "id": "thermal_chamber_charlie-fat-08-operator-breakdown-start",
@@ -5805,6 +5778,15 @@
         "kind": "operator_breakdown",
         "role": "operator_interaction",
         "timestamp": "2026-02-03T09:30:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-08-operator-reset-start",
+        "label": "Delta reset start",
+        "kind": "operator_reset",
+        "role": "operator_interaction",
+        "timestamp": "2026-02-03T11:00:00Z",
         "result": "action_required",
         "severity": "operator"
       },
@@ -5818,6 +5800,15 @@
         "severity": "operator"
       },
       {
+        "id": "thermal_chamber_delta-fat-08-operator-reset-ready",
+        "label": "Delta reset ready",
+        "kind": "operator_reset_ready",
+        "role": "operator_interaction",
+        "timestamp": "2026-02-03T14:00:00Z",
+        "result": "ready",
+        "severity": "operator"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-08-operator-reset-ready",
         "label": "Charlie reset ready",
         "kind": "operator_reset_ready",
@@ -5825,33 +5816,6 @@
         "timestamp": "2026-02-03T15:30:00Z",
         "result": "ready",
         "severity": "operator"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-09-FUNC-C01-COLD",
-        "label": "Delta Cold survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-04T00:54:00Z",
-        "cycle_index": 39,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-09-FUNC-C02-HOT",
-        "label": "Delta Cycle 2 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-04T11:04:00Z",
-        "cycle_index": 40,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-09-FUNC-C02-COLD",
-        "label": "Delta Cycle 2 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-04T23:08:00Z",
-        "cycle_index": 40,
-        "result": "pass"
       },
       {
         "id": "thermal_chamber_alpha-fat-10-FUNC-C01-HOT",
@@ -5872,15 +5836,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-09-FUNC-C03-HOT",
-        "label": "Delta Cycle 3 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-05T09:18:00Z",
-        "cycle_index": 41,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-10-FUNC-C01-COLD",
         "label": "Alpha Cold survival recovery functional test",
         "kind": "functional_gate",
@@ -5890,21 +5845,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-09-FUNC-C03-COLD",
-        "label": "Delta Cycle 3 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-05T21:22:00Z",
-        "cycle_index": 41,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-09-FUNC-C01-COLD",
         "label": "Bravo Cold survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-05T22:24:00Z",
         "cycle_index": 19,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-09-FUNC-C01-HOT",
+        "label": "Delta Hot survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-06T03:19:00Z",
+        "cycle_index": 39,
         "result": "pass"
       },
       {
@@ -5926,15 +5881,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-09-FUNC-C04-HOT",
-        "label": "Delta Cycle 4 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-06T07:32:00Z",
-        "cycle_index": 42,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-09-FUNC-C02-HOT",
         "label": "Bravo Cycle 2 hot dwell functional test",
         "kind": "functional_gate",
@@ -5953,15 +5899,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-09-FUNC-C04-COLD",
-        "label": "Delta Cycle 4 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-06T19:36:00Z",
-        "cycle_index": 42,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-09-FUNC-C02-COLD",
         "label": "Bravo Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
@@ -5971,21 +5908,21 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-09-FUNC-C01-COLD",
+        "label": "Delta Cold survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-06T20:54:00Z",
+        "cycle_index": 39,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-09-FUNC-C01-COLD",
         "label": "Charlie Cold survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-06T22:54:00Z",
         "cycle_index": 29,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-09-FUNC-POST",
-        "label": "Delta Post-environment functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-07T04:18:00Z",
-        "cycle_index": 38,
         "result": "pass"
       },
       {
@@ -6004,6 +5941,15 @@
         "role": "event",
         "timestamp": "2026-02-07T06:48:00Z",
         "cycle_index": 21,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-09-FUNC-C02-HOT",
+        "label": "Delta Cycle 2 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-07T07:04:00Z",
+        "cycle_index": 40,
         "result": "pass"
       },
       {
@@ -6034,6 +5980,15 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-09-FUNC-C02-COLD",
+        "label": "Delta Cycle 2 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-07T19:08:00Z",
+        "cycle_index": 40,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-09-FUNC-C02-COLD",
         "label": "Charlie Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
@@ -6058,6 +6013,15 @@
         "role": "event",
         "timestamp": "2026-02-08T05:02:00Z",
         "cycle_index": 22,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-09-FUNC-C03-HOT",
+        "label": "Delta Cycle 3 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-08T05:18:00Z",
+        "cycle_index": 41,
         "result": "pass"
       },
       {
@@ -6088,6 +6052,15 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-09-FUNC-C03-COLD",
+        "label": "Delta Cycle 3 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-08T17:22:00Z",
+        "cycle_index": 41,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-09-FUNC-C03-COLD",
         "label": "Charlie Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
@@ -6115,6 +6088,15 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-09-FUNC-C04-HOT",
+        "label": "Delta Cycle 4 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-09T03:32:00Z",
+        "cycle_index": 42,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-09-FUNC-C04-HOT",
         "label": "Charlie Cycle 4 hot dwell functional test",
         "kind": "functional_gate",
@@ -6129,15 +6111,6 @@
         "kind": "operator_breakdown",
         "role": "operator_interaction",
         "timestamp": "2026-02-09T08:30:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-09-operator-breakdown-start",
-        "label": "Delta breakdown start",
-        "kind": "operator_breakdown",
-        "role": "operator_interaction",
-        "timestamp": "2026-02-09T09:30:00Z",
         "result": "action_required",
         "severity": "operator"
       },
@@ -6169,15 +6142,6 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-09-operator-reset-start",
-        "label": "Delta reset start",
-        "kind": "operator_reset",
-        "role": "operator_interaction",
-        "timestamp": "2026-02-09T12:30:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-09-operator-reset-ready",
         "label": "Bravo reset ready",
         "kind": "operator_reset_ready",
@@ -6196,13 +6160,13 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-09-operator-reset-ready",
-        "label": "Delta reset ready",
-        "kind": "operator_reset_ready",
-        "role": "operator_interaction",
-        "timestamp": "2026-02-09T15:30:00Z",
-        "result": "ready",
-        "severity": "operator"
+        "id": "thermal_chamber_delta-fat-09-FUNC-C04-COLD",
+        "label": "Delta Cycle 4 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-09T15:36:00Z",
+        "cycle_index": 42,
+        "result": "pass"
       },
       {
         "id": "thermal_chamber_charlie-fat-09-FUNC-C04-COLD",
@@ -6211,6 +6175,15 @@
         "role": "event",
         "timestamp": "2026-02-09T17:36:00Z",
         "cycle_index": 32,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-09-FUNC-POST",
+        "label": "Delta Post-environment functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-10T00:18:00Z",
+        "cycle_index": 38,
         "result": "pass"
       },
       {
@@ -6232,6 +6205,15 @@
         "severity": "operator"
       },
       {
+        "id": "thermal_chamber_delta-fat-09-operator-breakdown-start",
+        "label": "Delta breakdown start",
+        "kind": "operator_breakdown",
+        "role": "operator_interaction",
+        "timestamp": "2026-02-10T09:30:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-09-operator-reset-start",
         "label": "Charlie reset start",
         "kind": "operator_reset",
@@ -6241,11 +6223,29 @@
         "severity": "operator"
       },
       {
+        "id": "thermal_chamber_delta-fat-09-operator-reset-start",
+        "label": "Delta reset start",
+        "kind": "operator_reset",
+        "role": "operator_interaction",
+        "timestamp": "2026-02-10T12:30:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
         "id": "thermal_chamber_charlie-fat-09-operator-reset-ready",
         "label": "Charlie reset ready",
         "kind": "operator_reset_ready",
         "role": "operator_interaction",
         "timestamp": "2026-02-10T15:00:00Z",
+        "result": "ready",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-09-operator-reset-ready",
+        "label": "Delta reset ready",
+        "kind": "operator_reset_ready",
+        "role": "operator_interaction",
+        "timestamp": "2026-02-10T15:30:00Z",
         "result": "ready",
         "severity": "operator"
       },
@@ -6277,15 +6277,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-10-FUNC-C01-HOT",
-        "label": "Charlie Hot survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-12T07:19:00Z",
-        "cycle_index": 30,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-10-FUNC-C02-HOT",
         "label": "Bravo Cycle 2 hot dwell functional test",
         "kind": "functional_gate",
@@ -6313,12 +6304,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-10-FUNC-C01-COLD",
-        "label": "Charlie Cold survival recovery functional test",
+        "id": "thermal_chamber_delta-fat-10-FUNC-C01-HOT",
+        "label": "Delta Hot survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-02-13T00:54:00Z",
-        "cycle_index": 30,
+        "timestamp": "2026-02-13T01:49:00Z",
+        "cycle_index": 40,
         "result": "pass"
       },
       {
@@ -6340,21 +6331,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-10-FUNC-C02-HOT",
-        "label": "Charlie Cycle 2 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-13T11:04:00Z",
-        "cycle_index": 31,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-10-FUNC-C03-COLD",
         "label": "Bravo Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-13T19:22:00Z",
         "cycle_index": 22,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-10-FUNC-C01-COLD",
+        "label": "Delta Cold survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-13T19:24:00Z",
+        "cycle_index": 40,
         "result": "pass"
       },
       {
@@ -6367,21 +6358,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-10-FUNC-C02-COLD",
-        "label": "Charlie Cycle 2 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-13T23:08:00Z",
-        "cycle_index": 31,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-10-FUNC-C01-HOT",
-        "label": "Delta Hot survival recovery functional test",
+        "id": "thermal_chamber_charlie-fat-10-FUNC-C01-HOT",
+        "label": "Charlie Hot survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-14T01:49:00Z",
-        "cycle_index": 40,
+        "cycle_index": 30,
         "result": "pass"
       },
       {
@@ -6394,21 +6376,21 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-10-FUNC-C02-HOT",
+        "label": "Delta Cycle 2 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-14T05:34:00Z",
+        "cycle_index": 41,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_alpha-fat-11-FUNC-C03-HOT",
         "label": "Alpha Cycle 3 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-14T07:18:00Z",
         "cycle_index": 13,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-10-FUNC-C03-HOT",
-        "label": "Charlie Cycle 3 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-14T09:18:00Z",
-        "cycle_index": 32,
         "result": "pass"
       },
       {
@@ -6421,6 +6403,15 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-10-FUNC-C02-COLD",
+        "label": "Delta Cycle 2 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-14T17:38:00Z",
+        "cycle_index": 41,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_alpha-fat-11-FUNC-C03-COLD",
         "label": "Alpha Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
@@ -6430,21 +6421,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-10-FUNC-C01-COLD",
-        "label": "Delta Cold survival recovery functional test",
+        "id": "thermal_chamber_charlie-fat-10-FUNC-C01-COLD",
+        "label": "Charlie Cold survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-14T19:24:00Z",
-        "cycle_index": 40,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-10-FUNC-C03-COLD",
-        "label": "Charlie Cycle 3 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-14T21:22:00Z",
-        "cycle_index": 32,
+        "cycle_index": 30,
         "result": "pass"
       },
       {
@@ -6457,6 +6439,15 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-10-FUNC-C03-HOT",
+        "label": "Delta Cycle 3 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-15T03:48:00Z",
+        "cycle_index": 42,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_alpha-fat-11-FUNC-C04-HOT",
         "label": "Alpha Cycle 4 hot dwell functional test",
         "kind": "functional_gate",
@@ -6466,21 +6457,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-10-FUNC-C02-HOT",
-        "label": "Delta Cycle 2 hot dwell functional test",
+        "id": "thermal_chamber_charlie-fat-10-FUNC-C02-HOT",
+        "label": "Charlie Cycle 2 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-15T05:34:00Z",
-        "cycle_index": 41,
+        "cycle_index": 31,
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-10-FUNC-C04-HOT",
-        "label": "Charlie Cycle 4 hot dwell functional test",
+        "id": "thermal_chamber_delta-fat-10-FUNC-C03-COLD",
+        "label": "Delta Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-02-15T07:32:00Z",
-        "cycle_index": 33,
+        "timestamp": "2026-02-15T15:52:00Z",
+        "cycle_index": 42,
         "result": "pass"
       },
       {
@@ -6493,21 +6484,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-10-FUNC-C02-COLD",
-        "label": "Delta Cycle 2 cold dwell functional test",
+        "id": "thermal_chamber_charlie-fat-10-FUNC-C02-COLD",
+        "label": "Charlie Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-15T17:38:00Z",
-        "cycle_index": 41,
+        "cycle_index": 31,
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-10-FUNC-C04-COLD",
-        "label": "Charlie Cycle 4 cold dwell functional test",
+        "id": "thermal_chamber_delta-fat-10-FUNC-C04-HOT",
+        "label": "Delta Cycle 4 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-02-15T19:36:00Z",
-        "cycle_index": 33,
+        "timestamp": "2026-02-16T02:02:00Z",
+        "cycle_index": 43,
         "result": "pass"
       },
       {
@@ -6520,21 +6511,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-10-FUNC-C03-HOT",
-        "label": "Delta Cycle 3 hot dwell functional test",
+        "id": "thermal_chamber_charlie-fat-10-FUNC-C03-HOT",
+        "label": "Charlie Cycle 3 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-16T03:48:00Z",
-        "cycle_index": 42,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-10-FUNC-POST",
-        "label": "Charlie Post-environment functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-16T04:18:00Z",
-        "cycle_index": 29,
+        "cycle_index": 32,
         "result": "pass"
       },
       {
@@ -6543,15 +6525,6 @@
         "kind": "operator_breakdown",
         "role": "operator_interaction",
         "timestamp": "2026-02-16T08:00:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-10-operator-breakdown-start",
-        "label": "Charlie breakdown start",
-        "kind": "operator_breakdown",
-        "role": "operator_interaction",
-        "timestamp": "2026-02-16T08:30:00Z",
         "result": "action_required",
         "severity": "operator"
       },
@@ -6574,15 +6547,6 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_charlie-fat-10-operator-reset-start",
-        "label": "Charlie reset start",
-        "kind": "operator_reset",
-        "role": "operator_interaction",
-        "timestamp": "2026-02-16T11:30:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-11-operator-reset-start",
         "label": "Alpha reset start",
         "kind": "operator_reset",
@@ -6601,13 +6565,13 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_charlie-fat-10-operator-reset-ready",
-        "label": "Charlie reset ready",
-        "kind": "operator_reset_ready",
-        "role": "operator_interaction",
-        "timestamp": "2026-02-16T14:30:00Z",
-        "result": "ready",
-        "severity": "operator"
+        "id": "thermal_chamber_delta-fat-10-FUNC-C04-COLD",
+        "label": "Delta Cycle 4 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-16T14:06:00Z",
+        "cycle_index": 43,
+        "result": "pass"
       },
       {
         "id": "thermal_chamber_alpha-fat-11-operator-reset-ready",
@@ -6619,21 +6583,30 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-10-FUNC-C03-COLD",
-        "label": "Delta Cycle 3 cold dwell functional test",
+        "id": "thermal_chamber_charlie-fat-10-FUNC-C03-COLD",
+        "label": "Charlie Cycle 3 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-16T15:52:00Z",
-        "cycle_index": 42,
+        "cycle_index": 32,
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-10-FUNC-C04-HOT",
-        "label": "Delta Cycle 4 hot dwell functional test",
+        "id": "thermal_chamber_delta-fat-10-FUNC-POST",
+        "label": "Delta Post-environment functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-16T22:48:00Z",
+        "cycle_index": 39,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-10-FUNC-C04-HOT",
+        "label": "Charlie Cycle 4 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-17T02:02:00Z",
-        "cycle_index": 43,
+        "cycle_index": 33,
         "result": "pass"
       },
       {
@@ -6646,21 +6619,48 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-10-FUNC-C04-COLD",
-        "label": "Delta Cycle 4 cold dwell functional test",
+        "id": "thermal_chamber_delta-fat-10-operator-breakdown-start",
+        "label": "Delta breakdown start",
+        "kind": "operator_breakdown",
+        "role": "operator_interaction",
+        "timestamp": "2026-02-17T09:00:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-10-operator-reset-start",
+        "label": "Delta reset start",
+        "kind": "operator_reset",
+        "role": "operator_interaction",
+        "timestamp": "2026-02-17T12:00:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-10-FUNC-C04-COLD",
+        "label": "Charlie Cycle 4 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-17T14:06:00Z",
-        "cycle_index": 43,
+        "cycle_index": 33,
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-10-FUNC-POST",
-        "label": "Delta Post-environment functional test",
+        "id": "thermal_chamber_delta-fat-10-operator-reset-ready",
+        "label": "Delta reset ready",
+        "kind": "operator_reset_ready",
+        "role": "operator_interaction",
+        "timestamp": "2026-02-17T15:00:00Z",
+        "result": "ready",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-10-FUNC-POST",
+        "label": "Charlie Post-environment functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-17T22:48:00Z",
-        "cycle_index": 39,
+        "cycle_index": 29,
         "result": "pass"
       },
       {
@@ -6682,11 +6682,11 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-10-operator-breakdown-start",
-        "label": "Delta breakdown start",
+        "id": "thermal_chamber_charlie-fat-10-operator-breakdown-start",
+        "label": "Charlie breakdown start",
         "kind": "operator_breakdown",
         "role": "operator_interaction",
-        "timestamp": "2026-02-18T09:00:00Z",
+        "timestamp": "2026-02-18T08:30:00Z",
         "result": "action_required",
         "severity": "operator"
       },
@@ -6700,20 +6700,20 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-10-operator-reset-start",
-        "label": "Delta reset start",
+        "id": "thermal_chamber_charlie-fat-10-operator-reset-start",
+        "label": "Charlie reset start",
         "kind": "operator_reset",
         "role": "operator_interaction",
-        "timestamp": "2026-02-18T12:00:00Z",
+        "timestamp": "2026-02-18T11:30:00Z",
         "result": "action_required",
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-10-operator-reset-ready",
-        "label": "Delta reset ready",
+        "id": "thermal_chamber_charlie-fat-10-operator-reset-ready",
+        "label": "Charlie reset ready",
         "kind": "operator_reset_ready",
         "role": "operator_interaction",
-        "timestamp": "2026-02-18T15:00:00Z",
+        "timestamp": "2026-02-18T14:30:00Z",
         "result": "ready",
         "severity": "operator"
       },
@@ -6736,15 +6736,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-11-FUNC-C01-HOT",
-        "label": "Charlie Hot survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-19T01:49:00Z",
-        "cycle_index": 31,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-11-FUNC-C03-HOT",
         "label": "Bravo Cycle 3 hot dwell functional test",
         "kind": "functional_gate",
@@ -6760,15 +6751,6 @@
         "role": "event",
         "timestamp": "2026-02-19T11:04:00Z",
         "cycle_index": 13,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-11-FUNC-C01-COLD",
-        "label": "Charlie Cold survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-19T19:24:00Z",
-        "cycle_index": 31,
         "result": "pass"
       },
       {
@@ -6790,12 +6772,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-11-FUNC-C02-HOT",
-        "label": "Charlie Cycle 2 hot dwell functional test",
+        "id": "thermal_chamber_delta-fat-11-FUNC-C01-HOT",
+        "label": "Delta Hot survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-02-20T05:34:00Z",
-        "cycle_index": 32,
+        "timestamp": "2026-02-20T03:19:00Z",
+        "cycle_index": 41,
         "result": "pass"
       },
       {
@@ -6817,21 +6799,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-11-FUNC-C02-COLD",
-        "label": "Charlie Cycle 2 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-20T17:38:00Z",
-        "cycle_index": 32,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_bravo-fat-11-FUNC-C04-COLD",
         "label": "Bravo Cycle 4 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
         "timestamp": "2026-02-20T19:36:00Z",
         "cycle_index": 24,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-11-FUNC-C01-COLD",
+        "label": "Delta Cold survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-20T20:54:00Z",
+        "cycle_index": 41,
         "result": "pass"
       },
       {
@@ -6844,21 +6826,12 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-11-FUNC-C01-HOT",
-        "label": "Delta Hot survival recovery functional test",
+        "id": "thermal_chamber_charlie-fat-11-FUNC-C01-HOT",
+        "label": "Charlie Hot survival recovery functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-02-21T03:19:00Z",
-        "cycle_index": 41,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-11-FUNC-C03-HOT",
-        "label": "Charlie Cycle 3 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-21T03:48:00Z",
-        "cycle_index": 33,
+        "timestamp": "2026-02-21T01:49:00Z",
+        "cycle_index": 31,
         "result": "pass"
       },
       {
@@ -6871,6 +6844,15 @@
         "result": "pass"
       },
       {
+        "id": "thermal_chamber_delta-fat-11-FUNC-C02-HOT",
+        "label": "Delta Cycle 2 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-21T07:04:00Z",
+        "cycle_index": 42,
+        "result": "pass"
+      },
+      {
         "id": "thermal_chamber_alpha-fat-12-FUNC-C04-HOT",
         "label": "Alpha Cycle 4 hot dwell functional test",
         "kind": "functional_gate",
@@ -6880,12 +6862,21 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-11-FUNC-C03-COLD",
-        "label": "Charlie Cycle 3 cold dwell functional test",
+        "id": "thermal_chamber_delta-fat-11-FUNC-C02-COLD",
+        "label": "Delta Cycle 2 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-02-21T15:52:00Z",
-        "cycle_index": 33,
+        "timestamp": "2026-02-21T19:08:00Z",
+        "cycle_index": 42,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-11-FUNC-C01-COLD",
+        "label": "Charlie Cold survival recovery functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-21T19:24:00Z",
+        "cycle_index": 31,
         "result": "pass"
       },
       {
@@ -6898,24 +6889,6 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-11-FUNC-C01-COLD",
-        "label": "Delta Cold survival recovery functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-21T20:54:00Z",
-        "cycle_index": 41,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-11-FUNC-C04-HOT",
-        "label": "Charlie Cycle 4 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-22T02:02:00Z",
-        "cycle_index": 34,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-12-FUNC-POST",
         "label": "Alpha Post-environment functional test",
         "kind": "functional_gate",
@@ -6925,58 +6898,58 @@
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_delta-fat-11-FUNC-C02-HOT",
-        "label": "Delta Cycle 2 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-22T07:04:00Z",
-        "cycle_index": 42,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-11-FUNC-C04-COLD",
-        "label": "Charlie Cycle 4 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-22T14:06:00Z",
-        "cycle_index": 34,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-11-FUNC-C02-COLD",
-        "label": "Delta Cycle 2 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-22T19:08:00Z",
-        "cycle_index": 42,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-11-FUNC-POST",
-        "label": "Charlie Post-environment functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-22T22:48:00Z",
-        "cycle_index": 30,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_delta-fat-11-FUNC-C03-HOT",
         "label": "Delta Cycle 3 hot dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-02-23T05:18:00Z",
+        "timestamp": "2026-02-22T05:18:00Z",
         "cycle_index": 43,
         "result": "pass"
       },
       {
-        "id": "thermal_chamber_charlie-fat-11-operator-breakdown-start",
-        "label": "Charlie breakdown start",
-        "kind": "operator_breakdown",
-        "role": "operator_interaction",
-        "timestamp": "2026-02-23T08:00:00Z",
-        "result": "action_required",
-        "severity": "operator"
+        "id": "thermal_chamber_charlie-fat-11-FUNC-C02-HOT",
+        "label": "Charlie Cycle 2 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-22T05:34:00Z",
+        "cycle_index": 32,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-11-FUNC-C03-COLD",
+        "label": "Delta Cycle 3 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-22T17:22:00Z",
+        "cycle_index": 43,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-11-FUNC-C02-COLD",
+        "label": "Charlie Cycle 2 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-22T17:38:00Z",
+        "cycle_index": 32,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_delta-fat-11-FUNC-C04-HOT",
+        "label": "Delta Cycle 4 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-23T03:32:00Z",
+        "cycle_index": 44,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-11-FUNC-C03-HOT",
+        "label": "Charlie Cycle 3 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-23T03:48:00Z",
+        "cycle_index": 33,
+        "result": "pass"
       },
       {
         "id": "thermal_chamber_alpha-fat-12-operator-breakdown-start",
@@ -6993,15 +6966,6 @@
         "kind": "operator_breakdown",
         "role": "operator_interaction",
         "timestamp": "2026-02-23T09:30:00Z",
-        "result": "action_required",
-        "severity": "operator"
-      },
-      {
-        "id": "thermal_chamber_charlie-fat-11-operator-reset-start",
-        "label": "Charlie reset start",
-        "kind": "operator_reset",
-        "role": "operator_interaction",
-        "timestamp": "2026-02-23T11:00:00Z",
         "result": "action_required",
         "severity": "operator"
       },
@@ -7024,15 +6988,6 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_charlie-fat-11-operator-reset-ready",
-        "label": "Charlie reset ready",
-        "kind": "operator_reset_ready",
-        "role": "operator_interaction",
-        "timestamp": "2026-02-23T14:00:00Z",
-        "result": "ready",
-        "severity": "operator"
-      },
-      {
         "id": "thermal_chamber_alpha-fat-12-operator-reset-ready",
         "label": "Alpha reset ready",
         "kind": "operator_reset_ready",
@@ -7051,30 +7006,21 @@
         "severity": "operator"
       },
       {
-        "id": "thermal_chamber_delta-fat-11-FUNC-C03-COLD",
-        "label": "Delta Cycle 3 cold dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-23T17:22:00Z",
-        "cycle_index": 43,
-        "result": "pass"
-      },
-      {
-        "id": "thermal_chamber_delta-fat-11-FUNC-C04-HOT",
-        "label": "Delta Cycle 4 hot dwell functional test",
-        "kind": "functional_gate",
-        "role": "event",
-        "timestamp": "2026-02-24T03:32:00Z",
-        "cycle_index": 44,
-        "result": "pass"
-      },
-      {
         "id": "thermal_chamber_delta-fat-11-FUNC-C04-COLD",
         "label": "Delta Cycle 4 cold dwell functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-02-24T15:36:00Z",
+        "timestamp": "2026-02-23T15:36:00Z",
         "cycle_index": 44,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-11-FUNC-C03-COLD",
+        "label": "Charlie Cycle 3 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-23T15:52:00Z",
+        "cycle_index": 33,
         "result": "pass"
       },
       {
@@ -7082,8 +7028,17 @@
         "label": "Delta Post-environment functional test",
         "kind": "functional_gate",
         "role": "event",
-        "timestamp": "2026-02-25T00:18:00Z",
+        "timestamp": "2026-02-24T00:18:00Z",
         "cycle_index": 40,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-11-FUNC-C04-HOT",
+        "label": "Charlie Cycle 4 hot dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-24T02:02:00Z",
+        "cycle_index": 34,
         "result": "pass"
       },
       {
@@ -7091,7 +7046,7 @@
         "label": "Delta breakdown start",
         "kind": "operator_breakdown",
         "role": "operator_interaction",
-        "timestamp": "2026-02-25T08:30:00Z",
+        "timestamp": "2026-02-24T08:30:00Z",
         "result": "action_required",
         "severity": "operator"
       },
@@ -7100,16 +7055,61 @@
         "label": "Delta reset start",
         "kind": "operator_reset",
         "role": "operator_interaction",
-        "timestamp": "2026-02-25T11:30:00Z",
+        "timestamp": "2026-02-24T11:30:00Z",
         "result": "action_required",
         "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-11-FUNC-C04-COLD",
+        "label": "Charlie Cycle 4 cold dwell functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-24T14:06:00Z",
+        "cycle_index": 34,
+        "result": "pass"
       },
       {
         "id": "thermal_chamber_delta-fat-11-operator-reset-ready",
         "label": "Delta reset ready",
         "kind": "operator_reset_ready",
         "role": "operator_interaction",
-        "timestamp": "2026-02-25T14:30:00Z",
+        "timestamp": "2026-02-24T14:30:00Z",
+        "result": "ready",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-11-FUNC-POST",
+        "label": "Charlie Post-environment functional test",
+        "kind": "functional_gate",
+        "role": "event",
+        "timestamp": "2026-02-24T22:48:00Z",
+        "cycle_index": 30,
+        "result": "pass"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-11-operator-breakdown-start",
+        "label": "Charlie breakdown start",
+        "kind": "operator_breakdown",
+        "role": "operator_interaction",
+        "timestamp": "2026-02-25T08:00:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-11-operator-reset-start",
+        "label": "Charlie reset start",
+        "kind": "operator_reset",
+        "role": "operator_interaction",
+        "timestamp": "2026-02-25T11:00:00Z",
+        "result": "action_required",
+        "severity": "operator"
+      },
+      {
+        "id": "thermal_chamber_charlie-fat-11-operator-reset-ready",
+        "label": "Charlie reset ready",
+        "kind": "operator_reset_ready",
+        "role": "operator_interaction",
+        "timestamp": "2026-02-25T14:00:00Z",
         "result": "ready",
         "severity": "operator"
       },
@@ -7427,8 +7427,8 @@
             "source_family": "facility_thermal",
             "render_kind": "line",
             "include_markers": true,
-            "tile_endpoint": "/api/campaigns/{campaign_id}/telemetry",
-            "latest_endpoint": "/api/campaigns/{campaign_id}/telemetry",
+            "tile_endpoint": "/data/current/campaigns/{campaign_id}/telemetry.arrow.gz",
+            "latest_endpoint": "/data/current/campaigns/{campaign_id}/telemetry.arrow.gz",
             "collapsible": true,
             "default_expanded": true,
             "supports_time_zoom": true,
@@ -7509,8 +7509,8 @@
             "source_family": "facility_thermal",
             "render_kind": "line",
             "include_markers": true,
-            "tile_endpoint": "/api/campaigns/{campaign_id}/telemetry",
-            "latest_endpoint": "/api/campaigns/{campaign_id}/telemetry",
+            "tile_endpoint": "/data/current/campaigns/{campaign_id}/telemetry.arrow.gz",
+            "latest_endpoint": "/data/current/campaigns/{campaign_id}/telemetry.arrow.gz",
             "collapsible": true,
             "default_expanded": true,
             "supports_time_zoom": true,
@@ -7591,8 +7591,8 @@
             "source_family": "facility_thermal",
             "render_kind": "line",
             "include_markers": true,
-            "tile_endpoint": "/api/campaigns/{campaign_id}/telemetry",
-            "latest_endpoint": "/api/campaigns/{campaign_id}/telemetry",
+            "tile_endpoint": "/data/current/campaigns/{campaign_id}/telemetry.arrow.gz",
+            "latest_endpoint": "/data/current/campaigns/{campaign_id}/telemetry.arrow.gz",
             "collapsible": true,
             "default_expanded": true,
             "supports_time_zoom": true,
@@ -7673,8 +7673,8 @@
             "source_family": "facility_thermal",
             "render_kind": "line",
             "include_markers": true,
-            "tile_endpoint": "/api/campaigns/{campaign_id}/telemetry",
-            "latest_endpoint": "/api/campaigns/{campaign_id}/telemetry",
+            "tile_endpoint": "/data/current/campaigns/{campaign_id}/telemetry.arrow.gz",
+            "latest_endpoint": "/data/current/campaigns/{campaign_id}/telemetry.arrow.gz",
             "collapsible": true,
             "default_expanded": true,
             "supports_time_zoom": true,
@@ -7893,8 +7893,8 @@
         "include_markers": true,
         "unit": "degC",
         "axis_policy": "temperature_c",
-        "tile_endpoint": "/api/campaigns/command_center_fat/telemetry",
-        "latest_endpoint": "/api/campaigns/command_center_fat/telemetry",
+        "tile_endpoint": "/data/current/campaigns/command_center_fat/telemetry.arrow.gz",
+        "latest_endpoint": "/data/current/campaigns/command_center_fat/telemetry.arrow.gz",
         "collapsible": true,
         "default_expanded": true,
         "supports_time_zoom": true,
@@ -7961,8 +7961,8 @@
         "include_markers": true,
         "unit": "degC",
         "axis_policy": "temperature_c",
-        "tile_endpoint": "/api/campaigns/command_center_fat/telemetry",
-        "latest_endpoint": "/api/campaigns/command_center_fat/telemetry",
+        "tile_endpoint": "/data/current/campaigns/command_center_fat/telemetry.arrow.gz",
+        "latest_endpoint": "/data/current/campaigns/command_center_fat/telemetry.arrow.gz",
         "collapsible": true,
         "default_expanded": true,
         "supports_time_zoom": true,
@@ -8029,8 +8029,8 @@
         "include_markers": true,
         "unit": "degC",
         "axis_policy": "temperature_c",
-        "tile_endpoint": "/api/campaigns/command_center_fat/telemetry",
-        "latest_endpoint": "/api/campaigns/command_center_fat/telemetry",
+        "tile_endpoint": "/data/current/campaigns/command_center_fat/telemetry.arrow.gz",
+        "latest_endpoint": "/data/current/campaigns/command_center_fat/telemetry.arrow.gz",
         "collapsible": true,
         "default_expanded": true,
         "supports_time_zoom": true,
@@ -8097,8 +8097,8 @@
         "include_markers": true,
         "unit": "degC",
         "axis_policy": "temperature_c",
-        "tile_endpoint": "/api/campaigns/command_center_fat/telemetry",
-        "latest_endpoint": "/api/campaigns/command_center_fat/telemetry",
+        "tile_endpoint": "/data/current/campaigns/command_center_fat/telemetry.arrow.gz",
+        "latest_endpoint": "/data/current/campaigns/command_center_fat/telemetry.arrow.gz",
         "collapsible": true,
         "default_expanded": true,
         "supports_time_zoom": true,

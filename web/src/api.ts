@@ -10,6 +10,7 @@ import type {
   Manifest,
   SourceCatalogue,
   SupervisorOverview,
+  TileBundleManifest,
   Topology
 } from "./types";
 import { arrowTile } from "./arrowTiles";
@@ -31,24 +32,6 @@ async function getJSON<T>(path: string): Promise<T> {
   }
 }
 
-async function getJSONWithFallback<T>(primary: string, fallback: string): Promise<T> {
-  try {
-    return await getJSON<T>(primary);
-  } catch (err) {
-    if (!isMissingStaticData(err)) throw err;
-    return getJSON<T>(fallback);
-  }
-}
-
-function isMissingStaticData(err: unknown) {
-  return err instanceof Error && (
-    err.message.includes(" returned 404") ||
-    err.message.includes(" returned 405") ||
-    err.message.includes(" returned 500") ||
-    err.message.includes(" returned HTML instead of JSON")
-  );
-}
-
 const tileManifestCache = new Map<string, Promise<GraphTileManifest>>();
 const graphShellCache = new Map<string, Promise<GraphModel>>();
 
@@ -56,10 +39,7 @@ function cachedTileManifest(id: string) {
   const key = id;
   let cached = tileManifestCache.get(key);
   if (!cached) {
-    cached = getJSONWithFallback<GraphTileManifest>(
-      `/data/current/campaigns/${id}/manifest.json`,
-      `/api/campaigns/${id}/tile-manifest`
-    );
+    cached = getJSON<GraphTileManifest>(`/data/current/campaigns/${id}/manifest.json`);
     tileManifestCache.set(key, cached);
   }
   return cached;
@@ -68,24 +48,19 @@ function cachedTileManifest(id: string) {
 function cachedGraphShell(id: string) {
   let cached = graphShellCache.get(id);
   if (!cached) {
-    cached = getJSONWithFallback<GraphModel>(
-      `/data/current/campaigns/${id}/graph-shell.json`,
-      `/api/campaigns/${id}/graph-shell`
-    );
+    cached = getJSON<GraphModel>(`/data/current/campaigns/${id}/graph-shell.json`);
     graphShellCache.set(id, cached);
   }
   return cached;
 }
 
 export const api = {
+  currentBundle: () => getJSON<TileBundleManifest>("/data/current/manifest.json"),
   manifest: () => getJSON<Manifest>("/api/manifest"),
   topology: () => getJSON<Topology>("/api/topology"),
   sources: () => getJSON<SourceCatalogue>("/api/sources"),
   supervisor: () => getJSON<SupervisorOverview>("/api/supervisor"),
-  commandCenterFAT: () => getJSONWithFallback<CommandCenterFAT>(
-    "/data/current/command_center_fat.json",
-    "/api/command-center/fat"
-  ),
+  commandCenterFAT: () => getJSON<CommandCenterFAT>("/data/current/command_center_fat.json"),
   busTap: () => getJSON<BusVirtualizationTap>("/api/bus-tap"),
   campaigns: () => getJSON<CampaignList>("/api/campaigns"),
   campaign: (id: string) => getJSON<Campaign>(`/api/campaigns/${id}`),
@@ -98,7 +73,6 @@ export const api = {
     if (!card) throw new Error(`unknown card ${cardID}`);
     return arrowTile(id, card, graph, level, t0, t1);
   },
-  liveCursorPath: (id: string) => `/api/campaigns/${id}/live`,
   commandAuthority: () => getJSON<CommandAuthorityState>("/api/command-authority"),
   evidenceReport: (id: string) => getJSON<EvidenceReport>(`/api/campaigns/${id}/evidence-report`),
   requestLease: () => fetch("/api/command-authority/request-lease", { method: "POST" }).then(() => api.commandAuthority()),

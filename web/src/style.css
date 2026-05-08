@@ -49,12 +49,16 @@ select {
 }
 
 .brand-mark {
+  display: inline-grid;
+  place-items: center;
   width: 42px;
   height: 42px;
   border: 1px solid #2d4960;
   border-radius: 8px;
   background: #071019;
-  object-fit: cover;
+  color: #bff3f8;
+  font-size: 22px;
+  font-weight: 800;
 }
 
 h1,
@@ -119,7 +123,6 @@ h3 {
   white-space: nowrap;
 }
 
-.topbar-owner span,
 .topbar-campaign span {
   text-transform: uppercase;
 }
@@ -387,6 +390,179 @@ button {
   grid-column: 2;
   grid-row: 1 / span 2;
   align-self: end;
+}
+
+.landing-experience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.landing-experience-card {
+  display: grid;
+  grid-template-rows: minmax(128px, 0.72fr) auto;
+  min-width: 0;
+  min-height: 250px;
+  border: 1px solid #263f56;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #071019;
+  color: #effbff;
+  text-decoration: none;
+}
+
+.landing-experience-card:hover {
+  border-color: #5b879b;
+}
+
+.landing-preview-screen {
+  display: grid;
+  grid-template-rows: 18px minmax(0, 1fr) 20px;
+  gap: 7px;
+  min-height: 0;
+  padding: 10px;
+  background: #050a0f;
+}
+
+.preview-topline,
+.preview-footer {
+  display: grid;
+  grid-template-columns: 1fr 0.62fr 0.42fr;
+  gap: 6px;
+}
+
+.preview-topline span,
+.preview-footer span {
+  border: 1px solid #20364d;
+  border-radius: 3px;
+  background: #0d1822;
+}
+
+.preview-plot {
+  position: relative;
+  min-height: 92px;
+  overflow: hidden;
+  border: 1px solid #20364d;
+  border-radius: 4px;
+  background:
+    linear-gradient(#10202c 1px, transparent 1px),
+    linear-gradient(90deg, #10202c 1px, transparent 1px),
+    #07111a;
+  background-size: 100% 28px, 54px 100%;
+}
+
+.preview-gridline,
+.preview-marker {
+  position: absolute;
+  inset-block: 0;
+  width: 1px;
+  background: #31465a;
+}
+
+.preview-marker {
+  width: 8px;
+  height: 8px;
+  inset-block: auto 18px;
+  border: 2px solid #ffb000;
+  border-radius: 50%;
+  background: #050a0f;
+  transform: translateX(-50%);
+}
+
+.preview-trace {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  height: 3px;
+  border-radius: 999px;
+  transform-origin: left center;
+}
+
+.preview-command {
+  top: 32%;
+  background: #ffd400;
+  box-shadow: 28px 18px 0 #ffd400, 74px -10px 0 #ffd400, 124px 8px 0 #ffd400;
+}
+
+.preview-actual {
+  top: 58%;
+  background: #00c8ff;
+  box-shadow: 32px -16px 0 #00c8ff, 84px 9px 0 #00c8ff, 138px -13px 0 #00c8ff;
+}
+
+.preview-dut {
+  top: 74%;
+  background: #ff315f;
+  box-shadow: 24px -11px 0 #ff315f, 68px -24px 0 #ff315f, 116px -7px 0 #ff315f;
+}
+
+.landing-experience-card[data-preview-kind="command"] .preview-plot {
+  background:
+    linear-gradient(90deg, transparent 0 19%, rgba(88, 108, 124, 0.26) 19% 28%, transparent 28% 47%, rgba(88, 108, 124, 0.26) 47% 56%, transparent 56%),
+    linear-gradient(#10202c 1px, transparent 1px),
+    #07111a;
+  background-size: 100% 100%, 100% 23px, 100% 100%;
+}
+
+.landing-experience-card[data-preview-kind="qualification"] .preview-actual {
+  background: #1f6fff;
+  box-shadow: 22px 20px 0 #1f6fff, 92px -18px 0 #1f6fff, 148px 15px 0 #1f6fff;
+}
+
+.landing-experience-copy {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  border-top: 1px solid #20364d;
+}
+
+.landing-experience-copy span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #8bd0d8;
+  font-size: 12px;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.landing-experience-copy strong {
+  font-size: 18px;
+}
+
+.landing-experience-copy small {
+  color: #b9c9d1;
+  font-size: 12px;
+}
+
+.landing-system-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.landing-system-grid > div {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  min-height: 148px;
+  border: 1px solid #20364d;
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, rgba(14, 31, 45, 0.92), rgba(7, 17, 26, 0.94)),
+    #07111a;
+  padding: 13px;
+}
+
+.landing-system-grid strong {
+  color: #effbff;
+  font-size: 14px;
+}
+
+.landing-system-grid span {
+  color: #b9c9d1;
+  font-size: 13px;
+  line-height: 1.48;
 }
 
 .hero-actions a {
@@ -2129,70 +2305,6 @@ code {
   padding: 12px;
 }
 
-.landing-architecture,
-.campaign-visual {
-  display: grid;
-  grid-template-columns: minmax(220px, 0.34fr) minmax(0, 1fr);
-  align-items: stretch;
-  gap: 14px;
-  min-width: 0;
-}
-
-.landing-architecture img,
-.campaign-visual img,
-.landing-demo-image img {
-  width: 100%;
-  border: 1px solid #273c4d;
-  border-radius: 6px;
-  background: #050a0f;
-  object-fit: contain;
-}
-
-.landing-architecture img {
-  align-self: stretch;
-  justify-self: center;
-  width: min(100%, 260px);
-  height: 100%;
-  max-height: none;
-}
-
-.landing-architecture > div,
-.campaign-visual > div {
-  display: grid;
-  align-content: center;
-  gap: 9px;
-  min-width: 0;
-  border: 1px solid #20364d;
-  border-radius: 6px;
-  background: #08111b;
-  padding: 14px;
-}
-
-.landing-architecture p,
-.campaign-visual p {
-  color: #b9c9d1;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.landing-demo-image {
-  margin-bottom: 12px;
-}
-
-.landing-demo-image img {
-  max-height: 260px;
-}
-
-.campaign-visual {
-  margin: 8px 0;
-  grid-template-columns: minmax(260px, 0.42fr) minmax(0, 1fr);
-}
-
-.campaign-visual img {
-  aspect-ratio: 21 / 9;
-  max-height: 240px;
-}
-
 .campaign-context-strip {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(210px, 0.24fr);
@@ -2643,8 +2755,6 @@ code {
   .view-grid,
   .landing-hero,
   .brand-lockup,
-  .landing-architecture,
-  .campaign-visual,
   .campaign-context-strip,
   .swimlane,
   .single-chamber-head,
@@ -2691,6 +2801,8 @@ code {
   .stream-grid,
   .tap-columns,
   .value-grid,
+  .landing-experience-grid,
+  .landing-system-grid,
   .landing-data-flow,
   .node-grid,
   .series-grid,

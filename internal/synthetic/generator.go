@@ -839,7 +839,7 @@ func graphCard(id, title, kind, role, unit, axisPolicy, source string, signals [
 	return contracts.GraphWallCard{
 		ID: id, Title: title, Kind: kind, Role: role, Transport: "arrow_ipc", Direction: "derived",
 		Unit: unit, AxisPolicy: axisPolicy, SourceFamily: source, Signals: signals,
-		RenderKind: renderKind(kind), TileEndpoint: "/api/campaigns/{campaign_id}/telemetry", LatestEndpoint: "/api/campaigns/{campaign_id}/telemetry",
+		RenderKind: renderKind(kind), TileEndpoint: "/data/current/campaigns/{campaign_id}/telemetry.arrow.gz", LatestEndpoint: "/data/current/campaigns/{campaign_id}/telemetry.arrow.gz",
 		Collapsible: true, DefaultExpanded: true, SupportsTimeZoom: true, SupportsYZoom: kind == "line" || kind == "counter",
 		Placement: contracts.GraphCardPlacement{Pinned: role == "primary_hero", HeightWeight: heightWeight(kind, role)},
 	}

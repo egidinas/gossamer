@@ -122,18 +122,16 @@ async function fetchArrowTelemetry(campaignId: string): Promise<ArrowTelemetry> 
 }
 
 async function fetchArrowBuffer(campaignId: string) {
-  const candidates = [
-    `/data/current/campaigns/${campaignId}/telemetry.arrow`,
-    `/data/current/campaigns/${campaignId}/telemetry.arrow.gz`,
-    `/api/campaigns/${campaignId}/telemetry`
-  ];
-  for (const url of candidates) {
-    const response = await fetch(url);
-    if (!response.ok) continue;
-    const buffer = await response.arrayBuffer();
-    if (!looksLikeHTML(buffer)) return buffer;
+  const url = `/data/current/campaigns/${campaignId}/telemetry.arrow.gz`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`${url} returned ${response.status}`);
   }
-  throw new Error(`Arrow telemetry unavailable for ${campaignId}`);
+  const buffer = await response.arrayBuffer();
+  if (looksLikeHTML(buffer)) {
+    throw new Error(`${url} returned HTML instead of Arrow telemetry`);
+  }
+  return buffer;
 }
 
 async function decodeArrowBuffer(buffer: ArrayBuffer) {
