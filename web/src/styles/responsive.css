@@ -3,14 +3,15 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
+/* clamp scales with viewport so all 4 lanes together fill ~85% svh at any size */
 .operator-graph-wall[data-campaign-id="command_center_fat"] .graph-wall-card {
-  --plot-height: clamp(200px, calc((100svh - 220px) / 4), 320px);
+  --plot-height: clamp(200px, calc((100svh - 220px) / 4), 600px);
   grid-template-columns: minmax(0, 1fr) 160px;
 }
 
 /* Primary alpha lane: same height as the others — ladder parity */
 .operator-graph-wall[data-campaign-id="command_center_fat"] .graph-wall-card[data-card-priority="primary"] {
-  --plot-height: clamp(200px, calc((100svh - 220px) / 4), 320px);
+  --plot-height: clamp(200px, calc((100svh - 220px) / 4), 600px);
 }
 
 @media (max-width: 820px) {

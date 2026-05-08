@@ -444,14 +444,16 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       if (commandCenterMarker && !commandCenterGateLabelAllowed(width, span)) return;
       const label = commandCenterMarker ? "FT" : shortGateLabel(marker.label);
       ctx.save();
-      ctx.font = commandCenterMarker ? "850 10px system-ui, sans-serif" : "850 14px system-ui, sans-serif";
+      ctx.font = commandCenterMarker ? "850 10px system-ui, sans-serif" : "850 12px system-ui, sans-serif";
       const metrics = ctx.measureText(label);
-      const labelWidth = Math.max(commandCenterMarker ? 22 : 42, metrics.width + 11);
-      const labelHeight = commandCenterMarker ? 16 : 20;
-      const placed = commandCenterMarker
-        ? placeMarkerLabel({ x, y: anchorY, labelWidth, labelHeight, left, top, width, height, placed: placedMarkerLabels, markerRadius: 8 })
-        : { x: Math.max(left + 8, Math.min(left + width - labelWidth - 8, x + 8)), y: Math.max(top + 24, Math.min(top + height - 16, anchorY - 14)), width: labelWidth, height: labelHeight };
-      if (commandCenterMarker) placedMarkerLabels.push(placed);
+      const labelWidth = Math.max(commandCenterMarker ? 22 : 36, metrics.width + 10);
+      const labelHeight = commandCenterMarker ? 16 : 18;
+      const placed = placeMarkerLabel({ x, y: anchorY, labelWidth, labelHeight, left, top, width, height, placed: placedMarkerLabels, markerRadius: 8 });
+      if (placedMarkerLabels.some((other) => rectanglesOverlap(placed, other))) {
+        ctx.restore();
+        return;
+      }
+      placedMarkerLabels.push(placed);
       const labelX = placed.x;
       const labelY = placed.y;
       ctx.translate(labelX, labelY);

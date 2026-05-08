@@ -9,8 +9,11 @@
   display: grid;
   gap: var(--space-3);
   overflow-y: auto;
+  overflow-x: auto;
   max-height: calc(100svh - 112px);
   padding-bottom: var(--space-3);
+  /* Smooth momentum scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
 }
 
 .operator-wall-section {
@@ -64,6 +67,8 @@
 /* Event/swimlane cards shorter */
 .graph-wall-card[data-render-kind="event_rail"] {
   --plot-height: 150px;
+  max-height: 300px;
+  overflow: hidden;
 }
 .graph-wall-card[data-render-kind="swimlane"] {
   --plot-height: 180px;
