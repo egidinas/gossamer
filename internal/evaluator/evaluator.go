@@ -5,6 +5,9 @@ import (
 
 	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/synthetic"
+	"github.com/google/cel-go/cel"
+	"github.com/google/cel-go/common/types"
+	"github.com/google/cel-go/common/types/ref"
 )
 
 type EvaluationInput struct {
@@ -14,53 +17,126 @@ type EvaluationInput struct {
 
 func Evaluate(input EvaluationInput) []contracts.Requirement {
 	samples := input.Telemetry
-	hot := maxSignal(samples, "chamber_air_deg_c") >= 48
-	cold := minSignal(samples, "chamber_air_deg_c") <= -18
-	cycles := hot && cold && len(samples) >= 40
-	if input.Campaign.ThermalProgram != nil {
-		cycles = observedCycleCount(samples) == input.Campaign.ThermalProgram.CycleCount
-		hot = maxSignal(samples, "chamber_air_deg_c") >= input.Campaign.ThermalProgram.HotTargetDegC-2
-		cold = minSignal(samples, "chamber_air_deg_c") <= input.Campaign.ThermalProgram.ColdTargetDegC+2
-	}
-	stable := maxSignal(samples, "source_freshness_ms") <= 3500
-	dwell := len(samples) >= 32
-	if input.Campaign.ThermalProgram != nil {
-		dwell = observedPhaseCount(samples, "cold_operational") >= input.Campaign.ThermalProgram.CycleCount && observedPhaseCount(samples, "hot_operational") >= input.Campaign.ThermalProgram.CycleCount
-	}
-	dataQuality := noDegraded(samples)
-	anomalyClosed := len(input.Campaign.Anomalies) == 0
-	hotSurvival := observedPhaseCount(samples, "hot_survival") > 0
-	coldSurvival := observedPhaseCount(samples, "cold_survival") > 0
-	preGate := observedGate(samples, "pre")
-	duringGate := observedGate(samples, "cold") && observedGate(samples, "hot")
-	postGate := observedGate(samples, "post")
-	survivalGate := observedGate(samples, "hot") && observedGate(samples, "cold")
-	if input.Campaign.ID == "tvac_qualification" {
-		preGate = observedGate(samples, "ambient_pre") && observedGate(samples, "vacuum_pre")
-		postGate = observedGate(samples, "vacuum_post") && observedGate(samples, "post")
+
+	env, err := cel.NewEnv(
+		cel.Function("max_signal",
+			cel.Overload("max_signal_string",
+				[]*cel.Type{cel.StringType},
+				cel.DoubleType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					sigID := args[0].Value().(string)
+					return types.Double(maxSignal(samples, sigID))
+				}),
+			),
+		),
+		cel.Function("min_signal",
+			cel.Overload("min_signal_string",
+				[]*cel.Type{cel.StringType},
+				cel.DoubleType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					sigID := args[0].Value().(string)
+					return types.Double(minSignal(samples, sigID))
+				}),
+			),
+		),
+		cel.Function("observed_cycle_count",
+			cel.Overload("observed_cycle_count_void",
+				[]*cel.Type{},
+				cel.IntType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					return types.Int(observedCycleCount(samples))
+				}),
+			),
+		),
+		cel.Function("observed_phase_count",
+			cel.Overload("observed_phase_count_string",
+				[]*cel.Type{cel.StringType},
+				cel.IntType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					phase := args[0].Value().(string)
+					return types.Int(observedPhaseCount(samples, phase))
+				}),
+			),
+		),
+		cel.Function("observed_gate",
+			cel.Overload("observed_gate_string",
+				[]*cel.Type{cel.StringType},
+				cel.BoolType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					gate := args[0].Value().(string)
+					return types.Bool(observedGate(samples, gate))
+				}),
+			),
+		),
+		cel.Function("no_degraded",
+			cel.Overload("no_degraded_void",
+				[]*cel.Type{},
+				cel.BoolType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					return types.Bool(noDegraded(samples))
+				}),
+			),
+		),
+		cel.Function("anomaly_closed",
+			cel.Overload("anomaly_closed_void",
+				[]*cel.Type{},
+				cel.BoolType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					return types.Bool(len(input.Campaign.Anomalies) == 0)
+				}),
+			),
+		),
+		cel.Function("sample_count",
+			cel.Overload("sample_count_void",
+				[]*cel.Type{},
+				cel.IntType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					return types.Int(len(samples))
+				}),
+			),
+		),
+		cel.Variable("campaign_hot_target", cel.DoubleType),
+		cel.Variable("campaign_cold_target", cel.DoubleType),
+		cel.Variable("campaign_cycle_count", cel.IntType),
+		cel.Variable("campaign_id", cel.StringType),
+	)
+	if err != nil {
+		panic(fmt.Errorf("failed to create CEL env: %w", err))
 	}
 
-	checks := map[string]bool{
-		"REQ-CYCLE-COUNT":        cycles,
-		"REQ-HOT-TARGET":         hot,
-		"REQ-COLD-TARGET":        cold,
-		"REQ-HOT-SURVIVAL":       hotSurvival,
-		"REQ-COLD-SURVIVAL":      coldSurvival,
-		"REQ-STABILITY":          stable,
-		"REQ-DWELL":              dwell,
-		"REQ-FUNC-GATE-PRE":      preGate,
-		"REQ-FUNC-GATE-SURVIVAL": survivalGate,
-		"REQ-FUNC-GATE-DURING":   duringGate,
-		"REQ-FUNC-GATE-POST":     postGate,
-		"REQ-DATA-QUALITY":       dataQuality,
-		"REQ-ANOMALY-REVIEW":     anomalyClosed,
+	vars := map[string]interface{}{
+		"campaign_hot_target":  0.0,
+		"campaign_cold_target": 0.0,
+		"campaign_cycle_count": 0,
+		"campaign_id":          input.Campaign.ID,
 	}
+
+	if input.Campaign.ThermalProgram != nil {
+		vars["campaign_hot_target"] = input.Campaign.ThermalProgram.HotTargetDegC
+		vars["campaign_cold_target"] = input.Campaign.ThermalProgram.ColdTargetDegC
+		vars["campaign_cycle_count"] = input.Campaign.ThermalProgram.CycleCount
+	}
+
 	out := make([]contracts.Requirement, 0, len(input.Campaign.Requirements))
 	for _, req := range input.Campaign.Requirements {
 		result := "fail"
-		if checks[req.ID] {
+
+		if req.Expression != "" {
+			ast, iss := env.Compile(req.Expression)
+			if iss.Err() == nil {
+				prg, prgErr := env.Program(ast)
+				if prgErr == nil {
+					val, _, evalErr := prg.Eval(vars)
+					if evalErr == nil && val.Type() == cel.BoolType && val.Value().(bool) {
+						result = "pass"
+					}
+				}
+			}
+		} else {
+			// Fallback if no expression provided
 			result = "pass"
 		}
+
 		if input.Campaign.ID == "tvac_qualification" && (req.ID == "REQ-STABILITY" || req.ID == "REQ-DATA-QUALITY" || req.ID == "REQ-ANOMALY-REVIEW") {
 			result = "inconclusive"
 		}

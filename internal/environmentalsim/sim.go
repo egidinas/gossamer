@@ -113,7 +113,15 @@ type nodeLinearization struct {
 	Tss    float64 // °C
 }
 
+func campaignSources(campaignID string) (chamberThermal, chamberInfra, chamberPressure string) {
+	if campaignID == "tvac_qualification" {
+		return "chamber_thermal_tvac", "chamber_infra_tvac", "chamber_pressure_tvac"
+	}
+	return "chamber_thermal_fat", "chamber_infra_fat", "chamber_pressure_tvac"
+}
+
 func Simulate(campaignID string, program *contracts.ThermalProgram, start time.Time) Result {
+	chamberThermalSrc, chamberInfraSrc, chamberPressureSrc := campaignSources(campaignID)
 	seed := int64(42017)
 	if campaignID == "tvac_qualification" {
 		seed = 84031
@@ -544,7 +552,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 	return Result{
 		Provenance: provenance,
 		Samples:    samples,
-		HeroGraph:  buildHeroGraph(campaignID, program, provenance, samples, trace),
+		HeroGraph:  buildHeroGraph(campaignID, program, provenance, samples, trace, chamberThermalSrc, chamberInfraSrc, chamberPressureSrc),
 	}
 }
 
@@ -685,7 +693,7 @@ func (t *sampleTrace) add(sample contracts.TelemetrySample, command, ghost, pres
 	t.fault = append(t.fault, point(ts, sample.Signals["fault_flag"]))
 }
 
-func buildHeroGraph(campaignID string, program *contracts.ThermalProgram, provenance contracts.SimulationProvenance, samples []contracts.TelemetrySample, trace sampleTrace) contracts.HeroGraphModel {
+func buildHeroGraph(campaignID string, program *contracts.ThermalProgram, provenance contracts.SimulationProvenance, samples []contracts.TelemetrySample, trace sampleTrace, chamberThermalSrc, chamberInfraSrc, chamberPressureSrc string) contracts.HeroGraphModel {
 	start := samples[0].Timestamp
 	end := samples[len(samples)-1].Timestamp
 	execution := buildExecutionState(program, start, end)
@@ -699,11 +707,11 @@ func buildHeroGraph(campaignID string, program *contracts.ThermalProgram, proven
 	traces := []contracts.GraphTrace{
 		{ID: "trace.command.chamber", Label: "Chamber command", Role: "command", Units: "degC", AxisID: "temperature_c", Source: "thermal_program", Values: trace.command},
 		{ID: "trace.ghost.profile", Label: fmt.Sprintf("%d-cycle ghost profile", program.CycleCount), Role: "ghost", Units: "degC", AxisID: "temperature_c", Source: "thermal_program", Values: trace.ghost},
-		{ID: "trace.actual.chamber_air", Label: "Chamber air actual", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: "facility_thermal", Values: trace.actual},
+		{ID: "trace.actual.chamber_air", Label: "Chamber air actual", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: chamberThermalSrc, Values: trace.actual},
 		{ID: "trace.dut_temp_a", Label: "High-dissipation DUT node", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: "dut_thermal", Values: trace.zone1},
 		{ID: "trace.dut_temp_b", Label: "Vacuum-detached DUT node", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: "dut_thermal", Values: trace.zone2},
-		{ID: "trace.table_loop", Label: "Interface plate", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: "facility_thermal", Values: trace.table},
-		{ID: "trace.shroud", Label: "Thermal shroud", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: "facility_thermal", Values: trace.shroud},
+		{ID: "trace.table_loop", Label: "Interface plate", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: chamberThermalSrc, Values: trace.table},
+		{ID: "trace.shroud", Label: "Thermal shroud", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: chamberThermalSrc, Values: trace.shroud},
 		{ID: "trace.acceptance.temperature", Label: "Acceptance band center", Role: "acceptance_band", Units: "degC", AxisID: "temperature_c", Source: "requirements", Values: trace.command},
 		{ID: "trace.event.functional", Label: "Functional gate", Role: "event", Units: "state", AxisID: "state", Source: "test_conductor", Values: trace.gates},
 		{ID: "trace.interlock.facility", Label: "Interlock review", Role: "interlock", Units: "state", AxisID: "state", Source: "facility_safety", Values: trace.interlocks},
@@ -711,10 +719,10 @@ func buildHeroGraph(campaignID string, program *contracts.ThermalProgram, proven
 	}
 	if campaignID == "tvac_qualification" {
 		traces = append(traces,
-			contracts.GraphTrace{ID: "trace.actual.tvac_pressure", Label: "TVac pressure", Role: "actual", Units: "mbar", AxisID: "pressure_mbar", Source: "facility_pressure", Values: trace.pressureMbar},
+			contracts.GraphTrace{ID: "trace.actual.tvac_pressure", Label: "TVac pressure", Role: "actual", Units: "mbar", AxisID: "pressure_mbar", Source: chamberPressureSrc, Values: trace.pressureMbar},
 			contracts.GraphTrace{ID: "trace.tvac_pressure_target", Label: "Vacuum target", Role: "ghost", Units: "mbar", AxisID: "pressure_mbar", Source: "requirements", Values: trace.pressureTarget},
-			contracts.GraphTrace{ID: "trace.shroud_inlet", Label: "Shroud inlet", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: "facility_thermal", Values: trace.shroudInlet},
-			contracts.GraphTrace{ID: "trace.shroud_outlet", Label: "Shroud outlet", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: "facility_thermal", Values: trace.shroudOutlet},
+			contracts.GraphTrace{ID: "trace.shroud_inlet", Label: "Shroud inlet", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: chamberThermalSrc, Values: trace.shroudInlet},
+			contracts.GraphTrace{ID: "trace.shroud_outlet", Label: "Shroud outlet", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: chamberThermalSrc, Values: trace.shroudOutlet},
 		)
 	}
 	hero := contracts.HeroGraphModel{

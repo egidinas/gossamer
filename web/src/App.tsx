@@ -1,7 +1,23 @@
 import { Activity, CalendarDays, FileCheck, Home, ShieldCheck, User } from "lucide-react";
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
-import { api, invalidateCaches } from "./api";
-import type { BusVirtualizationTap, Campaign, CommandAuthorityState, CommandCenterFAT, EvidenceReport, GraphModel, Manifest, SourceCatalogue, SupervisorOverview, TileCampaignManifest, Topology } from "./types";
+import { lazy, Suspense, useEffect, useMemo } from "react";
+import {
+  api,
+  invalidateCaches,
+  useBundleQuery,
+  useManifestQuery,
+  useTopologyQuery,
+  useSourcesQuery,
+  useSupervisorQuery,
+  useCommandCenterFATQuery,
+  useBusTapQuery,
+  useCampaignQuery,
+  useGraphShellQuery,
+  useCommandAuthorityQuery,
+  useEvidenceReportQuery,
+  useLeaseMutation
+} from "./api";
+import { useAppStore } from "./store";
+import type { Campaign, Manifest, SupervisorOverview, TileCampaignManifest } from "./types";
 import { LandingView } from "./views/LandingView";
 
 const MissionMapView = lazy(() => import("./views/MissionMapView").then((module) => ({ default: module.MissionMapView })));
@@ -14,8 +30,9 @@ const EvidenceReportView = lazy(() => import("./views/EvidenceReportView").then(
 const BusTapView = lazy(() => import("./views/BusTapView").then((module) => ({ default: module.BusTapView })));
 const ProfileView = lazy(() => import("./views/ProfileView").then((module) => ({ default: module.ProfileView })));
 const CommandCenterFATView = lazy(() => import("./views/CommandCenterFATView").then((module) => ({ default: module.CommandCenterFATView })));
+const FileViewerView = lazy(() => import("./views/FileViewerView").then((module) => ({ default: module.FileViewerView })));
 
-type Route = "landing" | "profile" | "acceptance" | "command-center-fat" | "qualification" | "mission-map" | "supervisor" | "graph-wall" | "sources" | "requirements" | "commands" | "bus-tap" | "report";
+type Route = "landing" | "profile" | "acceptance" | "command-center-fat" | "qualification" | "mission-map" | "supervisor" | "graph-wall" | "sources" | "requirements" | "commands" | "bus-tap" | "report" | "file-viewer";
 
 const campaignRouteMap: Partial<Record<Route, string>> = {
   acceptance: "thermal_acceptance_fat",
@@ -35,7 +52,8 @@ const routes: Array<{ id: Route; label: string; icon: typeof Activity; published
   { id: "sources", label: "Sources", icon: FileCheck, published: false },
   { id: "requirements", label: "Requirements", icon: FileCheck, published: false },
   { id: "commands", label: "Commands", icon: FileCheck, published: false },
-  { id: "bus-tap", label: "Bus Tap", icon: FileCheck, published: false }
+  { id: "bus-tap", label: "Bus Tap", icon: FileCheck, published: false },
+  { id: "file-viewer", label: "File Viewer", icon: FileCheck, published: false }
 ];
 
 const publishedRoutes = routes.filter((route) => route.published);
@@ -118,115 +136,109 @@ const bootSupervisor: SupervisorOverview = {
 };
 
 export function App() {
-  const [route, setRoute] = useState<Route>(hashRoute());
-  const [manifest, setManifest] = useState<Manifest>(bootManifest);
-  const [topology, setTopology] = useState<Topology | null>(null);
-  const [sources, setSources] = useState<SourceCatalogue | null>(null);
-  const [supervisor] = useState<SupervisorOverview>(bootSupervisor);
-  const [busTap, setBusTap] = useState<BusVirtualizationTap | null>(null);
-  const [campaigns, setCampaigns] = useState<Campaign[]>(bootCampaigns);
-  const [activeCampaign, setActiveCampaign] = useState("thermal_acceptance_fat");
-  const [graph, setGraph] = useState<GraphModel | null>(null);
-  const [commandCenterFAT, setCommandCenterFAT] = useState<CommandCenterFAT | null>(null);
-  const [commands, setCommands] = useState<CommandAuthorityState | null>(null);
-  const [report, setReport] = useState<EvidenceReport | null>(null);
-  const [error, setError] = useState("");
+  const { route, activeCampaign, setRoute, setActiveCampaign } = useAppStore();
+
+  const bundleQuery = useBundleQuery();
+  const manifestQuery = useManifestQuery();
+  const topologyQuery = useTopologyQuery();
+  const sourcesQuery = useSourcesQuery();
+  const supervisorQuery = useSupervisorQuery();
+  const commandCenterFATQuery = useCommandCenterFATQuery();
+  const busTapQuery = useBusTapQuery();
+  const commandAuthorityQuery = useCommandAuthorityQuery();
+  const leaseMutation = useLeaseMutation();
+
   const routeCampaign = campaignRouteMap[route];
   const requestedCampaign = routeCampaign ?? activeCampaign;
+
+  const campaignQuery = useCampaignQuery(requestedCampaign);
+  const graphShellQuery = useGraphShellQuery(requestedCampaign);
+  const evidenceReportQuery = useEvidenceReportQuery(requestedCampaign);
 
   useEffect(() => {
     const onHash = () => setRoute(hashRoute());
     window.addEventListener("hashchange", onHash);
     if (!window.location.hash) window.location.hash = "#landing";
+    else onHash();
     return () => window.removeEventListener("hashchange", onHash);
-  }, []);
+  }, [setRoute]);
 
   useEffect(() => {
     const nextCampaign = campaignRouteMap[route];
     if (nextCampaign && nextCampaign !== activeCampaign) {
       setActiveCampaign(nextCampaign);
     }
-  }, [route, activeCampaign]);
+  }, [route, activeCampaign, setActiveCampaign]);
 
   useEffect(() => {
-    let cancelled = false;
-    api.currentBundle()
-      .then((bundle) => {
-        if (cancelled) return;
-        invalidateCaches(bundle.data_version);
-        setManifest({
-          ...bootManifest,
-          generated_at: bundle.generated_at,
-          campaigns: bundle.campaigns.map((campaign) => campaign.campaign_id)
-        });
-        setCampaigns(bundle.campaigns.map(campaignFromTileManifest));
-      })
-      .catch((err: Error) => setError(err.message));
-    return () => {
-      cancelled = true;
+    if (bundleQuery.data) {
+      invalidateCaches(bundleQuery.data.data_version);
+    }
+  }, [bundleQuery.data]);
+
+  const manifest = useMemo((): Manifest => {
+    if (!bundleQuery.data) return bootManifest;
+    return {
+      ...bootManifest,
+      generated_at: bundleQuery.data.generated_at,
+      campaigns: bundleQuery.data.campaigns.map((c) => c.campaign_id)
     };
-  }, []);
+  }, [bundleQuery.data]);
 
-  useEffect(() => {
-    if (route === "landing") return;
-    if (route === "command-center-fat") {
-      api.commandCenterFAT().then(setCommandCenterFAT).catch((err: Error) => setError(err.message));
-      return;
-    }
-    if (route === "report") {
-      Promise.all([api.campaign(requestedCampaign), api.evidenceReport(requestedCampaign)])
-        .then(([campaign, evidence]) => {
-          setCampaigns((existing) => existing.map((item) => item.id === campaign.id ? campaign : item));
-          setReport(evidence);
-        })
-        .catch((err: Error) => setError(err.message));
-      return;
-    }
-    if (route === "mission-map") {
-      api.topology().then(setTopology).catch((err: Error) => setError(err.message));
-      return;
-    }
-    if (route === "sources") {
-      api.sources().then(setSources).catch((err: Error) => setError(err.message));
-      return;
-    }
-    if (route === "commands") {
-      api.commandAuthority().then(setCommands).catch((err: Error) => setError(err.message));
-      return;
-    }
-    if (route === "bus-tap") {
-      api.busTap().then(setBusTap).catch((err: Error) => setError(err.message));
-      return;
-    }
-    api.graphShell(requestedCampaign)
-      .then(setGraph)
-      .catch((err: Error) => setError(err.message));
-  }, [requestedCampaign, route]);
+  const campaigns = useMemo((): Campaign[] => {
+    if (!bundleQuery.data) return bootCampaigns;
+    return bundleQuery.data.campaigns.map(campaignFromTileManifest);
+  }, [bundleQuery.data]);
 
-  const selectedCampaign = useMemo(() => campaigns.find((campaign) => campaign.id === requestedCampaign), [campaigns, requestedCampaign]);
-  const graphReady = graph?.campaign_id === requestedCampaign;
-  const reportReady = report?.campaign_id === requestedCampaign;
-  const landingReady = campaigns.length > 0;
-  const campaignRouteReady = !!selectedCampaign && !!graph && graphReady;
-  const routeReady =
-    route === "landing" ? landingReady :
-    route === "profile" ? true :
-    route === "command-center-fat" ? !!commandCenterFAT :
-    route === "mission-map" ? landingReady && !!topology :
-    route === "sources" ? landingReady && !!sources :
-    route === "commands" ? landingReady && !!commands :
-    route === "bus-tap" ? landingReady && !!busTap :
-    route === "report" ? landingReady && !!report && reportReady :
-    route === "requirements" ? landingReady && !!selectedCampaign :
-    route === "graph-wall" ? campaignRouteReady :
-    route === "acceptance" || route === "qualification" || route === "supervisor" ? campaignRouteReady :
-    landingReady;
+  const selectedCampaign = useMemo(() => {
+    if (campaignQuery.data) return campaignQuery.data;
+    return campaigns.find((c) => c.id === requestedCampaign);
+  }, [campaigns, requestedCampaign, campaignQuery.data]);
 
-  const refreshCommands = (action: () => Promise<CommandAuthorityState>) => {
-    action().then(setCommands).catch((err: Error) => setError(err.message));
-  };
+  const supervisor = supervisorQuery.data ?? bootSupervisor;
 
-  if (error) return <main className="shell"><div className="error">{error}</div></main>;
+  const routeReady = useMemo(() => {
+    if (route === "landing") return campaigns.length > 0;
+    if (route === "profile") return true;
+    if (route === "command-center-fat") return commandCenterFATQuery.isSuccess;
+    if (route === "mission-map") return topologyQuery.isSuccess;
+    if (route === "sources") return sourcesQuery.isSuccess;
+    if (route === "commands") return commandAuthorityQuery.isSuccess;
+    if (route === "bus-tap") return busTapQuery.isSuccess;
+    if (route === "report") return evidenceReportQuery.isSuccess && evidenceReportQuery.data?.campaign_id === requestedCampaign;
+    if (route === "requirements") return !!selectedCampaign;
+    if (route === "graph-wall") return graphShellQuery.isSuccess && graphShellQuery.data?.campaign_id === requestedCampaign;
+    if (route === "acceptance" || route === "qualification" || route === "supervisor") {
+      return graphShellQuery.isSuccess && graphShellQuery.data?.campaign_id === requestedCampaign;
+    }
+    return true;
+  }, [route, campaigns.length, commandCenterFATQuery.isSuccess, topologyQuery.isSuccess, sourcesQuery.isSuccess, commandAuthorityQuery.isSuccess, busTapQuery.isSuccess, evidenceReportQuery.isSuccess, evidenceReportQuery.data?.campaign_id, requestedCampaign, selectedCampaign, graphShellQuery.isSuccess, graphShellQuery.data?.campaign_id]);
+
+  const errors = [
+    bundleQuery.error,
+    manifestQuery.error,
+    topologyQuery.error,
+    sourcesQuery.error,
+    supervisorQuery.error,
+    commandCenterFATQuery.error,
+    busTapQuery.error,
+    campaignQuery.error,
+    graphShellQuery.error,
+    commandAuthorityQuery.error,
+    evidenceReportQuery.error,
+    leaseMutation.error
+  ].filter(Boolean) as Error[];
+
+  if (errors.length > 0) {
+    return (
+      <main className="shell">
+        <div className="error">
+          {errors.map((e, i) => <p key={i}>{e.message}</p>)}
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="shell">
       <header className="topbar">
@@ -269,24 +281,24 @@ export function App() {
       {route !== "landing" && route !== "profile" && !(route === "acceptance" || route === "qualification" || route === "supervisor") && !routeReady && <div className="loading route-loading">Loading {routeLabel(route)} contracts...</div>}
       <Suspense fallback={<div className="loading route-loading">Loading view...</div>}>
         {route === "profile" && routeReady && <ProfileView />}
-        {route === "command-center-fat" && routeReady && commandCenterFAT && <CommandCenterFATView model={commandCenterFAT} />}
-        {route === "mission-map" && routeReady && topology && <MissionMapView manifest={manifest} topology={topology} campaigns={campaigns} />}
-        {(route === "acceptance" || route === "qualification" || route === "supervisor") && routeReady && selectedCampaign && graph && <SupervisorView overview={supervisor} campaign={selectedCampaign} graph={graph} />}
-        {route === "graph-wall" && routeReady && graph && <GraphWallView model={graph} samples={[]} />}
-        {route === "sources" && routeReady && sources && <SourceCatalogueView catalogue={sources} />}
+        {route === "command-center-fat" && routeReady && commandCenterFATQuery.data && <CommandCenterFATView model={commandCenterFATQuery.data} />}
+        {route === "mission-map" && routeReady && topologyQuery.data && <MissionMapView manifest={manifest} topology={topologyQuery.data} campaigns={campaigns} />}
+        {(route === "acceptance" || route === "qualification" || route === "supervisor") && routeReady && selectedCampaign && graphShellQuery.data && <SupervisorView overview={supervisor} campaign={selectedCampaign} graph={graphShellQuery.data} />}
+        {route === "graph-wall" && routeReady && graphShellQuery.data && <GraphWallView model={graphShellQuery.data} samples={[]} />}
+        {route === "sources" && routeReady && sourcesQuery.data && <SourceCatalogueView catalogue={sourcesQuery.data} />}
         {route === "requirements" && routeReady && selectedCampaign && <RequirementMatrixView campaign={selectedCampaign} />}
-        {route === "commands" && routeReady && commands && (
+        {route === "commands" && routeReady && commandAuthorityQuery.data && (
           <CommandAuthorityView
-            state={commands}
-            onRequest={() => refreshCommands(api.requestLease)}
-            onRelease={() => refreshCommands(api.releaseLease)}
-            onCommand={() => refreshCommands(api.mockCommand)}
+            state={commandAuthorityQuery.data}
+            onRequest={() => leaseMutation.mutate("request")}
+            onRelease={() => leaseMutation.mutate("release")}
+            onCommand={() => leaseMutation.mutate("mock")}
           />
         )}
-        {route === "bus-tap" && routeReady && busTap && <BusTapView tap={busTap} />}
-        {route === "report" && routeReady && report && <EvidenceReportView report={report} />}
+        {route === "bus-tap" && routeReady && busTapQuery.data && <BusTapView tap={busTapQuery.data} />}
+        {route === "report" && routeReady && evidenceReportQuery.data && <EvidenceReportView report={evidenceReportQuery.data} />}
+        {route === "file-viewer" && <FileViewerView />}
       </Suspense>
-      {/* source easter egg: every confident plot should be able to point back to the sample that made it move. */}
       <footer className="site-footer">
         <span>Dr. Jonathan Meyer · jonathan@jmeyer.space</span>
         <a href="https://github.com/egidinas/gossamer" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
@@ -318,18 +330,48 @@ function routeLabel(route: Route): string {
 }
 
 function campaignFromTileManifest(tile: TileCampaignManifest): Campaign {
+  const bootCampaigns: Campaign[] = [
+    {
+      schema_version: 1,
+      generated_at: bootGeneratedAt,
+      id: "thermal_acceptance_fat",
+      name: "Thermal Chamber FAT",
+      level: "acceptance",
+      state: "running",
+      result: "pass",
+      article: "Reference DUT",
+      facility: "thermal_chamber_a",
+      requirements: [],
+      anomalies: [],
+      synthetic_note: "Reference campaign model with backend-owned telemetry, evidence, and graph contracts."
+    },
+    {
+      schema_version: 1,
+      generated_at: bootGeneratedAt,
+      id: "tvac_qualification",
+      name: "TVac Qualification",
+      level: "qualification",
+      state: "running",
+      result: "inconclusive",
+      article: "Reference DUT",
+      facility: "tvac_chamber_q1",
+      requirements: [],
+      anomalies: [],
+      synthetic_note: "Reference campaign model with backend-owned telemetry, evidence, and graph contracts."
+    }
+  ];
   const boot = bootCampaigns.find((campaign) => campaign.id === tile.campaign_id);
   if (boot) {
     return {
       ...boot,
-      generated_at: bootManifest.generated_at,
+      generated_at: bootGeneratedAt,
       name: tile.title
     };
   }
   const isCommandCenter = tile.campaign_id === "command_center_fat";
   return {
     schema_version: 1,
-    generated_at: bootManifest.generated_at,
+    generated_at: bootGeneratedAt,
     id: tile.campaign_id,
     name: tile.title,
     level: isCommandCenter ? "acceptance-command-center" : "acceptance",

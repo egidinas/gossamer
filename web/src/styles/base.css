@@ -1,82 +1,116 @@
+/* ============================================================
+   GOSSAMER · BASE
+   --------------------------------------------------------------
+   Replaces styles/base.css. Imports tokens.css. Keeps every
+   class name your codebase already uses (.panel, .panel-head,
+   .badge, .eyebrow, etc.) — just retunes them.
+   ============================================================ */
+
+@import "./tokens.css";
+
 :root {
-  color: #d8e2e7;
-  background: #101418;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--color-text-200);
+  background: var(--color-bg-base);
+  font-family: var(--font-sans);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html {
-  overflow-x: hidden;
-}
+html { overflow-x: hidden; }
 
 body {
   margin: 0;
   min-width: 320px;
-  background: #101418;
+  background: var(--color-bg-base);
+  color: var(--color-text-200);
   overflow-x: hidden;
+  font-size: var(--type-body);
 }
 
-button,
-select {
-  font: inherit;
-}
+button, select { font: inherit; }
 
-.shell {
-  min-height: 100vh;
-  padding: 20px;
-}
+.shell { min-height: 100vh; padding: var(--space-5); }
 
-h1,
-h2,
-p {
-  margin: 0;
-}
+/* ── Type primitives ──────────────────────────────────────── */
+h1, h2, p { margin: 0; }
 
 h1 {
-  font-size: 28px;
-  font-weight: 700;
+  color: var(--color-text-100);
+  font-size: var(--type-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
 }
 
 h2 {
-  font-size: 15px;
-  font-weight: 650;
+  color: var(--color-text-100);
+  font-size: var(--type-heading);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1;
 }
 
 h3 {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 700;
+  color: var(--color-text-100);
+  font-size: var(--type-heading);
+  font-weight: 600;
+  letter-spacing: -0.005em;
 }
 
+.eyebrow {
+  display: inline-block;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.label,
+.disclaimer,
 .topbar p,
 .topbar-campaign span,
 .topbar-owner span,
 .panel-head span,
 .series-meta span,
-.node-card span,
-.label,
-.disclaimer {
-  color: #8fa2ad;
+.node-card span {
+  color: var(--color-text-300);
+  font-family: var(--font-mono);
+  font-size: var(--type-meta);
+  letter-spacing: 0.02em;
+}
+
+/* Anywhere a numeric value lives — IDs, timestamps, units —
+   give it the mono treatment. Add the .mono utility class to
+   your code or apply it semantically via these selectors. */
+code,
+.mono,
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+code { color: var(--color-accent); overflow-wrap: anywhere; }
+
+/* ── Form controls ────────────────────────────────────────── */
+select, button {
+  min-height: 30px;
+  height: 30px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-1);
+  background: var(--color-bg-2);
+  color: var(--color-text-150);
+  font-family: var(--font-sans);
   font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
 }
 
-select,
-button {
-  min-height: 36px;
-  border: 1px solid #34444e;
-  border-radius: 6px;
-  background: #182027;
-  color: #d8e2e7;
-}
-
-select {
-  padding: 0 12px;
-}
+select { padding: 0 10px; }
 
 button {
   display: inline-flex;
@@ -85,130 +119,156 @@ button {
   padding: 0 12px;
   cursor: pointer;
 }
+button:hover { border-color: var(--color-accent); color: var(--color-text-100); }
 
-.eyebrow {
-  color: #8bd0d8;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
+/* ── Tables ───────────────────────────────────────────────── */
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 12px;
 }
 
-th,
-td {
-  border-bottom: 1px solid #26323a;
-  padding: 9px 8px;
+th, td {
+  padding: 6px 10px;
   text-align: left;
-  vertical-align: top;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--color-border-rule);
 }
 
 th {
-  color: #91a6b2;
+  color: var(--color-text-300);
+  font-family: var(--font-mono);
+  font-size: 10px;
   font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--color-bg-2);
+  border-bottom: 1px solid var(--color-border-default);
 }
 
-.badge {
-  display: inline-flex;
-  width: fit-content;
-  align-items: center;
-  min-height: 22px;
-  padding: 0 8px;
-  border: 1px solid #3b4b54;
-  border-radius: 999px;
-  color: #d8e2e7;
-  font-size: 12px;
-  text-transform: capitalize;
+.requirement-expression-row td {
+  border-bottom: none;
+  padding-top: 0;
+  padding-bottom: 6px;
 }
 
-.badge-pass,
-.badge-fresh,
-.badge-available,
-.badge-held {
-  border-color: #4f8d70;
-  color: #9ee0bd;
+.requirement-expression {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-200);
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-1);
+  padding: 2px 6px;
 }
 
-.badge-inconclusive,
-.badge-degraded,
-.badge-needs_disposition,
-.badge-synthetic {
-  border-color: #9b8150;
-  color: #e8cf8b;
-}
-
-.badge-fail,
-.badge-missing {
-  border-color: #944f58;
-  color: #eda0a9;
-}
-
-.mini-trace {
-  width: 100%;
-  height: 54px;
-  border: 1px solid #27343d;
-  border-radius: 4px;
-  background: #0e1317;
-}
-
-.mini-trace polyline {
-  fill: none;
-  stroke: #82c6e8;
-  stroke-width: 2;
-  vector-effect: non-scaling-stroke;
-}
-
-.toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.summary {
-  margin-bottom: 10px;
-  color: #c6d5dc;
-}
-
-.disclaimer {
-  margin-top: 10px;
-}
-
-.loading,
-.error {
-  border: 1px solid #33434d;
-  border-radius: 8px;
-  padding: 16px;
-  background: #151b21;
-}
-
-.error {
-  border-color: #944f58;
-  color: #eda0a9;
-}
-
-code {
-  color: #b5d7e8;
-  overflow-wrap: anywhere;
-}
-
+/* ── Panel — OperatorPanel primitive ──────────────────────── */
 .panel {
-  border: 1px solid #2b3942;
-  border-radius: 8px;
-  background: #151b21;
-  padding: 14px;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-1);
+  background: var(--color-bg-1);
+  padding: 0;
   min-width: 0;
 }
 
 .panel-head {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: var(--space-4);
+  padding: var(--row-pad-y) var(--row-pad-x);
+  border-bottom: 1px solid var(--color-border-default);
+  min-height: var(--row-h);
+}
+
+.panel-head h2 { color: var(--color-text-100); }
+.panel-head > span { color: var(--color-text-300); }
+
+.panel > *:not(.panel-head) {
+  padding: var(--space-4) var(--row-pad-x);
+}
+
+/* Live-data variant — drop-in: just add `panel-live` next
+   to `panel` (or wrap with attribute, e.g. data-state="live"). */
+.panel-live,
+.panel[data-state="live"] {
+  background: var(--color-bg-live);
+  border-color: var(--color-border-live);
+}
+.panel-live .panel-head,
+.panel[data-state="live"] .panel-head {
+  border-bottom-color: var(--color-border-live);
+}
+
+/* ── Live tag (use in panel-head for live cards) ──────────── */
+.live-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-amber);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.live-dot {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 8px; height: 8px;
+}
+.live-dot::before,
+.live-dot::after {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: 999px;
+  background: var(--color-live-pulse);
+}
+.live-dot::after { animation: live-pulse 1.6s ease-out infinite; }
+@keyframes live-pulse {
+  0%   { transform: scale(1);   opacity: 0.85; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+
+/* ── Status messaging (loading / error) ───────────────────── */
+.loading, .error {
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-1);
+  padding: 12px 14px;
+  background: var(--color-bg-1);
+  color: var(--color-text-200);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.error {
+  border-color: var(--color-fail);
+  background: var(--color-fail-bg);
+  color: var(--color-fail);
+}
+
+.summary { margin-bottom: 8px; color: var(--color-text-150); }
+.disclaimer { margin-top: 10px; }
+
+/* Mini-trace sparkline */
+.mini-trace {
+  width: 100%;
+  height: 38px;
+  border: 1px solid var(--color-border-rule);
+  background: var(--color-bg-plot);
+}
+.mini-trace polyline {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+/* ── Toolbar ──────────────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
 }

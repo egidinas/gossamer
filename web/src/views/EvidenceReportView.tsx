@@ -1,10 +1,12 @@
 import type { EvidenceReport } from "../types";
 import { OperatorPanel } from "../components/OperatorPanel";
 import { StatusBadge } from "../components/StatusBadge";
+import { RequirementBadge } from "../components/RequirementBadge";
 
 export function EvidenceReportView({ report }: { report: EvidenceReport }) {
   const anomalies = report.anomalies ?? [];
   const reproducibility = report.reproducibility ?? [];
+  const requirements = report.requirements ?? [];
 
   return (
     <div className="lane-stack">
@@ -17,6 +19,25 @@ export function EvidenceReportView({ report }: { report: EvidenceReport }) {
           </p>
         )}
       </OperatorPanel>
+      {requirements.length > 0 && (
+        <OperatorPanel title="Requirement Outcomes" meta={`${requirements.length} requirements`}>
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Requirement</th><th>Result</th><th>Expression</th></tr>
+            </thead>
+            <tbody>
+              {requirements.map((req) => (
+                <tr key={req.id}>
+                  <td>{req.id}</td>
+                  <td>{req.title}</td>
+                  <td><RequirementBadge result={req.result} /></td>
+                  <td>{req.expression && <code className="requirement-expression">{req.expression}</code>}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </OperatorPanel>
+      )}
       <OperatorPanel title="Anomaly Disposition" meta={`${anomalies.length} anomalies`}>
         {anomalies.length === 0 ? <p>No open anomalies.</p> : anomalies.map((anomaly) => (
           <div className="anomaly" key={anomaly.id}>

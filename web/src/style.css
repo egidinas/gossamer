@@ -1,4 +1,5 @@
 @import "./styles/base.css";
+@import "./styles/badge.css";
 @import "./styles/topbar.css";
 @import "./styles/footer.css";
 @import "./styles/landing.css";

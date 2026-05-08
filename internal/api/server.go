@@ -1,7 +1,9 @@
 package api
 
 import (
+	"database/sql"
 	"encoding/json"
+	"fmt"
 	"math"
 	"net/http"
 	"os"
@@ -15,7 +17,9 @@ import (
 
 	"github.com/egidinas/gossamer/internal/arrowtelemetry"
 	"github.com/egidinas/gossamer/internal/contracts"
+	"github.com/egidinas/gossamer/internal/synthetic"
 	"github.com/egidinas/gossamer/internal/tilebundle"
+	_ "github.com/marcboeker/go-duckdb"
 )
 
 type Server struct {
@@ -25,22 +29,108 @@ type Server struct {
 	mu          sync.Mutex
 	graphMu     sync.Mutex
 	graphModels map[string]contracts.GraphModel
-	commands    contracts.CommandAuthorityState
+	db          *sql.DB
+	leases      LeaseManager
 }
 
-func New(root string) *Server {
-	s := &Server{
-		root:        root,
-		mux:         http.NewServeMux(),
-		graphModels: map[string]contracts.GraphModel{},
-		commands: contracts.CommandAuthorityState{
-			Envelope:        contracts.NewEnvelope(time.Now()),
+type LeaseManager interface {
+	GetState() contracts.CommandAuthorityState
+	RequestLease(operatorID string) (contracts.CommandAuthorityState, error)
+	ReleaseLease(operatorID string) (contracts.CommandAuthorityState, error)
+	ExecuteCommand(operatorID, command string) (contracts.CommandAuthorityState, error)
+}
+
+type InMemoryLeaseManager struct {
+	mu       sync.Mutex
+	state    contracts.CommandAuthorityState
+	lastSeen time.Time
+}
+
+func NewInMemoryLeaseManager() *InMemoryLeaseManager {
+	return &InMemoryLeaseManager{
+		state: contracts.CommandAuthorityState{
 			LeaseState:      "available",
 			AllowedCommands: []string{"set_demo_marker", "acknowledge_anomaly", "hold_fixture_state"},
 		},
 	}
+}
+
+func (m *InMemoryLeaseManager) GetState() contracts.CommandAuthorityState {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.checkExpiration()
+	m.state.Envelope = contracts.NewEnvelope(time.Now())
+	return m.state
+}
+
+func (m *InMemoryLeaseManager) RequestLease(operatorID string) (contracts.CommandAuthorityState, error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.checkExpiration()
+	if m.state.LeaseState == "held" && m.state.LeaseOwner != operatorID {
+		return m.state, fmt.Errorf("lease already held by %s", m.state.LeaseOwner)
+	}
+	m.state.LeaseState = "held"
+	m.state.LeaseOwner = operatorID
+	m.lastSeen = time.Now()
+	m.state.Envelope = contracts.NewEnvelope(time.Now())
+	return m.state, nil
+}
+
+func (m *InMemoryLeaseManager) ReleaseLease(operatorID string) (contracts.CommandAuthorityState, error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	if m.state.LeaseState == "held" && m.state.LeaseOwner != operatorID {
+		return m.state, fmt.Errorf("cannot release lease held by %s", m.state.LeaseOwner)
+	}
+	m.state.LeaseState = "available"
+	m.state.LeaseOwner = ""
+	m.state.Envelope = contracts.NewEnvelope(time.Now())
+	return m.state, nil
+}
+
+func (m *InMemoryLeaseManager) ExecuteCommand(operatorID, command string) (contracts.CommandAuthorityState, error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.checkExpiration()
+	if m.state.LeaseState != "held" || m.state.LeaseOwner != operatorID {
+		return m.state, fmt.Errorf("lease required to execute command")
+	}
+	m.state.LastCommand = command
+	m.lastSeen = time.Now()
+	m.state.Envelope = contracts.NewEnvelope(time.Now())
+	return m.state, nil
+}
+
+func (m *InMemoryLeaseManager) checkExpiration() {
+	if m.state.LeaseState == "held" && time.Since(m.lastSeen) > 5*time.Minute {
+		m.state.LeaseState = "available"
+		m.state.LeaseOwner = ""
+	}
+}
+
+func New(root string) *Server {
+	db, err := sql.Open("duckdb", "")
+	if err != nil {
+		panic(fmt.Errorf("failed to open duckdb: %w", err))
+	}
+
+	s := &Server{
+		root:        root,
+		mux:         http.NewServeMux(),
+		graphModels: map[string]contracts.GraphModel{},
+		db:          db,
+		leases:      NewInMemoryLeaseManager(),
+	}
 	s.routes()
 	return s
+}
+
+func (s *Server) Close() error {
+	if s.db != nil {
+		return s.db.Close()
+	}
+	return nil
 }
 
 func NewWithStatic(root, staticDir string) *Server {
@@ -66,6 +156,7 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("/api/bus-tap", s.fixture("bus_virtualization_tap.json"))
 	s.mux.HandleFunc("/api/campaigns", s.campaigns)
 	s.mux.HandleFunc("/api/campaigns/", s.campaignDetail)
+	s.mux.HandleFunc("/api/viewer/", s.fileViewer)
 	s.mux.HandleFunc("/api/command-authority", s.commandState)
 	s.mux.HandleFunc("/api/command-authority/request-lease", s.requestLease)
 	s.mux.HandleFunc("/api/command-authority/release-lease", s.releaseLease)
@@ -134,6 +225,8 @@ func (s *Server) campaignDetail(w http.ResponseWriter, r *http.Request) {
 	switch parts[1] {
 	case "telemetry":
 		serveArrowFile(w, r, filepath.Join(s.root, "fixtures", "public", "telemetry", id+".arrow"), "no-store")
+	case "query":
+		s.telemetryQuery(w, r, id)
 	case "live":
 		s.liveCampaign(w, r, id)
 	case "graph-model":
@@ -225,6 +318,26 @@ func (s *Server) readGraphModel(id string) (contracts.GraphModel, error) {
 	}
 	s.graphModels[id] = model
 	return model, nil
+}
+
+func (s *Server) fileViewer(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	id := strings.TrimPrefix(r.URL.Path, "/api/viewer/")
+	if id == "" || strings.Contains(id, "..") || strings.Contains(id, "/") {
+		http.NotFound(w, r)
+		return
+	}
+	env := contracts.Envelope{SchemaVersion: contracts.SchemaVersion, GeneratedAt: time.Now().UTC().Format(time.RFC3339)}
+	model, ok := synthetic.BuildFileViewModel(env, id)
+	if !ok {
+		http.NotFound(w, r)
+		return
+	}
+	w.Header().Set("Cache-Control", "no-cache")
+	writeJSON(w, model)
 }
 
 func buildTile(model contracts.GraphModel, cardID, levelID, t0s, t1s string, latest bool) (contracts.GraphTile, error) {
@@ -533,10 +646,7 @@ func (s *Server) commandState(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	s.commands.Envelope = contracts.NewEnvelope(time.Now())
-	writeJSON(w, s.commands)
+	writeJSON(w, s.leases.GetState())
 }
 
 func (s *Server) requestLease(w http.ResponseWriter, r *http.Request) {
@@ -544,16 +654,17 @@ func (s *Server) requestLease(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	if s.commands.LeaseState == "held" {
-		http.Error(w, "lease already held", http.StatusConflict)
+	opID := r.Header.Get("X-Operator-ID")
+	if opID == "" {
+		http.Error(w, "X-Operator-ID header required", http.StatusUnauthorized)
 		return
 	}
-	s.commands.LeaseState = "held"
-	s.commands.LeaseOwner = "demo_operator"
-	s.commands.Envelope = contracts.NewEnvelope(time.Now())
-	writeJSON(w, s.commands)
+	state, err := s.leases.RequestLease(opID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusConflict)
+		return
+	}
+	writeJSON(w, state)
 }
 
 func (s *Server) releaseLease(w http.ResponseWriter, r *http.Request) {
@@ -561,12 +672,17 @@ func (s *Server) releaseLease(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	s.commands.LeaseState = "available"
-	s.commands.LeaseOwner = ""
-	s.commands.Envelope = contracts.NewEnvelope(time.Now())
-	writeJSON(w, s.commands)
+	opID := r.Header.Get("X-Operator-ID")
+	if opID == "" {
+		http.Error(w, "X-Operator-ID header required", http.StatusUnauthorized)
+		return
+	}
+	state, err := s.leases.ReleaseLease(opID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusForbidden)
+		return
+	}
+	writeJSON(w, state)
 }
 
 func (s *Server) mockCommand(w http.ResponseWriter, r *http.Request) {
@@ -574,15 +690,17 @@ func (s *Server) mockCommand(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	if s.commands.LeaseState != "held" {
-		http.Error(w, "lease required", http.StatusConflict)
+	opID := r.Header.Get("X-Operator-ID")
+	if opID == "" {
+		http.Error(w, "X-Operator-ID header required", http.StatusUnauthorized)
 		return
 	}
-	s.commands.LastCommand = "set_demo_marker"
-	s.commands.Envelope = contracts.NewEnvelope(time.Now())
-	writeJSON(w, s.commands)
+	state, err := s.leases.ExecuteCommand(opID, "set_demo_marker")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusForbidden)
+		return
+	}
+	writeJSON(w, state)
 }
 
 func (s *Server) static(w http.ResponseWriter, r *http.Request) {
@@ -602,7 +720,7 @@ func (s *Server) static(w http.ResponseWriter, r *http.Request) {
 			if arrowStaticExists(candidate) {
 				cc := "public, max-age=31536000, immutable"
 				if isMutable {
-					cc = "no-store"
+					cc = "no-cache"
 				}
 				serveArrowFile(w, r, candidate, cc)
 				return
@@ -612,7 +730,7 @@ func (s *Server) static(w http.ResponseWriter, r *http.Request) {
 		}
 		if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
 			if isMutable || strings.HasSuffix(candidate, "manifest.json") {
-				w.Header().Set("Cache-Control", "no-store")
+				w.Header().Set("Cache-Control", "no-cache")
 			} else {
 				w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
 			}
@@ -689,6 +807,69 @@ func writeJSON(w http.ResponseWriter, v any) {
 	headers(w)
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(v)
+}
+
+func (s *Server) telemetryQuery(w http.ResponseWriter, r *http.Request, id string) {
+	query := r.URL.Query().Get("q")
+	if query == "" {
+		http.Error(w, "missing query", http.StatusBadRequest)
+		return
+	}
+
+	parquetPath := filepath.Join(s.root, "fixtures", "public", "telemetry", id+".parquet")
+	if _, err := os.Stat(parquetPath); err != nil {
+		http.Error(w, "telemetry data not found for campaign "+id, http.StatusNotFound)
+		return
+	}
+
+	// We'll replace 'telemetry' with the read_parquet function call.
+	// This allows the caller to use 'telemetry' as a table name.
+	fullQuery := strings.ReplaceAll(query, "telemetry", fmt.Sprintf("read_parquet('%s')", parquetPath))
+
+	rows, err := s.db.QueryContext(r.Context(), fullQuery)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	columns, err := rows.Columns()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	results := []map[string]any{}
+	for rows.Next() {
+		values := make([]any, len(columns))
+		valuePtrs := make([]any, len(columns))
+		for i := range columns {
+			valuePtrs[i] = &values[i]
+		}
+
+		if err := rows.Scan(valuePtrs...); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		row := make(map[string]any)
+		for i, col := range columns {
+			val := values[i]
+			if b, ok := val.([]byte); ok {
+				row[col] = string(b)
+			} else {
+				row[col] = val
+			}
+		}
+		results = append(results, row)
+	}
+
+	writeJSON(w, map[string]any{
+		"schema_version": 1,
+		"generated_at":   time.Now().UTC().Format(time.RFC3339),
+		"campaign_id":    id,
+		"results":        results,
+	})
 }
 
 func headers(w http.ResponseWriter) {

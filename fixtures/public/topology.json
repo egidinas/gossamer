@@ -11,9 +11,37 @@
     },
     {
       "id": "thermal_chamber_a",
-      "label": "Thermal Chamber A",
-      "kind": "facility",
+      "label": "Thermal Chamber A PLC",
+      "kind": "facility_plc",
+      "status": "campaign_active",
+      "quality": "fresh"
+    },
+    {
+      "id": "thermal_chamber_b",
+      "label": "Thermal Chamber B PLC",
+      "kind": "facility_plc",
       "status": "available",
+      "quality": "fresh"
+    },
+    {
+      "id": "thermal_chamber_c",
+      "label": "Thermal Chamber C PLC",
+      "kind": "facility_plc",
+      "status": "available",
+      "quality": "fresh"
+    },
+    {
+      "id": "thermal_chamber_d",
+      "label": "Thermal Chamber D PLC",
+      "kind": "facility_plc",
+      "status": "available",
+      "quality": "fresh"
+    },
+    {
+      "id": "thermal_supervisor_pc",
+      "label": "Thermal Supervisor PC",
+      "kind": "computer",
+      "status": "active",
       "quality": "fresh"
     },
     {
@@ -24,10 +52,38 @@
       "quality": "fresh"
     },
     {
+      "id": "tvac_plc_q1",
+      "label": "TVac PLC Q1",
+      "kind": "facility_plc",
+      "status": "campaign_active",
+      "quality": "fresh"
+    },
+    {
+      "id": "tvac_computer_1",
+      "label": "TVac Computer 1 (Primary)",
+      "kind": "computer",
+      "status": "active",
+      "quality": "fresh"
+    },
+    {
+      "id": "tvac_computer_2",
+      "label": "TVac Computer 2 (Backup)",
+      "kind": "computer",
+      "status": "active",
+      "quality": "fresh"
+    },
+    {
       "id": "flatsat_rack_a",
       "label": "Flatsat Rack A",
       "kind": "facility",
       "status": "available",
+      "quality": "fresh"
+    },
+    {
+      "id": "house_plc",
+      "label": "House Control PLC",
+      "kind": "facility_plc",
+      "status": "active",
       "quality": "fresh"
     },
     {
@@ -36,13 +92,121 @@
       "kind": "data_system",
       "status": "recording",
       "quality": "fresh"
+    },
+    {
+      "id": "nas_a",
+      "label": "Network Storage (NAS A)",
+      "kind": "storage",
+      "status": "active",
+      "quality": "fresh"
+    },
+    {
+      "id": "librarian_a",
+      "label": "Librarian",
+      "kind": "service",
+      "status": "active",
+      "quality": "fresh"
+    },
+    {
+      "id": "gateway_a",
+      "label": "Data Gateway",
+      "kind": "gateway",
+      "status": "active",
+      "quality": "fresh"
+    },
+    {
+      "id": "supervisor_a",
+      "label": "Test Supervisor",
+      "kind": "supervisor",
+      "status": "active",
+      "quality": "fresh"
     }
   ],
   "links": [
     {
-      "source": "reference_dut",
+      "source": "house_plc",
+      "target": "thermal_chamber_a",
+      "bus": "facility_utility_bus"
+    },
+    {
+      "source": "house_plc",
+      "target": "thermal_chamber_b",
+      "bus": "facility_utility_bus"
+    },
+    {
+      "source": "house_plc",
+      "target": "thermal_chamber_c",
+      "bus": "facility_utility_bus"
+    },
+    {
+      "source": "house_plc",
+      "target": "thermal_chamber_d",
+      "bus": "facility_utility_bus"
+    },
+    {
+      "source": "house_plc",
+      "target": "tvac_plc_q1",
+      "bus": "facility_utility_bus"
+    },
+    {
+      "source": "thermal_supervisor_pc",
+      "target": "thermal_chamber_a",
+      "bus": "facility_control_bus"
+    },
+    {
+      "source": "thermal_supervisor_pc",
+      "target": "thermal_chamber_b",
+      "bus": "facility_control_bus"
+    },
+    {
+      "source": "thermal_supervisor_pc",
+      "target": "thermal_chamber_c",
+      "bus": "facility_control_bus"
+    },
+    {
+      "source": "thermal_supervisor_pc",
+      "target": "thermal_chamber_d",
+      "bus": "facility_control_bus"
+    },
+    {
+      "source": "thermal_supervisor_pc",
+      "target": "house_plc",
+      "bus": "facility_control_bus"
+    },
+    {
+      "source": "supervisor_a",
+      "target": "thermal_supervisor_pc",
+      "bus": "supervisor_bus"
+    },
+    {
+      "source": "supervisor_a",
+      "target": "tvac_computer_1",
+      "bus": "supervisor_bus"
+    },
+    {
+      "source": "supervisor_a",
+      "target": "tvac_computer_2",
+      "bus": "supervisor_bus"
+    },
+    {
+      "source": "supervisor_a",
       "target": "archive_node_a",
-      "bus": "telemetry_bus"
+      "bus": "supervisor_bus"
+    },
+    {
+      "source": "tvac_plc_q1",
+      "target": "tvac_computer_1",
+      "bus": "facility_control_bus"
+    },
+    {
+      "source": "tvac_plc_q1",
+      "target": "tvac_computer_2",
+      "bus": "facility_control_bus"
+    },
+    {
+      "source": "tvac_plc_q1",
+      "target": "tvac_chamber_q1",
+      "bus": "facility_control_bus"
     },
     {
       "source": "thermal_chamber_a",
@@ -50,7 +214,27 @@
       "bus": "facility_control_bus"
     },
     {
-      "source": "tvac_chamber_q1",
+      "source": "thermal_chamber_b",
+      "target": "reference_dut",
+      "bus": "facility_control_bus"
+    },
+    {
+      "source": "thermal_chamber_c",
+      "target": "reference_dut",
+      "bus": "facility_control_bus"
+    },
+    {
+      "source": "thermal_chamber_d",
+      "target": "reference_dut",
+      "bus": "facility_control_bus"
+    },
+    {
+      "source": "tvac_computer_1",
+      "target": "reference_dut",
+      "bus": "facility_control_bus"
+    },
+    {
+      "source": "tvac_computer_2",
       "target": "reference_dut",
       "bus": "facility_control_bus"
     },
@@ -58,6 +242,36 @@
       "source": "flatsat_rack_a",
       "target": "reference_dut",
       "bus": "command_bus"
+    },
+    {
+      "source": "reference_dut",
+      "target": "archive_node_a",
+      "bus": "telemetry_bus"
+    },
+    {
+      "source": "archive_node_a",
+      "target": "nas_a",
+      "bus": "storage_bus"
+    },
+    {
+      "source": "nas_a",
+      "target": "librarian_a",
+      "bus": "storage_bus"
+    },
+    {
+      "source": "librarian_a",
+      "target": "gateway_a",
+      "bus": "api_bus"
+    },
+    {
+      "source": "thermal_supervisor_pc",
+      "target": "gateway_a",
+      "bus": "api_bus"
+    },
+    {
+      "source": "supervisor_a",
+      "target": "gateway_a",
+      "bus": "api_bus"
     }
   ]
 }

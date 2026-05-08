@@ -1,3 +1,4 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
   Campaign,
   CampaignList,
@@ -5,6 +6,7 @@ import type {
   CommandCenterFAT,
   CommandAuthorityState,
   EvidenceReport,
+  FileViewModel,
   GraphTileManifest,
   GraphModel,
   Manifest,
@@ -86,7 +88,106 @@ export const api = {
   },
   commandAuthority: () => getJSON<CommandAuthorityState>("/api/command-authority"),
   evidenceReport: (id: string) => getJSON<EvidenceReport>(`/api/campaigns/${id}/evidence-report`),
-  requestLease: () => fetch("/api/command-authority/request-lease", { method: "POST" }).then(() => api.commandAuthority()),
-  releaseLease: () => fetch("/api/command-authority/release-lease", { method: "POST" }).then(() => api.commandAuthority()),
-  mockCommand: () => fetch("/api/command-authority/mock-command", { method: "POST" }).then(() => api.commandAuthority())
+  fileViewer: (id: string) => getJSON<FileViewModel>(`/api/viewer/${id}`),
+  requestLease: () => fetch("/api/command-authority/request-lease", { method: "POST", headers: { "X-Operator-ID": "operator-alpha-1" } }).then(() => api.commandAuthority()),
+  releaseLease: () => fetch("/api/command-authority/release-lease", { method: "POST", headers: { "X-Operator-ID": "operator-alpha-1" } }).then(() => api.commandAuthority()),
+  mockCommand: () => fetch("/api/command-authority/mock-command", { method: "POST", headers: { "X-Operator-ID": "operator-alpha-1" } }).then(() => api.commandAuthority())
 };
+
+// React Query Hooks
+export function useBundleQuery() {
+  return useQuery({
+    queryKey: ["bundle"],
+    queryFn: api.currentBundle,
+    staleTime: 60000,
+  });
+}
+
+export function useManifestQuery() {
+  return useQuery({
+    queryKey: ["manifest"],
+    queryFn: api.manifest,
+  });
+}
+
+export function useTopologyQuery() {
+  return useQuery({
+    queryKey: ["topology"],
+    queryFn: api.topology,
+  });
+}
+
+export function useSourcesQuery() {
+  return useQuery({
+    queryKey: ["sources"],
+    queryFn: api.sources,
+  });
+}
+
+export function useSupervisorQuery() {
+  return useQuery({
+    queryKey: ["supervisor"],
+    queryFn: api.supervisor,
+  });
+}
+
+export function useCommandCenterFATQuery() {
+  return useQuery({
+    queryKey: ["command-center-fat"],
+    queryFn: api.commandCenterFAT,
+  });
+}
+
+export function useBusTapQuery() {
+  return useQuery({
+    queryKey: ["bus-tap"],
+    queryFn: api.busTap,
+  });
+}
+
+export function useCampaignQuery(id: string) {
+  return useQuery({
+    queryKey: ["campaign", id],
+    queryFn: () => api.campaign(id),
+    enabled: !!id,
+  });
+}
+
+export function useGraphShellQuery(id: string) {
+  return useQuery({
+    queryKey: ["graph-shell", id],
+    queryFn: () => api.graphShell(id),
+    enabled: !!id,
+  });
+}
+
+export function useCommandAuthorityQuery() {
+  return useQuery({
+    queryKey: ["command-authority"],
+    queryFn: api.commandAuthority,
+  });
+}
+
+export function useEvidenceReportQuery(id: string) {
+  return useQuery({
+    queryKey: ["evidence-report", id],
+    queryFn: () => api.evidenceReport(id),
+    enabled: !!id,
+  });
+}
+
+export function useLeaseMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (action: "request" | "release" | "mock") => {
+      switch (action) {
+        case "request": return api.requestLease();
+        case "release": return api.releaseLease();
+        case "mock": return api.mockCommand();
+      }
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(["command-authority"], data);
+    },
+  });
+}

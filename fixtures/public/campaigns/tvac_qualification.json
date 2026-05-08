@@ -15,6 +15,7 @@
       "id": "REQ-CYCLE-COUNT",
       "title": "Required cycle count completed",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "observed_cycle_count() == campaign_cycle_count",
       "result": "pass",
       "evidence": [
         "telemetry",
@@ -26,6 +27,7 @@
       "id": "REQ-HOT-TARGET",
       "title": "Hot target reached",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "max_signal(\"chamber_air_deg_c\") \u003e= campaign_hot_target - 2.0",
       "result": "pass",
       "evidence": [
         "telemetry",
@@ -37,6 +39,7 @@
       "id": "REQ-COLD-TARGET",
       "title": "Cold target reached",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "min_signal(\"chamber_air_deg_c\") \u003c= campaign_cold_target + 2.0",
       "result": "pass",
       "evidence": [
         "telemetry",
@@ -48,6 +51,7 @@
       "id": "REQ-HOT-SURVIVAL",
       "title": "Hot survival exposure completed",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "observed_phase_count(\"hot_survival\") \u003e 0",
       "result": "pass",
       "evidence": [
         "telemetry",
@@ -59,17 +63,7 @@
       "id": "REQ-COLD-SURVIVAL",
       "title": "Cold survival exposure completed",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
-      "result": "pass",
-      "evidence": [
-        "telemetry",
-        "graph_model"
-      ],
-      "rationale": "Evaluated from deterministic fixture data."
-    },
-    {
-      "id": "REQ-STABILITY",
-      "title": "Stabilization window achieved",
-      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "observed_phase_count(\"cold_survival\") \u003e 0",
       "result": "pass",
       "evidence": [
         "telemetry",
@@ -81,17 +75,7 @@
       "id": "REQ-DWELL",
       "title": "Dwell duration achieved",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
-      "result": "pass",
-      "evidence": [
-        "telemetry",
-        "graph_model"
-      ],
-      "rationale": "Evaluated from deterministic fixture data."
-    },
-    {
-      "id": "REQ-FUNC-GATE-PRE",
-      "title": "Pre-environment functional gate passed",
-      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "observed_phase_count(\"cold_operational\") \u003e= campaign_cycle_count \u0026\u0026 observed_phase_count(\"hot_operational\") \u003e= campaign_cycle_count",
       "result": "pass",
       "evidence": [
         "telemetry",
@@ -103,6 +87,31 @@
       "id": "REQ-FUNC-GATE-SURVIVAL",
       "title": "Functional test after survival exposure passed",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "observed_gate(\"hot\") \u0026\u0026 observed_gate(\"cold\")",
+      "result": "pass",
+      "evidence": [
+        "telemetry",
+        "graph_model"
+      ],
+      "rationale": "Evaluated from deterministic fixture data."
+    },
+    {
+      "id": "REQ-STABILITY",
+      "title": "Stabilization window achieved",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "max_signal(\"source_freshness_ms\") \u003c= 3500.0",
+      "result": "pass",
+      "evidence": [
+        "telemetry",
+        "graph_model"
+      ],
+      "rationale": "Evaluated from deterministic fixture data."
+    },
+    {
+      "id": "REQ-FUNC-GATE-PRE",
+      "title": "Pre-environment functional gate passed",
+      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "observed_gate(\"ambient_pre\") \u0026\u0026 observed_gate(\"vacuum_pre\")",
       "result": "pass",
       "evidence": [
         "telemetry",
@@ -114,6 +123,7 @@
       "id": "REQ-FUNC-GATE-DURING",
       "title": "During-environment functional gate passed",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "observed_gate(\"cold\") \u0026\u0026 observed_gate(\"hot\")",
       "result": "pass",
       "evidence": [
         "telemetry",
@@ -125,6 +135,7 @@
       "id": "REQ-FUNC-GATE-POST",
       "title": "Post-environment functional gate passed",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "observed_gate(\"vacuum_post\") \u0026\u0026 observed_gate(\"post\")",
       "result": "pass",
       "evidence": [
         "telemetry",
@@ -136,6 +147,7 @@
       "id": "REQ-DATA-QUALITY",
       "title": "Evidence data quality acceptable",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "no_degraded()",
       "result": "inconclusive",
       "evidence": [
         "telemetry",
@@ -147,6 +159,7 @@
       "id": "REQ-ANOMALY-REVIEW",
       "title": "Anomaly review disposition complete",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "anomaly_closed()",
       "result": "inconclusive",
       "evidence": [
         "telemetry",

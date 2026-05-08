@@ -22,7 +22,7 @@
           "signal": "chamber_setpoint_deg_c",
           "units": "degC",
           "role": "facility_setpoint",
-          "source": "facility_thermal",
+          "source": "chamber_thermal_fat",
           "min": -45,
           "max": 75,
           "values": [
@@ -354,7 +354,7 @@
           "signal": "chamber_air_deg_c",
           "units": "degC",
           "role": "facility_environment",
-          "source": "facility_thermal",
+          "source": "chamber_thermal_fat",
           "min": -45,
           "max": 75,
           "values": [
@@ -686,7 +686,7 @@
           "signal": "thermal_zone_1_deg_c",
           "units": "degC",
           "role": "article_temperature",
-          "source": "facility_thermal",
+          "source": "dut_thermal",
           "min": -45,
           "max": 75,
           "values": [
@@ -1018,7 +1018,7 @@
           "signal": "bus_latency_ms",
           "units": "ms",
           "role": "virtual_bus_health",
-          "source": "demo_bus_virtualization",
+          "source": "archive_bus",
           "min": 0,
           "max": 250,
           "values": [
@@ -2709,7 +2709,7 @@
           "signal": "payload_sim_heater_w",
           "units": "W",
           "role": "payload_thermal_control",
-          "source": "facility_thermal",
+          "source": "chamber_thermal_fat",
           "min": 0,
           "max": 60,
           "values": [
@@ -2913,7 +2913,7 @@
           "signal": "thermal_zone_2_deg_c",
           "units": "degC",
           "role": "article_temperature",
-          "source": "facility_thermal",
+          "source": "dut_thermal",
           "min": -45,
           "max": 70,
           "values": [
@@ -3134,7 +3134,7 @@
           "signal": "chamber_setpoint_deg_c",
           "units": "degC",
           "role": "facility_setpoint",
-          "source": "facility_thermal",
+          "source": "chamber_thermal_tvac",
           "min": -45,
           "max": 75,
           "values": [
@@ -3466,7 +3466,7 @@
           "signal": "thermal_zone_1_deg_c",
           "units": "degC",
           "role": "article_temperature",
-          "source": "facility_thermal",
+          "source": "dut_thermal",
           "min": -45,
           "max": 75,
           "values": [
@@ -3798,7 +3798,7 @@
           "signal": "tvac_pressure_mbar",
           "units": "mbar",
           "role": "facility_environment",
-          "source": "facility_pressure",
+          "source": "chamber_pressure_tvac",
           "min": 1e-8,
           "max": 1013.25,
           "values": [
@@ -4130,7 +4130,7 @@
           "signal": "ln2_valve_duty_pct",
           "units": "%",
           "role": "facility_interlock",
-          "source": "facility_thermal",
+          "source": "chamber_thermal_tvac",
           "min": 0,
           "max": 100,
           "values": [
@@ -4462,7 +4462,7 @@
           "signal": "cooling_water_freeze_margin_deg_c",
           "units": "degC",
           "role": "facility_interlock",
-          "source": "facility_infrastructure",
+          "source": "chamber_infra_tvac",
           "min": 0,
           "max": 25,
           "values": [
@@ -6562,7 +6562,7 @@
           "signal": "bus_latency_ms",
           "units": "ms",
           "role": "virtual_bus_health",
-          "source": "demo_bus_virtualization",
+          "source": "archive_bus",
           "min": 0,
           "max": 250,
           "values": [
@@ -6766,7 +6766,7 @@
           "signal": "tm_packet_counter",
           "units": "count",
           "role": "telemetry_counter",
-          "source": "demo_bus_virtualization",
+          "source": "archive_bus",
           "min": 0,
           "max": 8000,
           "values": [

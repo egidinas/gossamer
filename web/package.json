@@ -11,6 +11,7 @@
     "test:hosted": "node scripts/hosted-smoke.mjs"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.100.9",
     "@vitejs/plugin-react": "^5.1.1",
     "apache-arrow": "^21.1.0",
     "lucide-react": "^0.561.0",
@@ -18,7 +19,8 @@
     "react-dom": "^19.2.3",
     "typescript": "^5.9.3",
     "uplot": "^1.6.32",
-    "vite": "^7.2.7"
+    "vite": "^7.2.7",
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@types/react": "^19.2.7",

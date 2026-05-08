@@ -1,0 +1,118 @@
+/* ============================================================
+   GOSSAMER · DESIGN LANGUAGE V2 — TOKEN BLOCK
+   --------------------------------------------------------------
+   Drop this in at the top of styles/base.css (replacing the
+   existing :root block) or import as its own file BEFORE
+   every other stylesheet.
+   ============================================================ */
+
+:root {
+  /* ── Type stacks — system only, no CDN ────────────────── */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display",
+               "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+               "Liberation Mono", "DejaVu Sans Mono", monospace;
+
+  /* ── Surfaces — jet-black with faint cool cast ────────── */
+  --color-bg-base:   #07090c;   /* shell / page */
+  --color-bg-0:      #0a0d11;   /* canvas behind cards */
+  --color-bg-1:      #0d1116;   /* panels (static evidence) */
+  --color-bg-2:      #11161c;   /* raised */
+  --color-bg-plot:   #04060a;   /* graph plot interior */
+  --color-bg-input:  #0a0e13;
+
+  /* Live-data tint — subtle warmth, only on live cards */
+  --color-bg-live:    #100c08;
+  --color-border-live:#3a2a14;
+  --color-live-pulse: #ffb000;
+
+  /* ── Borders — hairline, three steps ──────────────────── */
+  --color-border-strong:  #232c36;
+  --color-border-default: #1a232c;
+  --color-border-subtle:  #121922;
+  --color-border-rule:    #0e151c;
+
+  /* ── Text — bumped contrast for jet-black surface ─────── */
+  --color-text-100: #ffffff;   /* primary headings, signal values */
+  --color-text-150: #e8eef2;   /* body emphasised */
+  --color-text-200: #b8c4ce;   /* body */
+  --color-text-300: #8595a3;   /* meta, axis ticks */
+  --color-text-400: #5a6772;   /* dim / disabled */
+
+  /* ── Brand / info accent ──────────────────────────────── */
+  --color-accent:    #56d6df;
+  --color-accent-2:  #2ea9b6;
+  --color-amber:     #ffb000;   /* live, attention */
+  --color-amber-2:   #c98a00;
+
+  /* ── Status — MCC-tuned, unambiguous at a glance ──────── */
+  --color-pass:        #5ad686;   /* mint phosphor — pass / fresh */
+  --color-pass-bg:     #0e1a14;
+  --color-warn:        #ffc24d;   /* amber — degraded / synthetic */
+  --color-warn-bg:     #1c1608;
+  --color-fail:        #ff5a6e;   /* coral — fail / missing */
+  --color-fail-bg:     #1d0c10;
+  --color-incon:       #b8a6ff;   /* lilac — inconclusive / needs disposition */
+  --color-incon-bg:    #15121f;
+  --color-degraded:    #ffd85f;
+  --color-degraded-bg: #1a160a;
+  --color-neutral:     #b8c4ce;
+  --color-neutral-bg:  #11161c;
+
+  /* ── Series — graph trace palette ─────────────────────── */
+  --series-cmd:    #ffd400;   /* commanded — yellow */
+  --series-actual: #56d6df;   /* actual — cyan */
+  --series-dut:    #ff7aa4;   /* DUT — pink */
+  --series-ghost:  #6a7886;   /* projection — grey */
+  --series-aux:    #b8a6ff;   /* aux — lilac */
+
+  /* ── Spacing — tighter scale, info-density first ──────── */
+  --space-0: 2px;
+  --space-1: 4px;
+  --space-2: 6px;
+  --space-3: 8px;
+  --space-4: 12px;
+  --space-5: 16px;
+  --space-6: 22px;
+  --space-7: 32px;
+
+  /* ── Radii — schematic, sparing ───────────────────────── */
+  --radius-0: 0;
+  --radius-1: 2px;
+  --radius-2: 3px;
+  --radius-3: 4px;
+
+  /* ── Density (default = standard) ─────────────────────── */
+  --row-h:        28px;
+  --row-pad-y:    6px;
+  --row-pad-x:    10px;
+  --type-meta:    11px;
+  --type-body:    12px;
+  --type-heading: 14px;
+  --type-display: 28px;
+  --type-num:     13px;
+  --type-num-lg:  20px;
+
+  /* Compatibility shims — your existing rules using the OLD
+     custom-property names still work because we map them here.
+     Remove once the codebase has migrated to the new names. */
+  --color-bg:       var(--color-bg-base);
+  --color-panel:    var(--color-bg-1);
+  --color-border:   var(--color-border-default);
+  --color-text:     var(--color-text-150);
+  --color-text-dim: var(--color-text-300);
+  --color-eyebrow:  var(--color-accent);
+}
+
+[data-density="compact"] {
+  --row-h: 22px;     --row-pad-y: 3px;  --row-pad-x: 7px;
+  --type-meta: 10px; --type-body: 11px; --type-heading: 13px;
+  --type-num: 12px;  --type-num-lg: 17px;
+  --space-3: 6px;    --space-4: 9px;    --space-5: 12px;
+}
+[data-density="roomy"] {
+  --row-h: 34px;     --row-pad-y: 9px;  --row-pad-x: 13px;
+  --type-meta: 12px; --type-body: 13px; --type-heading: 15px;
+  --type-num: 14px;  --type-num-lg: 22px;
+  --space-3: 10px;   --space-4: 14px;   --space-5: 20px;
+}

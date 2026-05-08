@@ -6,75 +6,10 @@
   "result": "fail",
   "requirements": [
     {
-      "id": "REQ-CYCLE-COUNT",
-      "title": "Required cycle count completed",
-      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
-      "result": "pass",
-      "evidence": [
-        "fixtures/public/telemetry/integrated_system_fat.arrow",
-        "fixtures/public/graph_models/integrated_system_fat.json"
-      ],
-      "rationale": "Telemetry and campaign metadata satisfy this traceability requirement."
-    },
-    {
-      "id": "REQ-HOT-TARGET",
-      "title": "Hot target reached",
-      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
-      "result": "pass",
-      "evidence": [
-        "fixtures/public/telemetry/integrated_system_fat.arrow",
-        "fixtures/public/graph_models/integrated_system_fat.json"
-      ],
-      "rationale": "Telemetry and campaign metadata satisfy this traceability requirement."
-    },
-    {
-      "id": "REQ-COLD-TARGET",
-      "title": "Cold target reached",
-      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
-      "result": "pass",
-      "evidence": [
-        "fixtures/public/telemetry/integrated_system_fat.arrow",
-        "fixtures/public/graph_models/integrated_system_fat.json"
-      ],
-      "rationale": "Telemetry and campaign metadata satisfy this traceability requirement."
-    },
-    {
-      "id": "REQ-HOT-SURVIVAL",
-      "title": "Hot survival exposure completed",
-      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
-      "result": "fail",
-      "evidence": [
-        "fixtures/public/telemetry/integrated_system_fat.arrow",
-        "fixtures/public/graph_models/integrated_system_fat.json"
-      ],
-      "rationale": "Evidence did not satisfy this traceability requirement."
-    },
-    {
-      "id": "REQ-COLD-SURVIVAL",
-      "title": "Cold survival exposure completed",
-      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
-      "result": "fail",
-      "evidence": [
-        "fixtures/public/telemetry/integrated_system_fat.arrow",
-        "fixtures/public/graph_models/integrated_system_fat.json"
-      ],
-      "rationale": "Evidence did not satisfy this traceability requirement."
-    },
-    {
       "id": "REQ-STABILITY",
       "title": "Stabilization window achieved",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
-      "result": "pass",
-      "evidence": [
-        "fixtures/public/telemetry/integrated_system_fat.arrow",
-        "fixtures/public/graph_models/integrated_system_fat.json"
-      ],
-      "rationale": "Telemetry and campaign metadata satisfy this traceability requirement."
-    },
-    {
-      "id": "REQ-DWELL",
-      "title": "Dwell duration achieved",
-      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "max_signal(\"source_freshness_ms\") \u003c= 3500.0",
       "result": "pass",
       "evidence": [
         "fixtures/public/telemetry/integrated_system_fat.arrow",
@@ -86,50 +21,43 @@
       "id": "REQ-FUNC-GATE-PRE",
       "title": "Pre-environment functional gate passed",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
-      "result": "fail",
+      "expression": "observed_gate(\"pre\")",
+      "result": "pass",
       "evidence": [
         "fixtures/public/telemetry/integrated_system_fat.arrow",
         "fixtures/public/graph_models/integrated_system_fat.json"
       ],
-      "rationale": "Evidence did not satisfy this traceability requirement."
-    },
-    {
-      "id": "REQ-FUNC-GATE-SURVIVAL",
-      "title": "Functional test after survival exposure passed",
-      "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
-      "result": "fail",
-      "evidence": [
-        "fixtures/public/telemetry/integrated_system_fat.arrow",
-        "fixtures/public/graph_models/integrated_system_fat.json"
-      ],
-      "rationale": "Evidence did not satisfy this traceability requirement."
+      "rationale": "Telemetry and campaign metadata satisfy this traceability requirement."
     },
     {
       "id": "REQ-FUNC-GATE-DURING",
       "title": "During-environment functional gate passed",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
-      "result": "fail",
+      "expression": "observed_gate(\"during\")",
+      "result": "pass",
       "evidence": [
         "fixtures/public/telemetry/integrated_system_fat.arrow",
         "fixtures/public/graph_models/integrated_system_fat.json"
       ],
-      "rationale": "Evidence did not satisfy this traceability requirement."
+      "rationale": "Telemetry and campaign metadata satisfy this traceability requirement."
     },
     {
       "id": "REQ-FUNC-GATE-POST",
       "title": "Post-environment functional gate passed",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
-      "result": "fail",
+      "expression": "observed_gate(\"post\")",
+      "result": "pass",
       "evidence": [
         "fixtures/public/telemetry/integrated_system_fat.arrow",
         "fixtures/public/graph_models/integrated_system_fat.json"
       ],
-      "rationale": "Evidence did not satisfy this traceability requirement."
+      "rationale": "Telemetry and campaign metadata satisfy this traceability requirement."
     },
     {
       "id": "REQ-DATA-QUALITY",
       "title": "Evidence data quality acceptable",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "no_degraded()",
       "result": "fail",
       "evidence": [
         "fixtures/public/telemetry/integrated_system_fat.arrow",
@@ -141,6 +69,7 @@
       "id": "REQ-ANOMALY-REVIEW",
       "title": "Anomaly review disposition complete",
       "description": "Requirement used to demonstrate measurement-to-evidence traceability.",
+      "expression": "anomaly_closed()",
       "result": "pass",
       "evidence": [
         "fixtures/public/telemetry/integrated_system_fat.arrow",
@@ -153,6 +82,8 @@
     {
       "id": "dut_power",
       "label": "DUT Power",
+      "node_id": "reference_dut",
+      "served_by": "archive_node_a",
       "owner": "egse_power_role",
       "bus": "telemetry_bus",
       "quality": "fresh",
@@ -168,6 +99,8 @@
     {
       "id": "dut_control",
       "label": "DUT Control",
+      "node_id": "reference_dut",
+      "served_by": "archive_node_a",
       "owner": "subsystem_test_role",
       "bus": "subsystem_event_bus",
       "quality": "fresh",
@@ -183,6 +116,8 @@
     {
       "id": "dut_link",
       "label": "DUT Link",
+      "node_id": "reference_dut",
+      "served_by": "archive_node_a",
       "owner": "subsystem_test_role",
       "bus": "telemetry_bus",
       "quality": "fresh",
@@ -197,6 +132,8 @@
     {
       "id": "dut_thermal",
       "label": "DUT Thermal Model",
+      "node_id": "reference_dut",
+      "served_by": "archive_node_a",
       "owner": "test_conductor_role",
       "bus": "derived_model_bus",
       "quality": "synthetic",
@@ -215,9 +152,176 @@
       ]
     },
     {
-      "id": "facility_thermal",
-      "label": "Facility Thermal",
-      "owner": "facility_test_role",
+      "id": "chamber_thermal_fat",
+      "label": "Chamber Thermal (FAT)",
+      "node_id": "thermal_chamber_a",
+      "served_by": "thermal_supervisor_pc",
+      "owner": "facility_operator_role",
+      "bus": "facility_control_bus",
+      "quality": "fresh",
+      "freshness_ms": 300,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "primary",
+      "signals": [
+        "thermal_cycle_index",
+        "thermal_phase_code",
+        "chamber_setpoint_deg_c",
+        "thermal_zone_1_deg_c",
+        "thermal_zone_2_deg_c",
+        "chamber_air_deg_c",
+        "interface_plate_deg_c",
+        "thermal_shroud_deg_c",
+        "thermal_shroud_inlet_deg_c",
+        "thermal_shroud_outlet_deg_c",
+        "thermal_shroud_gradient_deg_c",
+        "huber_table_deg_c",
+        "ln2_valve_duty_pct"
+      ]
+    },
+    {
+      "id": "chamber_infra_fat",
+      "label": "Building Infrastructure (FAT)",
+      "node_id": "thermal_chamber_a",
+      "served_by": "thermal_supervisor_pc",
+      "owner": "facility_operator_role",
+      "bus": "facility_utility_bus",
+      "quality": "fresh",
+      "freshness_ms": 600,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "cooling_water_freeze_margin_deg_c",
+        "cooling_water_temp_deg_c",
+        "pressurized_air_supply_bar",
+        "air_dewpoint_deg_c"
+      ]
+    },
+    {
+      "id": "chamber_thermal_b",
+      "label": "Chamber Thermal B",
+      "node_id": "thermal_chamber_b",
+      "served_by": "thermal_supervisor_pc",
+      "owner": "facility_operator_role",
+      "bus": "facility_control_bus",
+      "quality": "fresh",
+      "freshness_ms": 300,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "primary",
+      "signals": [
+        "thermal_cycle_index",
+        "thermal_phase_code",
+        "chamber_setpoint_deg_c",
+        "thermal_zone_1_deg_c",
+        "thermal_zone_2_deg_c",
+        "chamber_air_deg_c"
+      ]
+    },
+    {
+      "id": "chamber_thermal_c",
+      "label": "Chamber Thermal C",
+      "node_id": "thermal_chamber_c",
+      "served_by": "thermal_supervisor_pc",
+      "owner": "facility_operator_role",
+      "bus": "facility_control_bus",
+      "quality": "fresh",
+      "freshness_ms": 300,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "primary",
+      "signals": [
+        "thermal_cycle_index",
+        "thermal_phase_code",
+        "chamber_setpoint_deg_c",
+        "thermal_zone_1_deg_c",
+        "thermal_zone_2_deg_c",
+        "chamber_air_deg_c"
+      ]
+    },
+    {
+      "id": "chamber_thermal_d",
+      "label": "Chamber Thermal D",
+      "node_id": "thermal_chamber_d",
+      "served_by": "thermal_supervisor_pc",
+      "owner": "facility_operator_role",
+      "bus": "facility_control_bus",
+      "quality": "fresh",
+      "freshness_ms": 300,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "primary",
+      "signals": [
+        "thermal_cycle_index",
+        "thermal_phase_code",
+        "chamber_setpoint_deg_c",
+        "thermal_zone_1_deg_c",
+        "thermal_zone_2_deg_c",
+        "chamber_air_deg_c"
+      ]
+    },
+    {
+      "id": "thermal_supervisor",
+      "label": "Thermal Supervisor PC State",
+      "node_id": "thermal_supervisor_pc",
+      "served_by": "gateway_a",
+      "owner": "facility_operator_role",
+      "bus": "api_bus",
+      "quality": "fresh",
+      "freshness_ms": 500,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "active_chamber_count",
+        "chamber_interlock_any",
+        "thermal_schedule_state",
+        "thermal_supervisor_uptime_s"
+      ]
+    },
+    {
+      "id": "house_utilities",
+      "label": "House Control PLC",
+      "node_id": "house_plc",
+      "served_by": "thermal_supervisor_pc",
+      "owner": "facility_operator_role",
+      "bus": "facility_utility_bus",
+      "quality": "fresh",
+      "freshness_ms": 1000,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "facility_mains_voltage_v",
+        "facility_cooling_water_supply_bar",
+        "facility_compressed_air_bar",
+        "facility_ln2_supply_bar",
+        "facility_power_ok",
+        "facility_emergency_stop"
+      ]
+    },
+    {
+      "id": "tvac_plc",
+      "label": "TVac PLC (Cryo \u0026 Vacuum)",
+      "node_id": "tvac_plc_q1",
+      "served_by": "tvac_computer_1",
+      "owner": "facility_operator_role",
+      "bus": "facility_control_bus",
+      "quality": "fresh",
+      "freshness_ms": 300,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "primary",
+      "signals": [
+        "tvac_cryo_setpoint_deg_c",
+        "tvac_cryo_actual_deg_c",
+        "tvac_pump_state",
+        "tvac_roughing_pressure_mbar",
+        "tvac_turbo_speed_pct",
+        "ln2_fill_valve_state",
+        "ln2_vent_valve_state",
+        "facility_interlock_state"
+      ]
+    },
+    {
+      "id": "chamber_thermal_tvac",
+      "label": "Chamber Thermal (TVac)",
+      "node_id": "tvac_chamber_q1",
+      "served_by": "tvac_computer_1",
+      "owner": "tvac_computer_role",
       "bus": "facility_control_bus",
       "quality": "fresh",
       "freshness_ms": 300,
@@ -242,10 +346,28 @@
       ]
     },
     {
-      "id": "facility_infrastructure",
-      "label": "Building Infrastructure",
-      "owner": "facility_test_role",
+      "id": "chamber_pressure_tvac",
+      "label": "Facility Pressure (TVac)",
+      "node_id": "tvac_chamber_q1",
+      "served_by": "tvac_computer_1",
+      "owner": "tvac_computer_role",
       "bus": "facility_control_bus",
+      "quality": "fresh",
+      "freshness_ms": 300,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "primary",
+      "signals": [
+        "tvac_pressure_mbar",
+        "tvac_pressure_pa"
+      ]
+    },
+    {
+      "id": "chamber_infra_tvac",
+      "label": "Building Infrastructure (TVac)",
+      "node_id": "tvac_chamber_q1",
+      "served_by": "tvac_computer_1",
+      "owner": "facility_operator_role",
+      "bus": "facility_utility_bus",
       "quality": "fresh",
       "freshness_ms": 600,
       "provenance": "synthetic_fixture_generator",
@@ -262,21 +384,46 @@
       ]
     },
     {
-      "id": "facility_pressure",
-      "label": "Facility Pressure",
-      "owner": "facility_test_role",
+      "id": "tvac_tmtc_primary",
+      "label": "TVac TMTC Primary (Computer 1)",
+      "node_id": "tvac_computer_1",
+      "served_by": "supervisor_a",
+      "owner": "tvac_computer_role",
       "bus": "facility_control_bus",
       "quality": "fresh",
-      "freshness_ms": 300,
+      "freshness_ms": 200,
       "provenance": "synthetic_fixture_generator",
-      "evidence_suitability": "primary",
+      "evidence_suitability": "supporting",
       "signals": [
-        "tvac_pressure_mbar"
+        "tmtc_link_state",
+        "tc_queue_depth",
+        "tm_frame_rate_hz",
+        "last_tc_timestamp"
       ]
     },
     {
-      "id": "demo_bus_virtualization",
-      "label": "Demo Bus Virtualization Tap",
+      "id": "tvac_tmtc_backup",
+      "label": "TVac TMTC Backup (Computer 2)",
+      "node_id": "tvac_computer_2",
+      "served_by": "supervisor_a",
+      "owner": "tvac_computer_role",
+      "bus": "facility_control_bus",
+      "quality": "fresh",
+      "freshness_ms": 200,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "tmtc_link_state",
+        "tc_queue_depth",
+        "tm_frame_rate_hz",
+        "backup_recording_state"
+      ]
+    },
+    {
+      "id": "archive_bus",
+      "label": "Bus Virtualization Tap (Arrow IPC)",
+      "node_id": "archive_node_a",
+      "served_by": "librarian_a",
       "owner": "test_conductor_role",
       "bus": "telemetry_bus",
       "quality": "synthetic",
@@ -292,8 +439,10 @@
       ]
     },
     {
-      "id": "demo_quality",
-      "label": "Demo Quality Monitor",
+      "id": "archive_quality",
+      "label": "Source Quality Monitor",
+      "node_id": "archive_node_a",
+      "served_by": "librarian_a",
       "owner": "test_conductor_role",
       "bus": "telemetry_bus",
       "quality": "synthetic",
@@ -303,6 +452,78 @@
       "signals": [
         "source_freshness_ms",
         "facility_interlock_state"
+      ]
+    },
+    {
+      "id": "nas_exports",
+      "label": "NAS Archival Store (HDF5 + legacy)",
+      "node_id": "nas_a",
+      "served_by": "librarian_a",
+      "owner": "test_conductor_role",
+      "bus": "storage_bus",
+      "quality": "fresh",
+      "freshness_ms": 5000,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "primary",
+      "signals": [
+        "export_file_count",
+        "export_total_size_gb",
+        "latest_export_timestamp",
+        "oldest_export_timestamp",
+        "legacy_file_count"
+      ]
+    },
+    {
+      "id": "librarian_index",
+      "label": "Librarian (multi-format index \u0026 live translation)",
+      "node_id": "librarian_a",
+      "served_by": "gateway_a",
+      "owner": "test_conductor_role",
+      "bus": "api_bus",
+      "quality": "fresh",
+      "freshness_ms": 2000,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "indexed_file_count",
+        "live_translation_active",
+        "translation_lag_ms",
+        "last_index_scan_timestamp",
+        "legacy_formats_active"
+      ]
+    },
+    {
+      "id": "gateway_status",
+      "label": "Data Gateway Status",
+      "node_id": "gateway_a",
+      "served_by": "gateway_a",
+      "owner": "test_conductor_role",
+      "bus": "api_bus",
+      "quality": "fresh",
+      "freshness_ms": 1000,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "api_request_rate_hz",
+        "connected_clients",
+        "cache_hit_rate_pct",
+        "gateway_uptime_s"
+      ]
+    },
+    {
+      "id": "supervisor_state",
+      "label": "Campaign Supervisor State",
+      "node_id": "supervisor_a",
+      "served_by": "gateway_a",
+      "owner": "test_conductor_role",
+      "bus": "supervisor_bus",
+      "quality": "fresh",
+      "freshness_ms": 1000,
+      "provenance": "synthetic_fixture_generator",
+      "evidence_suitability": "supporting",
+      "signals": [
+        "functional_gate_code",
+        "facility_interlock_code"
       ]
     }
   ],

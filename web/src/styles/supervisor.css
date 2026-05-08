@@ -1,22 +1,22 @@
 .lane-stack {
   display: grid;
-  gap: 14px;
+  gap: var(--space-5);
 }
 
 .swimlane-board {
   display: grid;
-  gap: 12px;
+  gap: var(--space-4);
 }
 
 .swimlane {
   display: grid;
   grid-template-columns: minmax(240px, 0.34fr) minmax(260px, 0.24fr) minmax(520px, 1fr);
   align-items: stretch;
-  gap: 12px;
-  border: 1px solid #253f5c;
-  border-radius: 6px;
-  background: #070c12;
-  padding: 12px;
+  gap: var(--space-4);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-2);
+  background: var(--color-bg-0);
+  padding: var(--space-4);
 }
 
 .swimlane-head {
@@ -28,15 +28,16 @@
 .stream-card span,
 .event-card span,
 .value-grid span {
-  color: #8fa2ad;
-  font-size: 12px;
+  color: var(--color-text-300);
+  font-family: var(--font-mono);
+  font-size: var(--type-meta);
 }
 
 .lane-meta-grid,
 .metric-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 10px;
+  gap: var(--space-3);
 }
 
 .lane-meta-grid {
@@ -55,10 +56,10 @@
 .stream-metric {
   display: grid;
   gap: 3px;
-  border: 1px solid #25313a;
-  border-radius: 5px;
-  padding: 8px;
-  background: #10181d;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-2);
+  padding: var(--space-3);
+  background: var(--color-bg-2);
 }
 
 .lane-meta-grid.compact {
@@ -68,11 +69,11 @@
 .single-chamber-head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(360px, 0.6fr);
-  gap: 14px;
+  gap: var(--space-5);
   align-items: start;
 }
 
 .supervisor-view {
   display: grid;
-  gap: 14px;
+  gap: var(--space-5);
 }

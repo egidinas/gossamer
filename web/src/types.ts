@@ -34,6 +34,8 @@ export type Topology = Envelope & {
 export type Source = {
   id: string;
   label: string;
+  node_id: string;
+  served_by: string;
   owner: string;
   bus: string;
   quality: string;
@@ -51,10 +53,13 @@ export type Requirement = {
   id: string;
   title: string;
   description: string;
+  expression?: string;
   result: string;
   evidence: string[];
   rationale: string;
 };
+
+export type NodeKind = "test_article" | "facility" | "data_system" | "supervisor" | string;
 
 export type RequirementProgress = {
   id: string;
@@ -180,6 +185,7 @@ export type GraphSeries = {
   role: string;
   units: string;
   source: string;
+  node_id?: string;
   min: number;
   max: number;
 };
@@ -883,4 +889,24 @@ export type EvidenceReport = Envelope & {
   simulation_provenance?: SimulationProvenance;
   reproducibility: string[];
   synthetic_data_note: string;
+};
+
+export type FileSignalGroup = {
+  node_id: string;
+  node_label: string;
+  source_id: string;
+  source_label: string;
+  bus: string;
+  series: GraphSeries[];
+};
+
+export type FileViewModel = Envelope & {
+  campaign_id: string;
+  campaign_name: string;
+  file_ref: string;
+  file_kind: string;
+  time_start: string;
+  time_end: string;
+  signal_groups: FileSignalGroup[];
+  lanes: GraphLane[];
 };

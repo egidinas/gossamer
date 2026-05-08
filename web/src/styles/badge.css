@@ -1,0 +1,106 @@
+/* ============================================================
+   GOSSAMER · STATUS BADGES
+   --------------------------------------------------------------
+   Drop-in styles for .badge / .badge-{kind}. Adds geometric
+   glyphs via ::before pseudo-element so StatusBadge.tsx and
+   RequirementBadge.tsx require ZERO code changes.
+
+   Glyph mapping
+     ●  circle    — pass · fresh · available · held
+     ▲  triangle  — degraded · synthetic · warn
+     ■  square    — fail · missing
+     ◆  diamond   — inconclusive · needs_disposition
+
+   Import after base.css (or inline it there).
+   ============================================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  height: 18px;
+  min-height: 18px;
+  padding: 1px 7px 1px 6px;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-1);
+  background: var(--badge-bg, var(--color-bg-2));
+  color: var(--color-text-200);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.badge::before {
+  content: "";
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+}
+
+/* Circle — pass family ───────────────────────────────────── */
+.badge-pass,
+.badge-fresh,
+.badge-available,
+.badge-held {
+  color: var(--color-pass);
+  --badge-bg: var(--color-pass-bg);
+}
+.badge-pass::before,
+.badge-fresh::before,
+.badge-available::before,
+.badge-held::before {
+  border-radius: 999px;
+}
+
+/* Triangle — warn family ─────────────────────────────────── */
+.badge-degraded,
+.badge-synthetic,
+.badge-warn {
+  color: var(--color-warn);
+  --badge-bg: var(--color-warn-bg);
+}
+.badge-degraded::before,
+.badge-synthetic::before,
+.badge-warn::before {
+  width: 0; height: 0;
+  background: transparent;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 8px solid currentColor;
+}
+
+/* Square — fail family ───────────────────────────────────── */
+.badge-fail,
+.badge-missing {
+  color: var(--color-fail);
+  --badge-bg: var(--color-fail-bg);
+}
+/* square is the default ::before shape; nothing more needed */
+
+/* Diamond — inconclusive family ──────────────────────────── */
+.badge-inconclusive,
+.badge-needs_disposition {
+  color: var(--color-incon);
+  --badge-bg: var(--color-incon-bg);
+}
+.badge-inconclusive::before,
+.badge-needs_disposition::before {
+  width: 7px; height: 7px;
+  transform: rotate(45deg);
+}
+
+/* Filled variant — for KPI rails / topbar campaign state.
+   Add `badge-fill` alongside `badge-{kind}`. */
+.badge-fill {
+  background: currentColor;
+  color: var(--color-bg-base);
+  border-color: transparent;
+}
+.badge-fill::before { background: var(--color-bg-base); }

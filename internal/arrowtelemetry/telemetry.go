@@ -15,11 +15,13 @@ import (
 	"github.com/apache/arrow-go/v18/arrow/ipc"
 	"github.com/apache/arrow-go/v18/arrow/memory"
 	"github.com/egidinas/gossamer/internal/contracts"
+	"github.com/parquet-go/parquet-go"
 )
 
 const (
 	SchemaName    = "gossamer.telemetry.arrow.v2"
 	TransportMIME = "application/vnd.apache.arrow.stream"
+	BatchSize     = 10000
 )
 
 var dictionaryString = &arrow.DictionaryType{IndexType: arrow.PrimitiveTypes.Uint16, ValueType: arrow.BinaryTypes.String}
@@ -44,6 +46,20 @@ type SignalMeta struct {
 	SeriesRole   string
 	SignalKind   string
 	SourceFamily string
+}
+
+type ParquetRow struct {
+	TimestampNS  int64   `parquet:"timestamp_ns"`
+	Sensor       string  `parquet:"sensor"`
+	Value        float64 `parquet:"value"`
+	Unit         string  `parquet:"unit"`
+	CampaignID   string  `parquet:"campaign_id"`
+	Source       string  `parquet:"source"`
+	SeriesRole   string  `parquet:"series_role"`
+	SignalKind   string  `parquet:"signal_kind"`
+	SourceFamily string  `parquet:"source_family"`
+	Quality      string  `parquet:"quality"`
+	State        string  `parquet:"state"`
 }
 
 func MetadataFromGraph(model contracts.GraphModel) map[string]SignalMeta {
@@ -86,11 +102,25 @@ func MetadataFromGraph(model contracts.GraphModel) map[string]SignalMeta {
 	return meta
 }
 
-func WriteCampaign(path, campaignID string, samples []contracts.TelemetrySample, meta map[string]SignalMeta) error {
+func WriteCampaign(path, campaignID string, samples <-chan contracts.TelemetrySample, meta map[string]SignalMeta) error {
 	f, err := os.Create(path)
 	if err != nil {
 		return err
 	}
+	defer f.Close()
+
+	parquetPath := strings.TrimSuffix(path, ".arrow") + ".parquet"
+	pf, err := os.Create(parquetPath)
+	if err != nil {
+		return err
+	}
+	defer pf.Close()
+
+	arrowWriter := ipc.NewWriter(f, ipc.WithSchema(TelemetrySchema))
+	defer arrowWriter.Close()
+
+	parquetWriter := parquet.NewGenericWriter[ParquetRow](pf)
+	defer parquetWriter.Close()
 
 	builder := array.NewRecordBuilder(memory.DefaultAllocator, TelemetrySchema)
 	defer builder.Release()
@@ -107,92 +137,106 @@ func WriteCampaign(path, campaignID string, samples []contracts.TelemetrySample,
 	quality := builder.Field(9).(*array.BinaryDictionaryBuilder)
 	state := builder.Field(10).(*array.BinaryDictionaryBuilder)
 
-	for sampleIndex, sample := range samples {
+	var parquetRows []ParquetRow
+	rowCount := 0
+
+	flush := func() error {
+		if rowCount == 0 {
+			return nil
+		}
+		// Write Arrow Batch
+		record := builder.NewRecord()
+		if err := arrowWriter.Write(record); err != nil {
+			record.Release()
+			return err
+		}
+		record.Release()
+
+		// Write Parquet Batch
+		if _, err := parquetWriter.Write(parquetRows); err != nil {
+			return err
+		}
+
+		// Reset for next batch
+		parquetRows = parquetRows[:0]
+		rowCount = 0
+		return nil
+	}
+
+	for sample := range samples {
 		parsed, err := time.Parse(time.RFC3339, sample.Timestamp)
 		if err != nil {
-			return fmt.Errorf("sample %d timestamp: %w", sampleIndex, err)
+			return fmt.Errorf("sample timestamp parse error: %w", err)
 		}
 		timestampNS := parsed.UnixNano()
+
 		signalIDs := sortedFloatKeys(sample.Signals)
 		for _, signalID := range signalIDs {
 			item := meta[signalID]
+			v := roundTelemetryValue(signalID, item.Unit, sample.Signals[signalID])
+			
 			ts.Append(timestampNS)
-			if err := appendDict(sensor, signalID); err != nil {
-				return err
-			}
-			value.Append(roundTelemetryValue(signalID, item.Unit, sample.Signals[signalID]))
-			if err := appendDict(unit, item.Unit); err != nil {
-				return err
-			}
-			if err := appendDict(campaign, campaignID); err != nil {
-				return err
-			}
-			if err := appendDict(source, item.Source); err != nil {
-				return err
-			}
-			if err := appendDict(role, item.SeriesRole); err != nil {
-				return err
-			}
-			if err := appendDefault(kind, item.SignalKind, "numeric"); err != nil {
-				return err
-			}
-			if err := appendDict(sourceFamily, item.SourceFamily); err != nil {
-				return err
-			}
-			if err := appendDict(quality, sample.Quality); err != nil {
-				return err
-			}
+			_ = appendDict(sensor, signalID)
+			value.Append(v)
+			_ = appendDict(unit, item.Unit)
+			_ = appendDict(campaign, campaignID)
+			_ = appendDict(source, item.Source)
+			_ = appendDict(role, item.SeriesRole)
+			_ = appendDefault(kind, item.SignalKind, "numeric")
+			_ = appendDict(sourceFamily, item.SourceFamily)
+			_ = appendDict(quality, sample.Quality)
 			state.AppendNull()
+
+			parquetRows = append(parquetRows, ParquetRow{
+				TimestampNS: timestampNS, Sensor: signalID, Value: v, Unit: item.Unit,
+				CampaignID: campaignID, Source: item.Source, SeriesRole: item.SeriesRole,
+				SignalKind: item.SignalKind, SourceFamily: item.SourceFamily, Quality: sample.Quality,
+			})
+			rowCount++
 		}
+
 		stateIDs := sortedStringKeys(sample.States)
 		for _, signalID := range stateIDs {
 			item := meta[signalID]
 			ts.Append(timestampNS)
-			if err := appendDict(sensor, signalID); err != nil {
-				return err
-			}
+			_ = appendDict(sensor, signalID)
 			value.AppendNull()
-			if err := appendDefault(unit, item.Unit, "state"); err != nil {
-				return err
-			}
-			if err := appendDict(campaign, campaignID); err != nil {
-				return err
-			}
-			if err := appendDict(source, item.Source); err != nil {
-				return err
-			}
-			if err := appendDict(role, item.SeriesRole); err != nil {
-				return err
-			}
-			if err := appendDefault(kind, item.SignalKind, "state"); err != nil {
-				return err
-			}
-			if err := appendDict(sourceFamily, item.SourceFamily); err != nil {
-				return err
-			}
-			if err := appendDict(quality, sample.Quality); err != nil {
-				return err
-			}
-			if err := appendDict(state, sample.States[signalID]); err != nil {
+			_ = appendDefault(unit, item.Unit, "state")
+			_ = appendDict(campaign, campaignID)
+			_ = appendDict(source, item.Source)
+			_ = appendDict(role, item.SeriesRole)
+			_ = appendDefault(kind, item.SignalKind, "state")
+			_ = appendDict(sourceFamily, item.SourceFamily)
+			_ = appendDict(quality, sample.Quality)
+			_ = appendDict(state, sample.States[signalID])
+
+			parquetRows = append(parquetRows, ParquetRow{
+				TimestampNS: timestampNS, Sensor: signalID, Value: 0, Unit: item.Unit,
+				CampaignID: campaignID, Source: item.Source, SeriesRole: item.SeriesRole,
+				SignalKind: "state", SourceFamily: item.SourceFamily, Quality: sample.Quality,
+				State: sample.States[signalID],
+			})
+			rowCount++
+		}
+
+		if rowCount >= BatchSize {
+			if err := flush(); err != nil {
 				return err
 			}
 		}
 	}
 
-	record := builder.NewRecord()
-	defer record.Release()
+	if err := flush(); err != nil {
+		return err
+	}
 
-	writer := ipc.NewWriter(f, ipc.WithSchema(TelemetrySchema))
-	if err := writer.Write(record); err != nil {
-		_ = writer.Close()
+	if err := arrowWriter.Close(); err != nil {
 		return err
 	}
-	if err := writer.Close(); err != nil {
+	if err := parquetWriter.Close(); err != nil {
 		return err
 	}
-	if err := f.Close(); err != nil {
-		return err
-	}
+
 	return writeGzipSidecar(path)
 }
 

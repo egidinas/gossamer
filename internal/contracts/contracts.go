@@ -68,6 +68,8 @@ type Topology struct {
 type Source struct {
 	ID                  string   `json:"id"`
 	Label               string   `json:"label"`
+	NodeID              string   `json:"node_id"`   // node that originates this data
+	ServedBy            string   `json:"served_by"` // node that aggregates and exposes this data to clients
 	Owner               string   `json:"owner"`
 	Bus                 string   `json:"bus"`
 	Quality             string   `json:"quality"`
@@ -86,6 +88,7 @@ type Requirement struct {
 	ID          string   `json:"id"`
 	Title       string   `json:"title"`
 	Description string   `json:"description"`
+	Expression  string   `json:"expression,omitempty"`
 	Result      string   `json:"result"`
 	Evidence    []string `json:"evidence"`
 	Rationale   string   `json:"rationale"`
@@ -212,6 +215,7 @@ type GraphSeries struct {
 	Role   string  `json:"role"`
 	Units  string  `json:"units"`
 	Source string  `json:"source"`
+	NodeID string  `json:"node_id,omitempty"`
 	Min    float64 `json:"min"`
 	Max    float64 `json:"max"`
 }
@@ -920,6 +924,29 @@ type CommandAuthorityState struct {
 	LeaseState      string   `json:"lease_state"`
 	AllowedCommands []string `json:"allowed_commands"`
 	LastCommand     string   `json:"last_command"`
+}
+
+// FileSignalGroup groups signals from a single node/source for the file viewer.
+type FileSignalGroup struct {
+	NodeID   string        `json:"node_id"`
+	NodeLabel string       `json:"node_label"`
+	SourceID string        `json:"source_id"`
+	SourceLabel string     `json:"source_label"`
+	Bus      string        `json:"bus"`
+	Series   []GraphSeries `json:"series"`
+}
+
+// FileViewModel is the contract returned by /api/viewer/{campaign}.
+type FileViewModel struct {
+	Envelope
+	CampaignID   string            `json:"campaign_id"`
+	CampaignName string            `json:"campaign_name"`
+	FileRef      string            `json:"file_ref"`
+	FileKind     string            `json:"file_kind"`
+	TimeStart    string            `json:"time_start"`
+	TimeEnd      string            `json:"time_end"`
+	SignalGroups []FileSignalGroup `json:"signal_groups"`
+	Lanes        []GraphLane       `json:"lanes"`
 }
 
 func ValidateEnvelope(e Envelope) error {

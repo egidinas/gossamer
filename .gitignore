@@ -8,3 +8,6 @@
 /web/node_modules/
 /web/test-artifacts/
 *.log
+/fixtures/public_tiles/2*/
+/gossamer-server
+/fixtures/public/telemetry/*.parquet

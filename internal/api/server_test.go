@@ -79,10 +79,11 @@ func TestMissingCampaignReturnsNotFound(t *testing.T) {
 func TestCommandRequiresLease(t *testing.T) {
 	server := newTestServer(t)
 	req := httptest.NewRequest(http.MethodPost, "/api/command-authority/mock-command", nil)
+	req.Header.Set("X-Operator-ID", "test-operator")
 	rec := httptest.NewRecorder()
 	server.ServeHTTP(rec, req)
-	if rec.Code != http.StatusConflict {
-		t.Fatalf("status = %d, want 409", rec.Code)
+	if rec.Code != http.StatusForbidden {
+		t.Fatalf("status = %d, want 403", rec.Code)
 	}
 }
 

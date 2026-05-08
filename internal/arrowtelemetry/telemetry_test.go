@@ -31,7 +31,12 @@ func TestWriteCampaignProducesCanonicalArrowRows(t *testing.T) {
 		"facility_interlock_state": {Unit: "state", Source: "demo_quality", SeriesRole: "interlock", SignalKind: "state", SourceFamily: "quality"},
 	}
 
-	if err := WriteCampaign(path, "thermal_acceptance_fat", samples, meta); err != nil {
+	ch := make(chan contracts.TelemetrySample, len(samples))
+	for _, s := range samples {
+		ch <- s
+	}
+	close(ch)
+	if err := WriteCampaign(path, "thermal_acceptance_fat", ch, meta); err != nil {
 		t.Fatalf("write campaign arrow: %v", err)
 	}
 

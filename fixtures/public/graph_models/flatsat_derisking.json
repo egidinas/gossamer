@@ -12,7 +12,8 @@
           "label": "Chamber Setpoint",
           "role": "facility_setpoint",
           "units": "degC",
-          "source": "facility_thermal",
+          "source": "chamber_thermal_fat",
+          "node_id": "thermal_chamber_a",
           "min": -45,
           "max": 75
         },
@@ -21,7 +22,8 @@
           "label": "Chamber Air",
           "role": "facility_environment",
           "units": "degC",
-          "source": "facility_thermal",
+          "source": "chamber_thermal_fat",
+          "node_id": "thermal_chamber_a",
           "min": -45,
           "max": 75
         },
@@ -30,7 +32,8 @@
           "label": "Thermal Zone 1",
           "role": "article_temperature",
           "units": "degC",
-          "source": "facility_thermal",
+          "source": "dut_thermal",
+          "node_id": "reference_dut",
           "min": -45,
           "max": 75
         }
@@ -45,7 +48,8 @@
           "label": "TVac pressure",
           "role": "facility_environment",
           "units": "mbar",
-          "source": "facility_pressure",
+          "source": "chamber_pressure_tvac",
+          "node_id": "tvac_chamber_q1",
           "min": 1e-8,
           "max": 1013.25
         }
@@ -60,7 +64,8 @@
           "label": "Cooling Actuator Duty",
           "role": "facility_interlock",
           "units": "%",
-          "source": "facility_thermal",
+          "source": "chamber_thermal_fat",
+          "node_id": "thermal_chamber_a",
           "min": 0,
           "max": 100
         },
@@ -69,7 +74,8 @@
           "label": "Water scavenger freeze margin",
           "role": "facility_interlock",
           "units": "degC",
-          "source": "facility_infrastructure",
+          "source": "chamber_infra_fat",
+          "node_id": "thermal_chamber_a",
           "min": 0,
           "max": 25
         }
@@ -85,6 +91,7 @@
           "role": "dut_power",
           "units": "V",
           "source": "dut_power",
+          "node_id": "reference_dut",
           "min": 26,
           "max": 30
         },
@@ -94,6 +101,7 @@
           "role": "dut_power",
           "units": "A",
           "source": "dut_power",
+          "node_id": "reference_dut",
           "min": 0,
           "max": 8
         }
@@ -108,7 +116,8 @@
           "label": "Bus Latency",
           "role": "virtual_bus_health",
           "units": "ms",
-          "source": "demo_bus_virtualization",
+          "source": "archive_bus",
+          "node_id": "archive_node_a",
           "min": 0,
           "max": 250
         },
@@ -117,7 +126,8 @@
           "label": "TM Counter",
           "role": "telemetry_counter",
           "units": "count",
-          "source": "demo_bus_virtualization",
+          "source": "archive_bus",
+          "node_id": "archive_node_a",
           "min": 0,
           "max": 8000
         }
@@ -132,7 +142,8 @@
           "label": "Source Freshness",
           "role": "data_quality",
           "units": "ms",
-          "source": "demo_quality",
+          "source": "archive_quality",
+          "node_id": "archive_node_a",
           "min": 0,
           "max": 6000
         }

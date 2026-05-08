@@ -11,16 +11,23 @@ export function RequirementMatrixView({ campaign }: { campaign: Campaign }) {
         </thead>
         <tbody>
           {campaign.requirements.map((req) => (
-            <tr key={req.id}>
-              <td>{req.id}</td>
-              <td>{req.title}</td>
-              <td><RequirementBadge result={req.result} /></td>
-              <td>{req.rationale}</td>
-            </tr>
+            <>
+              <tr key={req.id}>
+                <td>{req.id}</td>
+                <td>{req.title}</td>
+                <td><RequirementBadge result={req.result} /></td>
+                <td>{req.rationale}</td>
+              </tr>
+              {req.expression && (
+                <tr key={req.id + "-expr"} className="requirement-expression-row">
+                  <td />
+                  <td colSpan={3}><code className="requirement-expression">{req.expression}</code></td>
+                </tr>
+              )}
+            </>
           ))}
         </tbody>
       </table>
     </OperatorPanel>
   );
 }
-
