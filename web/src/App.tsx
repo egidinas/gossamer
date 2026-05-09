@@ -7,6 +7,7 @@ import {
   useManifestQuery,
   useTopologyQuery,
   useSourcesQuery,
+  useSourceTreeConfigQuery,
   useSupervisorQuery,
   useCommandCenterFATQuery,
   useBusTapQuery,
@@ -122,7 +123,7 @@ const bootSupervisor: SupervisorOverview = {
       activity: "4-cycle acceptance profile",
       state: "running",
       result: "pass",
-      primary_bus: "CAN/TMTC",
+      primary_bus: "fixture command/telemetry bus",
       requirement_summary: "4-cycle acceptance campaign shell.",
       source_quality: "fresh",
       hero_graphs: [],
@@ -136,7 +137,7 @@ const bootSupervisor: SupervisorOverview = {
       activity: "8-cycle qualification profile",
       state: "running",
       result: "inconclusive",
-      primary_bus: "CAN/TMTC",
+      primary_bus: "fixture supervisor bus",
       requirement_summary: "8-cycle qualification campaign shell.",
       source_quality: "degraded",
       hero_graphs: [],
@@ -152,6 +153,7 @@ export function App() {
   const manifestQuery = useManifestQuery();
   const topologyQuery = useTopologyQuery();
   const sourcesQuery = useSourcesQuery();
+  const sourceTreeConfigQuery = useSourceTreeConfigQuery();
   const supervisorQuery = useSupervisorQuery();
   const commandCenterFATQuery = useCommandCenterFATQuery();
   const busTapQuery = useBusTapQuery();
@@ -295,7 +297,7 @@ export function App() {
         {route === "mission-map" && routeReady && topologyQuery.data && <MissionMapView manifest={manifest} topology={topologyQuery.data} campaigns={campaigns} />}
         {(route === "acceptance" || route === "qualification" || route === "supervisor") && routeReady && selectedCampaign && graphShellQuery.data && <SupervisorView overview={supervisor} campaign={selectedCampaign} graph={graphShellQuery.data} />}
         {route === "graph-wall" && routeReady && graphShellQuery.data && <GraphWallView model={graphShellQuery.data} samples={[]} />}
-        {route === "sources" && routeReady && sourcesQuery.data && <SourceCatalogueView catalogue={sourcesQuery.data} />}
+        {route === "sources" && routeReady && sourcesQuery.data && <SourceCatalogueView catalogue={sourcesQuery.data} treeConfig={sourceTreeConfigQuery.data} />}
         {route === "requirements" && routeReady && selectedCampaign && <RequirementMatrixView campaign={selectedCampaign} />}
         {route === "commands" && routeReady && commandAuthorityQuery.data && (
           <CommandAuthorityView

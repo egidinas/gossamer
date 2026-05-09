@@ -18,6 +18,26 @@ var SourceQualityStates = map[string]bool{
 	"not_applicable": true,
 }
 
+var SourceOwnerModes = map[string]bool{
+	"exclusive_connection": true,
+	"shared_monitor":       true,
+	"external_master":      true,
+	"derived":              true,
+	"fallback":             true,
+}
+
+var SourceUses = map[string]bool{
+	"primary":    true,
+	"shared":     true,
+	"derivative": true,
+	"fallback":   true,
+}
+
+var SourceFormatPreferences = map[string]bool{
+	"decoded":    true,
+	"raw_legacy": true,
+}
+
 var CampaignResultStates = map[string]bool{
 	"pass":         true,
 	"fail":         true,
@@ -66,22 +86,42 @@ type Topology struct {
 }
 
 type Source struct {
-	ID                  string   `json:"id"`
-	Label               string   `json:"label"`
-	NodeID              string   `json:"node_id"`   // node that originates this data
-	ServedBy            string   `json:"served_by"` // node that aggregates and exposes this data to clients
-	Owner               string   `json:"owner"`
-	Bus                 string   `json:"bus"`
-	Quality             string   `json:"quality"`
-	FreshnessMS         int      `json:"freshness_ms"`
-	Provenance          string   `json:"provenance"`
-	EvidenceSuitability string   `json:"evidence_suitability"`
-	Signals             []string `json:"signals"`
+	ID                  string              `json:"id"`
+	Label               string              `json:"label"`
+	NodeID              string              `json:"node_id"`   // node that originates this data
+	ServedBy            string              `json:"served_by"` // node that aggregates and exposes this data to clients
+	Owner               string              `json:"owner"`
+	OwnerMode           string              `json:"owner_mode"`
+	Use                 string              `json:"use"`
+	FormatPreference    string              `json:"format_preference"`
+	Bus                 string              `json:"bus"`
+	Quality             string              `json:"quality"`
+	FreshnessMS         int                 `json:"freshness_ms"`
+	Provenance          string              `json:"provenance"`
+	EvidenceSuitability string              `json:"evidence_suitability"`
+	Signals             []string            `json:"signals"`
+	DiscoveryPath       SourceDiscoveryPath `json:"discovery_path"`
+}
+
+type SourceDiscoveryPath struct {
+	Node      string `json:"node"`
+	Device    string `json:"device"`
+	Subsystem string `json:"subsystem"`
+	Stream    string `json:"stream"`
+}
+
+type SourceDiscoveryNode struct {
+	ID       string                `json:"id"`
+	Label    string                `json:"label"`
+	Kind     string                `json:"kind"`
+	SourceID string                `json:"source_id,omitempty"`
+	Children []SourceDiscoveryNode `json:"children,omitempty"`
 }
 
 type SourceCatalogue struct {
 	Envelope
-	Sources []Source `json:"sources"`
+	Sources []Source              `json:"sources"`
+	Tree    []SourceDiscoveryNode `json:"tree"`
 }
 
 type Requirement struct {
@@ -927,21 +967,21 @@ type OperatorLogEntry struct {
 
 type CommandAuthorityState struct {
 	Envelope
-	LeaseOwner      string              `json:"lease_owner"`
-	LeaseState      string              `json:"lease_state"`
-	AllowedCommands []string            `json:"allowed_commands"`
-	LastCommand     string              `json:"last_command"`
-	OperatorLog     []OperatorLogEntry  `json:"operator_log,omitempty"`
+	LeaseOwner      string             `json:"lease_owner"`
+	LeaseState      string             `json:"lease_state"`
+	AllowedCommands []string           `json:"allowed_commands"`
+	LastCommand     string             `json:"last_command"`
+	OperatorLog     []OperatorLogEntry `json:"operator_log,omitempty"`
 }
 
 // FileSignalGroup groups signals from a single node/source for the file viewer.
 type FileSignalGroup struct {
-	NodeID   string        `json:"node_id"`
-	NodeLabel string       `json:"node_label"`
-	SourceID string        `json:"source_id"`
-	SourceLabel string     `json:"source_label"`
-	Bus      string        `json:"bus"`
-	Series   []GraphSeries `json:"series"`
+	NodeID      string        `json:"node_id"`
+	NodeLabel   string        `json:"node_label"`
+	SourceID    string        `json:"source_id"`
+	SourceLabel string        `json:"source_label"`
+	Bus         string        `json:"bus"`
+	Series      []GraphSeries `json:"series"`
 }
 
 // FileViewModel is the contract returned by /api/viewer/{campaign}.
@@ -996,6 +1036,45 @@ func ValidateSourceCatalogue(c SourceCatalogue) error {
 		}
 		if !SourceQualityStates[s.Quality] {
 			return fmt.Errorf("source %s has unknown quality %q", s.ID, s.Quality)
+		}
+		if !SourceOwnerModes[s.OwnerMode] {
+			return fmt.Errorf("source %s has unknown owner_mode %q", s.ID, s.OwnerMode)
+		}
+		if !SourceUses[s.Use] {
+			return fmt.Errorf("source %s has unknown use %q", s.ID, s.Use)
+		}
+		if !SourceFormatPreferences[s.FormatPreference] {
+			return fmt.Errorf("source %s has unknown format_preference %q", s.ID, s.FormatPreference)
+		}
+		if empty(s.DiscoveryPath.Node) || empty(s.DiscoveryPath.Device) || empty(s.DiscoveryPath.Subsystem) || empty(s.DiscoveryPath.Stream) {
+			return fmt.Errorf("source %s discovery_path requires node, device, subsystem, and stream", s.ID)
+		}
+	}
+	leafSources := map[string]bool{}
+	var walk func([]SourceDiscoveryNode) error
+	walk = func(nodes []SourceDiscoveryNode) error {
+		for _, node := range nodes {
+			if empty(node.ID) || empty(node.Label) || empty(node.Kind) {
+				return errors.New("source catalogue tree nodes require id, label, and kind")
+			}
+			if node.Kind == "stream" {
+				if empty(node.SourceID) {
+					return fmt.Errorf("source catalogue stream node %s missing source_id", node.ID)
+				}
+				leafSources[node.SourceID] = true
+			}
+			if err := walk(node.Children); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+	if err := walk(c.Tree); err != nil {
+		return err
+	}
+	for _, s := range c.Sources {
+		if !leafSources[s.ID] {
+			return fmt.Errorf("source %s missing from backend-authored discovery tree", s.ID)
 		}
 	}
 	return nil
@@ -1213,6 +1292,72 @@ func ValidateBusVirtualizationTap(tap BusVirtualizationTap) error {
 	}
 	if !seenTM || !seenTC {
 		return errors.New("bus tap requires both TM and TC events")
+	}
+	return nil
+}
+
+// SourceTreeConfig declares which source IDs are active for each named view.
+// The UI uses this to pre-select and highlight tree nodes without browser-side heuristics.
+type SourceTreeConfig struct {
+	Envelope
+	Views []SourceTreeView `json:"views"`
+}
+
+type SourceTreeView struct {
+	ID        string   `json:"id"`
+	Label     string   `json:"label"`
+	SourceIDs []string `json:"source_ids"`
+}
+
+func ValidateSourceTreeConfig(c SourceTreeConfig) error {
+	if err := ValidateEnvelope(c.Envelope); err != nil {
+		return err
+	}
+	if len(c.Views) == 0 {
+		return errors.New("source tree config requires at least one view")
+	}
+	seen := make(map[string]bool, len(c.Views))
+	for _, v := range c.Views {
+		if empty(v.ID) || empty(v.Label) {
+			return fmt.Errorf("source tree view %q requires id and label", v.ID)
+		}
+		if seen[v.ID] {
+			return fmt.Errorf("source tree view id %q is duplicated", v.ID)
+		}
+		seen[v.ID] = true
+		if len(v.SourceIDs) == 0 {
+			return fmt.Errorf("source tree view %q requires at least one source_id", v.ID)
+		}
+	}
+	return nil
+}
+
+type GraphWallManifest struct {
+	Envelope
+	Targets []GraphWallTarget `json:"targets"`
+}
+
+type GraphWallTarget struct {
+	TargetID  string `json:"target_id"`
+	Lane      string `json:"lane"`
+	Role      string `json:"role"`
+	SourceID  string `json:"source_id"`
+	Timestamp string `json:"timestamp"`
+}
+
+func ValidateGraphWallManifest(m GraphWallManifest) error {
+	if len(m.Targets) == 0 {
+		return errors.New("graph wall manifest requires at least one target")
+	}
+	seen := make(map[string]bool, len(m.Targets))
+	for _, t := range m.Targets {
+		if empty(t.TargetID) || empty(t.Lane) || empty(t.Role) || empty(t.SourceID) || empty(t.Timestamp) {
+			return fmt.Errorf("graph wall target %q requires target_id, lane, role, source_id, and timestamp", t.TargetID)
+		}
+		if seen[t.TargetID] {
+			return fmt.Errorf("graph wall target_id %q is duplicated", t.TargetID)
+		}
+		seen[t.TargetID] = true
 	}
 	return nil
 }

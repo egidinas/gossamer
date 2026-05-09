@@ -570,7 +570,7 @@ func buildTileManifest(env contracts.Envelope, campaignID string, wall contracts
 		SourceNodes: sourceNodes(),
 		DataLensTranslations: []contracts.DataLensTranslation{
 			{ID: "legacy_csv_environment", Label: "Legacy CSV environment import", SourceFormat: "legacy_csv", TargetSchema: arrowtelemetrySchemaName, Mode: "translated_fixture", Confidence: "high", Provenance: "synthetic DataLens translation demo"},
-			{ID: "binary_tmtc_log", Label: "Binary TM/TC log import", SourceFormat: "binary_log", TargetSchema: arrowtelemetrySchemaName, Mode: "translated_fixture", Confidence: "medium", Provenance: "synthetic DataLens translation demo"},
+			{ID: "binary_tmtc_log", Label: "Binary transport log import", SourceFormat: "binary_log", TargetSchema: arrowtelemetrySchemaName, Mode: "translated_fixture", Confidence: "medium", Provenance: "synthetic DataLens translation demo"},
 			{ID: "hdf5_evidence_archive", Label: "HDF5-like evidence archive", SourceFormat: "hdf5", TargetSchema: arrowtelemetrySchemaName, Mode: "translated_fixture", Confidence: "high", Provenance: "synthetic DataLens translation demo"},
 		},
 	}

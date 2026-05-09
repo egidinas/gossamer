@@ -1,0 +1,416 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-05-09T00:00:00Z",
+  "synthetic_only": true,
+  "benchmark": "S-LG-06 agent context codec",
+  "description": "Public-safe benchmark for compact derived agent context rows. Canonical JSON remains authoritative; compact rows are for agent transport only and must round-trip before use.",
+  "required_preservation_fields": [
+    "id",
+    "provenance",
+    "authority",
+    "fixture_status",
+    "source_id"
+  ],
+  "samples": [
+    {
+      "name": "source_catalogue_slice",
+      "fields": [
+        "id",
+        "label",
+        "source_id",
+        "target_id",
+        "provenance",
+        "authority",
+        "fixture_status",
+        "owner_mode",
+        "use",
+        "format_preference",
+        "quality"
+      ],
+      "canonical_rows": [
+        {
+          "id": "source.thermal.chamber_air",
+          "label": "Chamber air telemetry",
+          "source_id": "chamber_thermal_fat",
+          "target_id": "graph_wall.thermal.chamber_a.air",
+          "provenance": "synthetic_fixture:source_catalogue.json",
+          "authority": "mock_read_only",
+          "fixture_status": "synthetic_public",
+          "owner_mode": "external_master",
+          "use": "primary",
+          "format_preference": "decoded",
+          "quality": "synthetic"
+        },
+        {
+          "id": "source.thermal.dut_a",
+          "label": "DUT A thermal telemetry",
+          "source_id": "dut_a_thermal_fat",
+          "target_id": "graph_wall.thermal.dut_a",
+          "provenance": "synthetic_fixture:source_catalogue.json",
+          "authority": "mock_read_only",
+          "fixture_status": "synthetic_public",
+          "owner_mode": "external_master",
+          "use": "primary",
+          "format_preference": "decoded",
+          "quality": "synthetic"
+        },
+        {
+          "id": "source.tvac.pressure",
+          "label": "TVac pressure telemetry",
+          "source_id": "chamber_pressure_tvac",
+          "target_id": "graph_wall.tvac.pressure.main",
+          "provenance": "synthetic_fixture:source_catalogue.json",
+          "authority": "mock_read_only",
+          "fixture_status": "synthetic_public",
+          "owner_mode": "shared_monitor",
+          "use": "shared",
+          "format_preference": "decoded",
+          "quality": "synthetic"
+        },
+        {
+          "id": "source.tvac.pump_state",
+          "label": "TVac pump state telemetry",
+          "source_id": "tvac_pump_state",
+          "target_id": "graph_wall.tvac.pump.state",
+          "provenance": "synthetic_fixture:source_catalogue.json",
+          "authority": "mock_read_only",
+          "fixture_status": "synthetic_public",
+          "owner_mode": "shared_monitor",
+          "use": "shared",
+          "format_preference": "decoded",
+          "quality": "synthetic"
+        },
+        {
+          "id": "source.archive.bus_legacy",
+          "label": "Archive legacy bus fallback",
+          "source_id": "archive_bus_raw",
+          "target_id": "graph_wall.archive.bus.raw",
+          "provenance": "synthetic_fixture:source_catalogue.json",
+          "authority": "mock_read_only",
+          "fixture_status": "synthetic_public",
+          "owner_mode": "fallback",
+          "use": "fallback",
+          "format_preference": "raw_legacy",
+          "quality": "synthetic"
+        },
+        {
+          "id": "source.archive.event_log",
+          "label": "Archive event log",
+          "source_id": "archive_event_log",
+          "target_id": "graph_wall.archive.events",
+          "provenance": "synthetic_fixture:source_catalogue.json",
+          "authority": "mock_read_only",
+          "fixture_status": "synthetic_public",
+          "owner_mode": "derived",
+          "use": "derivative",
+          "format_preference": "decoded",
+          "quality": "synthetic"
+        }
+      ],
+      "compact": {
+        "encoding": "gossamer.agent_context_table.v1",
+        "fields": [
+          "id",
+          "label",
+          "source_id",
+          "target_id",
+          "provenance",
+          "authority",
+          "fixture_status",
+          "owner_mode",
+          "use",
+          "format_preference",
+          "quality"
+        ],
+        "rows": [
+          [
+            "source.thermal.chamber_air",
+            "Chamber air telemetry",
+            "chamber_thermal_fat",
+            "graph_wall.thermal.chamber_a.air",
+            "synthetic_fixture:source_catalogue.json",
+            "mock_read_only",
+            "synthetic_public",
+            "external_master",
+            "primary",
+            "decoded",
+            "synthetic"
+          ],
+          [
+            "source.thermal.dut_a",
+            "DUT A thermal telemetry",
+            "dut_a_thermal_fat",
+            "graph_wall.thermal.dut_a",
+            "synthetic_fixture:source_catalogue.json",
+            "mock_read_only",
+            "synthetic_public",
+            "external_master",
+            "primary",
+            "decoded",
+            "synthetic"
+          ],
+          [
+            "source.tvac.pressure",
+            "TVac pressure telemetry",
+            "chamber_pressure_tvac",
+            "graph_wall.tvac.pressure.main",
+            "synthetic_fixture:source_catalogue.json",
+            "mock_read_only",
+            "synthetic_public",
+            "shared_monitor",
+            "shared",
+            "decoded",
+            "synthetic"
+          ],
+          [
+            "source.tvac.pump_state",
+            "TVac pump state telemetry",
+            "tvac_pump_state",
+            "graph_wall.tvac.pump.state",
+            "synthetic_fixture:source_catalogue.json",
+            "mock_read_only",
+            "synthetic_public",
+            "shared_monitor",
+            "shared",
+            "decoded",
+            "synthetic"
+          ],
+          [
+            "source.archive.bus_legacy",
+            "Archive legacy bus fallback",
+            "archive_bus_raw",
+            "graph_wall.archive.bus.raw",
+            "synthetic_fixture:source_catalogue.json",
+            "mock_read_only",
+            "synthetic_public",
+            "fallback",
+            "fallback",
+            "raw_legacy",
+            "synthetic"
+          ],
+          [
+            "source.archive.event_log",
+            "Archive event log",
+            "archive_event_log",
+            "graph_wall.archive.events",
+            "synthetic_fixture:source_catalogue.json",
+            "mock_read_only",
+            "synthetic_public",
+            "derived",
+            "derivative",
+            "decoded",
+            "synthetic"
+          ]
+        ]
+      },
+      "metrics": {
+        "canonical_bytes": 2148,
+        "compact_bytes": 1573,
+        "byte_reduction_ratio": 0.267691,
+        "token_estimate_method": "chars_div_4",
+        "canonical_token_estimate": 537,
+        "compact_token_estimate": 394
+      }
+    },
+    {
+      "name": "command_event_ring_slice",
+      "fields": [
+        "id",
+        "label",
+        "source_id",
+        "target_id",
+        "provenance",
+        "authority",
+        "fixture_status",
+        "direction",
+        "result",
+        "idempotency_key",
+        "timestamp"
+      ],
+      "canonical_rows": [
+        {
+          "id": "cmd.req.0001",
+          "label": "Start synthetic dwell capture",
+          "source_id": "command_authority_demo",
+          "target_id": "reference_dut.mode.capture",
+          "provenance": "synthetic_fixture:command_authority_state.json",
+          "authority": "mock_controller_ack_required",
+          "fixture_status": "synthetic_public",
+          "direction": "TC",
+          "result": "accepted",
+          "idempotency_key": "fixture-cmd-0001",
+          "timestamp": "2026-01-15T10:00:05Z"
+        },
+        {
+          "id": "cmd.res.0001",
+          "label": "Synthetic dwell capture accepted",
+          "source_id": "reference_dut.mode.capture",
+          "target_id": "command_authority_demo",
+          "provenance": "synthetic_fixture:command_authority_state.json",
+          "authority": "mock_controller_ack_required",
+          "fixture_status": "synthetic_public",
+          "direction": "TM",
+          "result": "acknowledged",
+          "idempotency_key": "fixture-cmd-0001",
+          "timestamp": "2026-01-15T10:00:06Z"
+        },
+        {
+          "id": "cmd.req.0002",
+          "label": "Set synthetic thermal profile",
+          "source_id": "command_authority_demo",
+          "target_id": "thermal_chamber.profile",
+          "provenance": "synthetic_fixture:command_authority_state.json",
+          "authority": "mock_controller_ack_required",
+          "fixture_status": "synthetic_public",
+          "direction": "TC",
+          "result": "accepted",
+          "idempotency_key": "fixture-cmd-0002",
+          "timestamp": "2026-01-15T10:01:00Z"
+        },
+        {
+          "id": "cmd.res.0002",
+          "label": "Synthetic thermal profile active",
+          "source_id": "thermal_chamber.profile",
+          "target_id": "command_authority_demo",
+          "provenance": "synthetic_fixture:command_authority_state.json",
+          "authority": "mock_controller_ack_required",
+          "fixture_status": "synthetic_public",
+          "direction": "TM",
+          "result": "acknowledged",
+          "idempotency_key": "fixture-cmd-0002",
+          "timestamp": "2026-01-15T10:01:02Z"
+        },
+        {
+          "id": "cmd.req.0003",
+          "label": "Request synthetic evidence snapshot",
+          "source_id": "command_authority_demo",
+          "target_id": "archive_node.snapshot",
+          "provenance": "synthetic_fixture:command_authority_state.json",
+          "authority": "mock_controller_ack_required",
+          "fixture_status": "synthetic_public",
+          "direction": "TC",
+          "result": "accepted",
+          "idempotency_key": "fixture-cmd-0003",
+          "timestamp": "2026-01-15T10:02:00Z"
+        },
+        {
+          "id": "cmd.res.0003",
+          "label": "Synthetic evidence snapshot ready",
+          "source_id": "archive_node.snapshot",
+          "target_id": "command_authority_demo",
+          "provenance": "synthetic_fixture:command_authority_state.json",
+          "authority": "mock_controller_ack_required",
+          "fixture_status": "synthetic_public",
+          "direction": "TM",
+          "result": "completed",
+          "idempotency_key": "fixture-cmd-0003",
+          "timestamp": "2026-01-15T10:02:08Z"
+        }
+      ],
+      "compact": {
+        "encoding": "gossamer.agent_context_table.v1",
+        "fields": [
+          "id",
+          "label",
+          "source_id",
+          "target_id",
+          "provenance",
+          "authority",
+          "fixture_status",
+          "direction",
+          "result",
+          "idempotency_key",
+          "timestamp"
+        ],
+        "rows": [
+          [
+            "cmd.req.0001",
+            "Start synthetic dwell capture",
+            "command_authority_demo",
+            "reference_dut.mode.capture",
+            "synthetic_fixture:command_authority_state.json",
+            "mock_controller_ack_required",
+            "synthetic_public",
+            "TC",
+            "accepted",
+            "fixture-cmd-0001",
+            "2026-01-15T10:00:05Z"
+          ],
+          [
+            "cmd.res.0001",
+            "Synthetic dwell capture accepted",
+            "reference_dut.mode.capture",
+            "command_authority_demo",
+            "synthetic_fixture:command_authority_state.json",
+            "mock_controller_ack_required",
+            "synthetic_public",
+            "TM",
+            "acknowledged",
+            "fixture-cmd-0001",
+            "2026-01-15T10:00:06Z"
+          ],
+          [
+            "cmd.req.0002",
+            "Set synthetic thermal profile",
+            "command_authority_demo",
+            "thermal_chamber.profile",
+            "synthetic_fixture:command_authority_state.json",
+            "mock_controller_ack_required",
+            "synthetic_public",
+            "TC",
+            "accepted",
+            "fixture-cmd-0002",
+            "2026-01-15T10:01:00Z"
+          ],
+          [
+            "cmd.res.0002",
+            "Synthetic thermal profile active",
+            "thermal_chamber.profile",
+            "command_authority_demo",
+            "synthetic_fixture:command_authority_state.json",
+            "mock_controller_ack_required",
+            "synthetic_public",
+            "TM",
+            "acknowledged",
+            "fixture-cmd-0002",
+            "2026-01-15T10:01:02Z"
+          ],
+          [
+            "cmd.req.0003",
+            "Request synthetic evidence snapshot",
+            "command_authority_demo",
+            "archive_node.snapshot",
+            "synthetic_fixture:command_authority_state.json",
+            "mock_controller_ack_required",
+            "synthetic_public",
+            "TC",
+            "accepted",
+            "fixture-cmd-0003",
+            "2026-01-15T10:02:00Z"
+          ],
+          [
+            "cmd.res.0003",
+            "Synthetic evidence snapshot ready",
+            "archive_node.snapshot",
+            "command_authority_demo",
+            "synthetic_fixture:command_authority_state.json",
+            "mock_controller_ack_required",
+            "synthetic_public",
+            "TM",
+            "completed",
+            "fixture-cmd-0003",
+            "2026-01-15T10:02:08Z"
+          ]
+        ]
+      },
+      "metrics": {
+        "canonical_bytes": 2350,
+        "compact_bytes": 1765,
+        "byte_reduction_ratio": 0.248936,
+        "token_estimate_method": "chars_div_4",
+        "canonical_token_estimate": 588,
+        "compact_token_estimate": 442
+      }
+    }
+  ]
+}

@@ -41,7 +41,7 @@ The smoke test captures route screenshots in `web/test-artifacts/screenshots/` a
 5. Open Sources and show freshness, provenance, and quality as first-class operating data.
 6. Open Requirements and connect telemetry to pass, warning, and evidence references.
 7. Open Commands and show the fictional command-authority lease path.
-8. Open Bus Tap and explain TM/TC visibility as a generic virtualization mockup, not a real protocol implementation.
+8. Open Bus Tap and explain transport visibility as a generic virtualization mockup, not a real protocol implementation.
 9. Open Evidence and close with repeatable report generation across flatsat, FAT, and qualification campaigns. Point out that empty anomaly lists are represented as arrays, so the report contract is stable for the UI and exports.
 
 ## Closing Point

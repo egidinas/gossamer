@@ -85,6 +85,9 @@
       "node_id": "reference_dut",
       "served_by": "archive_node_a",
       "owner": "egse_power_role",
+      "owner_mode": "exclusive_connection",
+      "use": "primary",
+      "format_preference": "decoded",
       "bus": "telemetry_bus",
       "quality": "fresh",
       "freshness_ms": 250,
@@ -94,7 +97,13 @@
         "eps_bus_voltage_v",
         "eps_bus_current_a",
         "dut_self_heat_w"
-      ]
+      ],
+      "discovery_path": {
+        "node": "reference_dut",
+        "device": "dut_eps",
+        "subsystem": "power",
+        "stream": "dut_power"
+      }
     },
     {
       "id": "dut_control",
@@ -102,6 +111,9 @@
       "node_id": "reference_dut",
       "served_by": "archive_node_a",
       "owner": "subsystem_test_role",
+      "owner_mode": "external_master",
+      "use": "primary",
+      "format_preference": "decoded",
       "bus": "subsystem_event_bus",
       "quality": "fresh",
       "freshness_ms": 500,
@@ -111,7 +123,13 @@
         "obc_boot_state",
         "obc_command_counter",
         "tc_packet_counter"
-      ]
+      ],
+      "discovery_path": {
+        "node": "reference_dut",
+        "device": "dut_obc",
+        "subsystem": "command",
+        "stream": "dut_control"
+      }
     },
     {
       "id": "dut_link",
@@ -119,6 +137,9 @@
       "node_id": "reference_dut",
       "served_by": "archive_node_a",
       "owner": "subsystem_test_role",
+      "owner_mode": "shared_monitor",
+      "use": "shared",
+      "format_preference": "decoded",
       "bus": "telemetry_bus",
       "quality": "fresh",
       "freshness_ms": 450,
@@ -127,7 +148,13 @@
       "signals": [
         "rf_link_margin_db",
         "tm_packet_counter"
-      ]
+      ],
+      "discovery_path": {
+        "node": "reference_dut",
+        "device": "dut_tm_link",
+        "subsystem": "telemetry",
+        "stream": "dut_link"
+      }
     },
     {
       "id": "dut_thermal",
@@ -135,6 +162,9 @@
       "node_id": "reference_dut",
       "served_by": "archive_node_a",
       "owner": "test_conductor_role",
+      "owner_mode": "derived",
+      "use": "derivative",
+      "format_preference": "decoded",
       "bus": "derived_model_bus",
       "quality": "synthetic",
       "freshness_ms": 300,
@@ -149,14 +179,23 @@
         "dut_lazy_air_flux_w",
         "dut_lazy_interface_flux_w",
         "dut_lazy_shroud_flux_w"
-      ]
+      ],
+      "discovery_path": {
+        "node": "reference_dut",
+        "device": "thermal_model",
+        "subsystem": "thermal_model",
+        "stream": "dut_thermal"
+      }
     },
     {
       "id": "chamber_thermal_fat",
-      "label": "Chamber Thermal (FAT)",
+      "label": "Chamber Thermal Alpha",
       "node_id": "thermal_chamber_a",
       "served_by": "thermal_supervisor_pc",
       "owner": "facility_operator_role",
+      "owner_mode": "external_master",
+      "use": "primary",
+      "format_preference": "decoded",
       "bus": "facility_control_bus",
       "quality": "fresh",
       "freshness_ms": 300,
@@ -176,14 +215,23 @@
         "thermal_shroud_gradient_deg_c",
         "huber_table_deg_c",
         "ln2_valve_duty_pct"
-      ]
+      ],
+      "discovery_path": {
+        "node": "thermal_chamber_a",
+        "device": "chamber_a_plc",
+        "subsystem": "thermal",
+        "stream": "chamber_thermal_fat"
+      }
     },
     {
       "id": "chamber_infra_fat",
-      "label": "Building Infrastructure (FAT)",
+      "label": "Building Infrastructure Alpha",
       "node_id": "thermal_chamber_a",
       "served_by": "thermal_supervisor_pc",
       "owner": "facility_operator_role",
+      "owner_mode": "shared_monitor",
+      "use": "shared",
+      "format_preference": "decoded",
       "bus": "facility_utility_bus",
       "quality": "fresh",
       "freshness_ms": 600,
@@ -194,14 +242,23 @@
         "cooling_water_temp_deg_c",
         "pressurized_air_supply_bar",
         "air_dewpoint_deg_c"
-      ]
+      ],
+      "discovery_path": {
+        "node": "thermal_chamber_a",
+        "device": "building_services",
+        "subsystem": "utilities",
+        "stream": "chamber_infra_fat"
+      }
     },
     {
       "id": "chamber_thermal_b",
-      "label": "Chamber Thermal B",
+      "label": "Chamber Thermal Bravo",
       "node_id": "thermal_chamber_b",
       "served_by": "thermal_supervisor_pc",
       "owner": "facility_operator_role",
+      "owner_mode": "external_master",
+      "use": "primary",
+      "format_preference": "decoded",
       "bus": "facility_control_bus",
       "quality": "fresh",
       "freshness_ms": 300,
@@ -214,14 +271,23 @@
         "thermal_zone_1_deg_c",
         "thermal_zone_2_deg_c",
         "chamber_air_deg_c"
-      ]
+      ],
+      "discovery_path": {
+        "node": "thermal_chamber_b",
+        "device": "chamber_b_plc",
+        "subsystem": "thermal",
+        "stream": "chamber_thermal_b"
+      }
     },
     {
       "id": "chamber_thermal_c",
-      "label": "Chamber Thermal C",
+      "label": "Chamber Thermal Charlie",
       "node_id": "thermal_chamber_c",
       "served_by": "thermal_supervisor_pc",
       "owner": "facility_operator_role",
+      "owner_mode": "external_master",
+      "use": "primary",
+      "format_preference": "decoded",
       "bus": "facility_control_bus",
       "quality": "fresh",
       "freshness_ms": 300,
@@ -234,14 +300,23 @@
         "thermal_zone_1_deg_c",
         "thermal_zone_2_deg_c",
         "chamber_air_deg_c"
-      ]
+      ],
+      "discovery_path": {
+        "node": "thermal_chamber_c",
+        "device": "chamber_c_plc",
+        "subsystem": "thermal",
+        "stream": "chamber_thermal_c"
+      }
     },
     {
       "id": "chamber_thermal_d",
-      "label": "Chamber Thermal D",
+      "label": "Chamber Thermal Delta",
       "node_id": "thermal_chamber_d",
       "served_by": "thermal_supervisor_pc",
       "owner": "facility_operator_role",
+      "owner_mode": "external_master",
+      "use": "primary",
+      "format_preference": "decoded",
       "bus": "facility_control_bus",
       "quality": "fresh",
       "freshness_ms": 300,
@@ -254,7 +329,13 @@
         "thermal_zone_1_deg_c",
         "thermal_zone_2_deg_c",
         "chamber_air_deg_c"
-      ]
+      ],
+      "discovery_path": {
+        "node": "thermal_chamber_d",
+        "device": "chamber_d_plc",
+        "subsystem": "thermal",
+        "stream": "chamber_thermal_d"
+      }
     },
     {
       "id": "thermal_supervisor",
@@ -262,6 +343,9 @@
       "node_id": "thermal_supervisor_pc",
       "served_by": "gateway_a",
       "owner": "facility_operator_role",
+      "owner_mode": "exclusive_connection",
+      "use": "primary",
+      "format_preference": "decoded",
       "bus": "api_bus",
       "quality": "fresh",
       "freshness_ms": 500,
@@ -272,7 +356,13 @@
         "chamber_interlock_any",
         "thermal_schedule_state",
         "thermal_supervisor_uptime_s"
-      ]
+      ],
+      "discovery_path": {
+        "node": "thermal_supervisor_pc",
+        "device": "thermal_supervisor_api",
+        "subsystem": "supervision",
+        "stream": "thermal_supervisor"
+      }
     },
     {
       "id": "house_utilities",
@@ -280,6 +370,9 @@
       "node_id": "house_plc",
       "served_by": "thermal_supervisor_pc",
       "owner": "facility_operator_role",
+      "owner_mode": "external_master",
+      "use": "shared",
+      "format_preference": "decoded",
       "bus": "facility_utility_bus",
       "quality": "fresh",
       "freshness_ms": 1000,
@@ -292,7 +385,13 @@
         "facility_ln2_supply_bar",
         "facility_power_ok",
         "facility_emergency_stop"
-      ]
+      ],
+      "discovery_path": {
+        "node": "house_plc",
+        "device": "house_plc",
+        "subsystem": "utilities",
+        "stream": "house_utilities"
+      }
     },
     {
       "id": "tvac_plc",
@@ -300,6 +399,9 @@
       "node_id": "tvac_plc_q1",
       "served_by": "tvac_computer_1",
       "owner": "facility_operator_role",
+      "owner_mode": "external_master",
+      "use": "primary",
+      "format_preference": "decoded",
       "bus": "facility_control_bus",
       "quality": "fresh",
       "freshness_ms": 300,
@@ -314,7 +416,13 @@
         "ln2_fill_valve_state",
         "ln2_vent_valve_state",
         "facility_interlock_state"
-      ]
+      ],
+      "discovery_path": {
+        "node": "tvac_plc_q1",
+        "device": "tvac_plc_q1",
+        "subsystem": "cryo_vacuum",
+        "stream": "tvac_plc"
+      }
     },
     {
       "id": "chamber_thermal_tvac",
@@ -322,6 +430,9 @@
       "node_id": "tvac_chamber_q1",
       "served_by": "tvac_computer_1",
       "owner": "tvac_computer_role",
+      "owner_mode": "external_master",
+      "use": "primary",
+      "format_preference": "decoded",
       "bus": "facility_control_bus",
       "quality": "fresh",
       "freshness_ms": 300,
@@ -343,7 +454,13 @@
         "ln2_line_temp_deg_c",
         "ln2_valve_duty_pct",
         "tvac_cryo_exhaust_temp_deg_c"
-      ]
+      ],
+      "discovery_path": {
+        "node": "tvac_chamber_q1",
+        "device": "tvac_chamber_q1",
+        "subsystem": "thermal",
+        "stream": "chamber_thermal_tvac"
+      }
     },
     {
       "id": "chamber_pressure_tvac",
@@ -351,6 +468,9 @@
       "node_id": "tvac_chamber_q1",
       "served_by": "tvac_computer_1",
       "owner": "tvac_computer_role",
+      "owner_mode": "external_master",
+      "use": "primary",
+      "format_preference": "decoded",
       "bus": "facility_control_bus",
       "quality": "fresh",
       "freshness_ms": 300,
@@ -359,7 +479,13 @@
       "signals": [
         "tvac_pressure_mbar",
         "tvac_pressure_pa"
-      ]
+      ],
+      "discovery_path": {
+        "node": "tvac_chamber_q1",
+        "device": "tvac_chamber_q1",
+        "subsystem": "pressure",
+        "stream": "chamber_pressure_tvac"
+      }
     },
     {
       "id": "chamber_infra_tvac",
@@ -367,6 +493,9 @@
       "node_id": "tvac_chamber_q1",
       "served_by": "tvac_computer_1",
       "owner": "facility_operator_role",
+      "owner_mode": "shared_monitor",
+      "use": "shared",
+      "format_preference": "decoded",
       "bus": "facility_utility_bus",
       "quality": "fresh",
       "freshness_ms": 600,
@@ -381,14 +510,23 @@
         "tvac_scavenger_cooling_water_return_deg_c",
         "tvac_exhaust_cold_recovery_pct",
         "tvac_exhaust_duct_safe"
-      ]
+      ],
+      "discovery_path": {
+        "node": "tvac_chamber_q1",
+        "device": "tvac_services",
+        "subsystem": "utilities",
+        "stream": "chamber_infra_tvac"
+      }
     },
     {
       "id": "tvac_tmtc_primary",
-      "label": "TVac TMTC Primary (Computer 1)",
+      "label": "TVac Transport Primary (Computer 1)",
       "node_id": "tvac_computer_1",
       "served_by": "supervisor_a",
       "owner": "tvac_computer_role",
+      "owner_mode": "exclusive_connection",
+      "use": "primary",
+      "format_preference": "decoded",
       "bus": "facility_control_bus",
       "quality": "fresh",
       "freshness_ms": 200,
@@ -399,14 +537,23 @@
         "tc_queue_depth",
         "tm_frame_rate_hz",
         "last_tc_timestamp"
-      ]
+      ],
+      "discovery_path": {
+        "node": "tvac_computer_1",
+        "device": "tmtc_primary_console",
+        "subsystem": "tmtc",
+        "stream": "tvac_tmtc_primary"
+      }
     },
     {
       "id": "tvac_tmtc_backup",
-      "label": "TVac TMTC Backup (Computer 2)",
+      "label": "TVac Transport Backup (Computer 2)",
       "node_id": "tvac_computer_2",
       "served_by": "supervisor_a",
       "owner": "tvac_computer_role",
+      "owner_mode": "fallback",
+      "use": "fallback",
+      "format_preference": "raw_legacy",
       "bus": "facility_control_bus",
       "quality": "fresh",
       "freshness_ms": 200,
@@ -417,7 +564,13 @@
         "tc_queue_depth",
         "tm_frame_rate_hz",
         "backup_recording_state"
-      ]
+      ],
+      "discovery_path": {
+        "node": "tvac_computer_2",
+        "device": "tmtc_backup_recorder",
+        "subsystem": "tmtc",
+        "stream": "tvac_tmtc_backup"
+      }
     },
     {
       "id": "archive_bus",
@@ -425,6 +578,9 @@
       "node_id": "archive_node_a",
       "served_by": "librarian_a",
       "owner": "test_conductor_role",
+      "owner_mode": "shared_monitor",
+      "use": "shared",
+      "format_preference": "decoded",
       "bus": "telemetry_bus",
       "quality": "synthetic",
       "freshness_ms": 200,
@@ -436,7 +592,13 @@
         "tc_packet_counter",
         "overall_packet_counter",
         "dropped_frame_count"
-      ]
+      ],
+      "discovery_path": {
+        "node": "archive_node_a",
+        "device": "arrow_tap",
+        "subsystem": "transport",
+        "stream": "archive_bus"
+      }
     },
     {
       "id": "archive_quality",
@@ -444,6 +606,9 @@
       "node_id": "archive_node_a",
       "served_by": "librarian_a",
       "owner": "test_conductor_role",
+      "owner_mode": "derived",
+      "use": "derivative",
+      "format_preference": "decoded",
       "bus": "telemetry_bus",
       "quality": "synthetic",
       "freshness_ms": 1000,
@@ -452,7 +617,13 @@
       "signals": [
         "source_freshness_ms",
         "facility_interlock_state"
-      ]
+      ],
+      "discovery_path": {
+        "node": "archive_node_a",
+        "device": "quality_monitor",
+        "subsystem": "observability",
+        "stream": "archive_quality"
+      }
     },
     {
       "id": "nas_exports",
@@ -460,6 +631,9 @@
       "node_id": "nas_a",
       "served_by": "librarian_a",
       "owner": "test_conductor_role",
+      "owner_mode": "external_master",
+      "use": "fallback",
+      "format_preference": "raw_legacy",
       "bus": "storage_bus",
       "quality": "fresh",
       "freshness_ms": 5000,
@@ -471,7 +645,13 @@
         "latest_export_timestamp",
         "oldest_export_timestamp",
         "legacy_file_count"
-      ]
+      ],
+      "discovery_path": {
+        "node": "nas_a",
+        "device": "nas_archive",
+        "subsystem": "storage",
+        "stream": "nas_exports"
+      }
     },
     {
       "id": "librarian_index",
@@ -479,6 +659,9 @@
       "node_id": "librarian_a",
       "served_by": "gateway_a",
       "owner": "test_conductor_role",
+      "owner_mode": "derived",
+      "use": "derivative",
+      "format_preference": "decoded",
       "bus": "api_bus",
       "quality": "fresh",
       "freshness_ms": 2000,
@@ -490,7 +673,13 @@
         "translation_lag_ms",
         "last_index_scan_timestamp",
         "legacy_formats_active"
-      ]
+      ],
+      "discovery_path": {
+        "node": "librarian_a",
+        "device": "librarian_indexer",
+        "subsystem": "catalogue",
+        "stream": "librarian_index"
+      }
     },
     {
       "id": "gateway_status",
@@ -498,6 +687,9 @@
       "node_id": "gateway_a",
       "served_by": "gateway_a",
       "owner": "test_conductor_role",
+      "owner_mode": "exclusive_connection",
+      "use": "shared",
+      "format_preference": "decoded",
       "bus": "api_bus",
       "quality": "fresh",
       "freshness_ms": 1000,
@@ -508,7 +700,13 @@
         "connected_clients",
         "cache_hit_rate_pct",
         "gateway_uptime_s"
-      ]
+      ],
+      "discovery_path": {
+        "node": "gateway_a",
+        "device": "gateway_api",
+        "subsystem": "serving",
+        "stream": "gateway_status"
+      }
     },
     {
       "id": "supervisor_state",
@@ -516,6 +714,9 @@
       "node_id": "supervisor_a",
       "served_by": "gateway_a",
       "owner": "test_conductor_role",
+      "owner_mode": "exclusive_connection",
+      "use": "primary",
+      "format_preference": "decoded",
       "bus": "supervisor_bus",
       "quality": "fresh",
       "freshness_ms": 1000,
@@ -524,7 +725,13 @@
       "signals": [
         "functional_gate_code",
         "facility_interlock_code"
-      ]
+      ],
+      "discovery_path": {
+        "node": "supervisor_a",
+        "device": "campaign_supervisor",
+        "subsystem": "campaign",
+        "stream": "supervisor_state"
+      }
     }
   ],
   "graph_evidence": [

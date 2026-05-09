@@ -32,6 +32,75 @@ func TestValidateSourceCatalogueRejectsUnknownQuality(t *testing.T) {
 	}
 }
 
+func TestValidateSourceCatalogueRequiresOwnershipVocabulary(t *testing.T) {
+	catalogue := SourceCatalogue{
+		Envelope: Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"},
+		Sources: []Source{{
+			ID:               "thermal_source",
+			Owner:            "test_conductor",
+			Quality:          "fresh",
+			OwnerMode:        "external_master",
+			Use:              "primary",
+			FormatPreference: "decoded",
+			DiscoveryPath:    SourceDiscoveryPath{Node: "thermal_supervisor_pc", Device: "chamber_a_plc", Subsystem: "thermal", Stream: "thermal_source"},
+		}},
+		Tree: []SourceDiscoveryNode{{
+			ID:    "thermal_supervisor_pc",
+			Label: "Thermal Supervisor PC",
+			Kind:  "node",
+			Children: []SourceDiscoveryNode{{
+				ID:    "chamber_a_plc",
+				Label: "Chamber A PLC",
+				Kind:  "device",
+				Children: []SourceDiscoveryNode{{
+					ID:    "thermal",
+					Label: "Thermal",
+					Kind:  "subsystem",
+					Children: []SourceDiscoveryNode{{
+						ID:       "thermal_source",
+						Label:    "Thermal Source",
+						Kind:     "stream",
+						SourceID: "thermal_source",
+					}},
+				}},
+			}},
+		}},
+	}
+
+	if err := ValidateSourceCatalogue(catalogue); err != nil {
+		t.Fatalf("expected valid ownership vocabulary: %v", err)
+	}
+
+	catalogue.Sources[0].OwnerMode = "unclear"
+	if err := ValidateSourceCatalogue(catalogue); err == nil {
+		t.Fatal("expected invalid owner_mode to fail")
+	}
+}
+
+func TestValidateSourceCatalogueRequiresBackendAuthoredTreeLeaves(t *testing.T) {
+	catalogue := SourceCatalogue{
+		Envelope: Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"},
+		Sources: []Source{{
+			ID:               "archive_bus",
+			Owner:            "test_conductor",
+			Quality:          "synthetic",
+			OwnerMode:        "shared_monitor",
+			Use:              "shared",
+			FormatPreference: "decoded",
+			DiscoveryPath:    SourceDiscoveryPath{Node: "archive_node_a", Device: "arrow_tap", Subsystem: "transport", Stream: "archive_bus"},
+		}},
+		Tree: []SourceDiscoveryNode{{
+			ID:    "archive_node_a",
+			Label: "Archive Node A",
+			Kind:  "node",
+		}},
+	}
+
+	if err := ValidateSourceCatalogue(catalogue); err == nil {
+		t.Fatal("expected tree without source leaf to fail")
+	}
+}
+
 func TestValidateGraphModelRejectsSeriesWithoutUnitsOrRole(t *testing.T) {
 	model := GraphModel{
 		Envelope:   Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"},
@@ -98,6 +167,41 @@ func testSupervisorLane(id, facility, campaign, signal, units string) Supervisor
 			Source: "demo_source",
 			Values: []GraphPoint{{Timestamp: "2026-01-15T10:00:00Z", Value: 21.5}},
 		}},
+	}
+}
+
+func TestValidateGraphWallManifestAcceptsValidTargets(t *testing.T) {
+	m := GraphWallManifest{
+		Envelope: Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"},
+		Targets: []GraphWallTarget{
+			{TargetID: "graph_wall.thermal.chamber_a.air", Lane: "thermal", Role: "temperature_primary", SourceID: "chamber_thermal_fat", Timestamp: "2026-01-15T10:00:00Z"},
+			{TargetID: "graph_wall.tvac.pressure.main", Lane: "tvac", Role: "pressure_primary", SourceID: "chamber_pressure_tvac", Timestamp: "2026-01-15T10:00:00Z"},
+		},
+	}
+	if err := ValidateGraphWallManifest(m); err != nil {
+		t.Fatalf("expected valid manifest: %v", err)
+	}
+}
+
+func TestValidateGraphWallManifestRejectsDuplicateTargetID(t *testing.T) {
+	m := GraphWallManifest{
+		Envelope: Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"},
+		Targets: []GraphWallTarget{
+			{TargetID: "graph_wall.thermal.a", Lane: "thermal", Role: "temperature_primary", SourceID: "chamber_thermal_fat", Timestamp: "2026-01-15T10:00:00Z"},
+			{TargetID: "graph_wall.thermal.a", Lane: "thermal", Role: "temperature_secondary", SourceID: "chamber_thermal_b", Timestamp: "2026-01-15T10:00:00Z"},
+		},
+	}
+	if err := ValidateGraphWallManifest(m); err == nil {
+		t.Fatal("expected duplicate target_id to fail")
+	}
+}
+
+func TestValidateGraphWallManifestRejectsEmptyTargets(t *testing.T) {
+	m := GraphWallManifest{
+		Envelope: Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"},
+	}
+	if err := ValidateGraphWallManifest(m); err == nil {
+		t.Fatal("expected empty targets to fail")
 	}
 }
 

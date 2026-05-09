@@ -31,8 +31,8 @@ flowchart TD
     subgraph tvac["TVac Q1"]
         tvac_plc_q1["⚙️ TVac PLC\ncryo · vacuum · LN2 valves"]
         tvac_chamber_q1["🔬 TVac Chamber\nthermal + pressure sensors"]
-        tvac_computer_1["💻 TVac Computer 1\nprimary TMTC"]
-        tvac_computer_2["💻 TVac Computer 2\nbackup TMTC + recorder"]
+        tvac_computer_1["💻 TVac Computer 1\nprimary transport"]
+        tvac_computer_2["💻 TVac Computer 2\nbackup transport + recorder"]
     end
 
     reference_dut["🛰️ Reference DUT"]
@@ -68,7 +68,7 @@ flowchart TD
 - **Archival path:** Archive exports Arrow → HDF5 on NAS when test finishes (supervisor/librarian triggers).
 - **Legacy data:** CSV/TXT/TDMS on NAS; librarian indexes and serves with on-the-fly translation — any gateway can subscribe.
 - **Thermal path:** Chamber PLCs → thermal supervisor PC → gateway (separate from DUT telemetry path).
-- **TVac path:** TVac PLC status → TVac computers → DUT TMTC + supervisor → gateway.
+- **TVac path:** TVac PLC status → TVac computers → DUT transport path + supervisor → gateway.
 - **Command Authority:** The gateway utilizes a Lease Manager, ensuring only the authenticated supervisor holding the lease can send control commands down the API bus to the respective chambers or Flatsat racks.
 
 ## Flow

@@ -57,9 +57,18 @@
 /* Event/swimlane cards shorter */
 .graph-wall-card[data-render-kind="event_rail"] {
   --plot-height: 150px;
-  max-height: 300px;
+  max-height: 500px;
   overflow: hidden;
 }
+
+.graph-wall-card[data-render-kind="event_rail"] .graph-card-plot-shell {
+  height: min(var(--plot-height), 480px);
+  max-height: 480px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
 .graph-wall-card[data-render-kind="swimlane"] {
   --plot-height: 180px;
 }
@@ -158,6 +167,162 @@
   border-radius: var(--radius-2);
   background: var(--color-bg-2);
   padding: var(--space-4);
+}
+
+/* ── Shared time axis ───────────────────────────────────────── */
+.operator-shared-time-axis {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto auto;
+  grid-template-rows: 38px;
+  align-items: center;
+  gap: 0 var(--space-3);
+  padding: 0 var(--space-3);
+  height: 38px;
+  background: var(--color-bg-0);
+  border-top: 1px solid var(--color-border-default);
+}
+
+.time-axis-label {
+  font-size: var(--type-meta);
+  color: var(--color-text-400);
+  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.time-axis-track {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.time-axis-elapsed {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(255, 176, 0, 0.07);
+  pointer-events: none;
+}
+
+.time-axis-now {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--color-amber);
+  pointer-events: none;
+}
+
+.time-axis-peek {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 176, 0, 0.5);
+  pointer-events: none;
+}
+
+.time-axis-hover {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--color-warn);
+  pointer-events: none;
+}
+
+.time-axis-tick {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.time-axis-tick i {
+  display: block;
+  flex-shrink: 0;
+  width: 1px;
+  height: 6px;
+  background: var(--color-border-strong);
+  margin-top: 4px;
+}
+
+.time-axis-tick em {
+  display: block;
+  font-style: normal;
+  font-size: var(--type-meta);
+  color: var(--color-text-300);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+}
+
+.time-axis-controls {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.time-axis-controls span,
+.time-axis-controls small {
+  font-size: var(--type-meta);
+  color: var(--color-text-400);
+  font-family: var(--font-mono);
+}
+
+.time-axis-controls button {
+  font-size: var(--type-meta);
+  font-family: var(--font-mono);
+  padding: 2px 6px;
+  background: var(--color-bg-2);
+  color: var(--color-text-200);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-1);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.time-axis-controls button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.time-axis-scrollbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.time-axis-scrollbar small {
+  font-size: var(--type-meta);
+  color: var(--color-text-400);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.time-axis-scrollbar input[type=range] {
+  width: 120px;
+}
+
+/* Hero top time axis — rendered inside graph-card-plot-shell above the uPlot canvas */
+.hero-top-time-axis {
+  flex-shrink: 0;
+  height: 24px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-border-rule);
 }
 
 /* ── Command Center ────────────────────────────────────────── */
@@ -667,4 +832,50 @@
   border-radius: var(--radius-1);
   padding: 2px var(--space-2);
   color: var(--color-text-300);
+}
+
+/* Source Catalogue — view selector */
+.source-tree-view-selector {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--row-pad-x);
+  border-bottom: 1px solid var(--color-border-rule);
+  flex-wrap: wrap;
+}
+
+.source-tree-view-label {
+  font-size: var(--type-meta);
+  color: var(--color-text-400);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: var(--space-1);
+}
+
+.source-tree-view-btn {
+  font-family: var(--font-mono);
+  font-size: var(--type-meta);
+  background: var(--color-bg-1);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-1);
+  color: var(--color-text-300);
+  padding: 2px var(--space-3);
+  cursor: pointer;
+  transition: border-color 80ms, color 80ms;
+}
+
+.source-tree-view-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text-100);
+}
+
+.source-tree-view-btn.active {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+/* Source tree inactive dimming */
+.source-tree-inactive {
+  opacity: 0.35;
 }

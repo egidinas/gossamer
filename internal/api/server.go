@@ -19,7 +19,6 @@ import (
 	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/synthetic"
 	"github.com/egidinas/gossamer/internal/tilebundle"
-	_ "github.com/marcboeker/go-duckdb"
 )
 
 type Server struct {
@@ -175,6 +174,8 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("/api/supervisor", s.fixture("supervisor_overview.json"))
 	s.mux.HandleFunc("/api/command-center/fat", s.fixture("command_center_fat.json"))
 	s.mux.HandleFunc("/api/bus-tap", s.fixture("bus_virtualization_tap.json"))
+	s.mux.HandleFunc("/api/graph-wall-manifest", s.fixture("graph_wall_manifest.json"))
+	s.mux.HandleFunc("/api/source-tree-config", s.fixture("source_tree_config.json"))
 	s.mux.HandleFunc("/api/campaigns", s.campaigns)
 	s.mux.HandleFunc("/api/campaigns/", s.campaignDetail)
 	s.mux.HandleFunc("/api/viewer/", s.fileViewer)

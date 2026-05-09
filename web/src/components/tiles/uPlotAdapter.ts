@@ -348,7 +348,7 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
     if (x < left || x > left + width) return;
     const color = markerColor(marker);
     const operatorMarker = marker.role === "operator_interaction" || marker.kind?.startsWith("operator_");
-    const attachedMarker = marker.kind === "functional_gate" || marker.kind === "stability" || marker.kind === "stability_achieved";
+    const attachedMarker = marker.kind === "functional_gate" || marker.kind === "stability" || marker.kind === "stability_achieved" || marker.kind === "interlock" || marker.kind === "pressure_gate";
     const anchor = attachedMarker || operatorMarker ? markerAnchor(plot, tile, markerTime, top, height) : null;
     const anchorY = anchor?.y ?? top + 10;
     if (operatorMarker) {

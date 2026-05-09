@@ -1210,46 +1210,50 @@ func buildTestItemThermalDiagram(campaignID string) *contracts.TestItemThermalDi
 		ID:      campaignID + "_test_item_thermal_paths",
 		Label:   "Generic test item thermal paths",
 		Context: "thermal_chamber",
-		Summary: "Chamber air and a fluid-controlled interface drive two representative DUT thermal nodes with different mass, coupling, self-heating, and sensor behavior.",
+		Summary: "Chamber air and a fluid-controlled interface couple to the enclosure, which distributes heat to internal nodes.",
 		Nodes: []contracts.ThermalDiagramNode{
 			{ID: "chamber_air", Label: "Chamber air", Kind: "environment", Role: "convective_boundary", Signal: "chamber_air_deg_c", X: 9, Y: 33},
 			{ID: "interface_plate", Label: "Fluid interface", Kind: "interface", Role: "conductive_boundary", Signal: "interface_plate_deg_c", X: 28, Y: 69},
-			{ID: "test_item", Label: "Test item", Kind: "test_item", Role: "enclosure", X: 50, Y: 48},
-			{ID: "fast_node", Label: "High-power node", Kind: "component", Role: "fast_thermal_response", Signal: "dut_fast_component_deg_c", X: 72, Y: 32},
-			{ID: "lazy_node", Label: "Isolated node", Kind: "component", Role: "slow_thermal_response", Signal: "dut_lazy_component_deg_c", X: 73, Y: 66},
+			{ID: "test_item", Label: "Test item (Enclosure)", Kind: "test_item", Role: "enclosure", X: 50, Y: 50},
+			{ID: "fast_node", Label: "High-power node", Kind: "component", Role: "fast_thermal_response", Signal: "dut_fast_component_deg_c", X: 43, Y: 43},
+			{ID: "lazy_node", Label: "Isolated node", Kind: "component", Role: "slow_thermal_response", Signal: "dut_lazy_component_deg_c", X: 57, Y: 57},
 		},
 		Links: []contracts.ThermalDiagramLink{
-			{ID: "air_to_fast", Source: "chamber_air", Target: "fast_node", Kind: "convection", Label: "air convection", Strength: 0.58, Signal: "dut_fast_air_flux_w"},
-			{ID: "air_to_lazy", Source: "chamber_air", Target: "lazy_node", Kind: "convection", Label: "air convection", Strength: 0.42, Signal: "dut_lazy_air_flux_w"},
-			{ID: "interface_to_fast", Source: "interface_plate", Target: "fast_node", Kind: "conduction", Label: "fluid interface conduction", Strength: 0.74, Signal: "dut_fast_interface_flux_w"},
-			{ID: "interface_to_lazy", Source: "interface_plate", Target: "lazy_node", Kind: "conduction", Label: "weak interface conduction", Strength: 0.24, Signal: "dut_lazy_interface_flux_w"},
+			{ID: "air_to_enclosure", Source: "chamber_air", Target: "test_item", Kind: "convection", Label: "air convection", Strength: 0.8, Signal: "enclosure_air_flux_w"},
+			{ID: "interface_to_enclosure", Source: "interface_plate", Target: "test_item", Kind: "conduction", Label: "interface conduction", Strength: 0.9, Signal: "enclosure_interface_flux_w"},
+			{ID: "enclosure_to_fast", Source: "test_item", Target: "fast_node", Kind: "conduction", Label: "internal conduction", Strength: 0.7, Signal: "dut_fast_interface_flux_w"},
+			{ID: "enclosure_to_lazy", Source: "test_item", Target: "lazy_node", Kind: "conduction", Label: "internal conduction", Strength: 0.3, Signal: "dut_lazy_interface_flux_w"},
+			{ID: "fast_to_lazy", Source: "fast_node", Target: "lazy_node", Kind: "conduction", Label: "cross coupling", Strength: 0.2, Signal: ""},
 		},
 		Notes: []string{
-			"High-power node responds quickly and self-heats during functional gates.",
-			"Isolated node is deliberately slower, showing delayed stabilization evidence.",
+			"Environment couples to the enclosure, which then heats internal nodes.",
+			"High-power node responds quickly and cross-couples to the isolated node.",
 		},
 	}
 	if campaignID == "tvac_qualification" {
 		diagram.Context = "thermal_vacuum"
-		diagram.Summary = "Vacuum reduces air coupling, so the thermal shroud becomes the dominant radiative boundary while the platen/interface remains a weaker conductive path for a generic satellite-like test item."
+		diagram.Summary = "Vacuum reduces air coupling. Shroud radiation dominates the enclosure, which conducts to internal nodes."
 		diagram.Nodes = []contracts.ThermalDiagramNode{
 			{ID: "thermal_shroud", Label: "Thermal shroud", Kind: "environment", Role: "radiative_boundary", Signal: "thermal_shroud_deg_c", X: 9, Y: 31},
 			{ID: "platen", Label: "Platen", Kind: "interface", Role: "conductive_boundary", Signal: "interface_plate_deg_c", X: 29, Y: 72},
-			{ID: "test_item", Label: "Test item", Kind: "test_item", Role: "enclosure", X: 50, Y: 49},
-			{ID: "fast_node", Label: "High-power node", Kind: "component", Role: "fast_thermal_response", Signal: "dut_fast_component_deg_c", X: 73, Y: 32},
-			{ID: "lazy_node", Label: "Isolated node", Kind: "component", Role: "slow_thermal_response", Signal: "dut_lazy_component_deg_c", X: 74, Y: 66},
+			{ID: "chamber_air", Label: "Residual air", Kind: "environment", Role: "convective_boundary", Signal: "chamber_air_deg_c", X: 9, Y: 10},
+			{ID: "test_item", Label: "Test item (Enclosure)", Kind: "test_item", Role: "enclosure", X: 50, Y: 50},
+			{ID: "fast_node", Label: "High-power node", Kind: "component", Role: "fast_thermal_response", Signal: "dut_fast_component_deg_c", X: 43, Y: 43},
+			{ID: "lazy_node", Label: "Isolated node", Kind: "component", Role: "slow_thermal_response", Signal: "dut_lazy_component_deg_c", X: 57, Y: 57},
 			{ID: "pressure", Label: "Vacuum pressure", Kind: "environment", Role: "coupling_modifier", Signal: "tvac_pressure_mbar", X: 24, Y: 19},
 		}
 		diagram.Links = []contracts.ThermalDiagramLink{
-			{ID: "shroud_to_fast", Source: "thermal_shroud", Target: "fast_node", Kind: "radiation", Label: "radiative exchange", Strength: 0.58, Signal: "dut_fast_shroud_flux_w"},
-			{ID: "shroud_to_lazy", Source: "thermal_shroud", Target: "lazy_node", Kind: "radiation", Label: "radiative exchange", Strength: 0.82, Signal: "dut_lazy_shroud_flux_w"},
-			{ID: "platen_to_fast", Source: "platen", Target: "fast_node", Kind: "conduction", Label: "platen conduction", Strength: 0.46, Signal: "dut_fast_interface_flux_w"},
-			{ID: "platen_to_lazy", Source: "platen", Target: "lazy_node", Kind: "conduction", Label: "weak platen conduction", Strength: 0.16, Signal: "dut_lazy_interface_flux_w"},
-			{ID: "pressure_air_coupling", Source: "pressure", Target: "test_item", Kind: "modifier", Label: "low pressure suppresses air coupling", Strength: 0.35, Signal: "tvac_pressure_mbar"},
+			{ID: "shroud_to_enclosure", Source: "thermal_shroud", Target: "test_item", Kind: "radiation", Label: "radiative exchange", Strength: 0.8, Signal: "enclosure_shroud_flux_w"},
+			{ID: "platen_to_enclosure", Source: "platen", Target: "test_item", Kind: "conduction", Label: "platen conduction", Strength: 0.6, Signal: "enclosure_interface_flux_w"},
+			{ID: "air_to_enclosure", Source: "chamber_air", Target: "test_item", Kind: "convection", Label: "residual convection", Strength: 0.1, Signal: "enclosure_air_flux_w"},
+			{ID: "enclosure_to_fast", Source: "test_item", Target: "fast_node", Kind: "conduction", Label: "internal conduction", Strength: 0.7, Signal: "dut_fast_interface_flux_w"},
+			{ID: "enclosure_to_lazy", Source: "test_item", Target: "lazy_node", Kind: "conduction", Label: "internal conduction", Strength: 0.3, Signal: "dut_lazy_interface_flux_w"},
+			{ID: "fast_to_lazy", Source: "fast_node", Target: "lazy_node", Kind: "conduction", Label: "cross coupling", Strength: 0.2, Signal: ""},
+			{ID: "pressure_air_coupling", Source: "pressure", Target: "air_to_enclosure", Kind: "modifier", Label: "low pressure suppresses air coupling", Strength: 0.35, Signal: "tvac_pressure_mbar"},
 		}
 		diagram.Notes = []string{
-			"Air convection collapses during pumpdown, making shroud radiation visible in the slow node.",
-			"The platen/interface is present but intentionally weaker for this generic satellite-like configuration.",
+			"Air convection collapses during pumpdown. Modifiers now target the convection link correctly.",
+			"Internal components sit visually and logically inside the enclosure.",
 		}
 	}
 	return diagram
@@ -1347,7 +1351,7 @@ func companionGroups(campaignID string, axes []contracts.GraphYAxis, trace sampl
 		},
 		{
 			ID:    "tmtc_bus_response",
-			Label: "TM/TC bus response",
+			Label: "Transport bus response",
 			Axes:  []contracts.GraphYAxis{busAxis},
 			Traces: []contracts.GraphTrace{
 				{ID: "trace.bus_latency", Label: "Bus latency", Role: "source_quality", Units: "ms", AxisID: "bus_ms", Source: "demo_bus_virtualization", Values: trace.busLatency},
@@ -1356,12 +1360,12 @@ func companionGroups(campaignID string, axes []contracts.GraphYAxis, trace sampl
 		},
 		{
 			ID:    "tmtc_counter_response",
-			Label: "TM/TC counters",
+			Label: "Transport counters",
 			Axes:  []contracts.GraphYAxis{{ID: "counter", Label: "Counter", Units: "count", Scale: "linear", Min: 0, Max: 9000, Side: "left", Format: "0"}},
 			Traces: []contracts.GraphTrace{
 				{ID: "trace.overall_packet_counter", Label: "Overall packet counter", Role: "counter", Units: "count", AxisID: "counter", Source: "demo_bus_virtualization", Values: trace.overall},
-				{ID: "trace.tm_packet_counter", Label: "TM packet counter", Role: "counter", Units: "count", AxisID: "counter", Source: "demo_bus_virtualization", Values: trace.tmCounter},
-				{ID: "trace.tc_packet_counter", Label: "TC packet counter", Role: "counter", Units: "count", AxisID: "counter", Source: "demo_bus_virtualization", Values: trace.tcCounter},
+				{ID: "trace.tm_packet_counter", Label: "Downlink packet counter", Role: "counter", Units: "count", AxisID: "counter", Source: "demo_bus_virtualization", Values: trace.tmCounter},
+				{ID: "trace.tc_packet_counter", Label: "Uplink packet counter", Role: "counter", Units: "count", AxisID: "counter", Source: "demo_bus_virtualization", Values: trace.tcCounter},
 				{ID: "trace.dropped_frame_count", Label: "Dropped frames", Role: "counter", Units: "count", AxisID: "counter", Source: "demo_bus_virtualization", Values: trace.dropCount},
 			},
 		},

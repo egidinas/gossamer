@@ -1,53 +1,12 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-01-18T14:22:00Z",
-  "lease_owner": "test_conductor_role",
-  "lease_state": "held",
+  "generated_at": "2026-01-15T10:00:00Z",
+  "lease_owner": "",
+  "lease_state": "available",
   "allowed_commands": [
     "set_demo_marker",
     "acknowledge_anomaly",
-    "hold_fixture_state",
-    "resume_fixture_state",
-    "set_phase_label",
-    "request_functional_gate"
+    "hold_fixture_state"
   ],
-  "last_command": "acknowledge_anomaly ANOM-FAT-003",
-  "operator_log": [
-    {
-      "t": "2026-01-15T09:58:11Z",
-      "operator": "test_conductor_role",
-      "action": "lease_acquired",
-      "detail": "Command authority acquired ahead of pre-conditioning start. Supervisor node confirmed."
-    },
-    {
-      "t": "2026-01-16T03:14:47Z",
-      "operator": "test_conductor_role",
-      "action": "hold_issued",
-      "detail": "Facility hold issued: heater bank 2 thermocouple (TC-H2) open-circuit fault. Chamber ramp suspended at +12 °C. Ref. ANOM-FAT-003."
-    },
-    {
-      "t": "2026-01-16T03:37:02Z",
-      "operator": "facility_engineer_role",
-      "action": "set_demo_marker",
-      "detail": "Marker placed at TC-H2 replacement point. Hold duration: 22 min 15 s."
-    },
-    {
-      "t": "2026-01-16T03:37:21Z",
-      "operator": "test_conductor_role",
-      "action": "resume_issued",
-      "detail": "Hold cleared. Ramp resumed. DUT telemetry continuous throughout hold; no re-soak required."
-    },
-    {
-      "t": "2026-01-17T11:05:33Z",
-      "operator": "test_conductor_role",
-      "action": "request_functional_gate",
-      "detail": "Hot-operational functional gate requested for cycle 2. Gate evaluation dispatched to supervisor."
-    },
-    {
-      "t": "2026-01-18T14:22:00Z",
-      "operator": "test_conductor_role",
-      "action": "acknowledge_anomaly",
-      "detail": "ANOM-FAT-003 acknowledged and closed. TCR-FAT-2026-007 filed. Lease retained for end-of-campaign sign-off."
-    }
-  ]
+  "last_command": ""
 }

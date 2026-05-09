@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "test:contracts": "node scripts/test-contracts.mjs",
+    "test:contracts": "node scripts/test-contracts.mjs && node scripts/test-agent-context-codec.mjs",
+    "test:clean-room": "node scripts/test-clean-room.mjs",
     "test:browser": "node scripts/browser-smoke.mjs",
     "test:hosted": "node scripts/hosted-smoke.mjs"
   },

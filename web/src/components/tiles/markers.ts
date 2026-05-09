@@ -97,14 +97,14 @@ export function fitCanvasText(ctx: CanvasRenderingContext2D, text: string, maxWi
 export function shortGateLabel(label: string) {
   return label
     .replace(/\s+breakdown\s+start$/i, " BD")
-    .replace(/\s+reset\s+start$/i, " RESET")
-    .replace(/\s+reset\s+ready$/i, " READY")
-    .replace(/^Stable\s+/i, "STABLE ")
+    .replace(/\s+reset\s+start$/i, " RST")
+    .replace(/\s+reset\s+ready$/i, " RDY")
+    .replace(/^Stable\s+/i, "STBL ")
     .replace(/\s+confirmed$/i, "")
     .replace(/^Cycle\s+/i, "C")
     .replace(/\s+dwell\s+functional\s+test/i, " FT")
     .replace(/\s+functional\s+test/i, " FT")
-    .slice(0, 18);
+    .slice(0, 8);
 }
 
 export function legendReadouts(tile: GraphTile, visibleSignals: Array<{ id: string; label: string }>, timeMs?: number, currentTimeMs?: number) {

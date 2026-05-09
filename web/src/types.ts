@@ -37,20 +37,48 @@ export type Source = {
   node_id: string;
   served_by: string;
   owner: string;
+  owner_mode: "exclusive_connection" | "shared_monitor" | "external_master" | "derived" | "fallback";
+  use: "primary" | "shared" | "derivative" | "fallback";
+  format_preference: "decoded" | "raw_legacy";
   bus: string;
   quality: string;
   freshness_ms: number;
   provenance: string;
   evidence_suitability: string;
   signals: string[];
+  discovery_path: {
+    node: string;
+    device: string;
+    subsystem: string;
+    stream: string;
+  };
   sensor_type?: string;
   uncertainty_pct?: number;
   last_calibration?: string;
   calibration_reference?: string;
 };
 
+export type SourceDiscoveryNode = {
+  id: string;
+  label: string;
+  kind: "node" | "device" | "subsystem" | "stream" | string;
+  source_id?: string;
+  children?: SourceDiscoveryNode[];
+};
+
 export type SourceCatalogue = Envelope & {
   sources: Source[];
+  tree: SourceDiscoveryNode[];
+};
+
+export type SourceTreeView = {
+  id: string;
+  label: string;
+  source_ids: string[];
+};
+
+export type SourceTreeConfig = Envelope & {
+  views: SourceTreeView[];
 };
 
 export type Requirement = {

@@ -21,7 +21,15 @@ type Props = {
   afterProgress?: ReactNode;
 };
 
-const TIME_GRID_TICK_COUNT = 14;
+function useViewportTickCount() {
+  const [w, setW] = useState(() => typeof window !== "undefined" ? window.innerWidth : 1440);
+  useEffect(() => {
+    const onResize = () => setW(window.innerWidth);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  return w < 480 ? 6 : w < 820 ? 9 : 14;
+}
 const DAY_MS = 86_400_000;
 
 export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }: Props) {
@@ -34,6 +42,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
   const [peekTimeMs, setPeekTimeMs] = useState<number | undefined>(undefined);
   const [timeAxisBounds, setTimeAxisBounds] = useState<{ left: number; right: number } | undefined>(undefined);
   const viewportWidth = useViewportWidth();
+  const tickCount = useViewportTickCount();
   const fullTimeRange = useMemo(() => graphTimeRange(heroGraph), [heroGraph]);
   const defaultTimeRange = useMemo(() => defaultGraphTimeRange(campaignId, heroGraph, fullTimeRange, viewportWidth), [campaignId, heroGraph, fullTimeRange, viewportWidth]);
   const [viewRange, setViewRange] = useState<TimeRange>(defaultTimeRange);
@@ -138,7 +147,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
         peekTimeMs={peekTimeMs}
         plotBounds={timeAxisBounds}
         onTimeRange={setViewRange}
-        tickCount={TIME_GRID_TICK_COUNT}
+        tickCount={tickCount}
       />
       <div className="operator-wall-scrollframe" ref={scrollFrameRef}>
         {[...wall.sections].sort(graphSectionPriority).map((section) => (
@@ -347,13 +356,14 @@ function GraphWallCardView({
   onHeightChange: (height: number) => void;
 }) {
   const renderKind = cardRef?.render_kind ?? card.render_kind ?? renderKindFor(card.kind);
+  const heroTickCount = useViewportTickCount();
   const visibleSignals = orderLegendSignals(cardRef?.signals ?? card.signals).slice(0, renderKind === "swimlane" ? 10 : 7);
   const readouts = tile ? legendReadouts(tile, visibleSignals, readoutTimeMs, currentTimeMs) : new Map<string, string>();
   const cardRefEl = useRef<HTMLElement | null>(null);
   const isPrimary = card.role === "primary" || card.placement.pinned;
   const defaultPlotHeight = isPrimary ? 300 : renderKind === "swimlane" ? 180 : renderKind === "event_rail" ? 150 : 220;
   const minHeight = renderKind === "swimlane" ? 150 : renderKind === "event_rail" ? 120 : isPrimary ? 240 : 180;
-  const maxHeight = card.id === "thermal_program" ? 760 : 560;
+  const maxHeight = renderKind === "event_rail" ? 360 : card.id === "thermal_program" ? 760 : 560;
   const style = height ? ({ "--plot-height": `${height}px` } as CSSProperties) : undefined;
   const startResize = (event: ReactPointerEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -408,7 +418,7 @@ function GraphWallCardView({
             {tile && renderKind === "event_rail" && <EventRailTile tile={tile} heroGraph={heroGraph} currentTimeMs={currentTimeMs} hoverTimeMs={hoverTimeMs} readoutTimeMs={readoutTimeMs} timeRange={timeRange} />}
             {tile && renderKind !== "swimlane" && renderKind !== "event_rail" && (
               <>
-                {card.id === "thermal_program" && <HeroTopTimeAxis timeRange={timeRange} currentTimeMs={currentTimeMs} hoverTimeMs={hoverTimeMs} readoutTimeMs={readoutTimeMs} />}
+                {card.id === "thermal_program" && <HeroTopTimeAxis timeRange={timeRange} currentTimeMs={currentTimeMs} hoverTimeMs={hoverTimeMs} readoutTimeMs={readoutTimeMs} tickCount={heroTickCount} />}
                 <UPlotTile
                   tile={tile}
                   heroGraph={heroGraph}
@@ -638,7 +648,7 @@ function SwimlaneTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTime
   const end = timeRange.end;
   const span = Math.max(1, end - start);
   const now = currentTimeMs ?? Date.parse(heroGraph.time_axis.now ?? heroGraph.execution?.now ?? "");
-  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), TIME_GRID_TICK_COUNT);
+  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), 14);
   return (
     <div className="tile-swimlane" data-swimlane-card={tile.card_id}>
       <div className="tile-time-plane">
@@ -668,12 +678,25 @@ function EventRailTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTim
   const end = timeRange.end;
   const span = Math.max(1, end - start);
   const now = currentTimeMs ?? Date.parse(heroGraph.time_axis.now ?? heroGraph.execution?.now ?? "");
-  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), TIME_GRID_TICK_COUNT);
+  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), 14);
+  const eventRailMarkers = (tile.markers ?? []).filter((marker) => inTimeRange(marker.timestamp, timeRange));
+  const labeledEventRailMarkerIDs = new Set(eventRailMarkers
+    .filter((marker, index, markers) => {
+      const markerTime = Date.parse(marker.timestamp);
+      if (!Number.isFinite(markerTime)) return false;
+      const left = ((markerTime - start) / span) * 100;
+      return !markers.slice(0, index).some((previous) => {
+        const previousTime = Date.parse(previous.timestamp);
+        if (!Number.isFinite(previousTime)) return false;
+        return Math.abs(((previousTime - start) / span) * 100 - left) < 3.5;
+      });
+    })
+    .map((marker) => marker.id));
   return (
     <div className="tile-event-rail" data-event-card={tile.card_id}>
       <div className="tile-time-plane">
         {ticks.map((tick) => <span className="tile-shared-gridline" key={tick.iso} style={{ left: `${tick.ratio * 100}%` }} />)}
-        {(tile.markers ?? []).filter((marker) => inTimeRange(marker.timestamp, timeRange)).map((marker, index) => {
+        {eventRailMarkers.map((marker, index) => {
           const left = Math.max(0, Math.min(100, ((Date.parse(marker.timestamp) - start) / span) * 100));
           const color = markerColor(marker);
           return (
@@ -684,7 +707,7 @@ function EventRailTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTim
               title={`${marker.label} ${marker.timestamp}`}
             >
               <i className={`event-marker event-${marker.result ?? marker.kind}`} style={{ background: color }} />
-              <strong>{shortGateLabel(marker.label)}</strong>
+              {labeledEventRailMarkerIDs.has(marker.id) && <strong>{shortGateLabel(marker.label)}</strong>}
             </span>
           );
         })}

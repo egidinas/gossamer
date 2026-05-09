@@ -1014,7 +1014,7 @@
         },
         {
           "id": "bus_latency_ms",
-          "label": "TM/TC Latency",
+          "label": "Transport Latency",
           "signal": "bus_latency_ms",
           "units": "ms",
           "role": "virtual_bus_health",
@@ -6549,7 +6549,7 @@
       "label": "Archive Evidence Capture",
       "facility": "archive_node_a",
       "campaign": "integrated_system_fat",
-      "activity": "TM/TC capture and evidence packaging",
+      "activity": "Transport capture and evidence packaging",
       "state": "complete",
       "result": "pass",
       "primary_bus": "telemetry_bus",
@@ -6762,7 +6762,7 @@
         },
         {
           "id": "tm_packet_counter",
-          "label": "TM Counter",
+          "label": "Packet counter",
           "signal": "tm_packet_counter",
           "units": "count",
           "role": "telemetry_counter",
@@ -6966,7 +6966,7 @@
         }
       ],
       "notes": [
-        "Archive node receives virtualized TM and TC events from the replay bus."
+        "Archive node receives virtualized transport events from the replay bus."
       ]
     }
   ]

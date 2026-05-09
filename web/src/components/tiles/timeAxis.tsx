@@ -85,11 +85,11 @@ export function TimeAxisTrack({ ticks, start, end, nowRatio, hoverTimeMs, peekTi
   );
 }
 
-export function HeroTopTimeAxis({ timeRange, currentTimeMs, hoverTimeMs, readoutTimeMs }: { timeRange: TimeRange; currentTimeMs?: number; hoverTimeMs?: number; readoutTimeMs?: number }) {
+export function HeroTopTimeAxis({ timeRange, currentTimeMs, hoverTimeMs, readoutTimeMs, tickCount }: { timeRange: TimeRange; currentTimeMs?: number; hoverTimeMs?: number; readoutTimeMs?: number; tickCount?: number }) {
   const start = timeRange.start;
   const end = timeRange.end;
   const nowRatio = typeof currentTimeMs === "number" && Number.isFinite(currentTimeMs) ? Math.max(0, Math.min(1, (currentTimeMs - start) / Math.max(1, end - start))) : undefined;
-  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), TIME_GRID_TICK_COUNT_DEFAULT);
+  const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), tickCount ?? TIME_GRID_TICK_COUNT_DEFAULT);
   return (
     <div className="hero-top-time-axis" aria-label="Hero graph top time axis">
       <TimeAxisTrack ticks={ticks} start={start} end={end} nowRatio={nowRatio} hoverTimeMs={hoverTimeMs} peekTimeMs={readoutTimeMs !== hoverTimeMs ? readoutTimeMs : undefined} compact />

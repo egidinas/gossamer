@@ -3,7 +3,6 @@
   "private": true,
   "scripts": {
     "build": "npm --prefix web run build",
-    "test:contracts": "npm --prefix web run test:contracts"
+    "test:contracts": "npm --prefix web run test:contracts && npm --prefix web run test:clean-room"
   }
 }
-

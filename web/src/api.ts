@@ -11,6 +11,7 @@ import type {
   GraphModel,
   Manifest,
   SourceCatalogue,
+  SourceTreeConfig,
   SupervisorOverview,
   TileBundleManifest,
   Topology
@@ -72,6 +73,7 @@ export const api = {
   manifest: () => getJSON<Manifest>("/api/manifest"),
   topology: () => getJSON<Topology>("/api/topology"),
   sources: () => getJSON<SourceCatalogue>("/api/sources"),
+  sourceTreeConfig: () => getJSON<SourceTreeConfig>("/api/source-tree-config"),
   supervisor: () => getJSON<SupervisorOverview>("/api/supervisor"),
   commandCenterFAT: () => getJSON<CommandCenterFAT>("/data/current/command_center_fat.json"),
   busTap: () => getJSON<BusVirtualizationTap>("/api/bus-tap"),
@@ -121,6 +123,13 @@ export function useSourcesQuery() {
   return useQuery({
     queryKey: ["sources"],
     queryFn: api.sources,
+  });
+}
+
+export function useSourceTreeConfigQuery() {
+  return useQuery({
+    queryKey: ["source-tree-config"],
+    queryFn: api.sourceTreeConfig,
   });
 }
 

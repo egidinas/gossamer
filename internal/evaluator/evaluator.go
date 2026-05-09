@@ -245,7 +245,7 @@ func rationale(id, result string, campaign contracts.Campaign) string {
 		case "REQ-DWELL":
 			return fmt.Sprintf("Hot and cold dwell windows are declared for all %d cycles and referenced by telemetry evidence.", campaign.ThermalProgram.CycleCount)
 		case "REQ-FUNC-GATE-PRE", "REQ-FUNC-GATE-SURVIVAL", "REQ-FUNC-GATE-DURING", "REQ-FUNC-GATE-POST":
-			return "Functional gate markers are present in telemetry and linked to load, TM/TC bus latency, packet counter, and thermal self-heating evidence."
+			return "Functional gate markers are present in telemetry and linked to load, transport bus latency, packet counter, and thermal self-heating evidence."
 		case "REQ-DATA-QUALITY":
 			return "Sensor freshness, dropout/source-quality flags, and graph evidence markers are evaluated from the generated physical telemetry."
 		case "REQ-ANOMALY-REVIEW":

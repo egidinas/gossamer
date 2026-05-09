@@ -71,13 +71,13 @@ func Build() FixtureSet {
 				// Test article
 				{ID: "reference_dut", Label: "Reference DUT", Kind: "test_article", Status: "in_test", Quality: "synthetic"},
 				// Thermal chamber PLCs — one per chamber; thermal_supervisor_pc polls them all
-				{ID: "thermal_chamber_a", Label: "Thermal Chamber A PLC", Kind: "facility_plc", Status: "campaign_active", Quality: "fresh"},
-				{ID: "thermal_chamber_b", Label: "Thermal Chamber B PLC", Kind: "facility_plc", Status: "available", Quality: "fresh"},
-				{ID: "thermal_chamber_c", Label: "Thermal Chamber C PLC", Kind: "facility_plc", Status: "available", Quality: "fresh"},
-				{ID: "thermal_chamber_d", Label: "Thermal Chamber D PLC", Kind: "facility_plc", Status: "available", Quality: "fresh"},
+				{ID: "thermal_chamber_a", Label: "Chamber Alpha PLC", Kind: "facility_plc", Status: "campaign_active", Quality: "fresh"},
+				{ID: "thermal_chamber_b", Label: "Chamber Bravo PLC", Kind: "facility_plc", Status: "available", Quality: "fresh"},
+				{ID: "thermal_chamber_c", Label: "Chamber Charlie PLC", Kind: "facility_plc", Status: "available", Quality: "fresh"},
+				{ID: "thermal_chamber_d", Label: "Chamber Delta PLC", Kind: "facility_plc", Status: "available", Quality: "fresh"},
 				// Thermal supervisor PC — gathers all four chamber PLCs and house PLC; serves as gateway for thermal data
 				{ID: "thermal_supervisor_pc", Label: "Thermal Supervisor PC", Kind: "computer", Status: "active", Quality: "fresh"},
-				// TVac — PLC controls cryo/vacuum; two computers relay TMTC and record data
+				// TVac — PLC controls cryo/vacuum; two computers relay transport streams and record data
 				{ID: "tvac_chamber_q1", Label: "TVac Chamber Q1", Kind: "facility", Status: "campaign_active", Quality: "fresh"},
 				{ID: "tvac_plc_q1", Label: "TVac PLC Q1", Kind: "facility_plc", Status: "campaign_active", Quality: "fresh"},
 				{ID: "tvac_computer_1", Label: "TVac Computer 1 (Primary)", Kind: "computer", Status: "active", Quality: "fresh"},
@@ -195,6 +195,12 @@ func WritePublicFixtures(root string) error {
 	if err := writeJSON(filepath.Join(base, "bus_virtualization_tap.json"), set.BusTap); err != nil {
 		return err
 	}
+	if err := writeJSON(filepath.Join(base, "graph_wall_manifest.json"), buildGraphWallManifest(set.Manifest.Envelope)); err != nil {
+		return err
+	}
+	if err := writeJSON(filepath.Join(base, "source_tree_config.json"), buildSourceTreeConfig(set.Manifest.Envelope)); err != nil {
+		return err
+	}
 	for _, id := range CampaignIDs {
 		if err := writeJSON(filepath.Join(base, "campaigns", id+".json"), set.Campaigns[id]); err != nil {
 			return err
@@ -215,6 +221,52 @@ func WritePublicFixtures(root string) error {
 		return err
 	}
 	return nil
+}
+
+func buildGraphWallManifest(env contracts.Envelope) contracts.GraphWallManifest {
+	return contracts.GraphWallManifest{
+		Envelope: env,
+		Targets: []contracts.GraphWallTarget{
+			{TargetID: "graph_wall.thermal.chamber_a.air", Lane: "thermal", Role: "temperature_primary", SourceID: "chamber_thermal_fat", Timestamp: env.GeneratedAt},
+			{TargetID: "graph_wall.tvac.pressure.main", Lane: "tvac", Role: "pressure_primary", SourceID: "chamber_pressure_tvac", Timestamp: env.GeneratedAt},
+			{TargetID: "graph_wall.transport.tmtc.primary", Lane: "transport", Role: "decoded_tmtc", SourceID: "tvac_tmtc_primary", Timestamp: env.GeneratedAt},
+			{TargetID: "graph_wall.archive.quality", Lane: "evidence", Role: "source_quality", SourceID: "archive_quality", Timestamp: env.GeneratedAt},
+		},
+	}
+}
+
+func buildSourceTreeConfig(env contracts.Envelope) contracts.SourceTreeConfig {
+	views := []contracts.SourceTreeView{
+		{
+			// FAT: 4 thermal chambers only; infra listed last so it appears at bottom of table
+			ID:    "thermal_acceptance_fat",
+			Label: "Acceptance FAT",
+			SourceIDs: []string{
+				"chamber_thermal_fat", "chamber_thermal_b", "chamber_thermal_c", "chamber_thermal_d",
+				"chamber_infra_fat",
+			},
+		},
+		{
+			ID:    "tvac_qualification",
+			Label: "Qualification TVac",
+			SourceIDs: []string{
+				"dut_power", "dut_control", "dut_link", "dut_thermal",
+				"chamber_thermal_tvac", "chamber_infra_tvac", "chamber_pressure_tvac",
+				"tvac_plc", "archive_bus", "archive_quality",
+			},
+		},
+		{
+			// command center uses aggregate per-chamber lanes not mapped 1:1 to catalogue IDs
+			ID:    "command_center_fat",
+			Label: "Command Center",
+			SourceIDs: []string{
+				"chamber_thermal_fat", "chamber_thermal_b", "chamber_thermal_c", "chamber_thermal_d",
+				"dut_thermal", "supervisor_state", "thermal_supervisor",
+			},
+		},
+	}
+
+	return contracts.SourceTreeConfig{Envelope: env, Views: views}
 }
 
 func telemetryWithGraphTraces(samples []contracts.TelemetrySample, model contracts.GraphModel) []contracts.TelemetrySample {
@@ -255,19 +307,19 @@ func telemetryWithGraphTraces(samples []contracts.TelemetrySample, model contrac
 }
 
 func buildSources(env contracts.Envelope) contracts.SourceCatalogue {
-	return contracts.SourceCatalogue{Envelope: env, Sources: []contracts.Source{
+	sources := []contracts.Source{
 		// DUT — telemetry flows to archive_node_a, then librarian indexes and gateway serves to clients
 		{ID: "dut_power", Label: "DUT Power", NodeID: "reference_dut", ServedBy: "archive_node_a", Owner: "egse_power_role", Bus: "telemetry_bus", Quality: "fresh", FreshnessMS: 250, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "primary", Signals: []string{"eps_bus_voltage_v", "eps_bus_current_a", "dut_self_heat_w"}},
 		{ID: "dut_control", Label: "DUT Control", NodeID: "reference_dut", ServedBy: "archive_node_a", Owner: "subsystem_test_role", Bus: "subsystem_event_bus", Quality: "fresh", FreshnessMS: 500, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"obc_boot_state", "obc_command_counter", "tc_packet_counter"}},
 		{ID: "dut_link", Label: "DUT Link", NodeID: "reference_dut", ServedBy: "archive_node_a", Owner: "subsystem_test_role", Bus: "telemetry_bus", Quality: "fresh", FreshnessMS: 450, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"rf_link_margin_db", "tm_packet_counter"}},
 		{ID: "dut_thermal", Label: "DUT Thermal Model", NodeID: "reference_dut", ServedBy: "archive_node_a", Owner: "test_conductor_role", Bus: "derived_model_bus", Quality: "synthetic", FreshnessMS: 300, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"dut_fast_component_deg_c", "dut_lazy_component_deg_c", "dut_fast_air_flux_w", "dut_fast_interface_flux_w", "dut_fast_shroud_flux_w", "dut_lazy_air_flux_w", "dut_lazy_interface_flux_w", "dut_lazy_shroud_flux_w"}},
 		// Thermal Chamber A PLC — polled by thermal_supervisor_pc which serves it to gateway_a
-		{ID: "chamber_thermal_fat", Label: "Chamber Thermal (FAT)", NodeID: "thermal_chamber_a", ServedBy: "thermal_supervisor_pc", Owner: "facility_operator_role", Bus: "facility_control_bus", Quality: "fresh", FreshnessMS: 300, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "primary", Signals: []string{"thermal_cycle_index", "thermal_phase_code", "chamber_setpoint_deg_c", "thermal_zone_1_deg_c", "thermal_zone_2_deg_c", "chamber_air_deg_c", "interface_plate_deg_c", "thermal_shroud_deg_c", "thermal_shroud_inlet_deg_c", "thermal_shroud_outlet_deg_c", "thermal_shroud_gradient_deg_c", "huber_table_deg_c", "ln2_valve_duty_pct"}},
-		{ID: "chamber_infra_fat", Label: "Building Infrastructure (FAT)", NodeID: "thermal_chamber_a", ServedBy: "thermal_supervisor_pc", Owner: "facility_operator_role", Bus: "facility_utility_bus", Quality: "fresh", FreshnessMS: 600, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"cooling_water_freeze_margin_deg_c", "cooling_water_temp_deg_c", "pressurized_air_supply_bar", "air_dewpoint_deg_c"}},
+		{ID: "chamber_thermal_fat", Label: "Chamber Thermal Alpha", NodeID: "thermal_chamber_a", ServedBy: "thermal_supervisor_pc", Owner: "facility_operator_role", Bus: "facility_control_bus", Quality: "fresh", FreshnessMS: 300, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "primary", Signals: []string{"thermal_cycle_index", "thermal_phase_code", "chamber_setpoint_deg_c", "thermal_zone_1_deg_c", "thermal_zone_2_deg_c", "chamber_air_deg_c", "interface_plate_deg_c", "thermal_shroud_deg_c", "thermal_shroud_inlet_deg_c", "thermal_shroud_outlet_deg_c", "thermal_shroud_gradient_deg_c", "huber_table_deg_c", "ln2_valve_duty_pct"}},
+		{ID: "chamber_infra_fat", Label: "Building Infrastructure Alpha", NodeID: "thermal_chamber_a", ServedBy: "thermal_supervisor_pc", Owner: "facility_operator_role", Bus: "facility_utility_bus", Quality: "fresh", FreshnessMS: 600, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"cooling_water_freeze_margin_deg_c", "cooling_water_temp_deg_c", "pressurized_air_supply_bar", "air_dewpoint_deg_c"}},
 		// Thermal Chambers B/C/D PLCs — available; polled by thermal_supervisor_pc
-		{ID: "chamber_thermal_b", Label: "Chamber Thermal B", NodeID: "thermal_chamber_b", ServedBy: "thermal_supervisor_pc", Owner: "facility_operator_role", Bus: "facility_control_bus", Quality: "fresh", FreshnessMS: 300, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "primary", Signals: []string{"thermal_cycle_index", "thermal_phase_code", "chamber_setpoint_deg_c", "thermal_zone_1_deg_c", "thermal_zone_2_deg_c", "chamber_air_deg_c"}},
-		{ID: "chamber_thermal_c", Label: "Chamber Thermal C", NodeID: "thermal_chamber_c", ServedBy: "thermal_supervisor_pc", Owner: "facility_operator_role", Bus: "facility_control_bus", Quality: "fresh", FreshnessMS: 300, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "primary", Signals: []string{"thermal_cycle_index", "thermal_phase_code", "chamber_setpoint_deg_c", "thermal_zone_1_deg_c", "thermal_zone_2_deg_c", "chamber_air_deg_c"}},
-		{ID: "chamber_thermal_d", Label: "Chamber Thermal D", NodeID: "thermal_chamber_d", ServedBy: "thermal_supervisor_pc", Owner: "facility_operator_role", Bus: "facility_control_bus", Quality: "fresh", FreshnessMS: 300, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "primary", Signals: []string{"thermal_cycle_index", "thermal_phase_code", "chamber_setpoint_deg_c", "thermal_zone_1_deg_c", "thermal_zone_2_deg_c", "chamber_air_deg_c"}},
+		{ID: "chamber_thermal_b", Label: "Chamber Thermal Bravo", NodeID: "thermal_chamber_b", ServedBy: "thermal_supervisor_pc", Owner: "facility_operator_role", Bus: "facility_control_bus", Quality: "fresh", FreshnessMS: 300, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "primary", Signals: []string{"thermal_cycle_index", "thermal_phase_code", "chamber_setpoint_deg_c", "thermal_zone_1_deg_c", "thermal_zone_2_deg_c", "chamber_air_deg_c"}},
+		{ID: "chamber_thermal_c", Label: "Chamber Thermal Charlie", NodeID: "thermal_chamber_c", ServedBy: "thermal_supervisor_pc", Owner: "facility_operator_role", Bus: "facility_control_bus", Quality: "fresh", FreshnessMS: 300, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "primary", Signals: []string{"thermal_cycle_index", "thermal_phase_code", "chamber_setpoint_deg_c", "thermal_zone_1_deg_c", "thermal_zone_2_deg_c", "chamber_air_deg_c"}},
+		{ID: "chamber_thermal_d", Label: "Chamber Thermal Delta", NodeID: "thermal_chamber_d", ServedBy: "thermal_supervisor_pc", Owner: "facility_operator_role", Bus: "facility_control_bus", Quality: "fresh", FreshnessMS: 300, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "primary", Signals: []string{"thermal_cycle_index", "thermal_phase_code", "chamber_setpoint_deg_c", "thermal_zone_1_deg_c", "thermal_zone_2_deg_c", "chamber_air_deg_c"}},
 		// Thermal Supervisor PC — aggregated view of all thermal chambers; served to gateway_a
 		{ID: "thermal_supervisor", Label: "Thermal Supervisor PC State", NodeID: "thermal_supervisor_pc", ServedBy: "gateway_a", Owner: "facility_operator_role", Bus: "api_bus", Quality: "fresh", FreshnessMS: 500, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"active_chamber_count", "chamber_interlock_any", "thermal_schedule_state", "thermal_supervisor_uptime_s"}},
 		// House Control PLC — facility-wide utilities; polled by thermal_supervisor_pc
@@ -278,10 +330,10 @@ func buildSources(env contracts.Envelope) contracts.SourceCatalogue {
 		{ID: "chamber_thermal_tvac", Label: "Chamber Thermal (TVac)", NodeID: "tvac_chamber_q1", ServedBy: "tvac_computer_1", Owner: "tvac_computer_role", Bus: "facility_control_bus", Quality: "fresh", FreshnessMS: 300, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "primary", Signals: []string{"thermal_cycle_index", "thermal_phase_code", "chamber_setpoint_deg_c", "thermal_zone_1_deg_c", "thermal_zone_2_deg_c", "chamber_air_deg_c", "interface_plate_deg_c", "thermal_shroud_deg_c", "thermal_shroud_inlet_deg_c", "thermal_shroud_outlet_deg_c", "thermal_shroud_gradient_deg_c", "huber_table_deg_c", "ln2_line_temp_deg_c", "ln2_valve_duty_pct", "tvac_cryo_exhaust_temp_deg_c"}},
 		{ID: "chamber_pressure_tvac", Label: "Facility Pressure (TVac)", NodeID: "tvac_chamber_q1", ServedBy: "tvac_computer_1", Owner: "tvac_computer_role", Bus: "facility_control_bus", Quality: "fresh", FreshnessMS: 300, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "primary", Signals: []string{"tvac_pressure_mbar", "tvac_pressure_pa"}},
 		{ID: "chamber_infra_tvac", Label: "Building Infrastructure (TVac)", NodeID: "tvac_chamber_q1", ServedBy: "tvac_computer_1", Owner: "facility_operator_role", Bus: "facility_utility_bus", Quality: "fresh", FreshnessMS: 600, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"cooling_water_freeze_margin_deg_c", "cooling_water_temp_deg_c", "pressurized_air_supply_bar", "air_dewpoint_deg_c", "tvac_scavenged_exhaust_temp_deg_c", "tvac_scavenger_cooling_water_return_deg_c", "tvac_exhaust_cold_recovery_pct", "tvac_exhaust_duct_safe"}},
-		// TVac Computer 1 — primary TMTC relay and test-script host; routes to supervisor_a then gateway_a
-		{ID: "tvac_tmtc_primary", Label: "TVac TMTC Primary (Computer 1)", NodeID: "tvac_computer_1", ServedBy: "supervisor_a", Owner: "tvac_computer_role", Bus: "facility_control_bus", Quality: "fresh", FreshnessMS: 200, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"tmtc_link_state", "tc_queue_depth", "tm_frame_rate_hz", "last_tc_timestamp"}},
-		// TVac Computer 2 — backup TMTC and independent data recorder; also routes to supervisor_a
-		{ID: "tvac_tmtc_backup", Label: "TVac TMTC Backup (Computer 2)", NodeID: "tvac_computer_2", ServedBy: "supervisor_a", Owner: "tvac_computer_role", Bus: "facility_control_bus", Quality: "fresh", FreshnessMS: 200, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"tmtc_link_state", "tc_queue_depth", "tm_frame_rate_hz", "backup_recording_state"}},
+		// TVac Computer 1 — primary transport relay and test-script host; routes to supervisor_a then gateway_a
+		{ID: "tvac_tmtc_primary", Label: "TVac Transport Primary (Computer 1)", NodeID: "tvac_computer_1", ServedBy: "supervisor_a", Owner: "tvac_computer_role", Bus: "facility_control_bus", Quality: "fresh", FreshnessMS: 200, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"tmtc_link_state", "tc_queue_depth", "tm_frame_rate_hz", "last_tc_timestamp"}},
+		// TVac Computer 2 — transport backup and independent data recorder; also routes to supervisor_a
+		{ID: "tvac_tmtc_backup", Label: "TVac Transport Backup (Computer 2)", NodeID: "tvac_computer_2", ServedBy: "supervisor_a", Owner: "tvac_computer_role", Bus: "facility_control_bus", Quality: "fresh", FreshnessMS: 200, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"tmtc_link_state", "tc_queue_depth", "tm_frame_rate_hz", "backup_recording_state"}},
 		// Archive node — logs live telemetry in Arrow IPC; supervisor or librarian triggers HDF5 export to NAS on test completion
 		{ID: "archive_bus", Label: "Bus Virtualization Tap (Arrow IPC)", NodeID: "archive_node_a", ServedBy: "librarian_a", Owner: "test_conductor_role", Bus: "telemetry_bus", Quality: "synthetic", FreshnessMS: 200, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"bus_latency_ms", "tm_packet_counter", "tc_packet_counter", "overall_packet_counter", "dropped_frame_count"}},
 		{ID: "archive_quality", Label: "Source Quality Monitor", NodeID: "archive_node_a", ServedBy: "librarian_a", Owner: "test_conductor_role", Bus: "telemetry_bus", Quality: "synthetic", FreshnessMS: 1000, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"source_freshness_ms", "facility_interlock_state"}},
@@ -293,7 +345,134 @@ func buildSources(env contracts.Envelope) contracts.SourceCatalogue {
 		{ID: "gateway_status", Label: "Data Gateway Status", NodeID: "gateway_a", ServedBy: "gateway_a", Owner: "test_conductor_role", Bus: "api_bus", Quality: "fresh", FreshnessMS: 1000, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"api_request_rate_hz", "connected_clients", "cache_hit_rate_pct", "gateway_uptime_s"}},
 		// Supervisor — campaign orchestration; aggregates all feeds and routes to gateway_a
 		{ID: "supervisor_state", Label: "Campaign Supervisor State", NodeID: "supervisor_a", ServedBy: "gateway_a", Owner: "test_conductor_role", Bus: "supervisor_bus", Quality: "fresh", FreshnessMS: 1000, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"functional_gate_code", "facility_interlock_code"}},
-	}}
+	}
+	enrichSourceOwnership(sources)
+	return contracts.SourceCatalogue{Envelope: env, Sources: sources, Tree: buildSourceDiscoveryTree(sources)}
+}
+
+type sourceOwnershipProfile struct {
+	ownerMode        string
+	use              string
+	formatPreference string
+	device           string
+	subsystem        string
+}
+
+func enrichSourceOwnership(sources []contracts.Source) {
+	profiles := map[string]sourceOwnershipProfile{
+		"dut_power":             {ownerMode: "exclusive_connection", use: "primary", formatPreference: "decoded", device: "dut_eps", subsystem: "power"},
+		"dut_control":           {ownerMode: "external_master", use: "primary", formatPreference: "decoded", device: "dut_obc", subsystem: "command"},
+		"dut_link":              {ownerMode: "shared_monitor", use: "shared", formatPreference: "decoded", device: "dut_tm_link", subsystem: "telemetry"},
+		"dut_thermal":           {ownerMode: "derived", use: "derivative", formatPreference: "decoded", device: "thermal_model", subsystem: "thermal_model"},
+		"chamber_thermal_fat":   {ownerMode: "external_master", use: "primary", formatPreference: "decoded", device: "chamber_a_plc", subsystem: "thermal"},
+		"chamber_infra_fat":     {ownerMode: "shared_monitor", use: "shared", formatPreference: "decoded", device: "building_services", subsystem: "utilities"},
+		"chamber_thermal_b":     {ownerMode: "external_master", use: "primary", formatPreference: "decoded", device: "chamber_b_plc", subsystem: "thermal"},
+		"chamber_thermal_c":     {ownerMode: "external_master", use: "primary", formatPreference: "decoded", device: "chamber_c_plc", subsystem: "thermal"},
+		"chamber_thermal_d":     {ownerMode: "external_master", use: "primary", formatPreference: "decoded", device: "chamber_d_plc", subsystem: "thermal"},
+		"thermal_supervisor":    {ownerMode: "exclusive_connection", use: "primary", formatPreference: "decoded", device: "thermal_supervisor_api", subsystem: "supervision"},
+		"house_utilities":       {ownerMode: "external_master", use: "shared", formatPreference: "decoded", device: "house_plc", subsystem: "utilities"},
+		"tvac_plc":              {ownerMode: "external_master", use: "primary", formatPreference: "decoded", device: "tvac_plc_q1", subsystem: "cryo_vacuum"},
+		"chamber_thermal_tvac":  {ownerMode: "external_master", use: "primary", formatPreference: "decoded", device: "tvac_chamber_q1", subsystem: "thermal"},
+		"chamber_pressure_tvac": {ownerMode: "external_master", use: "primary", formatPreference: "decoded", device: "tvac_chamber_q1", subsystem: "pressure"},
+		"chamber_infra_tvac":    {ownerMode: "shared_monitor", use: "shared", formatPreference: "decoded", device: "tvac_services", subsystem: "utilities"},
+		"tvac_tmtc_primary":     {ownerMode: "exclusive_connection", use: "primary", formatPreference: "decoded", device: "tmtc_primary_console", subsystem: "tmtc"},
+		"tvac_tmtc_backup":      {ownerMode: "fallback", use: "fallback", formatPreference: "raw_legacy", device: "tmtc_backup_recorder", subsystem: "tmtc"},
+		"archive_bus":           {ownerMode: "shared_monitor", use: "shared", formatPreference: "decoded", device: "arrow_tap", subsystem: "transport"},
+		"archive_quality":       {ownerMode: "derived", use: "derivative", formatPreference: "decoded", device: "quality_monitor", subsystem: "observability"},
+		"nas_exports":           {ownerMode: "external_master", use: "fallback", formatPreference: "raw_legacy", device: "nas_archive", subsystem: "storage"},
+		"librarian_index":       {ownerMode: "derived", use: "derivative", formatPreference: "decoded", device: "librarian_indexer", subsystem: "catalogue"},
+		"gateway_status":        {ownerMode: "exclusive_connection", use: "shared", formatPreference: "decoded", device: "gateway_api", subsystem: "serving"},
+		"supervisor_state":      {ownerMode: "exclusive_connection", use: "primary", formatPreference: "decoded", device: "campaign_supervisor", subsystem: "campaign"},
+	}
+	for i := range sources {
+		profile := profiles[sources[i].ID]
+		if profile.ownerMode == "" {
+			profile = sourceOwnershipProfile{ownerMode: "external_master", use: "primary", formatPreference: "decoded", device: sources[i].NodeID, subsystem: sources[i].Bus}
+		}
+		sources[i].OwnerMode = profile.ownerMode
+		sources[i].Use = profile.use
+		sources[i].FormatPreference = profile.formatPreference
+		sources[i].DiscoveryPath = contracts.SourceDiscoveryPath{
+			Node:      sources[i].NodeID,
+			Device:    profile.device,
+			Subsystem: profile.subsystem,
+			Stream:    sources[i].ID,
+		}
+	}
+}
+
+func buildSourceDiscoveryTree(sources []contracts.Source) []contracts.SourceDiscoveryNode {
+	nodeIndex := map[string]int{}
+	tree := []contracts.SourceDiscoveryNode{}
+	for _, source := range sources {
+		path := source.DiscoveryPath
+		n := ensureDiscoveryChild(&tree, nodeIndex, path.Node, nodeLabel(path.Node), "node")
+		d := ensureDiscoveryChild(&n.Children, nil, path.Device, discoveryLabel(path.Device), "device")
+		s := ensureDiscoveryChild(&d.Children, nil, path.Subsystem, discoveryLabel(path.Subsystem), "subsystem")
+		s.Children = append(s.Children, contracts.SourceDiscoveryNode{
+			ID:       path.Stream,
+			Label:    source.Label,
+			Kind:     "stream",
+			SourceID: source.ID,
+		})
+	}
+	return tree
+}
+
+func ensureDiscoveryChild(nodes *[]contracts.SourceDiscoveryNode, index map[string]int, id, label, kind string) *contracts.SourceDiscoveryNode {
+	if index != nil {
+		if i, ok := index[id]; ok {
+			return &(*nodes)[i]
+		}
+		*nodes = append(*nodes, contracts.SourceDiscoveryNode{ID: id, Label: label, Kind: kind})
+		index[id] = len(*nodes) - 1
+		return &(*nodes)[len(*nodes)-1]
+	}
+	for i := range *nodes {
+		if (*nodes)[i].ID == id {
+			return &(*nodes)[i]
+		}
+	}
+	*nodes = append(*nodes, contracts.SourceDiscoveryNode{ID: id, Label: label, Kind: kind})
+	return &(*nodes)[len(*nodes)-1]
+}
+
+func discoveryLabel(id string) string {
+	overrides := map[string]string{
+		"chamber_a_plc": "Chamber Alpha PLC",
+		"chamber_b_plc": "Chamber Bravo PLC",
+		"chamber_c_plc": "Chamber Charlie PLC",
+		"chamber_d_plc": "Chamber Delta PLC",
+	}
+	if label, ok := overrides[id]; ok {
+		return label
+	}
+	return strings.Title(strings.ReplaceAll(id, "_", " ")) //nolint:staticcheck
+}
+
+func nodeLabel(id string) string {
+	labels := map[string]string{
+		"reference_dut":         "Reference DUT",
+		"thermal_chamber_a":     "Chamber Alpha PLC",
+		"thermal_chamber_b":     "Chamber Bravo PLC",
+		"thermal_chamber_c":     "Chamber Charlie PLC",
+		"thermal_chamber_d":     "Chamber Delta PLC",
+		"thermal_supervisor_pc": "Thermal Supervisor PC",
+		"tvac_chamber_q1":       "TVac Chamber Q1",
+		"tvac_plc_q1":           "TVac PLC Q1",
+		"tvac_computer_1":       "TVac Computer 1",
+		"tvac_computer_2":       "TVac Computer 2",
+		"house_plc":             "House Control PLC",
+		"archive_node_a":        "Archive Node A",
+		"nas_a":                 "NAS A",
+		"librarian_a":           "Librarian",
+		"gateway_a":             "Gateway A",
+		"supervisor_a":          "Supervisor A",
+	}
+	if label, ok := labels[id]; ok {
+		return label
+	}
+	return discoveryLabel(id)
 }
 
 func buildCampaign(env contracts.Envelope, id string) contracts.Campaign {
@@ -1026,14 +1205,14 @@ func buildGraphWall(env contracts.Envelope, campaignID string, hero contracts.He
 		graphSignal("trace.power_avionics", "Avionics", "W", "dut_power", "actual", "measurement", "dut_power", "power_w", "dut_response"),
 		graphSignal("trace.power_link", "Link subsystem", "W", "dut_power", "actual", "measurement", "dut_power", "power_w", "dut_response"),
 	}))
-	add("tmtc_response", graphCard("tmtc_health", "TM/TC latency and freshness", "line", "companion", "ms", "bus_ms", "archive_bus", []contracts.GraphWallSignal{
+	add("tmtc_response", graphCard("tmtc_health", "Transport latency and freshness", "line", "companion", "ms", "bus_ms", "archive_bus", []contracts.GraphWallSignal{
 		graphSignal("trace.bus_latency", "Bus latency", "ms", "archive_bus", "source_quality", "measurement", "tmtc", "bus_ms", "tmtc_response"),
 		graphSignal("trace.source_freshness", "Freshness", "ms", "archive_quality", "source_quality", "measurement", "tmtc", "bus_ms", "tmtc_response"),
 	}))
-	add("tmtc_response", graphCard("tmtc_counters", "TM/TC packet counters", "counter", "companion", "count", "counter", "archive_bus", []contracts.GraphWallSignal{
+	add("tmtc_response", graphCard("tmtc_counters", "Transport packet counters", "counter", "companion", "count", "counter", "archive_bus", []contracts.GraphWallSignal{
 		graphSignal("trace.overall_packet_counter", "Overall packet counter", "count", "archive_bus", "counter", "counter", "tmtc", "counter", "tmtc_response"),
-		graphSignal("trace.tm_packet_counter", "TM packet counter", "count", "archive_bus", "counter", "counter", "tmtc", "counter", "tmtc_response"),
-		graphSignal("trace.tc_packet_counter", "TC packet counter", "count", "archive_bus", "counter", "counter", "tmtc", "counter", "tmtc_response"),
+		graphSignal("trace.tm_packet_counter", "Downlink packet counter", "count", "archive_bus", "counter", "counter", "tmtc", "counter", "tmtc_response"),
+		graphSignal("trace.tc_packet_counter", "Uplink packet counter", "count", "archive_bus", "counter", "counter", "tmtc", "counter", "tmtc_response"),
 		graphSignal("trace.dropped_frame_count", "Dropped frames", "count", "archive_bus", "counter", "counter", "tmtc", "counter", "tmtc_response"),
 	}))
 	add("tmtc_response", graphCard("source_quality", "Source freshness quality", "line", "companion", "ms", "bus_ms", "archive_quality", []contracts.GraphWallSignal{
@@ -1105,7 +1284,7 @@ func buildTileManifest(env contracts.Envelope, campaignID string, wall contracts
 		SourceNodes: sourceNodes(),
 		DataLensTranslations: []contracts.DataLensTranslation{
 			{ID: "legacy_csv_environment", Label: "Legacy CSV environment import", SourceFormat: "legacy_csv", TargetSchema: arrowtelemetry.SchemaName, Mode: "translated_fixture", Confidence: "high", Provenance: "synthetic DataLens translation demo"},
-			{ID: "binary_tmtc_log", Label: "Binary TM/TC log import", SourceFormat: "binary_log", TargetSchema: arrowtelemetry.SchemaName, Mode: "translated_fixture", Confidence: "medium", Provenance: "synthetic DataLens translation demo"},
+			{ID: "binary_tmtc_log", Label: "Binary transport log import", SourceFormat: "binary_log", TargetSchema: arrowtelemetry.SchemaName, Mode: "translated_fixture", Confidence: "medium", Provenance: "synthetic DataLens translation demo"},
 			{ID: "hdf5_evidence_archive", Label: "HDF5-like evidence archive", SourceFormat: "hdf5", TargetSchema: arrowtelemetry.SchemaName, Mode: "translated_fixture", Confidence: "high", Provenance: "synthetic DataLens translation demo"},
 		},
 	}
@@ -1180,7 +1359,7 @@ func graphSectionTitle(id string) string {
 	case "dut_response":
 		return "DUT Response"
 	case "tmtc_response":
-		return "Telecommand/Telemetry Response"
+		return "Transport Response"
 	case "testbed_dynamics":
 		return "Testbed Dynamics"
 	default:
@@ -1210,11 +1389,11 @@ func droppedFrames(campaign string, index int) float64 {
 
 func buildSupervisorOverview(env contracts.Envelope, campaigns map[string]contracts.Campaign, telemetry map[string][]contracts.TelemetrySample) contracts.SupervisorOverview {
 	lanes := []contracts.SupervisorLane{
-		supervisorLane("thermal_fat", "Thermal Chamber FAT", "thermal_chamber_a", campaigns["thermal_acceptance_fat"], "4 cycle chamber FAT with cold/hot dwell gates", "facility_control_bus", "4 cycles, hot/cold dwell, pre/cold/hot/post functional gates", "fresh", []string{"Thermal chamber profile is synchronized with DUT temperature."}, telemetry["thermal_acceptance_fat"], []heroSpec{{"chamber_setpoint_deg_c", "Setpoint", "facility_setpoint", "degC", "chamber_thermal_fat", -45, 75}, {"chamber_air_deg_c", "Chamber Air", "facility_environment", "degC", "chamber_thermal_fat", -45, 75}, {"thermal_zone_1_deg_c", "DUT Node 1", "article_temperature", "degC", "dut_thermal", -45, 75}, {"bus_latency_ms", "TM/TC Latency", "virtual_bus_health", "ms", "archive_bus", 0, 250}}),
+		supervisorLane("thermal_fat", "Thermal Chamber FAT", "thermal_chamber_a", campaigns["thermal_acceptance_fat"], "4 cycle chamber FAT with cold/hot dwell gates", "facility_control_bus", "4 cycles, hot/cold dwell, pre/cold/hot/post functional gates", "fresh", []string{"Thermal chamber profile is synchronized with DUT temperature."}, telemetry["thermal_acceptance_fat"], []heroSpec{{"chamber_setpoint_deg_c", "Setpoint", "facility_setpoint", "degC", "chamber_thermal_fat", -45, 75}, {"chamber_air_deg_c", "Chamber Air", "facility_environment", "degC", "chamber_thermal_fat", -45, 75}, {"thermal_zone_1_deg_c", "DUT Node 1", "article_temperature", "degC", "dut_thermal", -45, 75}, {"bus_latency_ms", "Transport Latency", "virtual_bus_health", "ms", "archive_bus", 0, 250}}),
 		supervisorLane("eps_load_step", "EPS Load Step", "flatsat_rack_a", campaigns["integrated_system_fat"], "Power load and command script", "command_bus", "REQ-FUNC-GATE-DURING pass", "degraded", []string{"Synthetic freshness degradation demonstrates disposition workflow."}, telemetry["integrated_system_fat"], []heroSpec{{"eps_bus_voltage_v", "Bus Voltage", "dut_power", "V", "dut_power", 24, 32}, {"eps_bus_current_a", "Bus Current", "dut_power", "A", "dut_power", 0, 8}}),
 		supervisorLane("payload_thermal", "Payload Thermal Cycle", "thermal_chamber_a", campaigns["integrated_system_fat"], "Payload simulator heater cycling", "telemetry_bus", "REQ-STABILITY pass", "fresh", []string{"Payload heater response is fictional and bounded for demo use."}, telemetry["integrated_system_fat"], []heroSpec{{"payload_sim_heater_w", "Payload Heater", "payload_thermal_control", "W", "chamber_thermal_fat", 0, 60}, {"thermal_zone_2_deg_c", "Article Zone 2", "article_temperature", "degC", "dut_thermal", -45, 70}}),
 		supervisorLane("tvac_qualification", "TVac Qualification", "tvac_chamber_q1", campaigns["tvac_qualification"], "8 cycle TVac qualification with pumpdown and thermal-source review", "facility_control_bus", "8 cycles, pressure plateau, safety interlock review open", "degraded", []string{"Pressure-source degradation remains open for review."}, telemetry["tvac_qualification"], []heroSpec{{"chamber_setpoint_deg_c", "Setpoint", "facility_setpoint", "degC", "chamber_thermal_tvac", -45, 75}, {"thermal_zone_1_deg_c", "DUT Node 1", "article_temperature", "degC", "dut_thermal", -45, 75}, {"tvac_pressure_mbar", "TVac pressure", "facility_environment", "mbar", "chamber_pressure_tvac", 0.00000001, 1013.25}, {"ln2_valve_duty_pct", "TVac cooling valve duty", "facility_interlock", "%", "chamber_thermal_tvac", 0, 100}, {"cooling_water_freeze_margin_deg_c", "Water scavenger freeze margin", "facility_interlock", "degC", "chamber_infra_tvac", 0, 25}}),
-		supervisorLane("archive_capture", "Archive Evidence Capture", "archive_node_a", campaigns["integrated_system_fat"], "TM/TC capture and evidence packaging", "telemetry_bus", "REQ-DATA-QUALITY pass with review note", "synthetic", []string{"Archive node receives virtualized TM and TC events from the replay bus."}, telemetry["integrated_system_fat"], []heroSpec{{"bus_latency_ms", "Bus Latency", "virtual_bus_health", "ms", "archive_bus", 0, 250}, {"tm_packet_counter", "TM Counter", "telemetry_counter", "count", "archive_bus", 0, 8000}}),
+		supervisorLane("archive_capture", "Archive Evidence Capture", "archive_node_a", campaigns["integrated_system_fat"], "Transport capture and evidence packaging", "telemetry_bus", "REQ-DATA-QUALITY pass with review note", "synthetic", []string{"Archive node receives virtualized transport events from the replay bus."}, telemetry["integrated_system_fat"], []heroSpec{{"bus_latency_ms", "Bus Latency", "virtual_bus_health", "ms", "archive_bus", 0, 250}, {"tm_packet_counter", "Packet counter", "telemetry_counter", "count", "archive_bus", 0, 8000}}),
 	}
 	return contracts.SupervisorOverview{
 		Envelope:    env,
@@ -1419,23 +1598,23 @@ func BuildFileViewModel(env contracts.Envelope, campaignID string) (contracts.Fi
 	}
 	// Node label lookup.
 	nodeLabels := map[string]string{
-		"reference_dut":        "Reference DUT",
-		"thermal_chamber_a":    "Thermal Chamber A PLC",
-		"thermal_chamber_b":    "Thermal Chamber B PLC",
-		"thermal_chamber_c":    "Thermal Chamber C PLC",
-		"thermal_chamber_d":    "Thermal Chamber D PLC",
+		"reference_dut":         "Reference DUT",
+		"thermal_chamber_a":     "Chamber Alpha PLC",
+		"thermal_chamber_b":     "Chamber Bravo PLC",
+		"thermal_chamber_c":     "Chamber Charlie PLC",
+		"thermal_chamber_d":     "Chamber Delta PLC",
 		"thermal_supervisor_pc": "Thermal Supervisor PC",
-		"tvac_chamber_q1":      "TVac Chamber Q1",
-		"tvac_plc_q1":          "TVac PLC Q1",
-		"tvac_computer_1":      "TVac Computer 1 (Primary)",
-		"tvac_computer_2":      "TVac Computer 2 (Backup)",
-		"flatsat_rack_a":       "Flatsat Rack A",
-		"house_plc":            "House Control PLC",
-		"archive_node_a":       "Archive Node A",
-		"nas_a":                "NAS A",
-		"librarian_a":          "Librarian",
-		"gateway_a":            "Data Gateway",
-		"supervisor_a":         "Test Supervisor",
+		"tvac_chamber_q1":       "TVac Chamber Q1",
+		"tvac_plc_q1":           "TVac PLC Q1",
+		"tvac_computer_1":       "TVac Computer 1 (Primary)",
+		"tvac_computer_2":       "TVac Computer 2 (Backup)",
+		"flatsat_rack_a":        "Flatsat Rack A",
+		"house_plc":             "House Control PLC",
+		"archive_node_a":        "Archive Node A",
+		"nas_a":                 "NAS A",
+		"librarian_a":           "Librarian",
+		"gateway_a":             "Data Gateway",
+		"supervisor_a":          "Test Supervisor",
 	}
 
 	groups := make([]contracts.FileSignalGroup, 0, len(bySource))

@@ -10,4 +10,5 @@
 *.log
 /fixtures/public_tiles/2*/
 /gossamer-server
+/gossamer-fixtures
 /fixtures/public/telemetry/*.parquet

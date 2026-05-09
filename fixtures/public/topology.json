@@ -11,28 +11,28 @@
     },
     {
       "id": "thermal_chamber_a",
-      "label": "Thermal Chamber A PLC",
+      "label": "Chamber Alpha PLC",
       "kind": "facility_plc",
       "status": "campaign_active",
       "quality": "fresh"
     },
     {
       "id": "thermal_chamber_b",
-      "label": "Thermal Chamber B PLC",
+      "label": "Chamber Bravo PLC",
       "kind": "facility_plc",
       "status": "available",
       "quality": "fresh"
     },
     {
       "id": "thermal_chamber_c",
-      "label": "Thermal Chamber C PLC",
+      "label": "Chamber Charlie PLC",
       "kind": "facility_plc",
       "status": "available",
       "quality": "fresh"
     },
     {
       "id": "thermal_chamber_d",
-      "label": "Thermal Chamber D PLC",
+      "label": "Chamber Delta PLC",
       "kind": "facility_plc",
       "status": "available",
       "quality": "fresh"

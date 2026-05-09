@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-01-15T10:00:00Z",
+  "targets": [
+    {
+      "target_id": "graph_wall.thermal.chamber_a.air",
+      "lane": "thermal",
+      "role": "temperature_primary",
+      "source_id": "chamber_thermal_fat",
+      "timestamp": "2026-01-15T10:00:00Z"
+    },
+    {
+      "target_id": "graph_wall.tvac.pressure.main",
+      "lane": "tvac",
+      "role": "pressure_primary",
+      "source_id": "chamber_pressure_tvac",
+      "timestamp": "2026-01-15T10:00:00Z"
+    },
+    {
+      "target_id": "graph_wall.transport.tmtc.primary",
+      "lane": "transport",
+      "role": "decoded_tmtc",
+      "source_id": "tvac_tmtc_primary",
+      "timestamp": "2026-01-15T10:00:00Z"
+    },
+    {
+      "target_id": "graph_wall.archive.quality",
+      "lane": "evidence",
+      "role": "source_quality",
+      "source_id": "archive_quality",
+      "timestamp": "2026-01-15T10:00:00Z"
+    }
+  ]
+}
