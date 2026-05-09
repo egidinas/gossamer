@@ -7,10 +7,12 @@ Items in priority order. Each item has a status, description, and acceptance cri
 ## Shared Loom / Gossamer backlog
 **Status:** active
 Cross-repo contract, fixture, evidence, and agent-tooling work is synchronized in
-[`shared_loom_gossamer_backlog.md`](shared_loom_gossamer_backlog.md). Gossamer
-may adopt sibling-system patterns only at the public-safe contract/workflow
-level. Do not import live adapters, private identifiers, host details,
-credentials, protocol databases, captures, or hardware-specific procedures.
+`/home/svc_pmg_testbed_b/shared/loom-gossamer-shared/docs/backlog/shared_loom_gossamer_backlog.md`.
+The local `docs/backlog/shared_loom_gossamer_backlog.md` file is only a pointer.
+Gossamer may adopt sibling-system patterns only at the public-safe
+contract/workflow level. Do not import live adapters, private identifiers, host
+details, credentials, protocol databases, captures, or hardware-specific
+procedures.
 
 ---
 

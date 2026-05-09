@@ -1346,6 +1346,9 @@ type GraphWallTarget struct {
 }
 
 func ValidateGraphWallManifest(m GraphWallManifest) error {
+	if err := ValidateEnvelope(m.Envelope); err != nil {
+		return err
+	}
 	if len(m.Targets) == 0 {
 		return errors.New("graph wall manifest requires at least one target")
 	}

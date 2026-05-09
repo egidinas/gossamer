@@ -26,6 +26,24 @@ The repository is independent, fictional, and not affiliated with any employer o
 - `web`: Vite/React operator UI.
 - `docs`: architecture, standards, traceability, and deployment notes.
 
+## Agent Backlog Workflow
+
+The canonical fixtures, reports, and backlog artifacts stay as JSON or JSONL.
+For large backlog slices, source catalogues, discovery trees, evidence reports,
+graph-wall fixtures, and Loom/Gossamer pairwise reviews exchanged between
+agents, use the shared `@loom-gossamer/shared/agent-context-codec` package from
+`/home/svc_pmg_testbed_b/shared/loom-gossamer-shared`.
+
+The compact form is only for agent prompt/tool transport. Decode it back to
+canonical JSON before changing files, regenerating fixtures, validating
+contracts, publishing the public demo, or presenting evidence. The Gossamer web
+contract test includes the codec consumer check:
+
+```bash
+cd web
+npm run test:contracts
+```
+
 ## Local Run
 
 ```bash

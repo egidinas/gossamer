@@ -205,6 +205,115 @@ func TestValidateGraphWallManifestRejectsEmptyTargets(t *testing.T) {
 	}
 }
 
+func TestValidateGraphWallManifestRejectsMissingEnvelope(t *testing.T) {
+	m := GraphWallManifest{
+		Targets: []GraphWallTarget{
+			{TargetID: "graph_wall.thermal.a", Lane: "thermal", Role: "temperature_primary", SourceID: "chamber_thermal_fat", Timestamp: "2026-01-15T10:00:00Z"},
+		},
+	}
+	if err := ValidateGraphWallManifest(m); err == nil {
+		t.Fatal("expected missing envelope to fail")
+	}
+}
+
+func TestValidateGraphWallManifestRejectsMissingRequiredField(t *testing.T) {
+	base := GraphWallTarget{TargetID: "t1", Lane: "thermal", Role: "temperature_primary", SourceID: "chamber_thermal_fat", Timestamp: "2026-01-15T10:00:00Z"}
+	env := Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"}
+	cases := []struct {
+		name   string
+		mutate func(*GraphWallTarget)
+	}{
+		{"empty target_id", func(t *GraphWallTarget) { t.TargetID = "" }},
+		{"empty lane", func(t *GraphWallTarget) { t.Lane = "" }},
+		{"empty role", func(t *GraphWallTarget) { t.Role = "" }},
+		{"empty source_id", func(t *GraphWallTarget) { t.SourceID = "" }},
+		{"empty timestamp", func(t *GraphWallTarget) { t.Timestamp = "" }},
+	}
+	for _, tc := range cases {
+		target := base
+		tc.mutate(&target)
+		m := GraphWallManifest{Envelope: env, Targets: []GraphWallTarget{target}}
+		if err := ValidateGraphWallManifest(m); err == nil {
+			t.Errorf("case %q: expected error but got nil", tc.name)
+		}
+	}
+}
+
+func TestValidateSourceTreeConfigAcceptsValidConfig(t *testing.T) {
+	c := SourceTreeConfig{
+		Envelope: Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"},
+		Views: []SourceTreeView{
+			{ID: "thermal_fat", Label: "Acceptance FAT", SourceIDs: []string{"chamber_thermal_fat", "chamber_thermal_b"}},
+			{ID: "tvac", Label: "Qualification TVac", SourceIDs: []string{"chamber_thermal_tvac"}},
+		},
+	}
+	if err := ValidateSourceTreeConfig(c); err != nil {
+		t.Fatalf("expected valid config: %v", err)
+	}
+}
+
+func TestValidateSourceTreeConfigRejectsMissingEnvelope(t *testing.T) {
+	c := SourceTreeConfig{
+		Views: []SourceTreeView{
+			{ID: "thermal_fat", Label: "Acceptance FAT", SourceIDs: []string{"chamber_thermal_fat"}},
+		},
+	}
+	if err := ValidateSourceTreeConfig(c); err == nil {
+		t.Fatal("expected missing envelope to fail")
+	}
+}
+
+func TestValidateSourceTreeConfigRejectsEmptyViews(t *testing.T) {
+	c := SourceTreeConfig{
+		Envelope: Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"},
+	}
+	if err := ValidateSourceTreeConfig(c); err == nil {
+		t.Fatal("expected empty views to fail")
+	}
+}
+
+func TestValidateSourceTreeConfigRejectsDuplicateViewID(t *testing.T) {
+	c := SourceTreeConfig{
+		Envelope: Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"},
+		Views: []SourceTreeView{
+			{ID: "thermal_fat", Label: "Acceptance FAT", SourceIDs: []string{"chamber_thermal_fat"}},
+			{ID: "thermal_fat", Label: "Duplicate", SourceIDs: []string{"chamber_thermal_b"}},
+		},
+	}
+	if err := ValidateSourceTreeConfig(c); err == nil {
+		t.Fatal("expected duplicate view id to fail")
+	}
+}
+
+func TestValidateSourceTreeConfigRejectsEmptySourceIDs(t *testing.T) {
+	c := SourceTreeConfig{
+		Envelope: Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"},
+		Views: []SourceTreeView{
+			{ID: "thermal_fat", Label: "Acceptance FAT", SourceIDs: []string{}},
+		},
+	}
+	if err := ValidateSourceTreeConfig(c); err == nil {
+		t.Fatal("expected empty source_ids to fail")
+	}
+}
+
+func TestValidateSourceTreeConfigRejectsMissingViewIDOrLabel(t *testing.T) {
+	env := Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"}
+	cases := []struct {
+		name string
+		view SourceTreeView
+	}{
+		{"empty id", SourceTreeView{ID: "", Label: "FAT", SourceIDs: []string{"chamber_thermal_fat"}}},
+		{"empty label", SourceTreeView{ID: "thermal_fat", Label: "", SourceIDs: []string{"chamber_thermal_fat"}}},
+	}
+	for _, tc := range cases {
+		c := SourceTreeConfig{Envelope: env, Views: []SourceTreeView{tc.view}}
+		if err := ValidateSourceTreeConfig(c); err == nil {
+			t.Errorf("case %q: expected error but got nil", tc.name)
+		}
+	}
+}
+
 func TestValidateBusVirtualizationRequiresTMAndTCEvents(t *testing.T) {
 	tap := BusVirtualizationTap{
 		Envelope:     Envelope{SchemaVersion: 1, GeneratedAt: "2026-01-15T10:00:00Z"},

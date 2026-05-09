@@ -447,7 +447,19 @@ func discoveryLabel(id string) string {
 	if label, ok := overrides[id]; ok {
 		return label
 	}
-	return strings.Title(strings.ReplaceAll(id, "_", " ")) //nolint:staticcheck
+	return titleCase(strings.ReplaceAll(id, "_", " "))
+}
+
+// titleCase capitalises the first letter of each space-separated word.
+// All synthetic IDs are ASCII, so byte-level manipulation is safe.
+func titleCase(s string) string {
+	words := strings.Fields(s)
+	for i, w := range words {
+		if len(w) > 0 {
+			words[i] = strings.ToUpper(w[:1]) + w[1:]
+		}
+	}
+	return strings.Join(words, " ")
 }
 
 func nodeLabel(id string) string {

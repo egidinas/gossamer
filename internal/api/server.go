@@ -4,12 +4,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"math"
 	"net/http"
 	"os"
 	"path"
 	"path/filepath"
-	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -19,7 +17,10 @@ import (
 	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/synthetic"
 	"github.com/egidinas/gossamer/internal/tilebundle"
+	"github.com/egidinas/loom-gossamer-shared/go/safepath"
 )
+
+const cacheControlNoStore = "no-store"
 
 type Server struct {
 	root        string
@@ -246,7 +247,7 @@ func (s *Server) campaignDetail(w http.ResponseWriter, r *http.Request) {
 	}
 	switch parts[1] {
 	case "telemetry":
-		serveArrowFile(w, r, filepath.Join(s.root, "fixtures", "public", "telemetry", id+".arrow"), "no-store")
+		serveArrowFile(w, r, filepath.Join(s.root, "fixtures", "public", "telemetry", id+".arrow"), cacheControlNoStore)
 	case "query":
 		s.telemetryQuery(w, r, id)
 	case "live":
@@ -391,7 +392,7 @@ func (s *Server) liveCampaign(w http.ResponseWriter, r *http.Request, id string)
 	acceleration := replayAcceleration(model.HeroGraph)
 	connectedAt := time.Now()
 	w.Header().Set("Content-Type", "text/event-stream")
-	w.Header().Set("Cache-Control", "no-store")
+	w.Header().Set("Cache-Control", cacheControlNoStore)
 	w.Header().Set("Connection", "keep-alive")
 	w.Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:5179")
 
@@ -458,184 +459,6 @@ func replayCursor(hero *contracts.HeroGraphModel) time.Time {
 		return mustParseTime(hero.Execution.Now)
 	}
 	return time.Time{}
-}
-
-func filterFuturePoints(points []contracts.GraphPoint, role string, cursor time.Time) []contracts.GraphPoint {
-	if cursor.IsZero() || plannedRole(role) {
-		return points
-	}
-	out := points[:0]
-	for _, point := range points {
-		if !mustParseTime(point.Timestamp).After(cursor) {
-			out = append(out, point)
-		}
-	}
-	return out
-}
-
-func filterFutureMarkers(markers []contracts.GraphMarker, cursor time.Time) []contracts.GraphMarker {
-	if cursor.IsZero() {
-		return markers
-	}
-	out := markers[:0]
-	for _, marker := range markers {
-		if !mustParseTime(marker.Timestamp).After(cursor) {
-			out = append(out, marker)
-		}
-	}
-	return out
-}
-
-func filterFutureBands(bands []contracts.GraphBand, cursor time.Time) []contracts.GraphBand {
-	if cursor.IsZero() {
-		return bands
-	}
-	out := bands[:0]
-	for _, band := range bands {
-		start := mustParseTime(band.Start)
-		end := mustParseTime(band.End)
-		if start.After(cursor) {
-			continue
-		}
-		if end.After(cursor) {
-			band.End = cursor.UTC().Format(time.RFC3339)
-		}
-		out = append(out, band)
-	}
-	return out
-}
-
-func plannedRole(role string) bool {
-	switch role {
-	case "ghost", "command", "acceptance_band":
-		return true
-	default:
-		return false
-	}
-}
-
-func findTileCard(manifest contracts.GraphTileManifest, cardID string) (contracts.GraphTileCardRef, bool) {
-	for _, card := range manifest.Cards {
-		if card.CardID == cardID {
-			return card, true
-		}
-	}
-	return contracts.GraphTileCardRef{}, false
-}
-
-func maxPointsForLevel(manifest contracts.GraphTileManifest, levelID string) int {
-	for _, level := range manifest.Levels {
-		if level.ID == levelID && level.MaxPoints > 0 {
-			return level.MaxPoints
-		}
-	}
-	if manifest.TilePolicy.DefaultPoints > 0 {
-		return manifest.TilePolicy.DefaultPoints
-	}
-	return 900
-}
-
-func traceIndex(hero *contracts.HeroGraphModel) map[string][]contracts.GraphPoint {
-	out := map[string][]contracts.GraphPoint{}
-	for _, trace := range hero.Traces {
-		out[trace.ID] = trace.Values
-	}
-	for _, group := range hero.CompanionGroups {
-		for _, trace := range group.Traces {
-			out[trace.ID] = trace.Values
-		}
-	}
-	return out
-}
-
-func filterPoints(points []contracts.GraphPoint, start, end time.Time) []contracts.GraphPoint {
-	out := make([]contracts.GraphPoint, 0, len(points))
-	for _, point := range points {
-		t := mustParseTime(point.Timestamp)
-		if !t.Before(start) && !t.After(end) {
-			out = append(out, point)
-		}
-	}
-	return out
-}
-
-func decimate(points []contracts.GraphPoint, maxPoints int) []contracts.GraphPoint {
-	if maxPoints <= 0 || len(points) <= maxPoints {
-		return points
-	}
-	buckets := max(1, maxPoints/4)
-	step := float64(len(points)) / float64(buckets)
-	out := make([]contracts.GraphPoint, 0, maxPoints)
-	for b := 0; b < buckets; b++ {
-		from := int(math.Floor(float64(b) * step))
-		to := int(math.Floor(float64(b+1) * step))
-		if to > len(points) {
-			to = len(points)
-		}
-		if from >= to {
-			continue
-		}
-		minPoint, maxPoint := points[from], points[from]
-		for _, p := range points[from:to] {
-			if p.Value < minPoint.Value {
-				minPoint = p
-			}
-			if p.Value > maxPoint.Value {
-				maxPoint = p
-			}
-		}
-		out = appendUniquePoints(out, points[from], minPoint, maxPoint, points[to-1])
-	}
-	return out
-}
-
-func normalizePoints(points []contracts.GraphPoint) []contracts.GraphPoint {
-	if len(points) < 2 {
-		return points
-	}
-	sort.SliceStable(points, func(i, j int) bool {
-		return points[i].Timestamp < points[j].Timestamp
-	})
-	out := make([]contracts.GraphPoint, 0, len(points))
-	for _, p := range points {
-		if len(out) > 0 && out[len(out)-1].Timestamp == p.Timestamp {
-			out[len(out)-1] = p
-			continue
-		}
-		out = append(out, p)
-	}
-	return out
-}
-
-func appendUniquePoints(out []contracts.GraphPoint, points ...contracts.GraphPoint) []contracts.GraphPoint {
-	for _, p := range points {
-		if len(out) == 0 || out[len(out)-1].Timestamp != p.Timestamp || out[len(out)-1].Value != p.Value {
-			out = append(out, p)
-		}
-	}
-	return out
-}
-
-func intersectBands(bands []contracts.GraphBand, start, end time.Time) []contracts.GraphBand {
-	out := []contracts.GraphBand{}
-	for _, band := range bands {
-		if mustParseTime(band.End).Before(start) || mustParseTime(band.Start).After(end) {
-			continue
-		}
-		out = append(out, band)
-	}
-	return out
-}
-
-func intersectMarkers(markers []contracts.GraphMarker, start, end time.Time) []contracts.GraphMarker {
-	out := []contracts.GraphMarker{}
-	for _, marker := range markers {
-		t := mustParseTime(marker.Timestamp)
-		if !t.Before(start) && !t.After(end) {
-			out = append(out, marker)
-		}
-	}
-	return out
 }
 
 func requirementID(kind string) string {
@@ -735,8 +558,12 @@ func (s *Server) static(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if strings.HasPrefix(r.URL.Path, "/data/") {
-		rel := strings.TrimPrefix(path.Clean("/"+r.URL.Path), "/data/")
-		candidate := filepath.Join(s.root, "fixtures", "public_tiles", filepath.FromSlash(rel))
+		rel := strings.TrimPrefix(r.URL.Path, "/data/")
+		candidate, err := safepath.ResolveUnderRoot(filepath.Join(s.root, "fixtures", "public_tiles"), rel)
+		if err != nil {
+			http.NotFound(w, r)
+			return
+		}
 		isMutable := strings.HasPrefix(rel, "current/") || rel == "current"
 		if strings.HasSuffix(candidate, ".arrow") {
 			if arrowStaticExists(candidate) {
@@ -768,7 +595,7 @@ func (s *Server) static(w http.ResponseWriter, r *http.Request) {
 	}
 	candidate := filepath.Join(s.staticDir, filepath.FromSlash(rel))
 	if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
-		w.Header().Set("Cache-Control", "no-store")
+		w.Header().Set("Cache-Control", cacheControlNoStore)
 		http.ServeFile(w, r, candidate)
 		return
 	}
@@ -777,7 +604,7 @@ func (s *Server) static(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	w.Header().Set("Cache-Control", "no-store")
+	w.Header().Set("Cache-Control", cacheControlNoStore)
 	http.ServeFile(w, r, index)
 }
 
@@ -895,7 +722,7 @@ func (s *Server) telemetryQuery(w http.ResponseWriter, r *http.Request, id strin
 }
 
 func headers(w http.ResponseWriter) {
-	w.Header().Set("Cache-Control", "no-store")
+	w.Header().Set("Cache-Control", cacheControlNoStore)
 	w.Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:5179")
 }
 

@@ -5,23 +5,23 @@ import { StatusBadge } from "../components/StatusBadge";
 
 function nodeLabel(nodeId: string): string {
   const labels: Record<string, string> = {
-    reference_dut: "DUT",
-    thermal_chamber_a: "Chamber Alpha",
-    thermal_chamber_b: "Chamber Bravo",
-    thermal_chamber_c: "Chamber Charlie",
-    thermal_chamber_d: "Chamber Delta",
-    thermal_supervisor_pc: "Thermal Sup.",
-    tvac_chamber_q1: "TVac Q1",
-    tvac_plc_q1: "TVac PLC",
-    tvac_computer_1: "TVac Comp. 1",
-    tvac_computer_2: "TVac Comp. 2",
-    flatsat_rack_a: "Flatsat A",
-    house_plc: "House PLC",
-    archive_node_a: "Archive",
+    reference_dut: "Reference DUT",
+    thermal_chamber_a: "Chamber Alpha PLC",
+    thermal_chamber_b: "Chamber Bravo PLC",
+    thermal_chamber_c: "Chamber Charlie PLC",
+    thermal_chamber_d: "Chamber Delta PLC",
+    thermal_supervisor_pc: "Thermal Supervisor PC",
+    tvac_chamber_q1: "TVac Chamber Q1",
+    tvac_plc_q1: "TVac PLC Q1",
+    tvac_computer_1: "TVac Computer 1",
+    tvac_computer_2: "TVac Computer 2",
+    flatsat_rack_a: "Flatsat Rack A",
+    house_plc: "House Control PLC",
+    archive_node_a: "Archive Node A",
     nas_a: "NAS A",
     librarian_a: "Librarian",
-    gateway_a: "Gateway",
-    supervisor_a: "Supervisor",
+    gateway_a: "Gateway A",
+    supervisor_a: "Supervisor A",
   };
   return labels[nodeId] ?? nodeId;
 }
