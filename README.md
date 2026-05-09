@@ -10,6 +10,9 @@ The repository is independent, fictional, and not affiliated with any employer o
 
 - A generic reference DUT moving through flatsat, thermal acceptance, TVac qualification, and integrated system FAT campaigns.
 - Backend-owned semantic contracts for source quality, graph lanes, requirements, command authority, and evidence reports.
+- Rich decoded telemetry contracts as the default: numeric values, units,
+  signal kind, provenance, and enum/boolean label dictionaries are supplied by
+  fixtures or APIs rather than inferred in the browser.
 - A landing page, campaign graph pages, and virtual bus tap that make the demo usable as a technical portfolio walkthrough.
 - A lightweight hosted static/tile deployment for reviewing the project without a local checkout.
 - Deterministic synthetic fixtures that make the demo reproducible.
@@ -94,6 +97,10 @@ The UI exposes eight views:
 ## Clean-Room Boundary
 
 Gossamer uses fictional names, deterministic fixture data, generic DUT subsystems, generic environmental facilities, and public engineering concepts. See [docs/ip_clean_room.md](docs/ip_clean_room.md).
+
+Clean-room fixtures may demonstrate decoded bus semantics and late-subscriber
+label dictionaries, but they must not include private DBCs, real device value
+tables, lab node names, captures, serial numbers, or hardware procedures.
 
 ## Public Demo
 
