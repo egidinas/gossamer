@@ -5,7 +5,7 @@ go 1.24.9
 require github.com/apache/arrow-go/v18 v18.5.2
 
 require (
-	github.com/egidinas/loom-gossamer-shared v0.1.2
+	github.com/egidinas/loom-gossamer-shared v0.2.1
 	github.com/google/cel-go v0.28.0
 	github.com/marcboeker/go-duckdb v1.8.5
 	github.com/parquet-go/parquet-go v0.29.0

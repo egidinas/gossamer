@@ -1,7 +1,6 @@
 package synthetic
 
 import (
-	"encoding/json"
 	"fmt"
 	"math"
 	"os"
@@ -13,6 +12,7 @@ import (
 	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/environmentalsim"
 	"github.com/egidinas/gossamer/internal/synthetic/commandcenter"
+	"github.com/egidinas/loom-gossamer-shared/go/jsonfile"
 )
 
 var FixedTime = time.Date(2026, 1, 15, 10, 0, 0, 0, time.UTC)
@@ -1572,13 +1572,7 @@ func round(value float64) float64 {
 	}
 }
 
-func writeJSON(path string, v any) error {
-	data, err := json.MarshalIndent(v, "", "  ")
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(path, append(data, '\n'), 0o644)
-}
+var writeJSON = jsonfile.WriteIndent
 
 // BuildFileViewModel builds a FileViewModel for the given campaign, deriving
 // signal groups by source and node so the file viewer can show data provenance.

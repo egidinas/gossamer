@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/egidinas/gossamer/internal/contracts"
+	"github.com/egidinas/loom-gossamer-shared/go/mathutil"
 )
 
 const (
@@ -1637,15 +1638,7 @@ func noise(rng *rand.Rand, sigma float64) float64 {
 	return rng.NormFloat64() * sigma
 }
 
-func clamp(v, min, max float64) float64 {
-	if v < min {
-		return min
-	}
-	if v > max {
-		return max
-	}
-	return v
-}
+var clamp = mathutil.Clamp[float64]
 
 func round(value float64) float64 {
 	return value

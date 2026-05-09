@@ -14,6 +14,7 @@ import (
 
 	"github.com/egidinas/gossamer/internal/arrowtelemetry"
 	"github.com/egidinas/gossamer/internal/contracts"
+	"github.com/egidinas/loom-gossamer-shared/go/jsonfile"
 )
 
 const (
@@ -632,17 +633,7 @@ func safePath(value string) string {
 	return b.String()
 }
 
-func writeJSON(path string, value any) error {
-	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
-		return err
-	}
-	data, err := json.MarshalIndent(value, "", "  ")
-	if err != nil {
-		return err
-	}
-	data = append(data, '\n')
-	return os.WriteFile(path, data, 0o644)
-}
+var writeJSON = jsonfile.WriteIndent
 
 func gzipJSON(path string) (int64, error) {
 	in, err := os.ReadFile(path)
