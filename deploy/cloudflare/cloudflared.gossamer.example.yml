@@ -1,5 +1,5 @@
 tunnel: <tunnel-uuid-or-name>
-credentials-file: /home/svc_pmg_testbed_b/.cloudflared/<tunnel-uuid>.json
+credentials-file: /path/to/cloudflared/<tunnel-uuid>.json
 
 ingress:
   - hostname: gossamer.jmeyer.space

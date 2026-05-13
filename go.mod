@@ -20,7 +20,7 @@ require (
 	cel.dev/expr v0.25.1 // indirect
 	github.com/andybalholm/brotli v1.2.1 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
-	github.com/egidinas/signalforge v0.1.0-private.6-loom-align.0.20260513224830-f4d32f0bb1be
+	github.com/egidinas/signalforge v0.2.0
 	github.com/go-viper/mapstructure/v2 v2.4.0 // indirect
 	github.com/goccy/go-json v0.10.6 // indirect
 	github.com/google/flatbuffers v25.12.19+incompatible // indirect

@@ -11,7 +11,6 @@ Start with:
 - `README.md`
 - `docs/ip_clean_room.md`
 - `docs/public_demo_access.md`
-- `/home/svc_pmg_testbed_b/.codex/skills/gossamer/SKILL.md`
 - `docs/backlog/BACKLOG.md`
 
 ## Core Invariants
