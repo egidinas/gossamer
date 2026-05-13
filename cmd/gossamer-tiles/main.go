@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/egidinas/gossamer/internal/arrowtelemetry"
-	"github.com/egidinas/gossamer/internal/contracts"
-	"github.com/egidinas/gossamer/internal/tilebundle"
+	"github.com/egidinas/signalforge/arrowtelemetry"
+	"github.com/egidinas/signalforge/contracts"
+	"github.com/egidinas/signalforge/tilebundle"
 )
 
 func main() {

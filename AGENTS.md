@@ -12,7 +12,7 @@ Start with:
 - `docs/ip_clean_room.md`
 - `docs/public_demo_access.md`
 - `/home/svc_pmg_testbed_b/.codex/skills/gossamer/SKILL.md`
-- `/home/svc_pmg_testbed_b/shared/loom-gossamer-shared/docs/backlog/shared_loom_gossamer_backlog.md`
+- `docs/backlog/BACKLOG.md`
 
 ## Core Invariants
 
@@ -28,16 +28,17 @@ Start with:
   only a hint; late-joining views must be able to resolve labels from fixtures,
   catalogues, sidecar metadata, or dictionary events without replaying old
   samples.
-- Shared Loom/Gossamer planning belongs in the shared repo backlog. Do not
-  create divergent local copies of shared S-LG items.
+- Shared neutral primitives belong in SignalForge. Keep Gossamer-local backlog
+  items in `docs/backlog/BACKLOG.md` and promote only public-safe reusable
+  contracts into SignalForge.
 
 ## Agent Context Efficiency
 
 Canonical fixtures, reports, contracts, and backlog files remain JSON or JSONL.
 For large backlog slices, source catalogues, discovery trees, evidence reports,
 graph-wall fixtures, pairwise Loom/Gossamer reviews, or other repeated
-agent-facing JSON payloads, use `@loom-gossamer/shared/agent-context-codec`
-from `/home/svc_pmg_testbed_b/shared/loom-gossamer-shared`.
+agent-facing JSON payloads, use the repo-local compact fixture contract guarded
+by `web/scripts/test-agent-context-codec.mjs`.
 
 Decode compact agent-context payloads back to canonical JSON before editing
 files, regenerating fixtures, validating contracts, publishing, replaying, or

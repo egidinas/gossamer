@@ -11,9 +11,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/report"
 	"github.com/egidinas/gossamer/internal/synthetic"
+	"github.com/egidinas/signalforge/contracts"
 )
 
 func newTestServer(t *testing.T) *Server {

@@ -50,6 +50,7 @@ try {
     }
   });
   page.on("requestfailed", (request) => {
+    console.error("REQUEST FAILED:", request.url(), request.failure()?.errorText);
     failedRequests.push(`${request.url()} ${request.failure()?.errorText}`);
   });
 

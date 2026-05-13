@@ -24,7 +24,9 @@ The repository is independent, fictional, and not affiliated with any employer o
 - `cmd/gossamer-fixtures`: regenerates deterministic public fixtures.
 - `cmd/gossamer-report`: builds evidence reports from campaign requirements and telemetry.
 - `cmd/gossamer-server`: serves the local demo API.
-- `internal/contracts`: backend-owned response models with `schema_version` and `generated_at`.
+- `internal/environmentalsim`: deterministic public simulation packages for the tracked traces.
+- `internal/synthetic`: public fixture assembly over SignalForge primitives.
+- `github.com/egidinas/signalforge/*`: shared contracts, Arrow telemetry, graph-wall, tile-bundle, JSON, and safe-path primitives used by the public build.
 - `fixtures/public`: synthetic JSON and JSONL contracts served by the API and tested by the UI.
 - `web`: Vite/React operator UI.
 - `docs`: architecture, standards, traceability, and deployment notes.
@@ -34,8 +36,8 @@ The repository is independent, fictional, and not affiliated with any employer o
 The canonical fixtures, reports, and backlog artifacts stay as JSON or JSONL.
 For large backlog slices, source catalogues, discovery trees, evidence reports,
 graph-wall fixtures, and Loom/Gossamer pairwise reviews exchanged between
-agents, use the shared `@loom-gossamer/shared/agent-context-codec` package from
-`/home/svc_pmg_testbed_b/shared/loom-gossamer-shared`.
+agents, use the repo-local compact fixture contract guarded by
+`web/scripts/test-agent-context-codec.mjs`.
 
 The compact form is only for agent prompt/tool transport. Decode it back to
 canonical JSON before changing files, regenerating fixtures, validating
@@ -101,6 +103,9 @@ Gossamer uses fictional names, deterministic fixture data, generic DUT subsystem
 Clean-room fixtures may demonstrate decoded bus semantics and late-subscriber
 label dictionaries, but they must not include private DBCs, real device value
 tables, lab node names, captures, serial numbers, or hardware procedures.
+
+Public dependency and release gates are tracked in
+[docs/public_variant_readiness.md](docs/public_variant_readiness.md).
 
 ## Public Demo
 

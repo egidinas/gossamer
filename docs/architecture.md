@@ -84,7 +84,7 @@ Every top-level API payload carries:
 
 - `schema_version`: currently `1`,
 - `generated_at`: deterministic timestamp for public fixtures,
-- typed content owned by `internal/contracts`.
+- typed content owned by the shared backend contract package.
 
 This keeps the frontend from deriving critical meaning from labels. The browser receives already-classified source states, graph series roles, supervisor lane states, bus stream health, requirement results, and command-authority state.
 

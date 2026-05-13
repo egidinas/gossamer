@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { decodeAgentContext, encodeAgentContext } from "@loom-gossamer/shared/agent-context-codec";
 
 const root = new URL("../..", import.meta.url).pathname;
 const fixturePath = join(root, "fixtures", "public", "agent_context_codec_benchmark.json");
@@ -65,13 +64,11 @@ for (const sample of fixture.samples) {
 
   const compact = encodeRows(sample.canonical_rows, sample.fields);
   const decoded = decodeRows(compact);
-  const sharedDecoded = decodeAgentContext(encodeAgentContext(sample.canonical_rows));
   const canonicalJSON = stableJSONString(sample.canonical_rows);
   const compactJSON = stableJSONString(compact);
   const reduction = 1 - compactJSON.length / canonicalJSON.length;
 
   if (stableJSONString(decoded) !== canonicalJSON) fail(`${sample.name} compact round-trip changed canonical rows`);
-  if (stableJSONString(sharedDecoded) !== canonicalJSON) fail(`${sample.name} shared codec round-trip changed canonical rows`);
   if (compactJSON !== stableJSONString(sample.compact)) fail(`${sample.name} compact fixture is stale`);
   if (sample.metrics?.canonical_bytes !== canonicalJSON.length) fail(`${sample.name} canonical byte count is stale`);
   if (sample.metrics?.compact_bytes !== compactJSON.length) fail(`${sample.name} compact byte count is stale`);

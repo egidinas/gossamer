@@ -13,11 +13,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/egidinas/gossamer/internal/arrowtelemetry"
-	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/synthetic"
-	"github.com/egidinas/gossamer/internal/tilebundle"
-	"github.com/egidinas/loom-gossamer-shared/go/safepath"
+	"github.com/egidinas/signalforge/arrowtelemetry"
+	"github.com/egidinas/signalforge/contracts"
+	"github.com/egidinas/signalforge/safepath"
+	"github.com/egidinas/signalforge/tilebundle"
 )
 
 const cacheControlNoStore = "no-store"
@@ -184,6 +184,7 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("/api/command-authority/request-lease", s.requestLease)
 	s.mux.HandleFunc("/api/command-authority/release-lease", s.releaseLease)
 	s.mux.HandleFunc("/api/command-authority/mock-command", s.mockCommand)
+	s.mux.HandleFunc("/data/", s.dataBundle)
 }
 
 func (s *Server) health(w http.ResponseWriter, _ *http.Request) {
@@ -558,35 +559,7 @@ func (s *Server) static(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if strings.HasPrefix(r.URL.Path, "/data/") {
-		rel := strings.TrimPrefix(r.URL.Path, "/data/")
-		candidate, err := safepath.ResolveUnderRoot(filepath.Join(s.root, "fixtures", "public_tiles"), rel)
-		if err != nil {
-			http.NotFound(w, r)
-			return
-		}
-		isMutable := strings.HasPrefix(rel, "current/") || rel == "current"
-		if strings.HasSuffix(candidate, ".arrow") {
-			if arrowStaticExists(candidate) {
-				cc := "public, max-age=31536000, immutable"
-				if isMutable {
-					cc = "no-cache"
-				}
-				serveArrowFile(w, r, candidate, cc)
-				return
-			}
-			http.NotFound(w, r)
-			return
-		}
-		if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
-			if isMutable || strings.HasSuffix(candidate, "manifest.json") {
-				w.Header().Set("Cache-Control", "no-cache")
-			} else {
-				w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
-			}
-			http.ServeFile(w, r, candidate)
-			return
-		}
-		http.NotFound(w, r)
+		s.dataBundle(w, r)
 		return
 	}
 	rel := strings.TrimPrefix(path.Clean("/"+r.URL.Path), "/")
@@ -606,6 +579,42 @@ func (s *Server) static(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Cache-Control", cacheControlNoStore)
 	http.ServeFile(w, r, index)
+}
+
+func (s *Server) dataBundle(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet && r.Method != http.MethodHead {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	rel := strings.TrimPrefix(r.URL.Path, "/data/")
+	candidate, err := safepath.ResolveUnderRoot(filepath.Join(s.root, "fixtures", "public_tiles"), rel)
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
+	isMutable := strings.HasPrefix(rel, "current/") || rel == "current"
+	if strings.HasSuffix(candidate, ".arrow") {
+		if arrowStaticExists(candidate) {
+			cc := "public, max-age=31536000, immutable"
+			if isMutable {
+				cc = "no-cache"
+			}
+			serveArrowFile(w, r, candidate, cc)
+			return
+		}
+		http.NotFound(w, r)
+		return
+	}
+	if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
+		if isMutable || strings.HasSuffix(candidate, "manifest.json") {
+			w.Header().Set("Cache-Control", "no-cache")
+		} else {
+			w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+		}
+		http.ServeFile(w, r, candidate)
+		return
+	}
+	http.NotFound(w, r)
 }
 
 func serveFile(w http.ResponseWriter, path string) {

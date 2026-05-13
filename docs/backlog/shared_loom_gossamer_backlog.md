@@ -1,13 +1,11 @@
-# Shared Loom / Gossamer Backlog
+# SignalForge / Gossamer Backlog Boundary
 
-This repo-local file is intentionally only a pointer.
+This repo-local file is intentionally retained as a migration note for older
+references.
 
-Canonical editable backlog:
-`/home/svc_pmg_testbed_b/shared/loom-gossamer-shared/docs/backlog/shared_loom_gossamer_backlog.md`
+Canonical reusable primitives now live in the public SignalForge module and are
+consumed through `github.com/egidinas/signalforge/*`.
 
-From this file, the relative path is:
-`../../../shared/loom-gossamer-shared/docs/backlog/shared_loom_gossamer_backlog.md`
-
-Do not add S-LG item bodies here. Edit the canonical shared-repo file instead,
-then update Gossamer-specific references only when a Gossamer-local task or
-public-safe acceptance criterion needs to point at the shared backlog.
+Do not add private sibling-system item bodies here. Add Gossamer-local tasks to
+`docs/backlog/BACKLOG.md` and promote only neutral, public-safe contracts into
+SignalForge.

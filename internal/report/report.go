@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/evaluator"
 	"github.com/egidinas/gossamer/internal/synthetic"
+	"github.com/egidinas/signalforge/contracts"
 )
 
 func Build(campaignID string) (contracts.EvidenceReport, error) {

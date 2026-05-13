@@ -7,8 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/environmentalsim"
+	"github.com/egidinas/signalforge/contracts"
+	sharedgraph "github.com/egidinas/signalforge/graphwall"
 )
 
 // BuildFATBundle is the entry point called from generator.go.
@@ -312,20 +313,7 @@ func buildCommandCenterGraphWall(env contracts.Envelope, campaignID string, comm
 			Mode:         "absolute_fixture",
 			Source:       "command_center_fat",
 		},
-		TilePolicy: contracts.GraphTilePolicy{
-			DefaultPoints:               1200,
-			MaxPoints:                   4200,
-			LiveTileMinRefreshMS:        1000,
-			HistoryTileMaxCount:         128,
-			ViewportPrefetchPX:          760,
-			TileBufferMaxEntries:        256,
-			TileBufferTTLMS:             90000,
-			ResolutionLevels:            []string{"raw", "1m", "5m", "15m"},
-			SubscriberRole:              "operator_supervisor",
-			SharedTimebaseRequired:      true,
-			LegendMayAffectPlotWidth:    false,
-			MalformedSVGPathHardFailure: true,
-		},
+		TilePolicy: denseOperatorGraphTilePolicy(1200, 4200, 128, 760, 256),
 		GraphGroups: []contracts.GraphGroup{{
 			ID:              groupID,
 			Title:           "Four-chamber FAT command center",
@@ -367,6 +355,29 @@ func buildCommandCenterGraphWall(env contracts.Envelope, campaignID string, comm
 	}
 	wall.Sections = []contracts.GraphSection{section}
 	return wall
+}
+
+func denseOperatorGraphTilePolicy(defaultPoints, maxPoints, historyTileMaxCount, viewportPrefetchPX, tileBufferMaxEntries int) contracts.GraphTilePolicy {
+	policy := sharedgraph.DenseOperatorTilePolicy()
+	policy.DefaultPoints = defaultPoints
+	policy.MaxPoints = maxPoints
+	policy.HistoryTileMaxCount = historyTileMaxCount
+	policy.ViewportPrefetchPX = viewportPrefetchPX
+	policy.TileBufferMaxEntries = tileBufferMaxEntries
+	return contracts.GraphTilePolicy{
+		DefaultPoints:               policy.DefaultPoints,
+		MaxPoints:                   policy.MaxPoints,
+		LiveTileMinRefreshMS:        policy.LiveTileMinRefreshMS,
+		HistoryTileMaxCount:         policy.HistoryTileMaxCount,
+		ViewportPrefetchPX:          policy.ViewportPrefetchPX,
+		TileBufferMaxEntries:        policy.TileBufferMaxEntries,
+		TileBufferTTLMS:             policy.TileBufferTTLMS,
+		ResolutionLevels:            append([]string(nil), policy.ResolutionLevels...),
+		SubscriberRole:              policy.SubscriberRole,
+		SharedTimebaseRequired:      policy.SharedTimebaseRequired,
+		LegendMayAffectPlotWidth:    policy.LegendMayAffectPlotWidth,
+		MalformedSVGPathHardFailure: policy.MalformedSVGPathHardFailure,
+	}
 }
 
 // commandCenterTraceValues finds trace values by ID from a slice of traces.

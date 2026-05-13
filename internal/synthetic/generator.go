@@ -8,11 +8,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/egidinas/gossamer/internal/arrowtelemetry"
-	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/environmentalsim"
 	"github.com/egidinas/gossamer/internal/synthetic/commandcenter"
-	"github.com/egidinas/loom-gossamer-shared/go/jsonfile"
+	"github.com/egidinas/signalforge/arrowtelemetry"
+	"github.com/egidinas/signalforge/contracts"
+	sharedgraph "github.com/egidinas/signalforge/graphwall"
+	"github.com/egidinas/signalforge/jsonfile"
 )
 
 var FixedTime = time.Date(2026, 1, 15, 10, 0, 0, 0, time.UTC)
@@ -303,6 +304,22 @@ func telemetryWithGraphTraces(samples []contracts.TelemetrySample, model contrac
 			}
 		}
 	}
+	for _, group := range model.HeroGraph.CompanionGroups {
+		for _, trace := range group.Traces {
+			if trace.ID == "" {
+				continue
+			}
+			for _, point := range trace.Values {
+				index, ok := byTimestamp[point.Timestamp]
+				if !ok {
+					continue
+				}
+				if _, exists := out[index].Signals[trace.ID]; !exists {
+					out[index].Signals[trace.ID] = point.Value
+				}
+			}
+		}
+	}
 	return out
 }
 
@@ -347,7 +364,15 @@ func buildSources(env contracts.Envelope) contracts.SourceCatalogue {
 		{ID: "supervisor_state", Label: "Campaign Supervisor State", NodeID: "supervisor_a", ServedBy: "gateway_a", Owner: "test_conductor_role", Bus: "supervisor_bus", Quality: "fresh", FreshnessMS: 1000, Provenance: "synthetic_fixture_generator", EvidenceSuitability: "supporting", Signals: []string{"functional_gate_code", "facility_interlock_code"}},
 	}
 	enrichSourceOwnership(sources)
-	return contracts.SourceCatalogue{Envelope: env, Sources: sources, Tree: buildSourceDiscoveryTree(sources)}
+	return contracts.SourceCatalogue{
+		Envelope: env,
+		Sources:  sources,
+		Tree: contracts.BuildSourceDiscoveryTree(sources, contracts.SourceDiscoveryTreeOptions{
+			NodeLabeler:      nodeLabel,
+			DeviceLabeler:    contracts.SourceDiscoveryDefaultLabel,
+			SubsystemLabeler: contracts.SourceDiscoveryDefaultLabel,
+		}),
+	}
 }
 
 type sourceOwnershipProfile struct {
@@ -401,42 +426,6 @@ func enrichSourceOwnership(sources []contracts.Source) {
 	}
 }
 
-func buildSourceDiscoveryTree(sources []contracts.Source) []contracts.SourceDiscoveryNode {
-	nodeIndex := map[string]int{}
-	tree := []contracts.SourceDiscoveryNode{}
-	for _, source := range sources {
-		path := source.DiscoveryPath
-		n := ensureDiscoveryChild(&tree, nodeIndex, path.Node, nodeLabel(path.Node), "node")
-		d := ensureDiscoveryChild(&n.Children, nil, path.Device, discoveryLabel(path.Device), "device")
-		s := ensureDiscoveryChild(&d.Children, nil, path.Subsystem, discoveryLabel(path.Subsystem), "subsystem")
-		s.Children = append(s.Children, contracts.SourceDiscoveryNode{
-			ID:       path.Stream,
-			Label:    source.Label,
-			Kind:     "stream",
-			SourceID: source.ID,
-		})
-	}
-	return tree
-}
-
-func ensureDiscoveryChild(nodes *[]contracts.SourceDiscoveryNode, index map[string]int, id, label, kind string) *contracts.SourceDiscoveryNode {
-	if index != nil {
-		if i, ok := index[id]; ok {
-			return &(*nodes)[i]
-		}
-		*nodes = append(*nodes, contracts.SourceDiscoveryNode{ID: id, Label: label, Kind: kind})
-		index[id] = len(*nodes) - 1
-		return &(*nodes)[len(*nodes)-1]
-	}
-	for i := range *nodes {
-		if (*nodes)[i].ID == id {
-			return &(*nodes)[i]
-		}
-	}
-	*nodes = append(*nodes, contracts.SourceDiscoveryNode{ID: id, Label: label, Kind: kind})
-	return &(*nodes)[len(*nodes)-1]
-}
-
 func discoveryLabel(id string) string {
 	overrides := map[string]string{
 		"chamber_a_plc": "Chamber Alpha PLC",
@@ -447,19 +436,7 @@ func discoveryLabel(id string) string {
 	if label, ok := overrides[id]; ok {
 		return label
 	}
-	return titleCase(strings.ReplaceAll(id, "_", " "))
-}
-
-// titleCase capitalises the first letter of each space-separated word.
-// All synthetic IDs are ASCII, so byte-level manipulation is safe.
-func titleCase(s string) string {
-	words := strings.Fields(s)
-	for i, w := range words {
-		if len(w) > 0 {
-			words[i] = strings.ToUpper(w[:1]) + w[1:]
-		}
-	}
-	return strings.Join(words, " ")
+	return contracts.SourceDiscoveryDefaultLabel(id)
 }
 
 func nodeLabel(id string) string {
@@ -1068,20 +1045,7 @@ func buildGraphWall(env contracts.Envelope, campaignID string, hero contracts.He
 			Mode:         "absolute_fixture",
 			Source:       "thermal_program",
 		},
-		TilePolicy: contracts.GraphTilePolicy{
-			DefaultPoints:               900,
-			MaxPoints:                   3600,
-			LiveTileMinRefreshMS:        1000,
-			HistoryTileMaxCount:         96,
-			ViewportPrefetchPX:          640,
-			TileBufferMaxEntries:        192,
-			TileBufferTTLMS:             90000,
-			ResolutionLevels:            []string{"raw", "1m", "5m", "15m"},
-			SubscriberRole:              "operator_supervisor",
-			SharedTimebaseRequired:      true,
-			LegendMayAffectPlotWidth:    false,
-			MalformedSVGPathHardFailure: true,
-		},
+		TilePolicy: denseOperatorGraphTilePolicy(900, 3600, 96, 640, 192),
 		GraphGroups: []contracts.GraphGroup{{
 			ID:              groupID,
 			Title:           "Synchronized environmental execution wall",
@@ -1259,6 +1223,29 @@ func buildGraphWall(env contracts.Envelope, campaignID string, hero contracts.He
 	return wall
 }
 
+func denseOperatorGraphTilePolicy(defaultPoints, maxPoints, historyTileMaxCount, viewportPrefetchPX, tileBufferMaxEntries int) contracts.GraphTilePolicy {
+	policy := sharedgraph.DenseOperatorTilePolicy()
+	policy.DefaultPoints = defaultPoints
+	policy.MaxPoints = maxPoints
+	policy.HistoryTileMaxCount = historyTileMaxCount
+	policy.ViewportPrefetchPX = viewportPrefetchPX
+	policy.TileBufferMaxEntries = tileBufferMaxEntries
+	return contracts.GraphTilePolicy{
+		DefaultPoints:               policy.DefaultPoints,
+		MaxPoints:                   policy.MaxPoints,
+		LiveTileMinRefreshMS:        policy.LiveTileMinRefreshMS,
+		HistoryTileMaxCount:         policy.HistoryTileMaxCount,
+		ViewportPrefetchPX:          policy.ViewportPrefetchPX,
+		TileBufferMaxEntries:        policy.TileBufferMaxEntries,
+		TileBufferTTLMS:             policy.TileBufferTTLMS,
+		ResolutionLevels:            append([]string(nil), policy.ResolutionLevels...),
+		SubscriberRole:              policy.SubscriberRole,
+		SharedTimebaseRequired:      policy.SharedTimebaseRequired,
+		LegendMayAffectPlotWidth:    policy.LegendMayAffectPlotWidth,
+		MalformedSVGPathHardFailure: policy.MalformedSVGPathHardFailure,
+	}
+}
+
 func graphCard(id, title, kind, role, unit, axisPolicy, source string, signals []contracts.GraphWallSignal) contracts.GraphWallCard {
 	return contracts.GraphWallCard{
 		ID: id, Title: title, Kind: kind, Role: role, Transport: "arrow_ipc", Direction: "derived",
@@ -1381,7 +1368,7 @@ func graphSectionTitle(id string) string {
 
 func heightWeight(kind, role string) float64 {
 	if role == "primary_hero" {
-		return 2.8
+		return 2.0
 	}
 	if kind == "state" || kind == "event" {
 		return 0.85

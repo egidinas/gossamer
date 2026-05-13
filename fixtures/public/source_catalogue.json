@@ -752,7 +752,7 @@
       "children": [
         {
           "id": "chamber_a_plc",
-          "label": "Chamber Alpha PLC",
+          "label": "Chamber A Plc",
           "kind": "device",
           "children": [
             {
@@ -799,7 +799,7 @@
       "children": [
         {
           "id": "chamber_b_plc",
-          "label": "Chamber Bravo PLC",
+          "label": "Chamber B Plc",
           "kind": "device",
           "children": [
             {
@@ -826,7 +826,7 @@
       "children": [
         {
           "id": "chamber_c_plc",
-          "label": "Chamber Charlie PLC",
+          "label": "Chamber C Plc",
           "kind": "device",
           "children": [
             {
@@ -853,7 +853,7 @@
       "children": [
         {
           "id": "chamber_d_plc",
-          "label": "Chamber Delta PLC",
+          "label": "Chamber D Plc",
           "kind": "device",
           "children": [
             {

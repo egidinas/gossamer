@@ -3,8 +3,8 @@ package evaluator
 import (
 	"fmt"
 
-	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/synthetic"
+	"github.com/egidinas/signalforge/contracts"
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/common/types"
 	"github.com/google/cel-go/common/types/ref"

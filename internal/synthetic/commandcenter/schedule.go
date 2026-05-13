@@ -3,7 +3,7 @@ package commandcenter
 import (
 	"time"
 
-	"github.com/egidinas/gossamer/internal/contracts"
+	"github.com/egidinas/signalforge/contracts"
 )
 
 func commandCenterResetDuration(laneIndex, runIndex int) time.Duration {

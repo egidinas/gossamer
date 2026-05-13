@@ -361,7 +361,7 @@ function GraphWallCardView({
   const readouts = tile ? legendReadouts(tile, visibleSignals, readoutTimeMs, currentTimeMs) : new Map<string, string>();
   const cardRefEl = useRef<HTMLElement | null>(null);
   const isPrimary = card.role === "primary" || card.placement.pinned;
-  const defaultPlotHeight = isPrimary ? 300 : renderKind === "swimlane" ? 180 : renderKind === "event_rail" ? 150 : 220;
+  const defaultPlotHeight = isPrimary ? 440 : renderKind === "swimlane" ? 180 : renderKind === "event_rail" ? 150 : 220;
   const minHeight = renderKind === "swimlane" ? 150 : renderKind === "event_rail" ? 120 : isPrimary ? 240 : 180;
   const maxHeight = renderKind === "event_rail" ? 360 : card.id === "thermal_program" ? 760 : 560;
   const style = height ? ({ "--plot-height": `${height}px` } as CSSProperties) : undefined;

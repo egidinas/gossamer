@@ -117,7 +117,7 @@ await mkdir(artifactDir, { recursive: true });
 const api = start("api", "go", ["run", "./cmd/gossamer-server", "-addr", `127.0.0.1:${apiPort}`]);
 const web = start("web", "npm", ["run", "dev", "--", "--host", "127.0.0.1", "--port", webPort], {
   cwd: webRoot,
-  env: { VITE_GOSSAMER_API_BASE: apiURL },
+  env: { GOSSAMER_API_PROXY_TARGET: apiURL },
 });
 
 try {

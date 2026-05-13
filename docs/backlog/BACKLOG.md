@@ -4,15 +4,15 @@ Items in priority order. Each item has a status, description, and acceptance cri
 
 ---
 
-## Shared Loom / Gossamer backlog
+## SignalForge / Gossamer backlog boundary
 **Status:** active
-Cross-repo contract, fixture, evidence, and agent-tooling work is synchronized in
-`/home/svc_pmg_testbed_b/shared/loom-gossamer-shared/docs/backlog/shared_loom_gossamer_backlog.md`.
-The local `docs/backlog/shared_loom_gossamer_backlog.md` file is only a pointer.
-Gossamer may adopt sibling-system patterns only at the public-safe
-contract/workflow level. Do not import live adapters, private identifiers, host
-details, credentials, protocol databases, captures, or hardware-specific
-procedures.
+Cross-repo neutral primitives live in the public SignalForge module and are
+consumed by Gossamer through `github.com/egidinas/signalforge/*`. Gossamer may
+adopt sibling-system patterns only at the public-safe contract/workflow level.
+Do not import live adapters, private identifiers, host details, credentials,
+protocol databases, captures, or hardware-specific procedures.
+Public-variant readiness gates are tracked in
+`docs/public_variant_readiness.md`.
 
 ---
 
@@ -25,10 +25,9 @@ polish so the public-safe semantic model is coherent.
 **Fix:** review, verify, and commit `owner_mode`, `use`, `format_preference`,
 `discovery_path`, source tree config, graph-wall manifest API, and source
 catalogue rendering as one focused public-safe slice.
-**AC:** `go test ./internal/contracts ./internal/synthetic` passes;
-`cd web && npm run test:contracts` passes; `cd web && npm run test:clean-room`
-passes (public-safe clean-room checklist); public fixtures/source/docs pass a clean-room
-scan; generated binaries and build artifacts are not tracked.
+**AC:** `go test ./...` passes; `cd web && npm run test:contracts` passes;
+public fixtures/source/docs pass the clean-room scan; generated binaries and
+build artifacts are not tracked.
 
 ---
 
@@ -93,7 +92,9 @@ or ad-hoc `*.sh` files.
 **Status:** implemented; commit/review pending
 `thermal_acceptance_fat` and `tvac_qualification` tiles, manifests, and telemetry archives are modified but not committed. The working tree is dirty against the deployed state.  
 **Fix:** verify that fixtures were regenerated from current generators/contracts and that existing deltas are intended before staging for commit.
-**Current verification:** `go run ./cmd/gossamer-fixtures` currently reports no generated-file changes; `go test ./internal/contracts ./internal/synthetic ./internal/api` and `cd web && npm run test:contracts` pass.
+**Current verification:** `go run ./cmd/gossamer-fixtures`, `go test ./...`,
+and `cd web && npm run test:contracts` pass against the shared contract and
+fixture boundary.
 **AC:** the current fixture/contract set is coherent with generator output and can be marked implemented pending commit/review.
 
 ---

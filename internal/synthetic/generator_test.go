@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/egidinas/gossamer/internal/contracts"
 	"github.com/egidinas/gossamer/internal/environmentalsim"
+	"github.com/egidinas/signalforge/contracts"
 )
 
 func TestBuildProducesValidContracts(t *testing.T) {
