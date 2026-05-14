@@ -3577,7 +3577,7 @@
         "id": "legacy_csv_environment",
         "label": "Legacy CSV environment import",
         "source_format": "legacy_csv",
-        "target_schema": "gossamer.telemetry.arrow.v2",
+        "target_schema": "signalforge.telemetry.arrow.v2",
         "mode": "translated_fixture",
         "confidence": "high",
         "provenance": "synthetic DataLens translation demo"
@@ -3586,7 +3586,7 @@
         "id": "binary_tmtc_log",
         "label": "Binary transport log import",
         "source_format": "binary_log",
-        "target_schema": "gossamer.telemetry.arrow.v2",
+        "target_schema": "signalforge.telemetry.arrow.v2",
         "mode": "translated_fixture",
         "confidence": "medium",
         "provenance": "synthetic DataLens translation demo"
@@ -3595,7 +3595,7 @@
         "id": "hdf5_evidence_archive",
         "label": "HDF5-like evidence archive",
         "source_format": "hdf5",
-        "target_schema": "gossamer.telemetry.arrow.v2",
+        "target_schema": "signalforge.telemetry.arrow.v2",
         "mode": "translated_fixture",
         "confidence": "high",
         "provenance": "synthetic DataLens translation demo"

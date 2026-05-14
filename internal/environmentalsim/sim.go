@@ -180,20 +180,28 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 		pressureGateReached := pressureGateState(campaignID, phase, st.pressure)
 		load := 4.0 + 0.025*math.Max(0, heaterDuty) + functionalHeat(gateActive)*0.11 + 0.006*math.Max(0, st.fastComponent-22) + 0.18*math.Sin(float64(len(samples))/17)
 		latency := 18.0 + 4*math.Sin(float64(len(samples))/13)
+		sourceNoFlow := campaignID == "tvac_qualification" && cycle == 6 && phase == "cold_operational"
 		if survivalMode {
 			latency += 4
-			st.tcPackets += 0.12
+			if !sourceNoFlow {
+				st.tcPackets += 0.12
+			}
 		} else if gateActive {
 			latency += 18
-			st.tcPackets += 5
-		} else {
+			if !sourceNoFlow {
+				st.tcPackets += 5
+			}
+		} else if !sourceNoFlow {
 			st.tcPackets += 1
 		}
-		if campaignID == "tvac_qualification" && cycle == 6 && phase == "cold_operational" {
+		if sourceNoFlow {
 			latency += 9
 			st.drops += 0.25
 		}
-		if survivalMode {
+		if sourceNoFlow {
+			// Degraded source windows are stale readout periods. Keep the last
+			// observed packet counters instead of synthesizing transport flow.
+		} else if survivalMode {
 			st.tmPackets += 1.8
 		} else {
 			st.tmPackets += 12 + functionalHeat(gateActive)*0.8
@@ -202,7 +210,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 		freshness := 230.0 + 40*math.Abs(noise(rng, 1))
 		interlock := "closed"
 		interlockCode := 1.0
-		if campaignID == "tvac_qualification" && cycle == 6 && phase == "cold_operational" {
+		if sourceNoFlow {
 			quality = "degraded"
 			freshness = 5200
 			interlock = "review"

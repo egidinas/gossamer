@@ -1108,6 +1108,40 @@ func TestIntegratedSystemFATIncludesDegradedSourceInterval(t *testing.T) {
 	}
 }
 
+func TestIntegratedSystemFATDegradedSourceDoesNotAdvanceTransportCounters(t *testing.T) {
+	set := Build()
+	assertDegradedSourceHoldsTransportCounters(t, "integrated_system_fat", set.Telemetry["integrated_system_fat"])
+}
+
+func TestTVacDegradedSourceDoesNotAdvanceTransportCounters(t *testing.T) {
+	set := Build()
+	assertDegradedSourceHoldsTransportCounters(t, "tvac_qualification", set.Telemetry["tvac_qualification"])
+}
+
+func assertDegradedSourceHoldsTransportCounters(t *testing.T, campaignID string, samples []contracts.TelemetrySample) {
+	t.Helper()
+	found := false
+	for i := 1; i < len(samples); i++ {
+		sample := samples[i]
+		if sample.Quality != "degraded" {
+			continue
+		}
+		found = true
+		previous := samples[i-1]
+		for _, signal := range []string{"tm_packet_counter", "tc_packet_counter", "overall_packet_counter"} {
+			if sample.Signals[signal] != previous.Signals[signal] {
+				t.Fatalf("%s %s advanced %s during degraded source interval: previous %.2f current %.2f", campaignID, sample.Timestamp, signal, previous.Signals[signal], sample.Signals[signal])
+			}
+		}
+		if sample.Signals["source_freshness_ms"] < 1000 {
+			t.Fatalf("%s %s degraded source freshness = %.2f, want stale readout", campaignID, sample.Timestamp, sample.Signals["source_freshness_ms"])
+		}
+	}
+	if !found {
+		t.Fatalf("%s missing degraded source interval", campaignID)
+	}
+}
+
 func TestBuildProducesSupervisorOverviewWithHeroTemperatureGraphs(t *testing.T) {
 	set := Build()
 	if err := contracts.ValidateSupervisorOverview(set.Supervisor); err != nil {

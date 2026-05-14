@@ -882,6 +882,8 @@ func buildTelemetry(campaign contracts.Campaign) []contracts.TelemetrySample {
 	}
 	start := FixedTime
 	out := make([]contracts.TelemetrySample, 0, 48)
+	tmCounter := 6000.0
+	tcCounter := 120.0
 	for i := 0; i < 48; i++ {
 		t := start.Add(time.Duration(i) * 15 * time.Minute)
 		phase := float64(i) / 47
@@ -889,10 +891,16 @@ func buildTelemetry(campaign contracts.Campaign) []contracts.TelemetrySample {
 		pressure := 101325.0
 		quality := "fresh"
 		freshness := 250.0
-		if campaign.ID == "integrated_system_fat" && i >= 18 && i <= 24 {
+		sourceNoFlow := campaign.ID == "integrated_system_fat" && i >= 18 && i <= 24
+		if i > 0 && !sourceNoFlow {
+			tmCounter += 17
+			tcCounter += 2
+		}
+		if sourceNoFlow {
 			quality = "degraded"
 			freshness = 3200
 		}
+		overallCounter := tmCounter + tcCounter
 		out = append(out, contracts.TelemetrySample{
 			Timestamp: t.Format(time.RFC3339),
 			Quality:   quality,
@@ -925,9 +933,9 @@ func buildTelemetry(campaign contracts.Campaign) []contracts.TelemetrySample {
 				"source_freshness_ms":                       freshness,
 				"facility_interlock_code":                   1,
 				"bus_latency_ms":                            18 + 8*math.Sin(phase*2*math.Pi),
-				"tm_packet_counter":                         float64(6000 + i*17),
-				"tc_packet_counter":                         float64(120 + i*2),
-				"overall_packet_counter":                    float64(6120 + i*19),
+				"tm_packet_counter":                         tmCounter,
+				"tc_packet_counter":                         tcCounter,
+				"overall_packet_counter":                    overallCounter,
 				"dropped_frame_count":                       droppedFrames(campaign.ID, i),
 				"rf_link_margin_db":                         8.5 + 1.5*math.Cos(phase*2*math.Pi),
 			},

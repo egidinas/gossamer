@@ -6844,123 +6844,123 @@
             },
             {
               "timestamp": "2026-01-15T14:30:00Z",
-              "value": 6306
+              "value": 6289
             },
             {
               "timestamp": "2026-01-15T14:45:00Z",
-              "value": 6323
+              "value": 6289
             },
             {
               "timestamp": "2026-01-15T15:00:00Z",
-              "value": 6340
+              "value": 6289
             },
             {
               "timestamp": "2026-01-15T15:15:00Z",
-              "value": 6357
+              "value": 6289
             },
             {
               "timestamp": "2026-01-15T15:30:00Z",
-              "value": 6374
+              "value": 6289
             },
             {
               "timestamp": "2026-01-15T15:45:00Z",
-              "value": 6391
+              "value": 6289
             },
             {
               "timestamp": "2026-01-15T16:00:00Z",
-              "value": 6408
+              "value": 6289
             },
             {
               "timestamp": "2026-01-15T16:15:00Z",
-              "value": 6425
+              "value": 6306
             },
             {
               "timestamp": "2026-01-15T16:30:00Z",
-              "value": 6442
+              "value": 6323
             },
             {
               "timestamp": "2026-01-15T16:45:00Z",
-              "value": 6459
+              "value": 6340
             },
             {
               "timestamp": "2026-01-15T17:00:00Z",
-              "value": 6476
+              "value": 6357
             },
             {
               "timestamp": "2026-01-15T17:15:00Z",
-              "value": 6493
+              "value": 6374
             },
             {
               "timestamp": "2026-01-15T17:30:00Z",
-              "value": 6510
+              "value": 6391
             },
             {
               "timestamp": "2026-01-15T17:45:00Z",
-              "value": 6527
+              "value": 6408
             },
             {
               "timestamp": "2026-01-15T18:00:00Z",
-              "value": 6544
+              "value": 6425
             },
             {
               "timestamp": "2026-01-15T18:15:00Z",
-              "value": 6561
+              "value": 6442
             },
             {
               "timestamp": "2026-01-15T18:30:00Z",
-              "value": 6578
+              "value": 6459
             },
             {
               "timestamp": "2026-01-15T18:45:00Z",
-              "value": 6595
+              "value": 6476
             },
             {
               "timestamp": "2026-01-15T19:00:00Z",
-              "value": 6612
+              "value": 6493
             },
             {
               "timestamp": "2026-01-15T19:15:00Z",
-              "value": 6629
+              "value": 6510
             },
             {
               "timestamp": "2026-01-15T19:30:00Z",
-              "value": 6646
+              "value": 6527
             },
             {
               "timestamp": "2026-01-15T19:45:00Z",
-              "value": 6663
+              "value": 6544
             },
             {
               "timestamp": "2026-01-15T20:00:00Z",
-              "value": 6680
+              "value": 6561
             },
             {
               "timestamp": "2026-01-15T20:15:00Z",
-              "value": 6697
+              "value": 6578
             },
             {
               "timestamp": "2026-01-15T20:30:00Z",
-              "value": 6714
+              "value": 6595
             },
             {
               "timestamp": "2026-01-15T20:45:00Z",
-              "value": 6731
+              "value": 6612
             },
             {
               "timestamp": "2026-01-15T21:00:00Z",
-              "value": 6748
+              "value": 6629
             },
             {
               "timestamp": "2026-01-15T21:15:00Z",
-              "value": 6765
+              "value": 6646
             },
             {
               "timestamp": "2026-01-15T21:30:00Z",
-              "value": 6782
+              "value": 6663
             },
             {
               "timestamp": "2026-01-15T21:45:00Z",
-              "value": 6799
+              "value": 6680
             }
           ]
         }
