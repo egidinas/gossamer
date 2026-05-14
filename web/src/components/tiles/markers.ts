@@ -13,6 +13,8 @@ export type MarkerLabelRect = {
   height: number;
 };
 
+const LABEL_COLLISION_PADDING = 8;
+
 export function markerColor(marker: { role?: string; result?: string; kind?: string }) {
   if (marker.kind === "operator_breakdown") return "rgba(255,112,67,0.98)";
   if (marker.kind === "operator_reset") return "rgba(36,214,255,0.98)";
@@ -72,8 +74,8 @@ export function placeMarkerLabel({
   const preferLeft = x > left + width * 0.68;
   const directions = preferLeft ? [-1, 1] : [1, -1];
   const baseY = Math.max(top + 4, Math.min(top + height - labelHeight - 4, y - labelHeight / 2));
-  const gap = labelHeight + 4;
-  const offsets = [0, -gap, gap, -2 * gap, 2 * gap, -3 * gap, 3 * gap];
+  const gap = labelHeight + LABEL_COLLISION_PADDING;
+  const offsets = [0, -gap, gap, -2 * gap, 2 * gap, -3 * gap, 3 * gap, -4 * gap, 4 * gap, -5 * gap, 5 * gap];
   for (const direction of directions) {
     const baseX = direction < 0 ? x - labelWidth - markerRadius - 8 : x + markerRadius + 8;
     const clampedX = Math.max(left + 4, Math.min(left + width - labelWidth - 4, baseX));
@@ -93,7 +95,10 @@ export function placeMarkerLabel({
 }
 
 export function rectanglesOverlap(a: MarkerLabelRect, b: MarkerLabelRect) {
-  return a.x < b.x + b.width + 3 && a.x + a.width + 3 > b.x && a.y < b.y + b.height + 3 && a.y + a.height + 3 > b.y;
+  return a.x < b.x + b.width + LABEL_COLLISION_PADDING
+    && a.x + a.width + LABEL_COLLISION_PADDING > b.x
+    && a.y < b.y + b.height + LABEL_COLLISION_PADDING
+    && a.y + a.height + LABEL_COLLISION_PADDING > b.y;
 }
 
 export function fitCanvasText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number) {

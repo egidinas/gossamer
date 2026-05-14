@@ -10,6 +10,7 @@ const backlogSource = await readFile(join(root, "docs", "backlog", "BACKLOG.md")
 const graphWallSource = await readFile(join(root, "web", "src", "components", "OperatorGraphWall.tsx"), "utf8");
 const graphCardCSS = await readFile(join(root, "web", "src", "styles", "graph-card.css"), "utf8");
 const markerSource = await readFile(join(root, "web", "src", "components", "tiles", "markers.ts"), "utf8");
+const uPlotAdapterSource = await readFile(join(root, "web", "src", "components", "tiles", "uPlotAdapter.ts"), "utf8");
 const viewsCSS = await readFile(join(root, "web", "src", "styles", "views.css"), "utf8");
 const semanticsChecklist = await readFile(join(root, "docs", "backend_semantics_checklist.md"), "utf8");
 
@@ -166,6 +167,14 @@ if (!graphWallSource.includes("railLabelPlacements")) throw new Error("event rai
 if (!graphWallSource.includes("showLabel")) throw new Error("event rail marker labels must suppress labels without hiding marker dots");
 if (!graphWallSource.includes("eventRailEvents") || !graphWallSource.includes("!markerIDs.has(event.id)")) throw new Error("event rail marker-derived events must not render twice");
 if (!graphWallSource.includes('title={`${marker.label} ${marker.timestamp}`}')) throw new Error("event rail markers must preserve full hover titles");
+if (!markerSource.includes("LABEL_COLLISION_PADDING = 8")) throw new Error("marker labels need a visible collision margin");
+if (!markerSource.includes("-5 * gap") || !markerSource.includes("5 * gap")) throw new Error("marker labels need enough fallback stack positions for dense graphs");
+if (!uPlotAdapterSource.includes("function commandAnchoredMarker")) throw new Error("event markers need explicit command-line anchoring policy");
+if (!uPlotAdapterSource.includes('commandAnchored && series.role === "command"')) throw new Error("command-like event markers must prefer command role series");
+if (!uPlotAdapterSource.includes("function drawExactMarkerAnchorLine")) throw new Error("event markers need an exact timestamp anchor line");
+if (!uPlotAdapterSource.includes("ctx.moveTo(x, top)") || !uPlotAdapterSource.includes("ctx.lineTo(x, top + height)")) throw new Error("marker anchor line must stay exactly on marker timestamp");
+if (uPlotAdapterSource.includes('anchorY - (marker.kind === "functional_gate" ? 5 : 0)')) throw new Error("functional gate glyph must not be vertically offset from command-line anchor");
+if (!uPlotAdapterSource.includes("drawMarkerLeader(ctx, x, anchorY")) throw new Error("attached marker labels must move independently with a leader back to the exact anchor");
 
 const supervisor = await readJSON("supervisor_overview.json");
 requireEnvelope("supervisor", supervisor);

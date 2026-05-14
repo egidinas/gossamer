@@ -314,6 +314,7 @@ function rankedMarkerAnchorSeries(tile: GraphTile, marker: GraphMarker) {
 function markerAnchorScore(series: TileSeries, marker: GraphMarker) {
   const haystack = `${series.id} ${series.label} ${series.axis_id ?? ""} ${series.source ?? ""} ${series.role}`.toLowerCase();
   const markerText = `${marker.id} ${marker.label} ${marker.kind} ${marker.role} ${marker.axis_id ?? ""}`.toLowerCase();
+  const commandAnchored = commandAnchoredMarker(marker);
   let score = 0;
   const addIfMarkerAndSeries = (markerTokens: string[], seriesTokens: string[], points: number) => {
     if (!markerTokens.some((token) => markerText.includes(token))) return;
@@ -326,10 +327,46 @@ function markerAnchorScore(series: TileSeries, marker: GraphMarker) {
   addIfMarkerAndSeries(["operator", "command"], ["command", "chamber"], 55);
   addIfMarkerAndSeries(["pump", "exhaust"], ["pump", "exhaust", "cryo", "scavenger"], 55);
   if (marker.axis_id && series.axis_id === marker.axis_id) score += 90;
-  if (series.role === "actual") score += 18;
-  if (series.role === "command") score += 8;
+  if (commandAnchored && series.role === "command") score += 220;
+  if (series.role === "actual") score += commandAnchored ? 4 : 18;
+  if (series.role === "command") score += commandAnchored ? 34 : 8;
   if (series.role === "ghost") score += 4;
   return score;
+}
+
+function commandAnchoredMarker(marker: GraphMarker) {
+  return marker.role === "operator_interaction"
+    || marker.kind?.startsWith("operator_")
+    || marker.kind === "functional_gate"
+    || marker.kind === "stability"
+    || marker.kind === "stability_achieved"
+    || marker.kind === "interlock";
+}
+
+function drawExactMarkerAnchorLine(ctx: CanvasRenderingContext2D, x: number, top: number, height: number, color: string, alpha = 0.42) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  ctx.setLineDash([2, 4]);
+  ctx.beginPath();
+  ctx.moveTo(x, top);
+  ctx.lineTo(x, top + height);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawMarkerLeader(ctx: CanvasRenderingContext2D, x: number, y: number, labelX: number, labelY: number, labelWidth: number, labelHeight: number, color: string) {
+  ctx.save();
+  ctx.globalAlpha = 0.8;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(labelX < x ? labelX + labelWidth : labelX, labelY + labelHeight / 2);
+  ctx.stroke();
+  ctx.restore();
 }
 
 function bandFillStyle(tile: GraphTile, bandKind: string, width: number) {
@@ -413,6 +450,9 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
     const attachedMarker = marker.kind === "functional_gate" || marker.kind === "stability" || marker.kind === "stability_achieved" || marker.kind === "interlock" || marker.kind === "pressure_gate";
     const anchor = attachedMarker || operatorMarker ? markerAnchor(plot, tile, marker, markerTime, top, height) : null;
     const anchorY = anchor?.y ?? top + 10;
+    if (attachedMarker || operatorMarker) {
+      drawExactMarkerAnchorLine(ctx, x, top, height, color, attachedMarker ? 0.48 : 0.36);
+    }
     if (operatorMarker) {
       const compact = tile.campaign_id === "command_center_fat" || width < 760;
       const y = anchor?.y ?? top + 18 + (marker.kind === "operator_reset" ? 34 : marker.kind === "operator_reset_ready" ? 68 : 0);
@@ -467,12 +507,7 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       placedMarkerLabels.push(placed);
       const labelX = placed.x;
       const labelY = placed.y;
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(labelX < x ? labelX + labelWidth : labelX, labelY + labelHeight / 2);
-      ctx.stroke();
+      drawMarkerLeader(ctx, x, y, labelX, labelY, labelWidth, labelHeight, color);
       ctx.fillStyle = "rgba(2,6,11,0.94)";
       ctx.fillRect(labelX, labelY, labelWidth, labelHeight);
       ctx.strokeStyle = color;
@@ -488,16 +523,17 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       ctx.strokeStyle = color;
       ctx.lineWidth = commandCenterMarker ? 2.2 : 1.8;
       ctx.beginPath();
-      ctx.arc(x, anchorY - (marker.kind === "functional_gate" ? 5 : 0), commandCenterMarker ? 8 : marker.kind === "functional_gate" ? 10 : 8, 0, Math.PI * 2);
+      ctx.arc(x, anchorY, commandCenterMarker ? 8 : marker.kind === "functional_gate" ? 10 : 8, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
       ctx.restore();
       ctx.fillStyle = color;
       ctx.beginPath();
       if (marker.kind === "functional_gate") {
-        ctx.moveTo(x, anchorY);
-        ctx.lineTo(x - 7, anchorY - 12);
-        ctx.lineTo(x + 7, anchorY - 12);
+        ctx.moveTo(x, anchorY - 7);
+        ctx.lineTo(x + 7, anchorY);
+        ctx.lineTo(x, anchorY + 7);
+        ctx.lineTo(x - 7, anchorY);
         ctx.closePath();
       } else {
         ctx.arc(x, anchorY, 5.6, 0, Math.PI * 2);
@@ -519,6 +555,7 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       placedMarkerLabels.push(placed);
       const labelX = placed.x;
       const labelY = placed.y;
+      drawMarkerLeader(ctx, x, anchorY, labelX, labelY, labelWidth, labelHeight, color);
       ctx.fillStyle = "rgba(2,6,11,0.92)";
       ctx.fillRect(labelX, labelY, labelWidth, labelHeight);
       ctx.strokeStyle = color;
