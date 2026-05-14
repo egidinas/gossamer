@@ -32,3 +32,14 @@ Use fictional and generic concepts only:
 ## Public Demonstration Rule
 
 Every page, fixture, report, screenshot, and API response must be safe to publish. If a detail would require private context to justify it, replace it with a generic fictional equivalent or remove it.
+
+## Information Barrier Enforcement
+
+The public repository may depend on public SignalForge packages only for shared primitives. It must not depend on, import from, replace to, or load files from Loom, mynaric telemetry, lab support repos, host-local checkouts, real captures, or private fixtures.
+
+The barrier is mechanical as well as procedural:
+
+- `npm run test:clean-room` runs the vocabulary/secret scan and the dependency/path barrier scan.
+- Gossamer `go.mod` must use the published `github.com/egidinas/signalforge` module without a local `replace`.
+- Go and web manifests must not reference private sibling repositories or `file:` dependencies.
+- Boundary prose may describe coordination rules, but runtime code, generated fixtures, and release artifacts must remain public-safe.
