@@ -811,9 +811,25 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  min-width: 0;
+  overflow-x: auto;
 }
 
 .file-viewer-lane-table { margin: 0; }
+
+.file-viewer-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.file-viewer-table-scroll table {
+  min-width: 560px;
+}
+
+.file-viewer-table-scroll .requirement-expression {
+  white-space: nowrap;
+}
 
 .file-viewer-lane-sources {
   display: flex;

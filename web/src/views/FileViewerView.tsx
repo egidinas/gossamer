@@ -26,23 +26,25 @@ function LaneSummary({ lane }: { lane: GraphLane }) {
           {nodes.length > 0 && <> · {nodes.map((n) => <code key={n} className="requirement-expression">{n}</code>)}</>}
         </span>
       </div>
-      <table className="file-viewer-lane-table">
-        <thead>
-          <tr><th>Signal</th><th>Role</th><th>Units</th><th>Source</th><th>Node</th><th>Range</th></tr>
-        </thead>
-        <tbody>
-          {lane.series.map((s) => (
-            <tr key={s.id}>
-              <td><code className="requirement-expression">{s.id}</code></td>
-              <td>{s.role}</td>
-              <td>{s.units}</td>
-              <td>{s.source}</td>
-              <td>{s.node_id && <code className="requirement-expression">{s.node_id}</code>}</td>
-              <td>{s.min} – {s.max}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="file-viewer-table-scroll">
+        <table className="file-viewer-lane-table">
+          <thead>
+            <tr><th>Signal</th><th>Role</th><th>Units</th><th>Source</th><th>Node</th><th>Range</th></tr>
+          </thead>
+          <tbody>
+            {lane.series.map((s) => (
+              <tr key={s.id}>
+                <td><code className="requirement-expression">{s.id}</code></td>
+                <td>{s.role}</td>
+                <td>{s.units}</td>
+                <td>{s.source}</td>
+                <td>{s.node_id && <code className="requirement-expression">{s.node_id}</code>}</td>
+                <td>{s.min} – {s.max}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       {sources.length > 0 && (
         <div className="file-viewer-lane-sources">
           {sources.map((src) => <span key={src} className="file-viewer-source-chip">{src}</span>)}
@@ -101,21 +103,23 @@ export function FileViewerView() {
       {model && !loading && (
         <>
           <OperatorPanel title="Signal Groups by Node" meta={`${model.signal_groups.length} sources`}>
-            <table>
-              <thead>
-                <tr><th>Node</th><th>Source</th><th>Bus</th><th>Signals</th></tr>
-              </thead>
-              <tbody>
-                {model.signal_groups.map((g) => (
-                  <tr key={g.source_id}>
-                    <td><code className="requirement-expression">{g.node_label}</code></td>
-                    <td>{g.source_label}</td>
-                    <td>{g.bus}</td>
-                    <td>{g.series.length}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="file-viewer-table-scroll">
+              <table>
+                <thead>
+                  <tr><th>Node</th><th>Source</th><th>Bus</th><th>Signals</th></tr>
+                </thead>
+                <tbody>
+                  {model.signal_groups.map((g) => (
+                    <tr key={g.source_id}>
+                      <td><code className="requirement-expression">{g.node_label}</code></td>
+                      <td>{g.source_label}</td>
+                      <td>{g.bus}</td>
+                      <td>{g.series.length}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </OperatorPanel>
 
           <OperatorPanel title="Graph Lanes" meta={`${model.lanes.length} lanes`}>

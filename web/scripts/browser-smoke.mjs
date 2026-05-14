@@ -31,6 +31,7 @@ const artifactDir = join(webRoot, "test-artifacts", "screenshots");
 
 const routes = [
   ["landing", "#landing"],
+  ["profile", "#profile"],
   ["acceptance", "#acceptance"],
   ["command-center", "#command-center-fat"],
   ["qualification", "#qualification"],
@@ -42,7 +43,21 @@ const routes = [
   ["commands", "#commands"],
   ["bus-tap", "#bus-tap"],
   ["report", "#report"],
+  ["file-viewer", "#file-viewer"],
 ];
+
+const routeContentSelectors = new Map([
+  ["profile", ".profile-grid"],
+  ["mission-map", ".node-grid"],
+  ["supervisor", ".operator-graph-wall"],
+  ["graph-wall", ".operator-graph-wall"],
+  ["sources", ".source-tree"],
+  ["requirements", ".requirement-expression-row"],
+  ["commands", ".command-grid"],
+  ["bus-tap", ".stream-grid"],
+  ["report", ".anomaly"],
+  ["file-viewer", ".file-viewer-lane"],
+]);
 
 const viewports = [
   ["desktop", { width: 1440, height: 960 }],
@@ -143,6 +158,10 @@ try {
         failedResponses.length = 0;
         await page.goto(`${webURL}/${hash}`, { waitUntil: "networkidle" });
         await page.locator(".shell").waitFor({ state: "visible", timeout: 10000 });
+        const contentSelector = routeContentSelectors.get(routeName);
+        if (contentSelector) {
+          await page.locator(contentSelector).first().waitFor({ state: "visible", timeout: 10000 });
+        }
         if (routeName === "acceptance" || routeName === "qualification" || routeName === "command-center") {
           await page.locator(".operator-graph-wall").waitFor({ state: "visible", timeout: 10000 });
         }
