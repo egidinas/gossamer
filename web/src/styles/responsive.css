@@ -234,7 +234,7 @@
     font-size: 11px;
   }
 
-  .graph-card-legend-rail span {
+  .graph-card-legend-rail .graph-card-readout-chip {
     grid-template-columns: 14px minmax(0, 1fr) auto;
   }
 

@@ -74,15 +74,386 @@
 }
 
 .operator-wall-meta {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-2) 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(142px, 1fr));
+  align-items: stretch;
+  gap: 6px;
+  padding: var(--space-3) 0;
   border-top: 1px solid var(--color-border-rule);
   color: var(--color-text-400);
   font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.06em;
+  letter-spacing: 0;
+}
+
+.operator-wall-meta span {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 7px;
+  min-width: 0;
+  padding: 5px 8px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-1);
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.operator-wall-meta b {
+  color: var(--color-text-400);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.operator-wall-meta strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-text-200);
+  font-size: 10px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.execution-progress-panel {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3) 0 var(--space-2);
+  border-top: 1px solid var(--color-border-rule);
+  color: var(--color-text-300);
+}
+
+.execution-now-strip {
+  display: grid;
+  grid-template-columns: max-content max-content minmax(180px, 1fr) max-content;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--type-meta);
+}
+
+.execution-now-strip span,
+.requirement-progress-card span {
+  color: var(--color-text-400);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.execution-now-strip strong,
+.requirement-progress-card strong {
+  color: var(--color-text-100);
+  font-size: var(--type-num-lg);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.execution-now-strip em {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-text-200);
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.execution-now-strip small {
+  color: var(--color-text-300);
+  font-size: var(--type-meta);
+}
+
+.execution-progress-track {
+  height: 2px;
+  overflow: hidden;
+  border-radius: var(--radius-1);
+  background: var(--color-border-subtle);
+}
+
+.execution-progress-track i,
+.requirement-progress-card div i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-pass));
+}
+
+.requirement-progress-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+  gap: var(--space-2);
+}
+
+.requirement-progress-card {
+  display: grid;
+  grid-template-columns: minmax(64px, max-content) max-content minmax(0, 1fr);
+  align-items: baseline;
+  gap: 4px 8px;
+  min-width: 0;
+  padding: 7px 9px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-1);
+  background: rgba(255, 255, 255, 0.012);
+  font-family: var(--font-mono);
+}
+
+.requirement-progress-card em {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-text-200);
+  font-size: var(--type-meta);
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.requirement-progress-card div {
+  grid-column: 1 / -1;
+  height: 2px;
+  overflow: hidden;
+  border-radius: var(--radius-1);
+  background: var(--color-border-rule);
+}
+
+.requirement-progress-card small {
+  grid-column: 1 / -1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-text-400);
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.thermal-diagram-panel {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.28fr) minmax(0, 1fr);
+  gap: var(--space-3);
+  min-width: 0;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-2);
+  background: rgba(255, 255, 255, 0.012);
+  padding: var(--space-3);
+}
+
+.thermal-diagram-meta {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  min-width: 0;
+  color: var(--color-text-300);
+}
+
+.thermal-diagram-meta > span,
+.thermal-diagram-notes span {
+  color: var(--color-text-400);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.thermal-diagram-meta > strong {
+  color: var(--color-text-100);
+  font-size: var(--type-heading);
+  font-weight: 700;
+}
+
+.thermal-diagram-meta p {
+  margin: 0;
+  color: var(--color-text-200);
+  font-size: var(--type-body);
+  line-height: 1.45;
+}
+
+.thermal-diagram-meta-row {
+  display: grid;
+  grid-template-columns: minmax(82px, 0.45fr) minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+  border-top: 1px solid var(--color-border-rule);
+  padding-top: var(--space-2);
+  font-family: var(--font-mono);
+}
+
+.thermal-diagram-meta-row span {
+  color: var(--color-text-400);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.thermal-diagram-meta-row strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-text-200);
+  font-size: var(--type-meta);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.thermal-diagram-canvas {
+  display: grid;
+  grid-template-columns: minmax(140px, 0.35fr) minmax(210px, 0.45fr) minmax(190px, 0.65fr);
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.thermal-map-boundaries,
+.thermal-map-item,
+.thermal-map-couplings {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.thermal-map-item {
+  border: 1px solid var(--color-border-rule);
+  border-radius: var(--radius-1);
+  background: var(--color-bg-0);
+  padding: var(--space-2);
+}
+
+.thermal-map-item > span {
+  margin-bottom: var(--space-1);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.thermal-map-item > div {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.thermal-map-node {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-1);
+  background: rgba(255, 255, 255, 0.018);
+  padding: 7px 8px;
+}
+
+.thermal-map-node strong,
+.thermal-map-node span,
+.thermal-map-node small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.thermal-map-node strong {
+  color: var(--color-text-100);
+  font-size: var(--type-body);
+}
+
+.thermal-map-node span,
+.thermal-map-node small {
+  color: var(--color-text-300);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.thermal-node-environment,
+.thermal-node-interface {
+  border-color: color-mix(in srgb, var(--color-accent) 38%, var(--color-border-subtle));
+}
+
+.thermal-node-component,
+.thermal-node-test_item {
+  border-color: color-mix(in srgb, var(--color-pass) 34%, var(--color-border-subtle));
+}
+
+.thermal-coupling-row {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr);
+  gap: 2px 7px;
+  min-width: 0;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-1);
+  padding: 6px 7px;
+  font-family: var(--font-mono);
+}
+
+.thermal-coupling-row i {
+  grid-row: 1 / span 3;
+  width: 3px;
+  border-radius: 99px;
+  background: var(--color-accent);
+}
+
+.thermal-coupling-row span,
+.thermal-coupling-row b {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.thermal-coupling-row span {
+  color: var(--color-text-300);
+  font-size: 10px;
+}
+
+.thermal-coupling-row b {
+  color: var(--color-text-100);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.thermal-link-radiative i,
+.thermal-link-key.thermal-link-radiative {
+  background: #a78bfa;
+}
+
+.thermal-link-conductive i,
+.thermal-link-key.thermal-link-conductive {
+  background: #2dd4bf;
+}
+
+.thermal-link-air_convection i,
+.thermal-link-key.thermal-link-air_convection {
+  background: #38bdf8;
+}
+
+.thermal-diagram-notes {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  padding-top: var(--space-1);
+}
+
+.thermal-diagram-notes span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-1);
+  padding: 4px 6px;
+  color: var(--color-text-300);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.thermal-link-key {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 99px;
+  background: var(--color-accent);
 }
 
 /* ── Layout grids ──────────────────────────────────────────── */

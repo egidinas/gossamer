@@ -2,10 +2,12 @@ import { tableFromIPC } from "apache-arrow";
 import type { GraphModel, GraphTile, GraphTileCardRef, GraphTileManifest, GraphWallSignal, TileSeries } from "./types";
 
 const arrowCache = new Map<string, Promise<ArrowTelemetry>>();
+const tileCache = new Map<string, Promise<GraphTile>>();
 const maxMaterializedPoints = 1400;
 
 export function invalidateArrowCache() {
   arrowCache.clear();
+  tileCache.clear();
 }
 
 type ArrowTelemetry = {
@@ -29,6 +31,23 @@ type BuiltSeries = {
 };
 
 export async function arrowTile(campaignId: string, card: GraphTileCardRef, tileManifest: GraphTileManifest, graph: GraphModel, level = "arrow-native", requestedT0?: string, requestedT1?: string, dataVersion?: string): Promise<GraphTile> {
+  const cacheKey = [
+    dataVersion || "unversioned",
+    campaignId,
+    card.card_id,
+    level,
+    requestedT0 || graph.graph_wall?.time_range.start || "",
+    requestedT1 || graph.graph_wall?.time_range.end || ""
+  ].join("|");
+  let cached = tileCache.get(cacheKey);
+  if (!cached) {
+    cached = buildArrowTile(campaignId, card, tileManifest, graph, level, requestedT0, requestedT1, dataVersion);
+    tileCache.set(cacheKey, cached);
+  }
+  return cached;
+}
+
+async function buildArrowTile(campaignId: string, card: GraphTileCardRef, tileManifest: GraphTileManifest, graph: GraphModel, level = "arrow-native", requestedT0?: string, requestedT1?: string, dataVersion?: string): Promise<GraphTile> {
   const telemetry = await cachedArrowTelemetry(campaignId, dataVersion);
   const start = requestedT0 ? Date.parse(requestedT0) : Date.parse(graph.graph_wall?.time_range.start ?? telemetry.t0);
   const end = requestedT1 ? Date.parse(requestedT1) : Date.parse(graph.graph_wall?.time_range.end ?? telemetry.t1);

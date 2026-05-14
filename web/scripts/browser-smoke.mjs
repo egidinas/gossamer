@@ -59,6 +59,12 @@ const routeContentSelectors = new Map([
   ["file-viewer", ".file-viewer-lane"],
 ]);
 
+const graphRouteMinimums = new Map([
+  ["acceptance", 8],
+  ["command-center", 4],
+  ["qualification", 12],
+]);
+
 const viewports = [
   ["desktop", { width: 1440, height: 960 }],
   ["4k", { width: 3840, height: 2160 }],
@@ -162,8 +168,18 @@ try {
         if (contentSelector) {
           await page.locator(contentSelector).first().waitFor({ state: "visible", timeout: 10000 });
         }
-        if (routeName === "acceptance" || routeName === "qualification" || routeName === "command-center") {
+        const graphMinimum = graphRouteMinimums.get(routeName);
+        if (graphMinimum) {
           await page.locator(".operator-graph-wall").waitFor({ state: "visible", timeout: 10000 });
+          await page.waitForFunction(
+            (minimum) => {
+              const loading = document.querySelectorAll(".operator-graph-wall .graph-card-loading").length;
+              const canvases = document.querySelectorAll(".operator-graph-wall canvas").length;
+              return loading === 0 && canvases >= minimum;
+            },
+            graphMinimum,
+            { timeout: 30000 }
+          );
         }
         await page.screenshot({ path: join(artifactDir, `${viewportName}-${routeName}.png`), fullPage: true });
 

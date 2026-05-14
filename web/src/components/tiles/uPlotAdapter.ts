@@ -302,6 +302,26 @@ function markerAnchor(plot: uPlot, tile: GraphTile, timeMs: number, top: number,
   return { y: Math.max(top + 12, Math.min(top + height - 10, y)) };
 }
 
+function bandFillStyle(tile: GraphTile, bandKind: string, width: number) {
+  const compact = width < 760;
+  const opacity = compact ? 0.018 : 0.075;
+  if (tile.campaign_id === "tvac_qualification" && (bandKind.includes("vacuum") || tile.card_id.includes("pressure"))) {
+    return `rgba(59,130,246,${compact ? 0.018 : 0.065})`;
+  }
+  if (bandKind.includes("breakdown")) return `rgba(255,112,67,${compact ? 0.026 : 0.11})`;
+  if (bandKind.includes("reset")) return `rgba(36,214,255,${compact ? 0.022 : 0.09})`;
+  if (bandKind.includes("cold")) return `rgba(61,133,198,${opacity})`;
+  return `rgba(198,119,61,${opacity})`;
+}
+
+function bandStrokeStyle(tile: GraphTile, bandKind: string) {
+  if (tile.campaign_id === "tvac_qualification" && (bandKind.includes("vacuum") || tile.card_id.includes("pressure"))) return "rgba(96,165,250,0.16)";
+  if (bandKind.includes("breakdown")) return "rgba(255,112,67,0.22)";
+  if (bandKind.includes("reset")) return "rgba(36,214,255,0.18)";
+  if (bandKind.includes("cold")) return "rgba(96,165,250,0.16)";
+  return "rgba(255,176,0,0.14)";
+}
+
 export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGraphModel, currentTimeMs?: number, hoverTimeMs?: number, timeRange?: TimeRange) {
   const ctx = plot.ctx;
   const bbox = plot.bbox;
@@ -328,17 +348,28 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
     const x = left + ((Date.parse(band.start) - start) / span) * width;
     const x2 = left + ((Date.parse(band.end) - start) / span) * width;
     const bandKind = band.kind.toLowerCase();
-    const vacuumBand = tile.campaign_id === "tvac_qualification" && (bandKind.includes("vacuum") || tile.card_id.includes("pressure"));
-    ctx.fillStyle = vacuumBand
-      ? "rgba(59,130,246,0.09)"
-      : bandKind.includes("breakdown")
-        ? "rgba(255,112,67,0.17)"
-        : bandKind.includes("reset")
-          ? "rgba(36,214,255,0.15)"
-          : bandKind.includes("cold")
-            ? "rgba(61,133,198,0.12)"
-            : "rgba(198,119,61,0.11)";
-    ctx.fillRect(x, top, Math.max(1, x2 - x), height);
+    const bandWidth = Math.max(1, x2 - x);
+    const compact = width < 760;
+    ctx.fillStyle = bandFillStyle(tile, bandKind, width);
+    if (compact) {
+      const railHeight = Math.max(2, Math.min(7, height * 0.04));
+      ctx.fillRect(x, top, bandWidth, railHeight);
+      ctx.fillRect(x, top + height - railHeight, bandWidth, railHeight);
+    } else {
+      ctx.fillRect(x, top, bandWidth, height);
+    }
+    ctx.strokeStyle = bandStrokeStyle(tile, bandKind);
+    ctx.lineWidth = width < 520 ? 0.75 : 1;
+    if (compact) {
+      ctx.beginPath();
+      ctx.moveTo(x + 0.5, top + 0.5);
+      ctx.lineTo(x + 0.5, top + height - 0.5);
+      ctx.moveTo(x + bandWidth - 0.5, top + 0.5);
+      ctx.lineTo(x + bandWidth - 0.5, top + height - 0.5);
+      ctx.stroke();
+    } else {
+      ctx.strokeRect(x + 0.5, top + 0.5, Math.max(0, bandWidth - 1), Math.max(0, height - 1));
+    }
   });
   const placedMarkerLabels: Array<{ x: number; y: number; width: number; height: number }> = [];
   (tile.markers ?? []).forEach((marker) => {

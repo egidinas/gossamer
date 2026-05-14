@@ -192,13 +192,13 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
       </div>
       {afterProgress}
       {execution && <ExecutionProgress execution={execution} heroGraph={heroGraph} currentTimeMs={currentTimeMs} />}
-      <div className="operator-wall-meta">
-        <span>{manifest ? "tile manifest ready" : "loading tile manifest"}</span>
-        <span>{wall.graph_version}</span>
-        <span>{wall.source_mode}</span>
-        <span>{wall.time_range.mode}</span>
-        <span>{wall.tile_policy.shared_timebase_required ? "shared timebase" : "local timebase"}</span>
-        {execution && <span>{execution.acceleration}</span>}
+      <div className="operator-wall-meta" aria-label="Graph wall provenance">
+        <span><b>Tiles</b><strong>{manifest ? "manifest ready" : "loading manifest"}</strong></span>
+        <span><b>Contract</b><strong>{wall.graph_version}</strong></span>
+        <span><b>Source</b><strong>{wall.source_mode}</strong></span>
+        <span><b>Timebase</b><strong>{wall.time_range.mode}</strong></span>
+        <span><b>Sync</b><strong>{wall.tile_policy.shared_timebase_required ? "shared" : "local"}</strong></span>
+        {execution && <span><b>Replay</b><strong>{execution.acceleration}</strong></span>}
       </div>
     </div>
   );
@@ -436,14 +436,14 @@ function GraphWallCardView({
           </div>
           <div className="graph-card-legend-rail">
             {visibleSignals.map((signal) => (
-              <span key={signal.id} title={`${signal.label} / ${signal.source_family}`}>
-                <i style={{ background: colorForSignal(signal) }} />
+              <span className="graph-card-readout-chip" key={signal.id} title={`${signal.label} / ${signal.source_family}`}>
+                <i className="graph-card-readout-swatch" style={{ background: colorForSignal(signal) }} />
                 <b>{signal.label}</b>
                 <em>{readouts.get(signal.id) ?? "-"}</em>
               </span>
             ))}
-            {readoutTimeMs && <small>{readoutMode} {new Date(readoutTimeMs).toISOString().slice(5, 16).replace("T", " ")}</small>}
-            {cardRef?.supports_y_zoom && <small>time + y zoom</small>}
+            {readoutTimeMs && <small className="graph-card-readout-context">{readoutMode} {new Date(readoutTimeMs).toISOString().slice(5, 16).replace("T", " ")}</small>}
+            {cardRef?.supports_y_zoom && <small className="graph-card-readout-context">time + y zoom</small>}
           </div>
           <button className="graph-card-resize" type="button" aria-label={`Resize ${card.title}`} onPointerDown={startResize}>
             <span aria-hidden="true" />
