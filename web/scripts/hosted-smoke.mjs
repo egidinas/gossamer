@@ -5,9 +5,9 @@ const expectedDataVersion = process.env.GOSSAMER_EXPECT_DATA_VERSION || "";
 
 const routes = [
   { name: "landing", hash: "#landing", expectedGraphs: 0, textNeedle: "Complete Operator Surfaces", minReadouts: 0 },
-  { name: "acceptance", hash: "#acceptance", expectedGraphs: 8, textNeedle: "Thermal Chamber FAT -", minReadouts: 10 },
+  { name: "acceptance", hash: "#acceptance", expectedGraphs: 8, textNeedle: "Thermal Chamber FAT", minReadouts: 10 },
   { name: "command-center", hash: "#command-center-fat", expectedGraphs: 4, textNeedle: "Command Center FAT", minReadouts: 8 },
-  { name: "qualification", hash: "#qualification", expectedGraphs: 12, textNeedle: "TVac Qualification -", minReadouts: 12 },
+  { name: "qualification", hash: "#qualification", expectedGraphs: 12, textNeedle: "TVac Qualification", minReadouts: 12 },
 ];
 
 async function launchBrowser() {
