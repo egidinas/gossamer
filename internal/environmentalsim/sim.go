@@ -869,11 +869,10 @@ func advancePressure(campaignID string, previous, volatilePool float64, elapsed 
 	arrhenius := math.Exp(-3600.0/tempK + 3600.0/referenceK)
 	tempFactor := clamp((hotNode+35)/115, 0.02, 1.7)
 	hotWave := clamp((hotNode-35)/60, 0, 1)
-	cycleMemory := math.Exp(-0.28 * math.Max(0, float64(cycle-1)))
 	if phase == "ramp_hot" || phase == "hot_survival" || phase == "hot_operational" {
-		outgasRate = (0.00007 + 0.036*hotWave*arrhenius*tempFactor) * volatilePool * cycleMemory
+		outgasRate = (0.00007 + 0.036*hotWave*arrhenius*tempFactor) * volatilePool
 	} else if phase == "ramp_cold" {
-		outgasRate = 0.00004 * volatilePool * cycleMemory
+		outgasRate = 0.00004 * volatilePool
 	} else if phase == "ambient_postcheck_vacuum" {
 		outgasRate = 0.000025 * volatilePool
 	} else {
@@ -892,7 +891,7 @@ func advancePressure(campaignID string, previous, volatilePool float64, elapsed 
 		next = math.Min(next, previous*0.92+outgasRate*dtMin+virtualLeak*dtMin)
 	}
 	next = math.Max(ultimatePressure, next)
-	depletion := outgasRate * dtMin * 2.6
+	depletion := outgasRate * dtMin * 0.001
 	nextPool = clamp(volatilePool-depletion, 0.018, 1.0)
 	return next, nextPool, outgasRate, virtualLeak, roughingRemoval, turboRemoval, totalRemoval
 }

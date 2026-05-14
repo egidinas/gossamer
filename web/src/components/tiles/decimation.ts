@@ -103,7 +103,7 @@ export function commandCenterTraceGapMs(tile: GraphTile, series: TileSeries) {
 }
 
 export function commandCenterProjectedSeries(tile: GraphTile, series: TileSeries) {
-  return tile.campaign_id === "command_center_fat" && (series.role === "actual" || series.role === "command");
+  return tile.campaign_id === "command_center_fat" && series.role === "command";
 }
 
 // displayValue is used internally by resampleSeries; also re-exported for uPlotAdapter

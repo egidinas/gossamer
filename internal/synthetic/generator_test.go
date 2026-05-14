@@ -655,26 +655,43 @@ func TestTVacPressureTargetAndBakeoutDepletion(t *testing.T) {
 
 	tvac := set.Telemetry["tvac_qualification"]
 	var firstHotMax, lastHotMax float64
+	hotPressureMaxByCycle := map[int]float64{}
+	inventoryEndByCycle := map[int]float64{}
 	for _, sample := range tvac {
 		cycle := int(sample.Signals["thermal_cycle_index"])
 		phase := sample.States["thermal_phase"]
+		if cycle > 0 {
+			inventoryEndByCycle[cycle] = sample.Signals["tvac_volatile_inventory_pct"]
+		}
 		if phase != "ramp_hot" && phase != "hot_survival" && phase != "hot_operational" {
 			continue
 		}
 		outgas := sample.Signals["tvac_outgassing_mbar_per_min"]
+		pressure := sample.Signals["tvac_pressure_mbar"]
 		if cycle == 1 && outgas > firstHotMax {
 			firstHotMax = outgas
 		}
 		if cycle == 8 && outgas > lastHotMax {
 			lastHotMax = outgas
 		}
+		if pressure > hotPressureMaxByCycle[cycle] {
+			hotPressureMaxByCycle[cycle] = pressure
+		}
 	}
 	finalInventory := tvac[len(tvac)-1].Signals["tvac_volatile_inventory_pct"]
-	if firstHotMax <= 0 || lastHotMax/firstHotMax > 0.20 {
+	if firstHotMax <= 0 || lastHotMax/firstHotMax > 0.45 {
 		t.Fatalf("TVac outgassing depletion too weak: cycle1 %.6g mbar/min cycle8 %.6g mbar/min", firstHotMax, lastHotMax)
 	}
-	if finalInventory > 8 {
-		t.Fatalf("TVac volatile inventory = %.2f%%, want strong bake-out depletion", finalInventory)
+	if finalInventory < 18 || finalInventory > 45 {
+		t.Fatalf("TVac volatile inventory = %.2f%%, want slow multi-cycle depletion with residual material", finalInventory)
+	}
+	for cycle := 2; cycle <= 8; cycle++ {
+		if inventoryEndByCycle[cycle] > inventoryEndByCycle[cycle-1]+0.05 {
+			t.Fatalf("TVac volatile inventory increased from cycle %d to %d: %.2f%% -> %.2f%%", cycle-1, cycle, inventoryEndByCycle[cycle-1], inventoryEndByCycle[cycle])
+		}
+	}
+	if hotPressureMaxByCycle[1] <= hotPressureMaxByCycle[8]*1.8 {
+		t.Fatalf("TVac hot pressure depletion too weak: cycle1 %.6g mbar cycle8 %.6g mbar", hotPressureMaxByCycle[1], hotPressureMaxByCycle[8])
 	}
 }
 
@@ -1563,14 +1580,14 @@ func TestBuildProducesCommandCenterTelemetryFromPhysicsSimulation(t *testing.T) 
 				t.Fatalf("%s points = %d, want physics-density trace", id, len(signalValues[id]))
 			}
 		}
-		if !hasPointAfter(signalValues[chamberID], now) {
-			t.Fatalf("%s has no tiled chamber physics trace after now", chamberID)
-		}
-		if !hasPointAfter(signalValues[dutID], now) {
-			t.Fatalf("%s has no tiled DUT physics trace after now", dutID)
-		}
 		if !hasPointAfter(signalValues[ghostID], now) {
-			t.Fatalf("%s has no ghost forecast after now", ghostID)
+			t.Fatalf("%s has no chamber ghost forecast after now", ghostID)
+		}
+		if hasPointAfter(signalValues[chamberID], now) {
+			t.Fatalf("%s should stop actual chamber telemetry at the live cursor; future chamber projection belongs to the ghost trace", chamberID)
+		}
+		if hasPointAfter(signalValues[dutID], now) {
+			t.Fatalf("%s should stop DUT actual telemetry at the live cursor", dutID)
 		}
 		for _, run := range lane.Runs {
 			runStart := mustTime(run.Start)
@@ -1578,11 +1595,17 @@ func TestBuildProducesCommandCenterTelemetryFromPhysicsSimulation(t *testing.T) 
 			if runEnd.Before(now) {
 				continue
 			}
-			if countPointsBetween(signalValues[chamberID], runStart, runEnd) < 60 {
-				t.Fatalf("%s has too few chamber physics points for tiled run %s", chamberID, run.ID)
+			if runStart.After(now) {
+				if countPointsBetween(signalValues[ghostID], runStart, runEnd) < 60 {
+					t.Fatalf("%s has too few chamber ghost points for future tiled run %s", ghostID, run.ID)
+				}
+				continue
 			}
-			if countPointsBetween(signalValues[dutID], runStart, runEnd) < 60 {
-				t.Fatalf("%s has too few DUT physics points for tiled run %s", dutID, run.ID)
+			if countPointsBetween(signalValues[chamberID], runStart, now) < 60 {
+				t.Fatalf("%s has too few as-run chamber physics points before now for tiled run %s", chamberID, run.ID)
+			}
+			if countPointsBetween(signalValues[dutID], runStart, now) < 60 {
+				t.Fatalf("%s has too few as-run DUT physics points before now for tiled run %s", dutID, run.ID)
 			}
 		}
 		if meanAbsoluteDelta(signalValues[commandID], signalValues[chamberID]) < 0.01 {
