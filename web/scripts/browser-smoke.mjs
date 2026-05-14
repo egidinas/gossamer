@@ -65,6 +65,11 @@ const graphRouteMinimums = new Map([
   ["qualification", 12],
 ]);
 
+const routeRequiredSignals = new Map([
+  ["acceptance", ["trace.power_total", "trace.power_payload", "trace.dut_temp_a"]],
+  ["qualification", ["trace.power_total", "trace.power_payload", "trace.dut_temp_a", "trace.tvac_pressure"]],
+]);
+
 const viewports = [
   ["desktop", { width: 1440, height: 960 }],
   ["4k", { width: 3840, height: 2160 }],
@@ -133,6 +138,67 @@ function stop(child) {
   });
 }
 
+async function assertRequiredSignalReadouts(page, routeName, viewportName) {
+  const requiredSignals = routeRequiredSignals.get(routeName);
+  if (!requiredSignals) return;
+  await page.waitForFunction(
+    (signalIDs) => signalIDs.every((signalID) => {
+      const chip = document.querySelector(`.graph-card-readout-chip[data-signal-id="${signalID}"]`);
+      const value = chip?.getAttribute("data-readout-value") ?? "";
+      return value.trim() && value.trim() !== "-";
+    }),
+    requiredSignals,
+    { timeout: 30000 }
+  ).catch(async () => {
+    const observed = await page.evaluate((signalIDs) => signalIDs.map((signalID) => {
+      const chip = document.querySelector(`.graph-card-readout-chip[data-signal-id="${signalID}"]`);
+      return {
+        signalID,
+        found: Boolean(chip),
+        label: chip?.querySelector("b")?.textContent?.trim() ?? "",
+        sourceFamily: chip?.getAttribute("data-signal-source-family") ?? "",
+        value: chip?.getAttribute("data-readout-value") ?? chip?.querySelector("em")?.textContent?.trim() ?? "",
+      };
+    }), requiredSignals);
+    throw new Error(`${viewportName} ${routeName} missing populated required readouts: ${JSON.stringify(observed)}`);
+  });
+}
+
+async function assertNoVisibleEventLabelOverlaps(page, routeName, viewportName) {
+  const overlaps = await page.evaluate(() => {
+    const labels = [...document.querySelectorAll(".event-marker-wrap strong, .event-chip-wrap strong")]
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          text: (element.textContent ?? "").trim(),
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+          width: rect.width,
+          height: rect.height,
+        };
+      })
+      .filter((item) => item.text && item.width > 2 && item.height > 2);
+    const collisions = [];
+    for (let i = 0; i < labels.length; i += 1) {
+      for (let j = i + 1; j < labels.length; j += 1) {
+        const a = labels[i];
+        const b = labels[j];
+        const xOverlap = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+        const yOverlap = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+        if (xOverlap > 1 && yOverlap > 1) {
+          collisions.push({ a: a.text, b: b.text, xOverlap: Math.round(xOverlap), yOverlap: Math.round(yOverlap) });
+        }
+      }
+    }
+    return collisions.slice(0, 8);
+  });
+  if (overlaps.length > 0) {
+    throw new Error(`${viewportName} ${routeName} has overlapping event labels: ${JSON.stringify(overlaps)}`);
+  }
+}
+
 await mkdir(artifactDir, { recursive: true });
 
 const api = start("api", "go", ["run", "./cmd/gossamer-server", "-addr", `127.0.0.1:${apiPort}`]);
@@ -180,6 +246,8 @@ try {
             graphMinimum,
             { timeout: 30000 }
           );
+          await assertRequiredSignalReadouts(page, routeName, viewportName);
+          await assertNoVisibleEventLabelOverlaps(page, routeName, viewportName);
         }
         await page.screenshot({ path: join(artifactDir, `${viewportName}-${routeName}.png`), fullPage: true });
 

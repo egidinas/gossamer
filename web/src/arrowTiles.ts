@@ -5,6 +5,51 @@ const arrowCache = new Map<string, Promise<ArrowTelemetry>>();
 const tileCache = new Map<string, Promise<GraphTile>>();
 const maxMaterializedPoints = 1400;
 
+const signalSensorAliases: Record<string, string[]> = {
+  "trace.shroud_gradient": ["thermal_shroud_gradient_deg_c"],
+  "trace.tvac_outgassing": ["tvac_outgassing_mbar_per_min"],
+  "trace.tvac_virtual_leak": ["tvac_virtual_leak_mbar_per_min"],
+  "trace.tvac_roughing_pump": ["tvac_roughing_removal_mbar_per_min"],
+  "trace.tvac_turbo_pump": ["tvac_turbo_removal_mbar_per_min"],
+  "trace.tvac_pump_removal": ["tvac_pump_removal_mbar_per_min"],
+  "trace.tvac_volatile_inventory": ["tvac_volatile_inventory_pct"],
+  "trace.ln2_duty": ["ln2_valve_duty_pct"],
+  "trace.freeze_margin": ["cooling_water_freeze_margin_deg_c"],
+  "trace.tvac_cryo_exhaust": ["tvac_cryo_exhaust_temp_deg_c"],
+  "trace.tvac_scavenged_exhaust": ["tvac_scavenged_exhaust_temp_deg_c"],
+  "trace.tvac_scavenger_water_return": ["tvac_scavenger_cooling_water_return_deg_c"],
+  "trace.tvac_exhaust_cold_recovery": ["tvac_exhaust_cold_recovery_pct"],
+  "trace.cooling_water_temp": ["cooling_water_temp_deg_c"],
+  "trace.pressurized_air_supply": ["pressurized_air_supply_bar"],
+  "trace.air_dewpoint": ["air_dewpoint_deg_c"],
+  "trace.power_total": ["dut_power_total_w"],
+  "trace.power_subsystem": ["dut_power_subsystem_w"],
+  "trace.power_payload": ["dut_power_payload_w"],
+  "trace.power_avionics": ["dut_power_avionics_w"],
+  "trace.power_link": ["dut_power_link_w"],
+  "trace.bus_latency": ["bus_latency_ms"],
+  "trace.source_freshness": ["source_freshness_ms"],
+  "trace.overall_packet_counter": ["overall_packet_counter"],
+  "trace.tm_packet_counter": ["tm_packet_counter"],
+  "trace.tc_packet_counter": ["tc_packet_counter"],
+  "trace.dropped_frame_count": ["dropped_frame_count"],
+  "trace.phase_enum": ["thermal_phase_code"],
+  "trace.functional_gate_active": ["functional_gate"],
+  "trace.stability_reached": ["stability_gate_reached"],
+  "trace.dwell_active": ["dwell_active"],
+  "trace.dwell_complete": ["dwell_complete"],
+  "trace.pressure_gate": ["pressure_gate_reached"],
+  "trace.pump_mode": ["tvac_pump_mode_code"],
+  "trace.exhaust_duct_safe": ["tvac_exhaust_duct_safe"],
+  "trace.interlock_review": ["facility_interlock_state"],
+  "trace.evidence_capture": ["trace.evidence.markers"],
+  "trace.dut_ready": ["dut_ready"],
+  "trace.dut_operative": ["dut_operative"],
+  "trace.payload_active": ["payload_active"],
+  "trace.rf_link_locked": ["rf_link_locked"],
+  "trace.fault_flag": ["fault_flag"]
+};
+
 export function invalidateArrowCache() {
   arrowCache.clear();
   tileCache.clear();
@@ -12,6 +57,7 @@ export function invalidateArrowCache() {
 
 type ArrowTelemetry = {
   bySensor: Map<string, ArrowRow[]>;
+  sensorIDs: string[];
   t0: string;
   t1: string;
 };
@@ -142,6 +188,7 @@ async function fetchArrowTelemetry(campaignId: string, dataVersion?: string): Pr
   }
   return {
     bySensor,
+    sensorIDs: Array.from(bySensor.keys()).sort(),
     t0: new Date(minT).toISOString(),
     t1: new Date(maxT).toISOString()
   };
@@ -181,7 +228,7 @@ function looksLikeHTML(buffer: ArrayBuffer) {
 }
 
 function buildSeries(signal: GraphWallSignal, card: GraphTileCardRef, telemetry: ArrowTelemetry, t0: number, t1: number): BuiltSeries {
-  const rows = (telemetry.bySensor.get(signal.id) ?? []).filter((row) => row.t >= t0 && row.t <= t1);
+  const rows = rowsForSignal(signal, telemetry).filter((row) => row.t >= t0 && row.t <= t1);
   const numeric = rows.filter((row) => row.value !== null);
   const tileSeries: TileSeries = {
     id: signal.id,
@@ -203,6 +250,32 @@ function buildSeries(signal: GraphWallSignal, card: GraphTileCardRef, telemetry:
   const materialized = decimateRows(numericRows, maxMaterializedPoints);
   tileSeries.points = materialized.map((row) => ({ timestamp: new Date(row.t).toISOString(), value: row.value }));
   return { series: tileSeries, rawCount: numericRows.length, pointCount: materialized.length };
+}
+
+function rowsForSignal(signal: GraphWallSignal, telemetry: ArrowTelemetry) {
+  for (const candidate of signalSensorCandidates(signal, telemetry)) {
+    const rows = telemetry.bySensor.get(candidate);
+    if (rows?.length) return rows;
+  }
+  return [];
+}
+
+function signalSensorCandidates(signal: GraphWallSignal, telemetry: ArrowTelemetry) {
+  const stripped = signal.id.replace(/^trace\./, "").replace(/^archive\./, "");
+  const looseToken = stripped.replace(/[^a-z0-9]+/gi, "_").replace(/^_+|_+$/g, "").toLowerCase();
+  const candidates = [signal.id, ...(signalSensorAliases[signal.id] ?? []), stripped, looseToken];
+  for (const sensorID of telemetry.sensorIDs) {
+    const normalized = sensorID.toLowerCase();
+    if (
+      normalized === looseToken ||
+      normalized.startsWith(`${looseToken}_`) ||
+      normalized.endsWith(`_${looseToken}`) ||
+      normalized.includes(`_${looseToken}_`)
+    ) {
+      candidates.push(sensorID);
+    }
+  }
+  return Array.from(new Set(candidates.filter(Boolean)));
 }
 
 function decimateRows(rows: NumericArrowRow[], budget: number): NumericArrowRow[] {

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-01-15T10:00:00Z",
+  "views": [
+    {
+      "id": "thermal_acceptance_fat",
+      "label": "Acceptance FAT",
+      "source_ids": [
+        "chamber_thermal_fat",
+        "chamber_thermal_b",
+        "chamber_thermal_c",
+        "chamber_thermal_d",
+        "chamber_infra_fat"
+      ]
+    },
+    {
+      "id": "tvac_qualification",
+      "label": "Qualification TVac",
+      "source_ids": [
+        "dut_power",
+        "dut_control",
+        "dut_link",
+        "dut_thermal",
+        "chamber_thermal_tvac",
+        "chamber_infra_tvac",
+        "chamber_pressure_tvac",
+        "tvac_plc",
+        "archive_bus",
+        "archive_quality"
+      ]
+    },
+    {
+      "id": "command_center_fat",
+      "label": "Command Center",
+      "source_ids": [
+        "chamber_thermal_fat",
+        "chamber_thermal_b",
+        "chamber_thermal_c",
+        "chamber_thermal_d",
+        "dut_thermal",
+        "supervisor_state",
+        "thermal_supervisor"
+      ]
+    }
+  ]
+}

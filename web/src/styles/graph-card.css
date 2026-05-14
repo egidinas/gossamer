@@ -532,8 +532,12 @@
   font-family: var(--font-mono);
   font-size: 9px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
+  line-height: 1;
   color: inherit;
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
   transform: rotate(-55deg) translateX(2px);
   transform-origin: top center;
@@ -563,8 +567,12 @@
   font-family: var(--font-mono);
   font-size: 9px;
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
+  line-height: 1;
   color: inherit;
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
   transform: rotate(-45deg) translateX(2px);
   transform-origin: top center;

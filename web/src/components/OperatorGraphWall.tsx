@@ -435,13 +435,23 @@ function GraphWallCardView({
             )}
           </div>
           <div className="graph-card-legend-rail">
-            {visibleSignals.map((signal) => (
-              <span className="graph-card-readout-chip" key={signal.id} title={`${signal.label} / ${signal.source_family}`}>
-                <i className="graph-card-readout-swatch" style={{ background: colorForSignal(signal) }} />
-                <b>{signal.label}</b>
-                <em>{readouts.get(signal.id) ?? "-"}</em>
-              </span>
-            ))}
+            {visibleSignals.map((signal) => {
+              const readout = readouts.get(signal.id) ?? "-";
+              return (
+                <span
+                  className="graph-card-readout-chip"
+                  data-readout-value={readout}
+                  data-signal-id={signal.id}
+                  data-signal-source-family={signal.source_family}
+                  key={signal.id}
+                  title={`${signal.label} / ${signal.source_family}`}
+                >
+                  <i className="graph-card-readout-swatch" style={{ background: colorForSignal(signal) }} />
+                  <b>{signal.label}</b>
+                  <em>{readout}</em>
+                </span>
+              );
+            })}
             {readoutTimeMs && <small className="graph-card-readout-context">{readoutMode} {new Date(readoutTimeMs).toISOString().slice(5, 16).replace("T", " ")}</small>}
             {cardRef?.supports_y_zoom && <small className="graph-card-readout-context">time + y zoom</small>}
           </div>
@@ -680,49 +690,43 @@ function EventRailTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTim
   const now = currentTimeMs ?? Date.parse(heroGraph.time_axis.now ?? heroGraph.execution?.now ?? "");
   const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), 14);
   const eventRailMarkers = (tile.markers ?? []).filter((marker) => inTimeRange(marker.timestamp, timeRange));
-  const labeledEventRailMarkerIDs = new Set(eventRailMarkers
-    .filter((marker, index, markers) => {
-      const markerTime = Date.parse(marker.timestamp);
-      if (!Number.isFinite(markerTime)) return false;
-      const left = ((markerTime - start) / span) * 100;
-      return !markers.slice(0, index).some((previous) => {
-        const previousTime = Date.parse(previous.timestamp);
-        if (!Number.isFinite(previousTime)) return false;
-        return Math.abs(((previousTime - start) / span) * 100 - left) < 3.5;
-      });
-    })
-    .map((marker) => marker.id));
+  const markerIDs = new Set(eventRailMarkers.map((marker) => marker.id));
+  const eventRailEvents = (tile.events ?? []).filter((event) => inTimeRange(event.timestamp, timeRange) && !markerIDs.has(event.id));
+  const markerPlacements = railLabelPlacements(eventRailMarkers, timeRange, 3, 2.8, 1.4);
+  const eventPlacements = railLabelPlacements(eventRailEvents, timeRange, 2, 3.0, 1.5);
   return (
     <div className="tile-event-rail" data-event-card={tile.card_id}>
       <div className="tile-time-plane">
         {ticks.map((tick) => <span className="tile-shared-gridline" key={tick.iso} style={{ left: `${tick.ratio * 100}%` }} />)}
         {eventRailMarkers.map((marker, index) => {
-          const left = Math.max(0, Math.min(100, ((Date.parse(marker.timestamp) - start) / span) * 100));
+          const placement = markerPlacements.get(marker.id);
+          const left = placement?.left ?? Math.max(0, Math.min(100, ((Date.parse(marker.timestamp) - start) / span) * 100));
           const color = markerColor(marker);
           return (
             <span
               className={`event-marker-wrap event-marker-${marker.kind ?? marker.role ?? "marker"}`}
               key={marker.id}
-              style={{ left: `${left}%`, top: `${12 + (index % 5) * 21}px`, color }}
+              style={{ left: `${left}%`, top: `${12 + (placement?.row ?? index % 3) * 44}px`, color }}
               title={`${marker.label} ${marker.timestamp}`}
             >
               <i className={`event-marker event-${marker.result ?? marker.kind}`} style={{ background: color }} />
-              {labeledEventRailMarkerIDs.has(marker.id) && <strong>{shortGateLabel(marker.label)}</strong>}
+              {placement?.showLabel && <strong>{shortGateLabel(marker.label)}</strong>}
             </span>
           );
         })}
-        {(tile.events ?? []).filter((event) => inTimeRange(event.timestamp, timeRange)).map((event, index) => {
-          const left = Math.max(0, Math.min(100, ((Date.parse(event.timestamp) - start) / span) * 100));
+        {eventRailEvents.map((event, index) => {
+          const placement = eventPlacements.get(event.id);
+          const left = placement?.left ?? Math.max(0, Math.min(100, ((Date.parse(event.timestamp) - start) / span) * 100));
           const color = eventColor(event.kind);
           return (
             <span
               className={`event-chip-wrap event-chip-${event.kind}`}
               key={event.id}
-              style={{ left: `${left}%`, top: `${118 + (index % 3) * 19}px`, color }}
+              style={{ left: `${left}%`, top: `${164 + (placement?.row ?? index % 2) * 42}px`, color }}
               title={`${event.label} ${event.timestamp}`}
             >
               <b className={`event-chip event-${event.kind}`} style={{ background: color }} />
-              <strong>{shortGateLabel(event.label)}</strong>
+              {placement?.showLabel && <strong>{shortGateLabel(event.label)}</strong>}
             </span>
           );
         })}
@@ -732,6 +736,38 @@ function EventRailTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTim
       </div>
     </div>
   );
+}
+
+type RailLabelPlacement = {
+  left: number;
+  row: number;
+  showLabel: boolean;
+};
+
+function railLabelPlacements<T extends { id: string; label: string; timestamp: string }>(items: T[], range: TimeRange, rows: number, minGapPct: number, widthScale: number) {
+  const span = Math.max(1, range.end - range.start);
+  const occupied = Array.from({ length: rows }, () => [] as Array<{ left: number; right: number }>);
+  const placements = new Map<string, RailLabelPlacement>();
+  items.forEach((item, index) => {
+    const t = Date.parse(item.timestamp);
+    const left = Number.isFinite(t) ? Math.max(0, Math.min(100, ((t - range.start) / span) * 100)) : 0;
+    const labelWidth = Math.min(18, Math.max(5.5, shortGateLabel(item.label).length * widthScale));
+    let row = index % rows;
+    let showLabel = false;
+    for (let candidate = 0; candidate < rows; candidate++) {
+      const labelLeft = Math.max(0, left - labelWidth / 2);
+      const labelRight = Math.min(100, left + labelWidth / 2);
+      const blocked = occupied[candidate].some((used) => labelLeft < used.right + minGapPct && labelRight + minGapPct > used.left);
+      if (!blocked) {
+        row = candidate;
+        showLabel = true;
+        occupied[candidate].push({ left: labelLeft, right: labelRight });
+        break;
+      }
+    }
+    placements.set(item.id, { left, row, showLabel });
+  });
+  return placements;
 }
 
 export function scheduleTileWork(work: () => void, delayMs: number) {

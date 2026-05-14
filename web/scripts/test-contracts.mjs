@@ -162,7 +162,9 @@ if (!graphWallSource.includes('renderKind === "event_rail" ? 360')) throw new Er
 if (!graphCardCSS.includes(".tile-event-rail")) throw new Error("event rail tile styles missing");
 if (!markerSource.includes("slice(0, 8)")) throw new Error("event marker labels must default to eight characters or fewer");
 if (!graphWallSource.includes("shortGateLabel(marker.label)")) throw new Error("event rail markers must use short label rendering");
-if (!graphWallSource.includes("labeledEventRailMarkerIDs")) throw new Error("event rail marker labels must suppress overlapping labels without hiding marker dots");
+if (!graphWallSource.includes("railLabelPlacements")) throw new Error("event rail marker labels must use collision-aware row placement");
+if (!graphWallSource.includes("showLabel")) throw new Error("event rail marker labels must suppress labels without hiding marker dots");
+if (!graphWallSource.includes("eventRailEvents") || !graphWallSource.includes("!markerIDs.has(event.id)")) throw new Error("event rail marker-derived events must not render twice");
 if (!graphWallSource.includes('title={`${marker.label} ${marker.timestamp}`}')) throw new Error("event rail markers must preserve full hover titles");
 
 const supervisor = await readJSON("supervisor_overview.json");

@@ -5,9 +5,23 @@ const expectedDataVersion = process.env.GOSSAMER_EXPECT_DATA_VERSION || "";
 
 const routes = [
   { name: "landing", hash: "#landing", expectedGraphs: 0, textNeedle: "Complete Operator Surfaces", minReadouts: 0 },
-  { name: "acceptance", hash: "#acceptance", expectedGraphs: 8, textNeedle: "Thermal Chamber FAT", minReadouts: 10 },
+  {
+    name: "acceptance",
+    hash: "#acceptance",
+    expectedGraphs: 8,
+    textNeedle: "Thermal Chamber FAT",
+    minReadouts: 10,
+    requiredSignals: ["trace.power_total", "trace.power_payload", "trace.dut_temp_a"],
+  },
   { name: "command-center", hash: "#command-center-fat", expectedGraphs: 4, textNeedle: "Command Center FAT", minReadouts: 8 },
-  { name: "qualification", hash: "#qualification", expectedGraphs: 12, textNeedle: "TVac Qualification", minReadouts: 12 },
+  {
+    name: "qualification",
+    hash: "#qualification",
+    expectedGraphs: 12,
+    textNeedle: "TVac Qualification",
+    minReadouts: 12,
+    requiredSignals: ["trace.power_total", "trace.power_payload", "trace.dut_temp_a", "trace.tvac_pressure"],
+  },
 ];
 
 async function launchBrowser() {
@@ -23,6 +37,66 @@ async function launchBrowser() {
 
 function url(path) {
   return new URL(path, baseURL).toString();
+}
+
+async function assertRequiredSignalReadouts(page, route) {
+  if (!route.requiredSignals?.length) return;
+  await page.waitForFunction(
+    (signalIDs) => signalIDs.every((signalID) => {
+      const chip = document.querySelector(`.graph-card-readout-chip[data-signal-id="${signalID}"]`);
+      const value = chip?.getAttribute("data-readout-value") ?? "";
+      return value.trim() && value.trim() !== "-";
+    }),
+    route.requiredSignals,
+    { timeout: 30000 }
+  ).catch(async () => {
+    const observed = await page.evaluate((signalIDs) => signalIDs.map((signalID) => {
+      const chip = document.querySelector(`.graph-card-readout-chip[data-signal-id="${signalID}"]`);
+      return {
+        signalID,
+        found: Boolean(chip),
+        label: chip?.querySelector("b")?.textContent?.trim() ?? "",
+        sourceFamily: chip?.getAttribute("data-signal-source-family") ?? "",
+        value: chip?.getAttribute("data-readout-value") ?? chip?.querySelector("em")?.textContent?.trim() ?? "",
+      };
+    }), route.requiredSignals);
+    throw new Error(`${route.name}: missing populated required readouts: ${JSON.stringify(observed)}`);
+  });
+}
+
+async function assertNoVisibleEventLabelOverlaps(page, routeName) {
+  const overlaps = await page.evaluate(() => {
+    const labels = [...document.querySelectorAll(".event-marker-wrap strong, .event-chip-wrap strong")]
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          text: (element.textContent ?? "").trim(),
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+          width: rect.width,
+          height: rect.height,
+        };
+      })
+      .filter((item) => item.text && item.width > 2 && item.height > 2);
+    const collisions = [];
+    for (let i = 0; i < labels.length; i += 1) {
+      for (let j = i + 1; j < labels.length; j += 1) {
+        const a = labels[i];
+        const b = labels[j];
+        const xOverlap = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+        const yOverlap = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+        if (xOverlap > 1 && yOverlap > 1) {
+          collisions.push({ a: a.text, b: b.text, xOverlap: Math.round(xOverlap), yOverlap: Math.round(yOverlap) });
+        }
+      }
+    }
+    return collisions.slice(0, 8);
+  });
+  if (overlaps.length > 0) {
+    throw new Error(`${routeName}: overlapping event labels: ${JSON.stringify(overlaps)}`);
+  }
 }
 
 const manifestResponse = await fetch(url("/data/current/manifest.json"));
@@ -54,7 +128,8 @@ try {
     failedRequests.push(`${request.url()} ${request.failure()?.errorText}`);
   });
 
-  for (const { name, hash, expectedGraphs, textNeedle, minReadouts } of routes) {
+  for (const route of routes) {
+    const { name, hash, expectedGraphs, textNeedle, minReadouts } = route;
     await page.goto(url(hash), { waitUntil: "networkidle", timeout: 60000 });
     await page.locator(".shell").waitFor({ state: "visible", timeout: 30000 });
     await page.getByText(textNeedle, { exact: false }).first().waitFor({ timeout: 30000 });
@@ -80,6 +155,8 @@ try {
         minReadouts,
         { timeout: 30000 }
       );
+      await assertRequiredSignalReadouts(page, route);
+      await assertNoVisibleEventLabelOverlaps(page, name);
     }
 
     const routeState = await page.evaluate(() => {

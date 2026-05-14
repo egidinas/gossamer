@@ -1,10 +1,8 @@
 import { Activity, CalendarDays, FileCheck, Home, ShieldCheck, User } from "lucide-react";
 import { lazy, Suspense, useEffect, useMemo } from "react";
 import {
-  api,
   invalidateCaches,
   useBundleQuery,
-  useManifestQuery,
   useTopologyQuery,
   useSourcesQuery,
   useSourceTreeConfigQuery,
@@ -149,23 +147,25 @@ const bootSupervisor: SupervisorOverview = {
 export function App() {
   const { route, activeCampaign, setRoute, setActiveCampaign } = useAppStore();
 
-  const bundleQuery = useBundleQuery();
-  const manifestQuery = useManifestQuery();
-  const topologyQuery = useTopologyQuery();
-  const sourcesQuery = useSourcesQuery();
-  const sourceTreeConfigQuery = useSourceTreeConfigQuery();
-  const supervisorQuery = useSupervisorQuery();
-  const commandCenterFATQuery = useCommandCenterFATQuery();
-  const busTapQuery = useBusTapQuery();
-  const commandAuthorityQuery = useCommandAuthorityQuery();
-  const leaseMutation = useLeaseMutation();
-
   const routeCampaign = campaignRouteMap[route];
   const requestedCampaign = routeCampaign ?? activeCampaign;
+  const isCampaignGraphRoute = route === "acceptance" || route === "qualification" || route === "supervisor" || route === "graph-wall";
+  const needsCampaignModel = isCampaignGraphRoute || route === "requirements" || route === "report";
+  const needsSupervisor = route === "acceptance" || route === "qualification" || route === "supervisor";
 
-  const campaignQuery = useCampaignQuery(requestedCampaign);
-  const graphShellQuery = useGraphShellQuery(requestedCampaign);
-  const evidenceReportQuery = useEvidenceReportQuery(requestedCampaign);
+  const bundleQuery = useBundleQuery();
+  const topologyQuery = useTopologyQuery(route === "mission-map");
+  const sourcesQuery = useSourcesQuery(route === "sources");
+  const sourceTreeConfigQuery = useSourceTreeConfigQuery(route === "sources");
+  const supervisorQuery = useSupervisorQuery(needsSupervisor);
+  const commandCenterFATQuery = useCommandCenterFATQuery(route === "command-center-fat");
+  const busTapQuery = useBusTapQuery(route === "bus-tap");
+  const commandAuthorityQuery = useCommandAuthorityQuery(route === "commands");
+  const leaseMutation = useLeaseMutation();
+
+  const campaignQuery = useCampaignQuery(requestedCampaign, needsCampaignModel);
+  const graphShellQuery = useGraphShellQuery(requestedCampaign, isCampaignGraphRoute);
+  const evidenceReportQuery = useEvidenceReportQuery(requestedCampaign, route === "report");
 
   useEffect(() => {
     const onHash = () => setRoute(hashRoute());
@@ -228,16 +228,14 @@ export function App() {
 
   const errors = [
     bundleQuery.error,
-    manifestQuery.error,
-    topologyQuery.error,
-    sourcesQuery.error,
-    supervisorQuery.error,
-    commandCenterFATQuery.error,
-    busTapQuery.error,
-    campaignQuery.error,
-    graphShellQuery.error,
-    commandAuthorityQuery.error,
-    evidenceReportQuery.error,
+    route === "mission-map" ? topologyQuery.error : undefined,
+    route === "sources" ? sourcesQuery.error : undefined,
+    route === "command-center-fat" ? commandCenterFATQuery.error : undefined,
+    route === "bus-tap" ? busTapQuery.error : undefined,
+    route === "commands" ? commandAuthorityQuery.error : undefined,
+    route === "report" ? evidenceReportQuery.error : undefined,
+    isCampaignGraphRoute ? campaignQuery.error : undefined,
+    isCampaignGraphRoute ? graphShellQuery.error : undefined,
     leaseMutation.error
   ].filter(Boolean) as Error[];
 

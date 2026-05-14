@@ -1,5 +1,5 @@
 import uPlot from "uplot";
-import type { GraphTile, HeroGraphModel, TileSeries } from "../../types";
+import type { GraphMarker, GraphTile, HeroGraphModel, TileSeries } from "../../types";
 import { colorForSignal, signalPriority } from "./visualPolicy";
 import { timeTicks } from "./timeAxis";
 import { viewportSeries, commandCenterGapBreaks, resampleSeries, decimationValue, commandCenterProjectedSeries, displayValue } from "./decimation";
@@ -289,17 +289,47 @@ function commandCenterGateLabelAllowed(width: number, spanMs: number) {
   return width / Math.max(1, days) >= 140;
 }
 
-function markerAnchor(plot: uPlot, tile: GraphTile, timeMs: number, top: number, height: number) {
-  const anchorSeries = tile.series.find((series) => series.id === "trace.command.chamber")
-    ?? tile.series.find((series) => series.role === "command" && (series.points ?? []).length)
-    ?? tile.series.find((series) => series.role === "ghost" && (series.points ?? []).length);
-  if (!anchorSeries) return null;
-  const raw = rawValueAt(anchorSeries, timeMs);
-  if (raw === undefined) return null;
-  const scale = scaleForSeries(tile, anchorSeries);
-  const y = plot.valToPos(displayValue(tile, anchorSeries, raw), scale);
-  if (!Number.isFinite(y)) return null;
-  return { y: Math.max(top + 12, Math.min(top + height - 10, y)) };
+function markerAnchor(plot: uPlot, tile: GraphTile, marker: GraphMarker, timeMs: number, top: number, height: number) {
+  const anchorSeries = rankedMarkerAnchorSeries(tile, marker);
+  for (const series of anchorSeries) {
+    const raw = rawValueAt(series, timeMs);
+    if (raw === undefined) continue;
+    const scale = scaleForSeries(tile, series);
+    const y = plot.valToPos(displayValue(tile, series, raw), scale);
+    if (!Number.isFinite(y)) continue;
+    return { y: Math.max(top + 12, Math.min(top + height - 10, y)) };
+  }
+  return null;
+}
+
+function rankedMarkerAnchorSeries(tile: GraphTile, marker: GraphMarker) {
+  return tile.series
+    .filter((series) => (series.points ?? []).length)
+    .map((series) => ({ series, score: markerAnchorScore(series, marker) }))
+    .filter((candidate) => candidate.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map((candidate) => candidate.series);
+}
+
+function markerAnchorScore(series: TileSeries, marker: GraphMarker) {
+  const haystack = `${series.id} ${series.label} ${series.axis_id ?? ""} ${series.source ?? ""} ${series.role}`.toLowerCase();
+  const markerText = `${marker.id} ${marker.label} ${marker.kind} ${marker.role} ${marker.axis_id ?? ""}`.toLowerCase();
+  let score = 0;
+  const addIfMarkerAndSeries = (markerTokens: string[], seriesTokens: string[], points: number) => {
+    if (!markerTokens.some((token) => markerText.includes(token))) return;
+    if (seriesTokens.some((token) => haystack.includes(token))) score += points;
+  };
+  addIfMarkerAndSeries(["pressure", "vacuum", "tvac"], ["pressure", "vacuum", "tvac"], 80);
+  addIfMarkerAndSeries(["dut", "functional", "stability", "dwell"], ["dut", "component", "interface", "chamber"], 70);
+  addIfMarkerAndSeries(["shroud"], ["shroud"], 70);
+  addIfMarkerAndSeries(["interlock"], ["interlock", "facility"], 70);
+  addIfMarkerAndSeries(["operator", "command"], ["command", "chamber"], 55);
+  addIfMarkerAndSeries(["pump", "exhaust"], ["pump", "exhaust", "cryo", "scavenger"], 55);
+  if (marker.axis_id && series.axis_id === marker.axis_id) score += 90;
+  if (series.role === "actual") score += 18;
+  if (series.role === "command") score += 8;
+  if (series.role === "ghost") score += 4;
+  return score;
 }
 
 function bandFillStyle(tile: GraphTile, bandKind: string, width: number) {
@@ -372,6 +402,7 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
     }
   });
   const placedMarkerLabels: Array<{ x: number; y: number; width: number; height: number }> = [];
+  const labeledMarkers = markerLabelIDs(tile.markers ?? [], start, start + span, width, tile.campaign_id);
   (tile.markers ?? []).forEach((marker) => {
     const markerTime = Date.parse(marker.timestamp);
     if (!Number.isFinite(markerTime)) return;
@@ -380,7 +411,7 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
     const color = markerColor(marker);
     const operatorMarker = marker.role === "operator_interaction" || marker.kind?.startsWith("operator_");
     const attachedMarker = marker.kind === "functional_gate" || marker.kind === "stability" || marker.kind === "stability_achieved" || marker.kind === "interlock" || marker.kind === "pressure_gate";
-    const anchor = attachedMarker || operatorMarker ? markerAnchor(plot, tile, markerTime, top, height) : null;
+    const anchor = attachedMarker || operatorMarker ? markerAnchor(plot, tile, marker, markerTime, top, height) : null;
     const anchorY = anchor?.y ?? top + 10;
     if (operatorMarker) {
       const compact = tile.campaign_id === "command_center_fat" || width < 760;
@@ -429,7 +460,7 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       const labelWidth = Math.min(maxLabelWidth, measuredWidth);
       const labelHeight = lines.length * lineHeight + 8;
       const placed = placeMarkerLabel({ x, y, labelWidth, labelHeight, left, top, width, height, placed: placedMarkerLabels, markerRadius });
-      if (tile.campaign_id === "command_center_fat" && placedMarkerLabels.some((other) => rectanglesOverlap(placed, other))) {
+      if (!placed || (tile.campaign_id === "command_center_fat" && placedMarkerLabels.some((other) => rectanglesOverlap(placed, other)))) {
         ctx.restore();
         return;
       }
@@ -472,6 +503,7 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
         ctx.arc(x, anchorY, 5.6, 0, Math.PI * 2);
       }
       ctx.fill();
+      if (!labeledMarkers.has(marker.id)) return;
       if (commandCenterMarker && !commandCenterGateLabelAllowed(width, span)) return;
       const label = commandCenterMarker ? "FT" : shortGateLabel(marker.label);
       ctx.save();
@@ -480,25 +512,22 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       const labelWidth = Math.max(commandCenterMarker ? 22 : 36, metrics.width + 10);
       const labelHeight = commandCenterMarker ? 16 : 18;
       const placed = placeMarkerLabel({ x, y: anchorY, labelWidth, labelHeight, left, top, width, height, placed: placedMarkerLabels, markerRadius: 8 });
-      if (placedMarkerLabels.some((other) => rectanglesOverlap(placed, other))) {
+      if (!placed || placedMarkerLabels.some((other) => rectanglesOverlap(placed, other))) {
         ctx.restore();
         return;
       }
       placedMarkerLabels.push(placed);
       const labelX = placed.x;
       const labelY = placed.y;
-      ctx.translate(labelX, labelY);
-      const nearRightEdge = x > left + width - 72;
-      ctx.rotate(commandCenterMarker ? 0 : nearRightEdge ? -Math.PI / 12 : -Math.PI / 6);
       ctx.fillStyle = "rgba(2,6,11,0.92)";
-      ctx.fillRect(-5, -labelHeight + 4, labelWidth, labelHeight);
+      ctx.fillRect(labelX, labelY, labelWidth, labelHeight);
       ctx.strokeStyle = color;
       ctx.lineWidth = 1;
-      ctx.strokeRect(-5, -labelHeight + 4, labelWidth, labelHeight);
+      ctx.strokeRect(labelX, labelY, labelWidth, labelHeight);
       ctx.fillStyle = marker.kind === "functional_gate" ? "#fff0a8" : "#c9ffef";
       ctx.shadowColor = "rgba(0,0,0,0.88)";
       ctx.shadowBlur = 5;
-      ctx.fillText(label, 0, 0);
+      ctx.fillText(label, labelX + 5, labelY + Math.min(13, labelHeight - 5));
       ctx.restore();
     } else {
       ctx.beginPath();
@@ -531,4 +560,36 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
     }
   }
   ctx.restore();
+}
+
+function markerLabelIDs(markers: GraphMarker[], start: number, end: number, width: number, campaignID?: string) {
+  const budget = markerLabelBudget(width, campaignID);
+  return new Set(
+    markers
+      .filter((marker) => {
+        const markerTime = Date.parse(marker.timestamp);
+        return Number.isFinite(markerTime) && markerTime >= start && markerTime <= end && markerLabelScore(marker) > 0;
+      })
+      .sort((a, b) => markerLabelScore(b) - markerLabelScore(a) || Date.parse(a.timestamp) - Date.parse(b.timestamp))
+      .slice(0, budget)
+      .map((marker) => marker.id)
+  );
+}
+
+function markerLabelBudget(width: number, campaignID?: string) {
+  if (campaignID === "command_center_fat") return width < 760 ? 4 : 7;
+  if (width < 520) return 3;
+  if (width < 760) return 4;
+  if (width < 1120) return 5;
+  return 6;
+}
+
+function markerLabelScore(marker: GraphMarker) {
+  let score = 0;
+  if (marker.role === "interlock" || marker.result === "fail" || marker.kind === "interlock") score += 1000;
+  if (marker.kind === "functional_gate") score += 760;
+  if (marker.kind === "pressure_gate") score += 640;
+  if (marker.kind === "stability" || marker.kind === "stability_achieved") score += 440;
+  if (marker.result === "pass") score += 120;
+  return score;
 }

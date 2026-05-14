@@ -54,7 +54,7 @@ func main() {
 	if err := copyTelemetry(*root, versionedOut, manifest.Campaigns); err != nil {
 		log.Fatal(err)
 	}
-	if err := copyStaticFixtures(*root, versionedOut, []string{"command_center_fat.json"}); err != nil {
+	if err := copyStaticFixtures(*root, versionedOut, []string{"command_center_fat.json", "source_tree_config.json"}); err != nil {
 		log.Fatal(err)
 	}
 	if *current {

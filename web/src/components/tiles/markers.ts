@@ -6,6 +6,13 @@ export type TimeRange = {
   end: number;
 };
 
+export type MarkerLabelRect = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
 export function markerColor(marker: { role?: string; result?: string; kind?: string }) {
   if (marker.kind === "operator_breakdown") return "rgba(255,112,67,0.98)";
   if (marker.kind === "operator_reset") return "rgba(36,214,255,0.98)";
@@ -59,29 +66,33 @@ export function placeMarkerLabel({
   top: number;
   width: number;
   height: number;
-  placed: Array<{ x: number; y: number; width: number; height: number }>;
+  placed: MarkerLabelRect[];
   markerRadius: number;
-}) {
+}): MarkerLabelRect | null {
   const preferLeft = x > left + width * 0.68;
-  const baseX = preferLeft ? x - labelWidth - markerRadius - 8 : x + markerRadius + 8;
-  const clampedX = Math.max(left + 4, Math.min(left + width - labelWidth - 4, baseX));
+  const directions = preferLeft ? [-1, 1] : [1, -1];
   const baseY = Math.max(top + 4, Math.min(top + height - labelHeight - 4, y - labelHeight / 2));
-  const offsets = [0, -labelHeight - 4, labelHeight + 4, -2 * (labelHeight + 4), 2 * (labelHeight + 4)];
-  for (const offset of offsets) {
-    const candidate = {
-      x: clampedX,
-      y: Math.max(top + 4, Math.min(top + height - labelHeight - 4, baseY + offset)),
-      width: labelWidth,
-      height: labelHeight
-    };
-    if (!placed.some((other) => rectanglesOverlap(candidate, other))) {
-      return candidate;
+  const gap = labelHeight + 4;
+  const offsets = [0, -gap, gap, -2 * gap, 2 * gap, -3 * gap, 3 * gap];
+  for (const direction of directions) {
+    const baseX = direction < 0 ? x - labelWidth - markerRadius - 8 : x + markerRadius + 8;
+    const clampedX = Math.max(left + 4, Math.min(left + width - labelWidth - 4, baseX));
+    for (const offset of offsets) {
+      const candidate = {
+        x: clampedX,
+        y: Math.max(top + 4, Math.min(top + height - labelHeight - 4, baseY + offset)),
+        width: labelWidth,
+        height: labelHeight
+      };
+      if (!placed.some((other) => rectanglesOverlap(candidate, other))) {
+        return candidate;
+      }
     }
   }
-  return { x: clampedX, y: baseY, width: labelWidth, height: labelHeight };
+  return null;
 }
 
-export function rectanglesOverlap(a: { x: number; y: number; width: number; height: number }, b: { x: number; y: number; width: number; height: number }) {
+export function rectanglesOverlap(a: MarkerLabelRect, b: MarkerLabelRect) {
   return a.x < b.x + b.width + 3 && a.x + a.width + 3 > b.x && a.y < b.y + b.height + 3 && a.y + a.height + 3 > b.y;
 }
 
