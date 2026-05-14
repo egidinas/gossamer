@@ -19,7 +19,7 @@ through public-safe SignalForge contracts before becoming reusable code here.
 ---
 
 ## GOSS-00 · Finish public-safe shared-backlog slice
-**Status:** implementation done; commit/review pending
+**Status:** done — verified 2026-05-14 (`go test ./...` and `npm run test:contracts` pass; `owner_mode`, `use`, `format_preference`, `discovery_path`, graph-wall manifest API, and source catalogue rendering confirmed in committed code)
 The current working tree contains source-ownership vocabulary, backend-authored
 source tree fixtures, graph-wall manifest plumbing, and UI/API contract work
 inspired by the shared backlog. Integrate that slice before starting new visual
@@ -34,7 +34,7 @@ build artifacts are not tracked.
 ---
 
 ## GOSS-01 · Marker label overlap
-**Status:** implemented; commit/review pending
+**Status:** done — verified 2026-05-14 (`shortGateLabel`, label suppression, and hover-title present in markers.ts and uPlotAdapter.ts; `npm run test:contracts` passes)
 Dense test phases on the primary FAT/TVac card render diagonal phase labels that collide at normal zoom levels. Labels become unreadable at 4-cycle or 8-cycle density.  
 **Fix:** render short labels (≤8 chars) by default; suppress overlapping neighbours; show full label on hover via tooltip.  
 **Current implementation:** event rail markers keep the marker dot and hover
@@ -46,7 +46,7 @@ the truncation, label suppression, and hover-title behavior.
 ---
 
 ## GOSS-02 · 4K card height under-utilisation
-**Status:** implemented; commit/review pending
+**Status:** done — verified 2026-05-14 (wide-viewport lane height caps present in committed CSS; `npm run test:contracts` passes)
 At 3840px the operator center lanes are ~352px each, leaving large dead space below the fourth lane. The `clamp` ceiling is capped at 320px which was designed for 1080p headroom.  
 **Fix:** raise the upper bound of the `clamp` for `command_center_fat` lanes at wide viewports so all four lanes together fill ~85% of the viewport height.  
 **Current implementation:** command-center lane height caps are raised for wide
@@ -58,7 +58,7 @@ viewport height.
 ---
 
 ## GOSS-03 · functional_events card unbounded height
-**Status:** implemented; commit/review pending
+**Status:** done — verified 2026-05-14 (event-rail bounded max-height with overflow-y scroll present in OperatorGraphWall.tsx and views.css; `npm run test:contracts` passes)
 The `functional_events` event-rail card grows to 1271–1313px on desktop because the event rail has no height cap. It dwarfs every other card and breaks section rhythm.  
 **Fix:** cap event-rail cards at `max-height: 480px` with `overflow-y: auto` inside the plot shell; or cap the swimlane row count at render time.  
 **Current implementation:** event-rail cards have a bounded resize height and a
@@ -69,7 +69,7 @@ the cap.
 ---
 
 ## GOSS-04 · Mobile graph horizontal scroll
-**Status:** implemented; commit/review pending
+**Status:** done — verified 2026-05-14 (scrollframe, overflow-x auto, and minimum graph width present in OperatorGraphWall.tsx and responsive.css; `npm run test:contracts` passes)
 Acceptance FAT and Qualification TVac overflow by ~243px on mobile (390px viewport). The time axis and right-side y-labels are clipped. Currently noted as acceptable but a scroll container would make the graph pannable.  
 **Fix:** wrap `.operator-wall-scrollframe` content in an `overflow-x: auto` scroll container at narrow viewports; or constrain the shared time axis and label-rail to the visible width.  
 **Current implementation:** mobile FAT/TVac graph walls get an explicit
@@ -81,7 +81,7 @@ mobile and verifies the scrollframe behavior using fresh local ports.
 ---
 
 ## GOSS-05 · Remove one-off scripts from repo root
-**Status:** implemented; commit/review pending
+**Status:** done — verified 2026-05-14 (no untracked *.py or ad-hoc *.sh files in repo root; `git status` clean)
 `do_gofmt.sh`, `do_refactor.py`, `refactor_*.py`, `fix_recover.py`, `safego_refactor.py`, and similar one-shot files are sitting untracked in the repo root. They pollute `git status` and are confusing to anyone cloning the repo.  
 **Fix:** delete all of them (they were single-use refactor aids, not ongoing tools).  
 **Current implementation:** the repo root no longer contains untracked `*.py`
@@ -91,7 +91,7 @@ or ad-hoc `*.sh` files.
 ---
 
 ## GOSS-06 · Commit outstanding fixture changes
-**Status:** implemented; commit/review pending
+**Status:** done — verified 2026-05-14 (`go test ./...` and `npm run test:contracts` pass; working tree clean; fixtures coherent with generator output)
 `thermal_acceptance_fat` and `tvac_qualification` tiles, manifests, and telemetry archives are modified but not committed. The working tree is dirty against the deployed state.  
 **Fix:** verify that fixtures were regenerated from current generators/contracts and that existing deltas are intended before staging for commit.
 **Current verification:** `go run ./cmd/gossamer-fixtures`, `go test ./...`,
@@ -102,7 +102,7 @@ fixture boundary.
 ---
 
 ## GOSS-07 · Shared backend semantics checklist
-**Status:** implemented; commit/review pending
+**Status:** done — verified 2026-05-14 (`docs/backend_semantics_checklist.md` present; `npm run test:contracts` guards required terms)
 Gossamer and its sibling system now share a discipline: the backend owns semantic
 meaning, while the browser renders already-classified contracts. This needs a
 small checklist so UI work does not drift back into local inference.
@@ -118,7 +118,7 @@ report changes cite the checklist during review.
 ---
 
 ## GOSS-08 · Evidence report cross-check with sibling contract
-**Status:** implemented; commit/review pending
+**Status:** done — verified 2026-05-14 (report fixtures include fixture status, requirement references, source provenance, anomaly summaries, command authority, and review notes; `npm run test:contracts` passes)
 Gossamer's reports are strong as deterministic campaign evidence, while the
 sibling system needs sharper language around fixture proof versus live proof.
 Gossamer should keep its public-safe report vocabulary but align the field
@@ -136,7 +136,7 @@ hardware validation.
 ---
 
 ## GOSS-09 · Agent context codec fixture pack
-**Status:** Gossamer benchmark implemented; Loom counterpart pending
+**Status:** Gossamer side done — verified 2026-05-14 (`fixtures/public/agent_context_codec_benchmark.json` present; `npm run test:contracts` validates compact encoding, round-trip, and required fields). Loom counterpart (S-LG-06) still pending.
 Large source catalogues, graph manifests, report JSON, and backlog slices are
 expensive to pass through coding agents repeatedly. Gossamer should provide a
 representative public-safe fixture pack for measuring compact, schema-aware
@@ -156,7 +156,7 @@ Shared `S-LG-06` can close only after Loom records a matching measured payload.
 ---
 
 ## GOSS-10 · Discovery tree and graph assignment UX comparison
-**Status:** implementation done; review pending
+**Status:** done — verified 2026-05-14 (shared/demo-only/live-only classification present in source_catalogue.json, source_tree_config.json, and graph_wall_manifest.json)
 The source catalogue is converging on a collapsible, backend-authored tree model,
 with source grouping from fixture semantics and static discovery-path provenance.
 **Current implementation:** the shared backlog now records the classification for
@@ -176,7 +176,7 @@ changes includes an explicit shared/demo-only/live-only classification.
 ---
 
 ## GOSS-11 · Remove live-system bus vocabulary from public UI copy
-**Status:** implemented; commit/review pending
+**Status:** done — verified 2026-05-14 (App.tsx boot copy uses generic terms; `npm run test:contracts` guards public-facing path; documented legacy identifier exceptions retained per cleanup rule)
 The clean-room scan currently flags `web/src/App.tsx` strings that describe a
 public demo bus as `CAN/TMTC`. That wording is too close to live-system
 vocabulary for a public-safe demonstrator.
