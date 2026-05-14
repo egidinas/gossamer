@@ -3,30 +3,31 @@ import { extname, join, relative } from "node:path";
 
 const repoRoot = new URL("../..", import.meta.url).pathname;
 
-const forbiddenDependencyFragments = [
-  "loom-gossamer-shared",
-  "@loom-gossamer/shared",
-  "github.com/egidinas/loom",
-  "github.com/egidinas/mynaric_telemetry",
-  "github.com/egidinas/work_time",
-  "github.com/egidinas/Jobsearch",
-  "github.com/egidinas/kvaser-dual-bridge",
+const privateRepoNames = [
+  "loom",
+  "mynaric_telemetry",
+  "work_time",
+  "Jobsearch",
+  "kvaser-dual-bridge",
 ];
 
-const forbiddenWorkspacePaths = [
-  "/home/svc_pmg_testbed_b/loom",
-  "/home/svc_pmg_testbed_b/mynaric_telemetry",
-  "/home/svc_pmg_testbed_b/work_time",
-  "/home/svc_pmg_testbed_b/Jobsearch",
-  "/home/svc_pmg_testbed_b/kvaser-dual-bridge",
-  "../loom",
-  "../mynaric_telemetry",
-  "../work_time",
-  "../Jobsearch",
-  "../kvaser-dual-bridge",
+const forbiddenFragments = [
+  "loom-gossamer-shared",
+  "@loom-gossamer/shared",
+  ...privateRepoNames.map((name) => `github.com/egidinas/${name}`),
+  ...privateRepoNames.flatMap((name) => [
+    `/home/svc_pmg_testbed_b/${name}`,
+    `../${name}`,
+  ]),
 ];
 
 const scanTargets = [
+  {
+    name: "root manifests",
+    root: repoRoot,
+    exts: new Set([".json"]),
+    maxDepth: 0,
+  },
   {
     name: "go source",
     root: repoRoot,
@@ -37,17 +38,18 @@ const scanTargets = [
     root: join(repoRoot, "web"),
     exts: new Set([".json", ".mjs", ".js", ".ts", ".tsx"]),
   },
-  {
-    name: "root manifests",
-    root: repoRoot,
-    exts: new Set([".json"]),
-    maxDepth: 1,
-  },
 ];
 
 const allowedMentionFiles = new Set([
   "web/scripts/test-information-barrier.mjs",
 ]);
+
+const ignoredPathParts = [
+  "/.git/",
+  "/node_modules/",
+  "/dist/",
+  "/test-artifacts/",
+];
 
 function toUnixPath(value) {
   return value.replaceAll("\\", "/");
@@ -55,12 +57,7 @@ function toUnixPath(value) {
 
 function shouldSkip(path) {
   const normalized = toUnixPath(path);
-  return (
-    normalized.includes("/.git/") ||
-    normalized.includes("/node_modules/") ||
-    normalized.includes("/dist/") ||
-    normalized.includes("/test-artifacts/")
-  );
+  return ignoredPathParts.some((part) => normalized.includes(part));
 }
 
 function lineForOffset(content, index) {
@@ -88,7 +85,7 @@ async function collectFiles(root, allowedExts, maxDepth = Infinity, depth = 0) {
 
 function findForbiddenFragments(normalizedPath, content, findings) {
   if (allowedMentionFiles.has(normalizedPath)) return;
-  for (const fragment of [...forbiddenDependencyFragments, ...forbiddenWorkspacePaths]) {
+  for (const fragment of forbiddenFragments) {
     let index = content.indexOf(fragment);
     while (index !== -1) {
       findings.push({
@@ -133,7 +130,8 @@ function checkPackageJSON(normalizedPath, content, findings) {
   for (const section of ["dependencies", "devDependencies", "optionalDependencies"]) {
     const deps = parsed[section] ?? {};
     for (const [name, spec] of Object.entries(deps)) {
-      if (name.includes("loom") || String(spec).startsWith("file:")) {
+      const dependencyName = name.toLowerCase();
+      if (dependencyName.includes("loom") || String(spec).startsWith("file:")) {
         findings.push({
           path: normalizedPath,
           line: 1,

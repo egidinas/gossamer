@@ -22,5 +22,8 @@ Use this list before accepting any sibling-system import into public Gossamer do
 
 ## Validation
 
-- Run `cd web && npm run test:clean-room` after any shared-import-facing edits. This includes the information-barrier dependency/path scan.
+- Check `docs/cross_project_transfer_register.md` before adding a sibling-inspired
+  pattern, and promote reusable behavior through public-safe SignalForge
+  contracts instead of private imports.
+- Run `npm run test:clean-room` after any shared-import-facing edits. This includes the information-barrier dependency/path scan.
 - Keep `127.0.0.1`, loopback references for local demo runbooks, and documented legacy terms explicitly allowed in public demo files.

@@ -12,7 +12,9 @@ adopt sibling-system patterns only at the public-safe contract/workflow level.
 Do not import live adapters, private identifiers, host details, credentials,
 protocol databases, captures, or hardware-specific procedures.
 Public-variant readiness gates are tracked in
-`docs/public_variant_readiness.md`.
+`docs/public_variant_readiness.md`. Cross-project ideas that should not be lost
+are tracked in `docs/cross_project_transfer_register.md` and must be promoted
+through public-safe SignalForge contracts before becoming reusable code here.
 
 ---
 

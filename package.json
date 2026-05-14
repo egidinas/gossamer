@@ -3,6 +3,8 @@
   "private": true,
   "scripts": {
     "build": "npm --prefix web run build",
-    "test:contracts": "npm --prefix web run test:contracts && npm --prefix web run test:clean-room"
+    "test:barrier": "node web/scripts/test-information-barrier.mjs",
+    "test:clean-room": "npm --prefix web run test:clean-room",
+    "test:contracts": "npm --prefix web run test:contracts && npm run test:clean-room"
   }
 }
