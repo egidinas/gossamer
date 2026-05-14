@@ -99,6 +99,69 @@ async function assertNoVisibleEventLabelOverlaps(page, routeName) {
   }
 }
 
+async function assertGraphWallStackGeometry(page, routeName) {
+  const geometry = await page.evaluate(() => {
+    const rect = (element) => {
+      const box = element.getBoundingClientRect();
+      return {
+        top: box.top,
+        bottom: box.bottom,
+        left: box.left,
+        right: box.right,
+        height: box.height,
+      };
+    };
+    const gaps = [];
+    const titleProblems = [];
+
+    for (const stack of document.querySelectorAll(".operator-wall-cards")) {
+      const cards = [...stack.querySelectorAll(":scope > .graph-wall-card")]
+        .filter((card) => card.getBoundingClientRect().height > 1);
+      for (let index = 1; index < cards.length; index += 1) {
+        const previous = rect(cards[index - 1]);
+        const current = rect(cards[index]);
+        gaps.push({
+          previous: cards[index - 1].getAttribute("data-card-id"),
+          current: cards[index].getAttribute("data-card-id"),
+          gap: Number((current.top - previous.bottom).toFixed(2)),
+        });
+      }
+    }
+
+    for (const card of document.querySelectorAll(".operator-graph-wall .graph-wall-card:not(.graph-card-collapsed)")) {
+      const title = card.querySelector(".graph-card-inline-title");
+      const plot = card.querySelector(".graph-card-uplot, .tile-swimlane, .tile-event-rail, .graph-card-loading");
+      if (!title || !plot) continue;
+      const cardRect = rect(card);
+      const titleRect = rect(title);
+      const plotRect = rect(plot);
+      const titleOverlapsPlot = titleRect.bottom > plotRect.top + 1 && titleRect.top < plotRect.bottom - 1;
+      const titleOverflows = titleRect.left < cardRect.left - 1 || titleRect.right > cardRect.right + 1 || titleRect.top < cardRect.top - 1 || titleRect.bottom > cardRect.bottom + 1;
+      if (titleOverlapsPlot || titleOverflows || titleRect.height < 18 || titleRect.height > 48) {
+        titleProblems.push({
+          card: card.getAttribute("data-card-id"),
+          titleOverlapsPlot,
+          titleOverflows,
+          titleHeight: Math.round(titleRect.height),
+        });
+      }
+    }
+
+    return {
+      maxGap: gaps.length ? Math.max(...gaps.map((gap) => gap.gap)) : 0,
+      gaps: gaps.filter((gap) => Math.abs(gap.gap) > 1).slice(0, 8),
+      titleProblems: titleProblems.slice(0, 8),
+    };
+  });
+
+  if (geometry.maxGap > 1 || geometry.gaps.length > 0) {
+    throw new Error(`${routeName}: hosted graph wall has vertical card gaps: ${JSON.stringify(geometry.gaps)}`);
+  }
+  if (geometry.titleProblems.length > 0) {
+    throw new Error(`${routeName}: hosted graph title placement problems: ${JSON.stringify(geometry.titleProblems)}`);
+  }
+}
+
 const manifestResponse = await fetch(url("/data/current/manifest.json"));
 if (!manifestResponse.ok) {
   throw new Error(`hosted manifest failed: ${manifestResponse.status} ${manifestResponse.statusText}`);
@@ -157,6 +220,7 @@ try {
       );
       await assertRequiredSignalReadouts(page, route);
       await assertNoVisibleEventLabelOverlaps(page, name);
+      await assertGraphWallStackGeometry(page, name);
     }
 
     const routeState = await page.evaluate(() => {

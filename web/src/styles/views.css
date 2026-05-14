@@ -18,7 +18,7 @@
 
 .operator-wall-section {
   display: grid;
-  gap: var(--space-2);
+  gap: 0;
 }
 
 .operator-wall-section-title {
@@ -45,7 +45,25 @@
 .operator-wall-cards {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-2);
+  gap: 0;
+}
+
+.operator-wall-cards > .graph-wall-card {
+  border-radius: 0;
+}
+
+.operator-wall-cards > .graph-wall-card:first-child {
+  border-top-left-radius: var(--radius-1);
+  border-top-right-radius: var(--radius-1);
+}
+
+.operator-wall-cards > .graph-wall-card:last-child {
+  border-bottom-left-radius: var(--radius-1);
+  border-bottom-right-radius: var(--radius-1);
+}
+
+.operator-wall-cards > .graph-wall-card + .graph-wall-card {
+  border-top-width: 0;
 }
 
 
