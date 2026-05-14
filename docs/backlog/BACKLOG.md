@@ -194,3 +194,30 @@ documentation copy; only the documented legacy identifier cases remain.
 **AC:** a clean-room vocabulary scan over `fixtures/public`, `internal`,
 `web/src`, and public docs no longer finds private/live-system bus terms except
 inside backlog items that explicitly document the cleanup rule.
+
+---
+
+## GOSS-12 · [MT-GOSS-01] Fictional scanner/setup confirmation demo
+**Status:** planned 2026-05-15 — harvest candidate from mynaric_telemetry before archival.
+Scanner identity/setup flow and uPlot/graph surface lessons from mynaric_telemetry are
+candidates for a fictional public demo in Gossamer.
+**Fix:** recreate scanner confirmation and setup step patterns as deterministic fictional
+fixtures with neutral placeholder identities; do not copy real testbed labels, captures,
+hostnames, or payloads. Relevant patterns: scan equipment identity, confirm setup steps,
+feed requirement progress, create auditable event trail.
+**AC:** Gossamer has a fictional scanner confirmation demo using placeholder identities;
+`npm run test:contracts` and clean-room scan pass; no real testbed labels or mynaric
+identifiers appear in fixtures, source, or docs.
+
+---
+
+## GOSS-13 · [KV-SF-01 / MT-SF-01] Watch for SignalForge neutral CAN and archive harvest candidates
+**Status:** planned 2026-05-15 — future SignalForge extractions may produce Gossamer-consumable primitives.
+When SignalForge receives neutral CAN adapter interface, capture/reduction vocabulary,
+artifact bundle metadata, Arrow/LTTB tile contract, or archive/replay primitives from
+the kvaser-dual-bridge or mynaric_telemetry harvest, Gossamer should evaluate consuming
+them through the public SignalForge module.
+**Fix:** review each SignalForge audit note for KV-SF-01 / MT-SF-01 rows; adopt any
+primitives that improve the Gossamer demo without adding private dependencies.
+**AC:** Gossamer consumes only public SignalForge versions; no local `replace` directives;
+clean-room scan passes after any adoption.
