@@ -296,5 +296,5 @@
       ]
     }
   ],
-  "source_fixture_version": "gossamer.telemetry.arrow.v2"
+  "source_fixture_version": "signalforge.telemetry.arrow.v2"
 }

@@ -905,37 +905,31 @@
     }
   ],
   "simulation_provenance": {
-    "model": "multi_path_dut_thermal_rc_v3",
-    "model_version": "2026.05.4",
+    "model": "multi_path_dut_thermal_rc_v2",
+    "model_version": "2026.05.1",
     "seed": 42017,
     "step_seconds": 300,
     "source": "gossamer internal/environmentalsim deterministic fixture",
     "parameters": {
       "chamber_air_tau_min": 18,
-      "dut_node_coupled_radiating_area_m2": 0.026,
       "fast_air_conductance_w_per_k": 0.34,
       "fast_component_capacitance_j_per_k": 3200,
       "fast_interface_conductance_w_per_k": 0.52,
-      "fast_molecular_gas_conductance_w_per_k": 0.01,
-      "fast_shroud_view_factor": 0.72,
       "functional_gate_fast_self_heat_w": 15,
       "functional_gate_lazy_self_heat_w": 2.4,
       "interface_plate_tau_min": 33,
       "lazy_air_conductance_w_per_k": 0.42,
       "lazy_component_capacitance_j_per_k": 10500,
       "lazy_interface_conductance_w_per_k": 0.23,
-      "lazy_molecular_gas_conductance_w_per_k": 0.016,
       "lazy_radiating_area_m2": 0.13,
-      "lazy_shroud_view_factor": 0.88,
-      "tvac_baked_ultimate_pressure_mbar": 5.052583783783784e-8,
-      "tvac_baked_ultimate_pressure_pa": 0.000005052583783783784,
+      "tvac_baked_ultimate_pressure_mbar": 9.971189189189189e-8,
+      "tvac_baked_ultimate_pressure_pa": 0.00000997118918918919,
       "tvac_base_virtual_leak_pa_per_min": 0.0000051,
       "tvac_cryo_pump_max_multiplier": 3.2,
       "tvac_effective_pump_rate_per_min": 0.185,
       "tvac_exhaust_scavenger_min_safe_c": 4,
       "tvac_exhaust_water_flow_nominal": 1,
-      "tvac_free_molecular_reference_pa": 100,
-      "tvac_high_vacuum_air_cutoff_pa": 0.01,
+      "tvac_min_air_coupling_factor": 0.015,
       "tvac_nominal_pump_rate_per_min": 0.185,
       "tvac_shroud_nominal_tau_min": 28
     },
@@ -948,16 +942,16 @@
     "provenance": "gossamer internal/environmentalsim deterministic fixture",
     "time_axis": {
       "start": "2026-01-15T10:00:00Z",
-      "end": "2026-01-20T09:48:00Z",
+      "end": "2026-01-20T11:43:00Z",
       "anchor": "2026-01-15T10:00:00Z",
-      "now": "2026-01-18T09:52:48Z",
-      "range_seconds": 431280,
+      "now": "2026-01-18T11:01:48Z",
+      "range_seconds": 438180,
       "clamp": true,
       "latest_policy": "accelerated_fixture_cursor"
     },
     "execution": {
       "mode": "accelerated_live_replay",
-      "now": "2026-01-18T09:52:48Z",
+      "now": "2026-01-18T11:01:48Z",
       "percent_complete": 60,
       "acceleration": "1 simulated hour per wall-clock minute",
       "past_data_policy": "real simulated telemetry up to cursor",
@@ -1094,7 +1088,7 @@
         "role": "actual",
         "units": "degC",
         "axis_id": "temperature_c",
-        "source": "chamber_thermal_fat",
+        "source": "facility_thermal",
         "values": null
       },
       {
@@ -1121,7 +1115,7 @@
         "role": "actual",
         "units": "degC",
         "axis_id": "temperature_c",
-        "source": "chamber_thermal_fat",
+        "source": "facility_thermal",
         "values": null
       },
       {
@@ -1130,7 +1124,7 @@
         "role": "actual",
         "units": "degC",
         "axis_id": "temperature_c",
-        "source": "chamber_thermal_fat",
+        "source": "facility_thermal",
         "values": null
       },
       {
@@ -2108,7 +2102,7 @@
       },
       {
         "id": "tmtc_bus_response",
-        "label": "TM/TC bus response",
+        "label": "Transport bus response",
         "axes": [
           {
             "id": "bus_ms",
@@ -2144,7 +2138,7 @@
       },
       {
         "id": "tmtc_counter_response",
-        "label": "TM/TC counters",
+        "label": "Transport counters",
         "axes": [
           {
             "id": "counter",
@@ -2169,7 +2163,7 @@
           },
           {
             "id": "trace.tm_packet_counter",
-            "label": "TM packet counter",
+            "label": "Downlink packet counter",
             "role": "counter",
             "units": "count",
             "axis_id": "counter",
@@ -2178,7 +2172,7 @@
           },
           {
             "id": "trace.tc_packet_counter",
-            "label": "TC packet counter",
+            "label": "Uplink packet counter",
             "role": "counter",
             "units": "count",
             "axis_id": "counter",
@@ -2437,9 +2431,9 @@
     "provenance": "gossamer internal/environmentalsim deterministic fixture",
     "time_range": {
       "start": "2026-01-15T10:00:00Z",
-      "end": "2026-01-20T09:48:00Z",
+      "end": "2026-01-20T11:43:00Z",
       "anchor": "2026-01-15T10:00:00Z",
-      "range_seconds": 431280,
+      "range_seconds": 438180,
       "mode": "absolute_fixture",
       "source": "thermal_program"
     },
@@ -2514,7 +2508,7 @@
               "section_id": "thermal_environment",
               "group_id": "thermal_acceptance_fat_operator_wall",
               "order": 1,
-              "height_weight": 2.8,
+              "height_weight": 2,
               "default_visible": true,
               "pinned": true,
               "resize_policy": "fixed_plot_area"
@@ -2936,7 +2930,7 @@
       },
       {
         "id": "tmtc_response",
-        "title": "Telecommand/Telemetry Response",
+        "title": "Transport Response",
         "group_id": "thermal_acceptance_fat_operator_wall",
         "transport": "arrow_ipc",
         "direction": "derived",
@@ -2945,7 +2939,7 @@
         "cards": [
           {
             "id": "tmtc_health",
-            "title": "TM/TC latency and freshness",
+            "title": "Transport latency and freshness",
             "kind": "line",
             "role": "companion",
             "placement": {
@@ -3000,7 +2994,7 @@
           },
           {
             "id": "tmtc_counters",
-            "title": "TM/TC packet counters",
+            "title": "Transport packet counters",
             "kind": "counter",
             "role": "companion",
             "placement": {
@@ -3040,7 +3034,7 @@
               },
               {
                 "id": "trace.tm_packet_counter",
-                "label": "TM packet counter",
+                "label": "Downlink packet counter",
                 "unit": "count",
                 "source": "archive_bus",
                 "source_family": "archive_bus",
@@ -3053,7 +3047,7 @@
               },
               {
                 "id": "trace.tc_packet_counter",
-                "label": "TC packet counter",
+                "label": "Uplink packet counter",
                 "unit": "count",
                 "source": "archive_bus",
                 "source_family": "archive_bus",
@@ -3469,9 +3463,9 @@
     "source_mode": "arrow_telemetry_backend",
     "time_range": {
       "start": "2026-01-15T10:00:00Z",
-      "end": "2026-01-20T09:48:00Z",
+      "end": "2026-01-20T11:43:00Z",
       "anchor": "2026-01-15T10:00:00Z",
-      "range_seconds": 431280,
+      "range_seconds": 438180,
       "mode": "absolute_fixture",
       "source": "thermal_program"
     },
@@ -3590,7 +3584,7 @@
       },
       {
         "id": "binary_tmtc_log",
-        "label": "Binary TM/TC log import",
+        "label": "Binary transport log import",
         "source_format": "binary_log",
         "target_schema": "gossamer.telemetry.arrow.v2",
         "mode": "translated_fixture",
@@ -3945,7 +3939,7 @@
       },
       {
         "card_id": "tmtc_health",
-        "title": "TM/TC latency and freshness",
+        "title": "Transport latency and freshness",
         "render_kind": "line",
         "unit": "ms",
         "axis_policy": "bus_ms",
@@ -3986,7 +3980,7 @@
       },
       {
         "card_id": "tmtc_counters",
-        "title": "TM/TC packet counters",
+        "title": "Transport packet counters",
         "render_kind": "counter",
         "unit": "count",
         "axis_policy": "counter",
@@ -4012,7 +4006,7 @@
           },
           {
             "id": "trace.tm_packet_counter",
-            "label": "TM packet counter",
+            "label": "Downlink packet counter",
             "unit": "count",
             "source": "archive_bus",
             "source_family": "archive_bus",
@@ -4025,7 +4019,7 @@
           },
           {
             "id": "trace.tc_packet_counter",
-            "label": "TC packet counter",
+            "label": "Uplink packet counter",
             "unit": "count",
             "source": "archive_bus",
             "source_family": "archive_bus",

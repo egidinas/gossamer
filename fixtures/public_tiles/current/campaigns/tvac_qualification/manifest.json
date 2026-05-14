@@ -5,9 +5,9 @@
   "manifest_path": "/data/current/campaigns/tvac_qualification/manifest.json",
   "time_range": {
     "start": "2026-01-15T10:00:00Z",
-    "end": "2026-01-28T13:54:00Z",
+    "end": "2026-01-29T10:04:00Z",
     "anchor": "2026-01-15T10:00:00Z",
-    "range_seconds": 1137240,
+    "range_seconds": 1209840,
     "mode": "absolute_fixture",
     "source": "thermal_program"
   },
@@ -654,7 +654,7 @@
     },
     {
       "card_id": "tmtc_health",
-      "title": "TM/TC latency and freshness",
+      "title": "Transport latency and freshness",
       "render_kind": "line",
       "unit": "ms",
       "axis_policy": "bus_ms",
@@ -695,7 +695,7 @@
     },
     {
       "card_id": "tmtc_counters",
-      "title": "TM/TC packet counters",
+      "title": "Transport packet counters",
       "render_kind": "counter",
       "unit": "count",
       "axis_policy": "counter",
@@ -721,7 +721,7 @@
         },
         {
           "id": "trace.tm_packet_counter",
-          "label": "TM packet counter",
+          "label": "Downlink packet counter",
           "unit": "count",
           "source": "archive_bus",
           "source_family": "archive_bus",
@@ -734,7 +734,7 @@
         },
         {
           "id": "trace.tc_packet_counter",
-          "label": "TC packet counter",
+          "label": "Uplink packet counter",
           "unit": "count",
           "source": "archive_bus",
           "source_family": "archive_bus",
@@ -1700,5 +1700,5 @@
       "label": "Cycle 8 cold dwell functional test"
     }
   ],
-  "source_fixture_version": "gossamer.telemetry.arrow.v2"
+  "source_fixture_version": "signalforge.telemetry.arrow.v2"
 }
