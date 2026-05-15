@@ -145,17 +145,19 @@ export function SharedTimeAxis({
     <div className="operator-shared-time-axis" aria-label="Shared graph time axis" style={axisStyle}>
       <span className="time-axis-label">TIME</span>
       <TimeAxisTrack ticks={ticks} start={start} end={end} nowRatio={nowRatio} hoverTimeMs={hoverTimeMs} peekTimeMs={peekTimeMs} />
-      <div className="time-axis-controls">
-        <span>{spanHours.toFixed(spanHours >= 24 ? 0 : 1)} h</span>
-        <small>zoom</small>
-        <button type="button" onClick={() => zoomBy(1.35)} aria-label="Zoom out">-</button>
-        <button type="button" onClick={() => zoomBy(0.72)} aria-label="Zoom in">+</button>
-        <button type="button" disabled={!isZoomed} onClick={() => onTimeRange(fullRange)}>full</button>
+      <div className="time-axis-sub-row">
+        <div className="time-axis-controls">
+          <span>{spanHours.toFixed(spanHours >= 24 ? 0 : 1)} h</span>
+          <small>zoom</small>
+          <button type="button" onClick={() => zoomBy(1.35)} aria-label="Zoom out">-</button>
+          <button type="button" onClick={() => zoomBy(0.72)} aria-label="Zoom in">+</button>
+          <button type="button" disabled={!isZoomed} onClick={() => onTimeRange(fullRange)}>full</button>
+        </div>
+        <label className="time-axis-scrollbar">
+          <small>scroll</small>
+          <input type="range" min="0" max="1000" step="1" disabled={!isZoomed} value={Math.max(0, Math.min(1000, scrollValue))} onChange={(event) => setScroll(Number(event.currentTarget.value))} />
+        </label>
       </div>
-      <label className="time-axis-scrollbar">
-        <small>scroll</small>
-        <input type="range" min="0" max="1000" step="1" disabled={!isZoomed} value={Math.max(0, Math.min(1000, scrollValue))} onChange={(event) => setScroll(Number(event.currentTarget.value))} />
-      </label>
     </div>
   );
 }

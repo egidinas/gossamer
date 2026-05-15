@@ -10,6 +10,26 @@
   --plot-height: clamp(200px, calc((100svh - 220px) / 4), 700px);
 }
 
+/* Narrow viewports: legend falls below plot (single column) */
+@media (max-width: 900px) {
+  .graph-wall-card {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .graph-wall-card > .graph-card-legend-rail {
+    grid-column: 1;
+    grid-row: auto;
+    border-left: 0;
+    border-top: 1px solid var(--color-border-default);
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+    overflow-y: visible;
+  }
+  .graph-wall-card > .graph-card-resize {
+    grid-column: 1;
+  }
+}
+
 @media (max-width: 820px) {
   .shell {
     padding: 12px;
@@ -148,8 +168,28 @@
     left: var(--time-axis-left, 27px);
     right: var(--time-axis-right, 27px);
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: 30px 18px;
+    grid-template-rows: 30px 22px;
     height: 52px;
+    padding: 0;
+  }
+
+  .operator-shared-time-axis > .time-axis-label {
+    display: none;
+  }
+
+  .operator-shared-time-axis > .time-axis-track {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .operator-shared-time-axis > .time-axis-sub-row {
+    grid-column: 1;
+    grid-row: 2;
+    justify-content: space-between;
+  }
+
+  .time-axis-sub-row .time-axis-controls span {
+    display: none;
   }
 
   .operator-graph-wall {
@@ -158,27 +198,6 @@
 
   .operator-wall-scrollframe {
     max-height: calc(100vh - 142px);
-  }
-
-  .time-axis-label,
-  .time-axis-controls span {
-    display: none;
-  }
-
-  .time-axis-controls {
-    grid-template-columns: auto auto auto auto auto;
-    justify-content: end;
-    right: 3px;
-  }
-
-  .time-axis-track {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .time-axis-scrollbar {
-    grid-column: 1;
-    grid-row: 2;
   }
 
   .companion-graph svg {

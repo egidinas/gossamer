@@ -75,14 +75,21 @@ export function placeMarkerLabel({
   const directions = preferLeft ? [-1, 1] : [1, -1];
   const baseY = Math.max(top + 4, Math.min(top + height - labelHeight - 4, y - labelHeight / 2));
   const gap = labelHeight + LABEL_COLLISION_PADDING;
-  const offsets = [0, -gap, gap, -2 * gap, 2 * gap, -3 * gap, 3 * gap, -4 * gap, 4 * gap, -5 * gap, 5 * gap];
+  // Extended offsets: try up to ±10 gaps, then allow overflow above/below the plot
+  const inPlotOffsets = Array.from({ length: 21 }, (_, i) => {
+    const n = Math.ceil(i / 2) * (i % 2 === 0 ? 1 : -1);
+    return n * gap;
+  });
+  const overflowOffsets = [-6 * gap, -7 * gap, -8 * gap, -9 * gap, -10 * gap, 6 * gap, 7 * gap, 8 * gap, 9 * gap, 10 * gap];
   for (const direction of directions) {
     const baseX = direction < 0 ? x - labelWidth - markerRadius - 8 : x + markerRadius + 8;
     const clampedX = Math.max(left + 4, Math.min(left + width - labelWidth - 4, baseX));
-    for (const offset of offsets) {
+    for (const offset of [...inPlotOffsets, ...overflowOffsets]) {
+      const rawY = baseY + offset;
+      // Allow up to 2 label heights outside the plot box
       const candidate = {
         x: clampedX,
-        y: Math.max(top + 4, Math.min(top + height - labelHeight - 4, baseY + offset)),
+        y: Math.max(top - labelHeight * 2, Math.min(top + height + labelHeight, rawY)),
         width: labelWidth,
         height: labelHeight
       };

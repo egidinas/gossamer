@@ -1138,16 +1138,7 @@ func buildGraphWall(env contracts.Envelope, campaignID string, hero contracts.He
 			graphSignal("trace.shroud_gradient", "Shroud gradient", "degC", chamberThermalSrc, "source_quality", "measurement", "facility", "temperature_c", "thermal_environment"),
 		)
 	}
-	dutTemperatureTitle := "DUT temperatures in chamber context"
 	if campaignID == "tvac_qualification" {
-		dutTemperatureTitle = "DUT temperatures in TVac context"
-	}
-	add("thermal_environment", graphCard("dut_temperature", dutTemperatureTitle, "line", "companion", "degC", "temperature_c", "dut_thermal", dutTemperatureSignals))
-	if campaignID == "tvac_qualification" {
-		add("facility_response", graphCard("tvac_pressure", "TVac pressure pumpdown and bursts", "line", "companion", "mbar", "log_pressure_mbar", "chamber_pressure_tvac", []contracts.GraphWallSignal{
-			graphSignal("trace.tvac_pressure", "Pressure", "mbar", "chamber_pressure_tvac", "actual", "measurement", "facility", "pressure_mbar", "facility_response"),
-			graphSignal("trace.tvac_pressure_target", "Vacuum target", "mbar", "requirements", "ghost", "target", "requirements", "pressure_mbar", "facility_response"),
-		}))
 		add("facility_response", graphCard("tvac_pressure_sources", "Pump, leak, and outgassing balance", "line", "companion", "mixed", "pressure_balance", "chamber_pressure_tvac", []contracts.GraphWallSignal{
 			graphSignal("trace.tvac_outgassing", "Temperature outgassing", "mbar/min", "chamber_pressure_tvac", "actual", "measurement", "facility", "pressure_rate", "facility_response"),
 			graphSignal("trace.tvac_virtual_leak", "Virtual leak", "mbar/min", "chamber_pressure_tvac", "acceptance_band", "limit", "facility", "pressure_rate", "facility_response"),

@@ -377,7 +377,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 			},
 		}
 		samples = append(samples, sample)
-		trace.add(sample, command, acceptanceTarget(command, program), tvacPressureTargetMbar(campaignID, phase, gate, targetPressure), gateActive, interlock != "closed")
+		trace.add(sample, command, acceptanceTarget(command, program), tvacPressureTargetMbar(campaignID, cycle, phase, gate, targetPressure), gateActive, interlock != "closed")
 	}
 
 	firstCycle := program.Cycles[0]
@@ -1261,7 +1261,7 @@ func acceptanceTarget(command float64, program *contracts.ThermalProgram) float6
 	return program.ColdTargetDegC
 }
 
-func tvacPressureTargetMbar(campaignID, phase string, gate string, pressurePa float64) float64 {
+func tvacPressureTargetMbar(campaignID string, cycle int, phase string, gate string, pressurePa float64) float64 {
 	if campaignID != "tvac_qualification" {
 		return pressurePa * 0.01
 	}
@@ -1270,10 +1270,13 @@ func tvacPressureTargetMbar(campaignID, phase string, gate string, pressurePa fl
 		if gate == "none" || gate == "" {
 			return 1013.25
 		}
-	case "ambient_postcheck_vacuum":
-		return 0.0000008
 	}
-	return 0.0000008
+	// Per-cycle ramp: outgassing depletes progressively across 8 TVac cycles.
+	// Starts at ~5e-6 mbar (cycle 1), decays ~45% per cycle, floors at 3e-7.
+	const cycle1Target = 5e-6
+	const decayPerCycle = 0.55
+	target := cycle1Target * math.Pow(decayPerCycle, float64(cycle-1))
+	return math.Max(target, 3e-7)
 }
 
 func functionalHeat(active bool) float64 {

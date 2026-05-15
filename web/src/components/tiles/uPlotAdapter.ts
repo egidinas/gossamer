@@ -97,8 +97,8 @@ export function buildScales(scaleKeys: Set<string>): Record<string, uPlot.Scale>
 }
 
 export function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[] {
-  const leftAxisSize = 54;
-  const rightAxisSize = 58;
+  const leftAxisSize = 64;
+  const rightAxisSize = 64;
   const axes: uPlot.Axis[] = [{ show: false }];
   const primary = scaleKeys.has("temperature_c")
     ? "temperature_c"
@@ -125,6 +125,7 @@ export function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[]
     ticks: { stroke: "rgba(83,112,140,0.48)", width: 1, size: 4 },
     splits: (_u, _axisIdx, scaleMin, scaleMax) => logScale(primary) ? logSplits(scaleMin, scaleMax) : ySplits(scaleMin, scaleMax),
     size: leftAxisSize,
+    gap: 0,
     label: axisLabel(primary, tile),
     labelSize: 12,
     labelGap: 0,
@@ -140,6 +141,7 @@ export function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[]
       grid: { show: false },
       ticks: { show: false },
       size: rightAxisSize,
+      gap: 0,
       label: axisLabel(key, tile),
       labelSize: 12,
       labelGap: 0,
@@ -153,6 +155,7 @@ export function buildAxes(scaleKeys: Set<string>, tile: GraphTile): uPlot.Axis[]
       side: 1,
       scale: primary,
       size: rightAxisSize,
+      gap: 0,
       label: "",
       labelSize: 12,
       labelGap: 0,
@@ -201,8 +204,8 @@ export function ySplits(min: number, max: number) {
   return values;
 }
 
-export function axisLabel(scale: string, tile: GraphTile) {
-  if (scale === "temperature_c") return tile.card_id === "thermal_program" && hasPressure(tile) ? "degC + pressure rail" : "degC";
+export function axisLabel(scale: string, _tile: GraphTile) {
+  if (scale === "temperature_c") return "degC";
   if (scale === "pressure_log") return "log10 mbar";
   if (scale === "pressure_rate_log") return "log10 mbar/min";
   if (scale === "pressure_bar") return "bar";
@@ -214,19 +217,7 @@ export function axisLabel(scale: string, tile: GraphTile) {
   return scale;
 }
 
-export function hasPressure(tile: GraphTile) {
-  return tile.series.some((series) => series.axis_id === "pressure_mbar");
-}
-
-export function pressureHeroRailDegC(mbar: number) {
-  const minLog = Math.log10(0.00000001);
-  const maxLog = Math.log10(1013.25);
-  const ratio = (Math.log10(Math.max(0.00000001, Math.min(1013.25, mbar))) - minLog) / (maxLog - minLog);
-  return -82 + ratio * 104;
-}
-
-export function scaleForSeries(tile: GraphTile, series: TileSeries): string {
-  if (series.axis_id === "pressure_mbar" && tile.card_id === "thermal_program") return "temperature_c";
+export function scaleForSeries(_tile: GraphTile, series: TileSeries): string {
   if (series.axis_id === "pressure_mbar") return "pressure_log";
   if (series.axis_id === "pressure_rate") return "pressure_rate_log";
   if (series.axis_id === "pressure_bar") return "pressure_bar";
@@ -599,8 +590,7 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
   ctx.restore();
 }
 
-function markerLabelIDs(markers: GraphMarker[], start: number, end: number, width: number, campaignID?: string) {
-  const budget = markerLabelBudget(width, campaignID);
+function markerLabelIDs(markers: GraphMarker[], start: number, end: number, _width: number, _campaignID?: string) {
   return new Set(
     markers
       .filter((marker) => {
@@ -608,17 +598,8 @@ function markerLabelIDs(markers: GraphMarker[], start: number, end: number, widt
         return Number.isFinite(markerTime) && markerTime >= start && markerTime <= end && markerLabelScore(marker) > 0;
       })
       .sort((a, b) => markerLabelScore(b) - markerLabelScore(a) || Date.parse(a.timestamp) - Date.parse(b.timestamp))
-      .slice(0, budget)
       .map((marker) => marker.id)
   );
-}
-
-function markerLabelBudget(width: number, campaignID?: string) {
-  if (campaignID === "command_center_fat") return width < 760 ? 4 : 7;
-  if (width < 520) return 3;
-  if (width < 760) return 4;
-  if (width < 1120) return 5;
-  return 6;
 }
 
 function markerLabelScore(marker: GraphMarker) {

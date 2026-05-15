@@ -18,19 +18,35 @@
 .graph-wall-card {
   --card-height-weight: 1;
   --plot-height: 220px;
-  --axis-left: 56px;
-  --axis-right: 12px;
+  --axis-left: 64px;
+  --axis-right: 64px;
+  --legend-width: 204px;
 
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto auto auto;
+  grid-template-columns: minmax(0, 1fr) var(--legend-width);
+  grid-template-rows: 1fr auto;
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-1);
   background: var(--color-bg-1);
   overflow: hidden;
   min-width: 0;
   transition: border-color 80ms linear;
+}
+
+.graph-wall-card > .graph-card-plot-shell {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.graph-wall-card > .graph-card-legend-rail {
+  grid-column: 2;
+  grid-row: 1 / 3;
+}
+
+.graph-wall-card > .graph-card-resize {
+  grid-column: 1;
+  grid-row: 2;
 }
 
 .graph-wall-card:hover {
@@ -54,6 +70,7 @@
 /* Collapsed variant — only header visible */
 .graph-wall-card.graph-card-collapsed {
   --plot-height: 0px;
+  grid-template-columns: minmax(0, 1fr);
 }
 .graph-wall-card.graph-card-collapsed .graph-card-plot-shell,
 .graph-wall-card.graph-card-collapsed .graph-card-legend-rail {
@@ -61,13 +78,18 @@
 }
 
 /* ── Title row (inline title + meta) ───────────────────────── */
+/* Only shown on the primary/pinned card; secondary cards use the label-rail title */
+.graph-wall-card[data-card-priority="secondary"] .graph-card-inline-title {
+  display: none;
+}
+
 .graph-card-inline-title {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--space-4);
-  padding: var(--row-pad-y) var(--row-pad-x);
-  min-height: var(--row-h);
+  padding: 3px var(--row-pad-x);
+  min-height: 24px;
   border-bottom: 1px solid var(--color-border-default);
   background: linear-gradient(
     180deg,
@@ -267,19 +289,20 @@
   text-align: right;
 }
 
-/* ── Legend rail (below plot) ──────────────────────────────── */
+/* ── Legend rail (right side of plot) ─────────────────────── */
 .graph-card-legend-rail {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
-  align-items: stretch;
-  gap: 6px;
-  padding: 6px var(--row-pad-x) 7px;
-  border-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 6px 6px 8px;
+  border-left: 1px solid var(--color-border-default);
+  overflow-y: auto;
   background: var(--color-bg-1);
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0;
   color: var(--color-text-300);
+  min-height: 0;
 }
 
 .graph-wall-card.panel-live .graph-card-legend-rail,
@@ -323,15 +346,16 @@
 
 .graph-card-readout-chip {
   display: grid;
-  grid-template-columns: 12px minmax(0, 1fr) auto;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
   align-items: center;
   min-width: 0;
-  gap: 6px;
-  padding: 4px 7px;
+  gap: 5px;
+  padding: 3px 6px;
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-1);
   background: rgba(255, 255, 255, 0.012);
   line-height: 1.15;
+  flex-shrink: 0;
 }
 
 .graph-card-readout-chip:hover {
@@ -493,10 +517,10 @@
   background: var(--color-bg-0);
 }
 
-/* Time plane: the full-width positioned canvas for markers/chips */
+/* Time plane: aligned to inner-plot column — same inset as uPlot inner bbox */
 .tile-time-plane {
   position: absolute;
-  inset: 0;
+  inset: 0 var(--axis-right) 0 var(--axis-left);
   overflow: hidden;
 }
 

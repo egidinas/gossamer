@@ -43,17 +43,9 @@ export function lttb(points: TileSeries["points"], threshold: number, yValue: (v
   return sampled;
 }
 
-export function decimationValue(tile: GraphTile, series: TileSeries, value: number) {
-  if (series.axis_id === "pressure_mbar" && tile.card_id === "thermal_program") return pressureHeroRailDegC(value);
+export function decimationValue(_tile: GraphTile, series: TileSeries, value: number) {
   if (series.axis_id === "pressure_mbar" || series.axis_id === "pressure_rate") return value > 0 ? Math.log10(value) : Number.NaN;
   return value;
-}
-
-function pressureHeroRailDegC(mbar: number) {
-  const minLog = Math.log10(0.00000001);
-  const maxLog = Math.log10(1013.25);
-  const ratio = (Math.log10(Math.max(0.00000001, Math.min(1013.25, mbar))) - minLog) / (maxLog - minLog);
-  return -82 + ratio * 104;
 }
 
 export function resampleSeries(tile: GraphTile, series: TileSeries, xValues: number[], currentTimeMs?: number): Array<number | null> {
@@ -107,8 +99,7 @@ export function commandCenterProjectedSeries(tile: GraphTile, series: TileSeries
 }
 
 // displayValue is used internally by resampleSeries; also re-exported for uPlotAdapter
-export function displayValue(tile: GraphTile, series: TileSeries, value: number) {
-  if (series.axis_id === "pressure_mbar" && tile.card_id === "thermal_program") return pressureHeroRailDegC(value);
+export function displayValue(_tile: GraphTile, series: TileSeries, value: number) {
   if (series.axis_id === "pressure_mbar" || series.axis_id === "pressure_rate") return value > 0 ? value : Number.NaN;
   return value;
 }

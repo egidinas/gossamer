@@ -635,22 +635,25 @@ func TestTVacPressureTargetAndBakeoutDepletion(t *testing.T) {
 	if len(target) == 0 {
 		t.Fatal("TVac hero graph missing idealized vacuum target trace")
 	}
-	var flatVacuumSeen bool
+	distinctVals := map[float64]struct{}{}
 	for _, point := range target {
-		if point.Value > 0 && point.Value <= 0.0000011 {
-			flatVacuumSeen = true
-			break
+		if point.Value > 0 && point.Value < 1 {
+			rounded := math.Round(point.Value*1e8) / 1e8
+			distinctVals[rounded] = struct{}{}
 		}
 	}
-	if !flatVacuumSeen {
-		t.Fatal("TVac vacuum target should include a flat low-1e-6 mbar target")
+	if len(distinctVals) < 3 {
+		t.Fatalf("TVac vacuum target should ramp across cycles (got %d distinct values, want ≥3)", len(distinctVals))
 	}
 	cards := graphWallCards(*model.GraphWall)
 	if !graphCardSignal(cards["thermal_program"], "trace.tvac_pressure_target") {
 		t.Fatal("TVac thermal-program graph wall missing vacuum target signal")
 	}
-	if !graphCardSignal(cards["tvac_pressure"], "trace.tvac_pressure_target") {
-		t.Fatal("TVac pressure card missing vacuum target signal")
+	if _, hasTvacPressureCard := cards["tvac_pressure"]; hasTvacPressureCard {
+		t.Fatal("TVac standalone pressure card should be removed (pressure is on hero log axis)")
+	}
+	if _, hasDutTemperatureCard := cards["dut_temperature"]; hasDutTemperatureCard {
+		t.Fatal("DUT temperature companion card should be removed (DUT temp is on hero)")
 	}
 
 	tvac := set.Telemetry["tvac_qualification"]
@@ -698,11 +701,10 @@ func TestTVacPressureTargetAndBakeoutDepletion(t *testing.T) {
 func TestThermalGraphModelsExposeOperatorGraphWallContract(t *testing.T) {
 	set := Build()
 	cases := []struct {
-		campaignID       string
-		wantPressureCard bool
+		campaignID string
 	}{
 		{campaignID: "thermal_acceptance_fat"},
-		{campaignID: "tvac_qualification", wantPressureCard: true},
+		{campaignID: "tvac_qualification"},
 	}
 
 	for _, tc := range cases {
@@ -728,9 +730,11 @@ func TestThermalGraphModelsExposeOperatorGraphWallContract(t *testing.T) {
 		}
 
 		cards := graphWallCards(*wall)
+		if _, ok := cards["dut_temperature"]; ok {
+			t.Fatalf("%s graph wall has redundant dut_temperature card (DUT temp is on hero)", tc.campaignID)
+		}
 		requiredCards := map[string]string{
 			"thermal_program":       "line",
-			"dut_temperature":       "line",
 			"facility_actuation":    "line",
 			"dut_power":             "line",
 			"tmtc_health":           "line",
@@ -756,14 +760,16 @@ func TestThermalGraphModelsExposeOperatorGraphWallContract(t *testing.T) {
 				t.Fatalf("%s graph wall card %s missing signals", tc.campaignID, cardID)
 			}
 		}
-		if _, ok := cards["facility_temperature_safety"]; ok != tc.wantPressureCard {
-			t.Fatalf("%s freeze-margin card presence = %v, want %v", tc.campaignID, ok, tc.wantPressureCard)
+		if tc.campaignID == "tvac_qualification" {
+			if _, ok := cards["facility_temperature_safety"]; !ok {
+				t.Fatalf("%s freeze-margin card should be present", tc.campaignID)
+			}
+			if _, ok := cards["tvac_pressure"]; ok {
+				t.Fatalf("%s standalone pressure card should be absent (pressure now on hero log axis)", tc.campaignID)
+			}
 		}
 		if _, ok := cards["source_quality"]; !ok {
 			t.Fatalf("%s graph wall must split freshness ms away from packet counters", tc.campaignID)
-		}
-		if _, ok := cards["tvac_pressure"]; ok != tc.wantPressureCard {
-			t.Fatalf("%s pressure card presence = %v, want %v", tc.campaignID, ok, tc.wantPressureCard)
 		}
 		power := cards["dut_power"]
 		if power.Unit != "W" || power.AxisPolicy != "power_w" {

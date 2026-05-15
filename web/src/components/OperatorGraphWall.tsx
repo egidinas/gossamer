@@ -111,7 +111,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
     const measure = () => {
       window.cancelAnimationFrame(raf);
       raf = window.requestAnimationFrame(() => {
-        const plot = frame.querySelector(".u-over, .tile-time-plane") as HTMLElement | null;
+        const plot = frame.querySelector(".u-plot .u-over") as HTMLElement | null;
         const rect = plot?.getBoundingClientRect();
         if (!rect || rect.width <= 0) return;
         const next = {
@@ -781,4 +781,4 @@ export { TimeAxisTrack, timeTicks, clampRange } from "./tiles/timeAxis";
 export { colorForSignal, roleColors, signalColors, orderLegendSignals, graphCardPriority, graphSectionPriority, blockLabel, eventColor } from "./tiles/visualPolicy";
 export { legendReadouts, clampTime, markerColor, shortGateLabel, rawValueAt, stateAt, formatLegendValue, formatScientific, formatPressure, unitForAxis } from "./tiles/markers";
 export { viewportSeries, lttb, decimationValue, resampleSeries, commandCenterGapBreaks, commandCenterTraceGapMs, commandCenterProjectedSeries, displayValue } from "./tiles/decimation";
-export { uplotData, seriesDrawOrder, lineWidthFor, sharedTimeGrid, buildScales, buildAxes, paddedRange, logScale, logSplits, ySplits, axisLabel, hasPressure, pressureHeroRailDegC, scaleForSeries, stateBlocks, inTimeRange, renderKindFor, drawTileOverlays } from "./tiles/uPlotAdapter";
+export { uplotData, seriesDrawOrder, lineWidthFor, sharedTimeGrid, buildScales, buildAxes, paddedRange, logScale, logSplits, ySplits, axisLabel, scaleForSeries, stateBlocks, inTimeRange, renderKindFor, drawTileOverlays } from "./tiles/uPlotAdapter";
