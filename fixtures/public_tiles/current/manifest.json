@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "id": "signalforge_tile_bundle_20260514T183525Z",
-  "data_version": "20260514T183525Z",
-  "generated_at": "2026-05-14T18:35:28Z",
+  "id": "signalforge_tile_bundle_20260515T165106Z",
+  "data_version": "20260515T165106Z",
+  "generated_at": "2026-05-15T16:51:06Z",
   "source_fixture_version": "signalforge.telemetry.arrow.v2",
   "time_range": {
     "start": "2026-01-15T10:00:00Z",
@@ -95,73 +95,6 @@
             {
               "id": "trace.actual.chamber_air",
               "label": "Chamber air actual",
-              "unit": "degC",
-              "source": "chamber_thermal_fat",
-              "source_family": "chamber_thermal_fat",
-              "kind": "measurement",
-              "category": "actual",
-              "role": "actual",
-              "subsystem": "facility",
-              "axis_id": "temperature_c",
-              "section_id": "thermal_environment"
-            },
-            {
-              "id": "trace.dut_temp_a",
-              "label": "High-dissipation DUT node",
-              "unit": "degC",
-              "source": "dut_thermal",
-              "source_family": "dut_thermal",
-              "kind": "measurement",
-              "category": "actual",
-              "role": "actual",
-              "subsystem": "dut",
-              "axis_id": "temperature_c",
-              "section_id": "thermal_environment"
-            },
-            {
-              "id": "trace.dut_temp_b",
-              "label": "Vacuum-detached DUT node",
-              "unit": "degC",
-              "source": "dut_thermal",
-              "source_family": "dut_thermal",
-              "kind": "measurement",
-              "category": "actual",
-              "role": "actual",
-              "subsystem": "dut",
-              "axis_id": "temperature_c",
-              "section_id": "thermal_environment"
-            },
-            {
-              "id": "trace.table_loop",
-              "label": "Fluid interface",
-              "unit": "degC",
-              "source": "chamber_thermal_fat",
-              "source_family": "chamber_thermal_fat",
-              "kind": "measurement",
-              "category": "actual",
-              "role": "actual",
-              "subsystem": "facility",
-              "axis_id": "temperature_c",
-              "section_id": "thermal_environment"
-            }
-          ]
-        },
-        {
-          "card_id": "dut_temperature",
-          "title": "DUT temperatures in chamber context",
-          "render_kind": "line",
-          "unit": "degC",
-          "axis_policy": "temperature_c",
-          "tile_endpoint": "",
-          "latest_endpoint": "",
-          "collapsible": true,
-          "default_expanded": true,
-          "supports_time_zoom": true,
-          "supports_y_zoom": true,
-          "signals": [
-            {
-              "id": "trace.context.chamber_air",
-              "label": "Chamber air",
               "unit": "degC",
               "source": "chamber_thermal_fat",
               "source_family": "chamber_thermal_fat",
@@ -1260,140 +1193,6 @@
               "subsystem": "facility",
               "axis_id": "temperature_c",
               "section_id": "thermal_environment"
-            }
-          ]
-        },
-        {
-          "card_id": "dut_temperature",
-          "title": "DUT temperatures in TVac context",
-          "render_kind": "line",
-          "unit": "degC",
-          "axis_policy": "temperature_c",
-          "tile_endpoint": "",
-          "latest_endpoint": "",
-          "collapsible": true,
-          "default_expanded": true,
-          "supports_time_zoom": true,
-          "supports_y_zoom": true,
-          "signals": [
-            {
-              "id": "trace.dut_temp_a",
-              "label": "High-dissipation DUT node",
-              "unit": "degC",
-              "source": "dut_thermal",
-              "source_family": "dut_thermal",
-              "kind": "measurement",
-              "category": "actual",
-              "role": "actual",
-              "subsystem": "dut",
-              "axis_id": "temperature_c",
-              "section_id": "thermal_environment"
-            },
-            {
-              "id": "trace.dut_temp_b",
-              "label": "Vacuum-detached DUT node",
-              "unit": "degC",
-              "source": "dut_thermal",
-              "source_family": "dut_thermal",
-              "kind": "measurement",
-              "category": "actual",
-              "role": "actual",
-              "subsystem": "dut",
-              "axis_id": "temperature_c",
-              "section_id": "thermal_environment"
-            },
-            {
-              "id": "trace.table_loop",
-              "label": "Fluid interface",
-              "unit": "degC",
-              "source": "chamber_thermal_tvac",
-              "source_family": "chamber_thermal_tvac",
-              "kind": "measurement",
-              "category": "actual",
-              "role": "actual",
-              "subsystem": "facility",
-              "axis_id": "temperature_c",
-              "section_id": "thermal_environment"
-            },
-            {
-              "id": "trace.shroud_inlet",
-              "label": "Shroud inlet",
-              "unit": "degC",
-              "source": "chamber_thermal_tvac",
-              "source_family": "chamber_thermal_tvac",
-              "kind": "measurement",
-              "category": "actual",
-              "role": "actual",
-              "subsystem": "facility",
-              "axis_id": "temperature_c",
-              "section_id": "thermal_environment"
-            },
-            {
-              "id": "trace.shroud_outlet",
-              "label": "Shroud outlet",
-              "unit": "degC",
-              "source": "chamber_thermal_tvac",
-              "source_family": "chamber_thermal_tvac",
-              "kind": "measurement",
-              "category": "actual",
-              "role": "actual",
-              "subsystem": "facility",
-              "axis_id": "temperature_c",
-              "section_id": "thermal_environment"
-            },
-            {
-              "id": "trace.shroud_gradient",
-              "label": "Shroud gradient",
-              "unit": "degC",
-              "source": "chamber_thermal_tvac",
-              "source_family": "chamber_thermal_tvac",
-              "kind": "measurement",
-              "category": "source_quality",
-              "role": "source_quality",
-              "subsystem": "facility",
-              "axis_id": "temperature_c",
-              "section_id": "thermal_environment"
-            }
-          ]
-        },
-        {
-          "card_id": "tvac_pressure",
-          "title": "TVac pressure pumpdown and bursts",
-          "render_kind": "line",
-          "unit": "mbar",
-          "axis_policy": "log_pressure_mbar",
-          "tile_endpoint": "",
-          "latest_endpoint": "",
-          "collapsible": true,
-          "default_expanded": true,
-          "supports_time_zoom": true,
-          "supports_y_zoom": true,
-          "signals": [
-            {
-              "id": "trace.tvac_pressure",
-              "label": "Pressure",
-              "unit": "mbar",
-              "source": "chamber_pressure_tvac",
-              "source_family": "chamber_pressure_tvac",
-              "kind": "measurement",
-              "category": "actual",
-              "role": "actual",
-              "subsystem": "facility",
-              "axis_id": "pressure_mbar",
-              "section_id": "facility_response"
-            },
-            {
-              "id": "trace.tvac_pressure_target",
-              "label": "Vacuum target",
-              "unit": "mbar",
-              "source": "requirements",
-              "source_family": "requirements",
-              "kind": "target",
-              "category": "ghost",
-              "role": "ghost",
-              "subsystem": "requirements",
-              "axis_id": "pressure_mbar",
-              "section_id": "facility_response"
             }
           ]
         },

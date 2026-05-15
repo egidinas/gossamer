@@ -431,6 +431,15 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
   });
   const placedMarkerLabels: Array<{ x: number; y: number; width: number; height: number }> = [];
   const labeledMarkers = markerLabelIDs(tile.markers ?? [], start, start + span, width, tile.campaign_id);
+  // Overflow stacking: when placeMarkerLabel fails, stack labels in a rail above the inner plot.
+  // Canvas drawing is unclipped so this area (uPlot header space) is always available.
+  let overflowSlot = 0;
+  const forcePlace = (labelWidth: number, labelHeight: number, preferX: number): { x: number; y: number; width: number; height: number } => {
+    const y = top - (overflowSlot + 1) * (labelHeight + 3);
+    const x = Math.max(left, Math.min(left + width - labelWidth, preferX));
+    overflowSlot += 1;
+    return { x, y, width: labelWidth, height: labelHeight };
+  };
   (tile.markers ?? []).forEach((marker) => {
     const markerTime = Date.parse(marker.timestamp);
     if (!Number.isFinite(markerTime)) return;
@@ -490,8 +499,9 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       const measuredWidth = Math.max(...lines.map((line) => ctx.measureText(line).width)) + 12;
       const labelWidth = Math.min(maxLabelWidth, measuredWidth);
       const labelHeight = lines.length * lineHeight + 8;
-      const placed = placeMarkerLabel({ x, y, labelWidth, labelHeight, left, top, width, height, placed: placedMarkerLabels, markerRadius });
-      if (!placed || (tile.campaign_id === "command_center_fat" && placedMarkerLabels.some((other) => rectanglesOverlap(placed, other)))) {
+      const placed = placeMarkerLabel({ x, y, labelWidth, labelHeight, left, top, width, height, placed: placedMarkerLabels, markerRadius })
+        ?? (tile.campaign_id === "command_center_fat" ? null : forcePlace(labelWidth, labelHeight, x - labelWidth / 2));
+      if (!placed) {
         ctx.restore();
         return;
       }
@@ -538,8 +548,9 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       const metrics = ctx.measureText(label);
       const labelWidth = Math.max(commandCenterMarker ? 22 : 36, metrics.width + 10);
       const labelHeight = commandCenterMarker ? 16 : 18;
-      const placed = placeMarkerLabel({ x, y: anchorY, labelWidth, labelHeight, left, top, width, height, placed: placedMarkerLabels, markerRadius: 8 });
-      if (!placed || placedMarkerLabels.some((other) => rectanglesOverlap(placed, other))) {
+      const placed = placeMarkerLabel({ x, y: anchorY, labelWidth, labelHeight, left, top, width, height, placed: placedMarkerLabels, markerRadius: 8 })
+        ?? (tile.campaign_id === "command_center_fat" ? null : forcePlace(labelWidth, labelHeight, x - labelWidth / 2));
+      if (!placed) {
         ctx.restore();
         return;
       }
