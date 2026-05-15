@@ -207,7 +207,7 @@ export function formatScientific(value: number) {
 
 export function formatPressure(value: number) {
   if (value <= 0) return "0";
-  if (value < 0.001 || value >= 1000) return value.toExponential(2);
+  if (value < 0.001 || value >= 1000) return value.toExponential(2).replace("e", "E");
   if (value < 1) return value.toPrecision(3);
   return value.toFixed(value < 10 ? 2 : 1);
 }
