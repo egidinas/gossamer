@@ -275,10 +275,6 @@ function formatScientific(value: number) {
   return value.toExponential(2).replace("e", "E");
 }
 
-function commandCenterGateLabelAllowed(width: number, spanMs: number) {
-  const days = spanMs / DAY_MS;
-  return width / Math.max(1, days) >= 140;
-}
 
 function markerAnchor(plot: uPlot, tile: GraphTile, marker: GraphMarker, timeMs: number, top: number, height: number) {
   const anchorSeries = rankedMarkerAnchorSeries(tile, marker);
@@ -431,6 +427,8 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
   });
   const placedMarkerLabels: Array<{ x: number; y: number; width: number; height: number }> = [];
   const labeledMarkers = markerLabelIDs(tile.markers ?? [], start, start + span, width, tile.campaign_id);
+  let expectedMarkerLabels = 0;
+  let drawnMarkerLabels = 0;
   // Overflow stacking: when placeMarkerLabel fails, stack labels in a rail above the inner plot.
   // Canvas drawing is unclipped so this area (uPlot header space) is always available.
   let overflowSlot = 0;
@@ -454,6 +452,7 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       drawExactMarkerAnchorLine(ctx, x, top, height, color, attachedMarker ? 0.48 : 0.36);
     }
     if (operatorMarker) {
+      expectedMarkerLabels += 1;
       const compact = tile.campaign_id === "command_center_fat" || width < 760;
       const y = anchor?.y ?? top + 18 + (marker.kind === "operator_reset" ? 34 : marker.kind === "operator_reset_ready" ? 68 : 0);
       const markerRadius = compact ? 9 : 12;
@@ -487,10 +486,6 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       ctx.lineWidth = 1.4;
       ctx.strokeStyle = "rgba(2,6,11,0.96)";
       ctx.stroke();
-      if (tile.campaign_id === "command_center_fat" && marker.kind === "operator_reset_ready") {
-        ctx.restore();
-        return;
-      }
       const lines = operatorMarkerLines(marker, compact);
       const fontSize = compact ? Math.max(8.5, Math.min(10.5, width / 118)) : 12;
       const lineHeight = compact ? 11 : 14;
@@ -500,7 +495,7 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       const labelWidth = Math.min(maxLabelWidth, measuredWidth);
       const labelHeight = lines.length * lineHeight + 8;
       const placed = placeMarkerLabel({ x, y, labelWidth, labelHeight, left, top, width, height, placed: placedMarkerLabels, markerRadius })
-        ?? (tile.campaign_id === "command_center_fat" ? null : forcePlace(labelWidth, labelHeight, x - labelWidth / 2));
+        ?? forcePlace(labelWidth, labelHeight, x - labelWidth / 2);
       if (!placed) {
         ctx.restore();
         return;
@@ -516,6 +511,7 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       ctx.strokeRect(labelX, labelY, labelWidth, labelHeight);
       ctx.fillStyle = color;
       lines.forEach((line, lineIndex) => ctx.fillText(fitCanvasText(ctx, line, labelWidth - 10), labelX + 6, labelY + lineHeight + 1 + lineIndex * lineHeight));
+      drawnMarkerLabels += 1;
       ctx.restore();
     } else if (attachedMarker) {
       const commandCenterMarker = tile.campaign_id === "command_center_fat";
@@ -541,7 +537,7 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       }
       ctx.fill();
       if (!labeledMarkers.has(marker.id)) return;
-      if (commandCenterMarker && !commandCenterGateLabelAllowed(width, span)) return;
+      expectedMarkerLabels += 1;
       const label = commandCenterMarker ? "FT" : shortGateLabel(marker.label);
       ctx.save();
       ctx.font = commandCenterMarker ? "850 10px system-ui, sans-serif" : "850 12px system-ui, sans-serif";
@@ -549,7 +545,7 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       const labelWidth = Math.max(commandCenterMarker ? 22 : 36, metrics.width + 10);
       const labelHeight = commandCenterMarker ? 16 : 18;
       const placed = placeMarkerLabel({ x, y: anchorY, labelWidth, labelHeight, left, top, width, height, placed: placedMarkerLabels, markerRadius: 8 })
-        ?? (tile.campaign_id === "command_center_fat" ? null : forcePlace(labelWidth, labelHeight, x - labelWidth / 2));
+        ?? forcePlace(labelWidth, labelHeight, x - labelWidth / 2);
       if (!placed) {
         ctx.restore();
         return;
@@ -567,6 +563,7 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       ctx.shadowColor = "rgba(0,0,0,0.88)";
       ctx.shadowBlur = 5;
       ctx.fillText(label, labelX + 5, labelY + Math.min(13, labelHeight - 5));
+      drawnMarkerLabels += 1;
       ctx.restore();
     } else {
       ctx.beginPath();
@@ -574,6 +571,11 @@ export function drawTileOverlays(plot: uPlot, tile: GraphTile, heroGraph: HeroGr
       ctx.fill();
     }
   });
+  const host = plot.root?.closest("[data-uplot-card]") as HTMLElement | null;
+  if (host) {
+    host.dataset.markerLabelsExpected = String(expectedMarkerLabels);
+    host.dataset.markerLabelsDrawn = String(drawnMarkerLabels);
+  }
   const now = currentTimeMs ?? Date.parse(heroGraph.time_axis.now ?? heroGraph.execution?.now ?? "");
   if (Number.isFinite(now)) {
     const x = left + ((now - start) / span) * width;

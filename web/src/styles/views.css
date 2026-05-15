@@ -1,5 +1,7 @@
 /* ── Operator graph wall ───────────────────────────────────── */
 .operator-graph-wall {
+  --axis-left: 64px;
+  --axis-right: 64px;
   display: grid;
   gap: 0;
   position: relative;
@@ -571,7 +573,7 @@
   bottom: 0;
   z-index: 10;
   display: grid;
-  grid-template-columns: calc(var(--axis-left) + 1px) minmax(0, 1fr) calc(var(--axis-right) + 1px);
+  grid-template-columns: var(--time-axis-grid-left, calc(var(--axis-left) + 1px)) minmax(0, 1fr) var(--time-axis-grid-right, calc(var(--axis-right) + 1px));
   grid-template-rows: 24px 14px;
   height: 38px;
   padding: 0;

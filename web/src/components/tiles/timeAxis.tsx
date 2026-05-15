@@ -127,6 +127,8 @@ export function SharedTimeAxis({
   const isZoomed = viewSpan < fullSpan * 0.995;
   const minSpan = Math.max(60_000, fullSpan / 600);
   const axisStyle = plotBounds ? ({
+    "--time-axis-grid-left": `${plotBounds.left}px`,
+    "--time-axis-grid-right": `${plotBounds.right}px`,
     "--time-axis-left": `${plotBounds.left}px`,
     "--time-axis-right": `${plotBounds.right}px`,
   } as CSSProperties) : undefined;

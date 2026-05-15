@@ -111,12 +111,17 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
     const measure = () => {
       window.cancelAnimationFrame(raf);
       raf = window.requestAnimationFrame(() => {
-        const plot = frame.querySelector(".u-plot .u-over") as HTMLElement | null;
+        const wall = frame.closest(".operator-graph-wall") as HTMLElement | null;
+        const plot = frame.querySelector(".u-over") as HTMLElement | null;
+        const wallRect = wall?.getBoundingClientRect();
         const rect = plot?.getBoundingClientRect();
-        if (!rect || rect.width <= 0) return;
+        if (!wall || !wallRect || !rect || rect.width <= 0) return;
+        const wallStyle = window.getComputedStyle(wall);
+        const wallPaddingLeft = Number.parseFloat(wallStyle.paddingLeft) || 0;
+        const wallPaddingRight = Number.parseFloat(wallStyle.paddingRight) || 0;
         const next = {
-          left: Math.round(rect.left),
-          right: Math.round(window.innerWidth - rect.right),
+          left: Math.round(rect.left - wallRect.left - wallPaddingLeft),
+          right: Math.round(wallRect.right - wallPaddingRight - rect.right),
         };
         setTimeAxisBounds((existing) => {
           if (existing && Math.abs(existing.left - next.left) < 1 && Math.abs(existing.right - next.right) < 1) return existing;

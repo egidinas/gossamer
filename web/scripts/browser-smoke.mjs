@@ -263,21 +263,59 @@ async function assertGraphWallStackGeometry(page, routeName, viewportName) {
   }
 }
 
+async function assertCanvasMarkerLabelCounts(page, routeName, viewportName) {
+  if (routeName !== "command-center" || viewportName !== "desktop") return;
+  await page.waitForFunction(
+    () => [...document.querySelectorAll(".operator-graph-wall[data-campaign-id=\"command_center_fat\"] [data-uplot-card]")]
+      .some((host) => host.getAttribute("data-marker-labels-expected") !== null),
+    undefined,
+    { timeout: 5000 }
+  );
+  const counts = await page.evaluate(() => {
+    const hosts = [...document.querySelectorAll(".operator-graph-wall[data-campaign-id=\"command_center_fat\"] [data-uplot-card]")];
+    return hosts.map((host) => ({
+      card: host.getAttribute("data-uplot-card"),
+      expected: Number(host.getAttribute("data-marker-labels-expected") ?? "0"),
+      drawn: Number(host.getAttribute("data-marker-labels-drawn") ?? "0"),
+    })).filter((item) => item.expected > 0 || item.drawn > 0);
+  });
+  const expectedTotal = counts.reduce((sum, item) => sum + item.expected, 0);
+  const drawnTotal = counts.reduce((sum, item) => sum + item.drawn, 0);
+  const missing = counts.filter((item) => item.drawn < item.expected);
+  if (expectedTotal < 1) {
+    throw new Error(`${viewportName} ${routeName} found no expected canvas marker labels`);
+  }
+  if (missing.length > 0) {
+    throw new Error(`${viewportName} ${routeName} missing canvas marker labels: ${JSON.stringify(missing)}`);
+  }
+  console.log(`  └─ ${viewportName} ${routeName} canvas marker labels OK: ${drawnTotal}/${expectedTotal} drawn`);
+}
+
 async function assertQualificationContract(page, routeName, viewportName, apiURL) {
   if (routeName !== "qualification" || viewportName !== "desktop") return;
 
   // 1. Geometry: every uPlot inner plot left edge must align with SharedTimeAxis track left edge (±2px).
+  //    Waits up to 5 s for canvases to be present so the check is not vacuous on slow renders.
+  // Wait for uPlot overlay divs to appear (u-over is inside .u-wrap inside .graph-card-uplot).
+  await page.waitForFunction(
+    () => document.querySelectorAll(".operator-graph-wall .u-over").length >= 3,
+    undefined,
+    { timeout: 5000 }
+  ).catch(() => { /* will be caught as 0-plots error below */ });
   const alignResult = await page.evaluate(() => {
     const timeAxisTrack = document.querySelector(".operator-shared-time-axis > .time-axis-track");
     if (!timeAxisTrack) return { error: "no .operator-shared-time-axis > .time-axis-track found" };
-    const trackLeft = Math.round(timeAxisTrack.getBoundingClientRect().left);
-    const plots = [...document.querySelectorAll(".operator-graph-wall .u-plot .u-over")]
+    const trackRect = timeAxisTrack.getBoundingClientRect();
+    const trackLeft = Math.round(trackRect.left);
+    // .u-over is absolutely positioned by uPlot to cover exactly the inner-plot area.
+    const plots = [...document.querySelectorAll(".operator-graph-wall .u-over")]
       .map((el) => ({ cardId: el.closest("[data-card-id]")?.getAttribute("data-card-id"), left: Math.round(el.getBoundingClientRect().left) }))
-      .filter((el) => el.left >= 0);
+      .filter((el) => el.left > 0 && el.left < 3000);
     const misaligned = plots.filter((p) => Math.abs(p.left - trackLeft) > 2);
     return { trackLeft, plots: plots.length, misaligned };
   });
   if (alignResult.error) throw new Error(`${viewportName} ${routeName} geometry: ${alignResult.error}`);
+  if (alignResult.plots < 3) throw new Error(`${viewportName} ${routeName} geometry check found <3 uPlot overlays — check selector ".operator-graph-wall .u-over"`);
   if (alignResult.misaligned.length > 0) throw new Error(`${viewportName} ${routeName} plot left edges misaligned with SharedTimeAxis track (trackLeft=${alignResult.trackLeft}): ${JSON.stringify(alignResult.misaligned)}`);
   console.log(`  └─ ${viewportName} ${routeName} axis alignment OK: ${alignResult.plots} plots aligned to x=${alignResult.trackLeft}`);
 
@@ -292,26 +330,26 @@ async function assertQualificationContract(page, routeName, viewportName, apiURL
   if (dupCards.length > 0) throw new Error(`${viewportName} ${routeName} still has redundant companion cards: ${dupCards.join(", ")}`);
   console.log(`  └─ ${viewportName} ${routeName} deduplication OK: dut_temperature and tvac_pressure absent`);
 
-  // 3. Vacuum target ramp: fetch via Node (not browser) to avoid CORS; pressure_target must have ≥3 distinct values.
-  const tileEndpoint = `${apiURL}/api/campaigns/tvac_qualification/tiles?card_id=thermal_program&level=minute`;
-  let tileResp;
+  // 3. Vacuum target ramp: graph-model traces have full resolution (not LTTB-decimated).
+  //    tvac_pressure_target must show ≥3 distinct sub-1-mbar values across cycles.
+  let graphModel;
   try {
-    const r = await fetch(tileEndpoint);
+    const r = await fetch(`${apiURL}/api/campaigns/tvac_qualification/graph-model`);
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    tileResp = await r.json();
+    graphModel = await r.json();
   } catch (e) {
-    throw new Error(`${viewportName} ${routeName} vacuum ramp check failed: ${e}`);
+    throw new Error(`${viewportName} ${routeName} vacuum ramp check failed fetching graph-model: ${e}`);
   }
-  const targetSeries = (tileResp.series ?? []).find((s) => s.id === "trace.tvac_pressure_target");
-  if (!targetSeries) throw new Error(`${viewportName} ${routeName} hero tile missing trace.tvac_pressure_target series`);
-  // Verify ramp via raw fixture data — minute-level LTTB collapses sub-1-mbar values, so count distinct
-  // non-ambient values from the per-cycle ramp logic in the generator (verified in Go unit tests).
-  // Here we just confirm the series has data and any non-atmospheric values appear (vacuum phases).
-  const allVals = (targetSeries.points ?? []).map((p) => p.value).filter((v) => typeof v === "number" && Number.isFinite(v));
-  if (allVals.length < 10) throw new Error(`${viewportName} ${routeName} vacuum target series has too few points (${allVals.length})`);
-  const hasVacuumPhase = allVals.some((v) => v < 1000);
-  if (!hasVacuumPhase) throw new Error(`${viewportName} ${routeName} vacuum target series shows no vacuum phase (all values ≥ 1000 mbar)`);
-  console.log(`  └─ ${viewportName} ${routeName} vacuum ramp OK: ${allVals.length} data points, vacuum phase present`);
+  const targetTrace = (graphModel?.hero_graph?.traces ?? []).find((t) => t.id === "trace.tvac_pressure_target");
+  if (!targetTrace) throw new Error(`${viewportName} ${routeName} graph-model missing trace.tvac_pressure_target`);
+  const distinctVacuumVals = new Set(
+    (targetTrace.values ?? [])
+      .map((p) => (typeof p === "number" ? p : p?.value))
+      .filter((v) => typeof v === "number" && Number.isFinite(v) && v > 0 && v < 1)
+      .map((v) => Math.round(v * 1e8) / 1e8)
+  );
+  if (distinctVacuumVals.size < 3) throw new Error(`${viewportName} ${routeName} vacuum target must ramp across cycles (got ${distinctVacuumVals.size} distinct sub-1-mbar values, want ≥3)`);
+  console.log(`  └─ ${viewportName} ${routeName} vacuum ramp OK: ${distinctVacuumVals.size} distinct cycle target levels`);
 }
 
 await mkdir(artifactDir, { recursive: true });
@@ -365,6 +403,7 @@ try {
           await assertRequiredSignalReadouts(page, routeName, viewportName);
           await assertNoVisibleEventLabelOverlaps(page, routeName, viewportName);
           await assertGraphWallStackGeometry(page, routeName, viewportName);
+          await assertCanvasMarkerLabelCounts(page, routeName, viewportName);
           await assertQualificationContract(page, routeName, viewportName, apiURL);
         }
         await page.screenshot({ path: join(artifactDir, `${viewportName}-${routeName}.png`), fullPage: true });
