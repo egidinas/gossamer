@@ -16,6 +16,8 @@ import (
 	"github.com/egidinas/signalforge/tilebundle"
 )
 
+var renamePath = os.Rename
+
 func main() {
 	var (
 		root        = flag.String("root", ".", "repository or fixture root")
@@ -35,6 +37,9 @@ func main() {
 	version := *dataVersion
 	if version == "" {
 		version = contentAddressedVersion(models)
+	}
+	if err := validateDataVersion(version); err != nil {
+		log.Fatal(err)
 	}
 
 	versionedOut := filepath.Join(*root, *out, version)
@@ -79,6 +84,26 @@ func contentAddressedVersion(models []contracts.GraphModel) string {
 		}
 	}
 	return "v" + hex.EncodeToString(h.Sum(nil))[:8]
+}
+
+func validateDataVersion(version string) error {
+	if version == "" || version == "." || version == ".." {
+		return fmt.Errorf("data-version must be a non-empty path segment")
+	}
+	for _, r := range version {
+		switch {
+		case r >= 'a' && r <= 'z':
+		case r >= 'A' && r <= 'Z':
+		case r >= '0' && r <= '9':
+		case r == '.', r == '_', r == '-':
+		default:
+			return fmt.Errorf("data-version %q contains invalid character %q", version, r)
+		}
+	}
+	if filepath.Base(version) != version || strings.ContainsAny(version, `/\`) {
+		return fmt.Errorf("data-version %q must not contain path separators", version)
+	}
+	return nil
 }
 
 func splitCSV(value string) []string {
@@ -153,11 +178,50 @@ func replaceDir(dst, src string) error {
 		_ = os.RemoveAll(tmp)
 		return err
 	}
-	if err := os.RemoveAll(dst); err != nil {
+
+	exists, err := pathExists(dst)
+	if err != nil {
 		_ = os.RemoveAll(tmp)
 		return err
 	}
-	return os.Rename(tmp, dst)
+	var backup string
+	if exists {
+		backup, err = os.MkdirTemp(filepath.Dir(dst), filepath.Base(dst)+".backup-")
+		if err != nil {
+			_ = os.RemoveAll(tmp)
+			return err
+		}
+		if err := os.RemoveAll(backup); err != nil {
+			_ = os.RemoveAll(tmp)
+			return err
+		}
+		if err := renamePath(dst, backup); err != nil {
+			_ = os.RemoveAll(tmp)
+			return err
+		}
+	}
+	if err := renamePath(tmp, dst); err != nil {
+		_ = os.RemoveAll(tmp)
+		if backup != "" {
+			_ = renamePath(backup, dst)
+		}
+		return err
+	}
+	if backup != "" {
+		_ = os.RemoveAll(backup)
+	}
+	return nil
+}
+
+func pathExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
 }
 
 func copyDir(dst, src string) error {
