@@ -27,9 +27,7 @@ Start with:
   only a hint; late-joining views must be able to resolve labels from fixtures,
   catalogues, sidecar metadata, or dictionary events without replaying old
   samples.
-- Shared neutral primitives belong in SignalForge. Keep Gossamer-local backlog
-  items in `docs/backlog/BACKLOG.md` and promote only public-safe reusable
-  contracts into SignalForge.
+- Shared neutral backend primitives (`mathutil`, `jsonfile`, `graphwall`, `safepath`, `tilebundle`) belong in SignalForge. Import them from `github.com/egidinas/signalforge`, not `loom-gossamer-shared`. Keep the Gossamer UI clean-room local unless a public-safe shared UI dependency is deliberately approved. Lab-specific models (`graphsem`, `contracts`) intentionally violate the clean-room boundary and must stay out of Gossamer when porting code. Keep Gossamer-local backlog items in `docs/backlog/BACKLOG.md` and promote only public-safe reusable contracts into SignalForge.
 
 ## Agent Context Efficiency
 

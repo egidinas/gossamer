@@ -26,7 +26,7 @@ The repository is independent, fictional, and not affiliated with any employer o
 - `cmd/gossamer-server`: serves the local demo API.
 - `internal/environmentalsim`: deterministic public simulation packages for the tracked traces.
 - `internal/synthetic`: public fixture assembly over SignalForge primitives.
-- `github.com/egidinas/signalforge/*`: shared contracts, Arrow telemetry, graph-wall, tile-bundle, JSON, and safe-path primitives used by the public build.
+- `github.com/egidinas/signalforge/*`: shared neutral backend primitives (Arrow telemetry, graph-wall, tile-bundle, JSON, safe-path). These are imported directly from the clean-room baseline, strictly avoiding the legacy `loom-gossamer-shared` dependencies.
 - `fixtures/public`: synthetic JSON and JSONL contracts served by the API and tested by the UI.
 - `web`: Vite/React operator UI.
 - `docs`: architecture, standards, traceability, and deployment notes.
