@@ -17,6 +17,7 @@ type EvaluationInput struct {
 
 func Evaluate(input EvaluationInput) []contracts.Requirement {
 	samples := input.Telemetry
+	summary := newTelemetrySummary(samples)
 
 	env, err := cel.NewEnv(
 		cel.Function("max_signal",
@@ -25,7 +26,7 @@ func Evaluate(input EvaluationInput) []contracts.Requirement {
 				cel.DoubleType,
 				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
 					sigID := args[0].Value().(string)
-					max, ok := maxSignal(samples, sigID)
+					max, ok := summary.maxSignal(sigID)
 					if !ok {
 						return types.NewErr("missing signal %q", sigID)
 					}
@@ -39,7 +40,7 @@ func Evaluate(input EvaluationInput) []contracts.Requirement {
 				cel.DoubleType,
 				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
 					sigID := args[0].Value().(string)
-					min, ok := minSignal(samples, sigID)
+					min, ok := summary.minSignal(sigID)
 					if !ok {
 						return types.NewErr("missing signal %q", sigID)
 					}
@@ -52,7 +53,7 @@ func Evaluate(input EvaluationInput) []contracts.Requirement {
 				[]*cel.Type{},
 				cel.IntType,
 				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
-					return types.Int(observedCycleCount(samples))
+					return types.Int(summary.observedCycleCount())
 				}),
 			),
 		),
@@ -62,7 +63,7 @@ func Evaluate(input EvaluationInput) []contracts.Requirement {
 				cel.IntType,
 				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
 					phase := args[0].Value().(string)
-					return types.Int(observedPhaseCount(samples, phase))
+					return types.Int(summary.observedPhaseCount(phase))
 				}),
 			),
 		),
@@ -72,7 +73,7 @@ func Evaluate(input EvaluationInput) []contracts.Requirement {
 				cel.BoolType,
 				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
 					gate := args[0].Value().(string)
-					return types.Bool(observedGate(samples, gate))
+					return types.Bool(summary.observedGate(gate))
 				}),
 			),
 		),
@@ -81,7 +82,7 @@ func Evaluate(input EvaluationInput) []contracts.Requirement {
 				[]*cel.Type{},
 				cel.BoolType,
 				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
-					return types.Bool(noDegraded(samples))
+					return types.Bool(summary.noDegraded())
 				}),
 			),
 		),
@@ -170,70 +171,84 @@ func EvaluateSyntheticCampaign(id string) (contracts.Campaign, []contracts.Requi
 	return campaign, reqs, nil
 }
 
-func maxSignal(samples []contracts.TelemetrySample, id string) (float64, bool) {
-	var max float64
-	found := false
-	for _, sample := range samples {
-		if v, ok := sample.Signals[id]; ok && (!found || v > max) {
-			max = v
-			found = true
-		}
-	}
-	return max, found
+type signalAggregate struct {
+	min float64
+	max float64
 }
 
-func minSignal(samples []contracts.TelemetrySample, id string) (float64, bool) {
-	var min float64
-	found := false
-	for _, sample := range samples {
-		if v, ok := sample.Signals[id]; ok && (!found || v < min) {
-			min = v
-			found = true
-		}
-	}
-	return min, found
+type telemetrySummary struct {
+	signals     map[string]signalAggregate
+	cycles      map[int]struct{}
+	phaseCycles map[string]map[int]struct{}
+	gates       map[string]struct{}
+	clean       bool
 }
 
-func noDegraded(samples []contracts.TelemetrySample) bool {
+func newTelemetrySummary(samples []contracts.TelemetrySample) telemetrySummary {
+	summary := telemetrySummary{
+		signals:     map[string]signalAggregate{},
+		cycles:      map[int]struct{}{},
+		phaseCycles: map[string]map[int]struct{}{},
+		gates:       map[string]struct{}{},
+		clean:       true,
+	}
 	for _, sample := range samples {
 		if sample.Quality == "degraded" || sample.Quality == "missing" {
-			return false
+			summary.clean = false
 		}
-	}
-	return true
-}
-
-func observedCycleCount(samples []contracts.TelemetrySample) int {
-	seen := map[int]bool{}
-	for _, sample := range samples {
+		for id, value := range sample.Signals {
+			aggregate, ok := summary.signals[id]
+			if !ok {
+				summary.signals[id] = signalAggregate{min: value, max: value}
+				continue
+			}
+			if value < aggregate.min {
+				aggregate.min = value
+			}
+			if value > aggregate.max {
+				aggregate.max = value
+			}
+			summary.signals[id] = aggregate
+		}
 		cycle := int(sample.Signals["thermal_cycle_index"])
 		if cycle > 0 {
-			seen[cycle] = true
-		}
-	}
-	return len(seen)
-}
-
-func observedPhaseCount(samples []contracts.TelemetrySample, phase string) int {
-	seen := map[int]bool{}
-	for _, sample := range samples {
-		if sample.States["thermal_phase"] == phase {
-			cycle := int(sample.Signals["thermal_cycle_index"])
-			if cycle > 0 {
-				seen[cycle] = true
+			summary.cycles[cycle] = struct{}{}
+			phase := sample.States["thermal_phase"]
+			if _, ok := summary.phaseCycles[phase]; !ok {
+				summary.phaseCycles[phase] = map[int]struct{}{}
 			}
+			summary.phaseCycles[phase][cycle] = struct{}{}
 		}
+		summary.gates[sample.States["functional_gate"]] = struct{}{}
 	}
-	return len(seen)
+	return summary
 }
 
-func observedGate(samples []contracts.TelemetrySample, gate string) bool {
-	for _, sample := range samples {
-		if sample.States["functional_gate"] == gate {
-			return true
-		}
-	}
-	return false
+func (s telemetrySummary) maxSignal(id string) (float64, bool) {
+	aggregate, ok := s.signals[id]
+	return aggregate.max, ok
+}
+
+func (s telemetrySummary) minSignal(id string) (float64, bool) {
+	aggregate, ok := s.signals[id]
+	return aggregate.min, ok
+}
+
+func (s telemetrySummary) noDegraded() bool {
+	return s.clean
+}
+
+func (s telemetrySummary) observedCycleCount() int {
+	return len(s.cycles)
+}
+
+func (s telemetrySummary) observedPhaseCount(phase string) int {
+	return len(s.phaseCycles[phase])
+}
+
+func (s telemetrySummary) observedGate(gate string) bool {
+	_, ok := s.gates[gate]
+	return ok
 }
 
 func rationale(id, result string, campaign contracts.Campaign) string {
