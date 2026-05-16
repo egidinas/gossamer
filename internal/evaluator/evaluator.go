@@ -25,7 +25,11 @@ func Evaluate(input EvaluationInput) []contracts.Requirement {
 				cel.DoubleType,
 				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
 					sigID := args[0].Value().(string)
-					return types.Double(maxSignal(samples, sigID))
+					max, ok := maxSignal(samples, sigID)
+					if !ok {
+						return types.NewErr("missing signal %q", sigID)
+					}
+					return types.Double(max)
 				}),
 			),
 		),
@@ -35,7 +39,11 @@ func Evaluate(input EvaluationInput) []contracts.Requirement {
 				cel.DoubleType,
 				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
 					sigID := args[0].Value().(string)
-					return types.Double(minSignal(samples, sigID))
+					min, ok := minSignal(samples, sigID)
+					if !ok {
+						return types.NewErr("missing signal %q", sigID)
+					}
+					return types.Double(min)
 				}),
 			),
 		),
@@ -162,24 +170,28 @@ func EvaluateSyntheticCampaign(id string) (contracts.Campaign, []contracts.Requi
 	return campaign, reqs, nil
 }
 
-func maxSignal(samples []contracts.TelemetrySample, id string) float64 {
-	max := -1e12
+func maxSignal(samples []contracts.TelemetrySample, id string) (float64, bool) {
+	var max float64
+	found := false
 	for _, sample := range samples {
-		if v, ok := sample.Signals[id]; ok && v > max {
+		if v, ok := sample.Signals[id]; ok && (!found || v > max) {
 			max = v
+			found = true
 		}
 	}
-	return max
+	return max, found
 }
 
-func minSignal(samples []contracts.TelemetrySample, id string) float64 {
-	min := 1e12
+func minSignal(samples []contracts.TelemetrySample, id string) (float64, bool) {
+	var min float64
+	found := false
 	for _, sample := range samples {
-		if v, ok := sample.Signals[id]; ok && v < min {
+		if v, ok := sample.Signals[id]; ok && (!found || v < min) {
 			min = v
+			found = true
 		}
 	}
-	return min
+	return min, found
 }
 
 func noDegraded(samples []contracts.TelemetrySample) bool {

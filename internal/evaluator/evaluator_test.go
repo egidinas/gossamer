@@ -1,6 +1,11 @@
 package evaluator
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/egidinas/gossamer/internal/synthetic"
+	"github.com/egidinas/signalforge/contracts"
+)
 
 func TestThermalFATRequirementsPass(t *testing.T) {
 	campaign, reqs, err := EvaluateSyntheticCampaign("thermal_acceptance_fat")
@@ -71,6 +76,36 @@ func TestIntegratedSystemFATRequirements(t *testing.T) {
 	}
 }
 
+func TestMissingUpperBoundSignalDoesNotPassRequirement(t *testing.T) {
+	set := synthetic.Build()
+	campaign := set.Campaigns["thermal_acceptance_fat"]
+	telemetry := set.Telemetry[campaign.ID]
+	for _, sample := range telemetry {
+		delete(sample.Signals, "source_freshness_ms")
+	}
+
+	got := requirementResults(Evaluate(EvaluationInput{Campaign: campaign, Telemetry: telemetry}))
+	if got["REQ-STABILITY"] == "pass" {
+		t.Fatalf("REQ-STABILITY = pass, want fail when source_freshness_ms is absent")
+	}
+}
+
+func TestMissingTemperatureSignalDoesNotPassAggregateRequirements(t *testing.T) {
+	set := synthetic.Build()
+	campaign := set.Campaigns["thermal_acceptance_fat"]
+	telemetry := set.Telemetry[campaign.ID]
+	for _, sample := range telemetry {
+		delete(sample.Signals, "chamber_air_deg_c")
+	}
+
+	got := requirementResults(Evaluate(EvaluationInput{Campaign: campaign, Telemetry: telemetry}))
+	for _, reqID := range []string{"REQ-HOT-TARGET", "REQ-COLD-TARGET"} {
+		if got[reqID] == "pass" {
+			t.Fatalf("%s = pass, want fail when chamber_air_deg_c is absent", reqID)
+		}
+	}
+}
+
 func TestRequirementsCarryExpression(t *testing.T) {
 	_, reqs, err := EvaluateSyntheticCampaign("thermal_acceptance_fat")
 	if err != nil {
@@ -81,4 +116,12 @@ func TestRequirementsCarryExpression(t *testing.T) {
 			t.Fatalf("%s has no expression", req.ID)
 		}
 	}
+}
+
+func requirementResults(reqs []contracts.Requirement) map[string]string {
+	got := map[string]string{}
+	for _, req := range reqs {
+		got[req.ID] = req.Result
+	}
+	return got
 }
