@@ -75,11 +75,19 @@ export function placeMarkerLabel({
   const directions = preferLeft ? [-1, 1] : [1, -1];
   const baseY = Math.max(top + 4, Math.min(top + height - labelHeight - 4, y - labelHeight / 2));
   const gap = labelHeight + LABEL_COLLISION_PADDING;
-  // Extended offsets: try up to ±10 gaps, then allow overflow above/below the plot
-  const inPlotOffsets = Array.from({ length: 21 }, (_, i) => {
-    const n = Math.ceil(i / 2) * (i % 2 === 0 ? 1 : -1);
-    return n * gap;
-  });
+  const inPlotOffsets = [
+    0,
+    -1 * gap, 1 * gap,
+    -2 * gap, 2 * gap,
+    -3 * gap, 3 * gap,
+    -4 * gap, 4 * gap,
+    -5 * gap, 5 * gap,
+    -6 * gap, 6 * gap,
+    -7 * gap, 7 * gap,
+    -8 * gap, 8 * gap,
+    -9 * gap, 9 * gap,
+    -10 * gap, 10 * gap
+  ];
   const overflowOffsets = [-6 * gap, -7 * gap, -8 * gap, -9 * gap, -10 * gap, 6 * gap, 7 * gap, 8 * gap, 9 * gap, 10 * gap];
   for (const direction of directions) {
     const baseX = direction < 0 ? x - labelWidth - markerRadius - 8 : x + markerRadius + 8;
