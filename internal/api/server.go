@@ -68,7 +68,7 @@ func (m *InMemoryLeaseManager) GetState() contracts.CommandAuthorityState {
 	defer m.mu.Unlock()
 	m.checkExpiration()
 	m.state.Envelope = contracts.NewEnvelope(time.Now())
-	return m.state
+	return cloneCommandAuthorityState(m.state)
 }
 
 func (m *InMemoryLeaseManager) appendLog(operator, action, detail string) {
@@ -86,27 +86,27 @@ func (m *InMemoryLeaseManager) RequestLease(operatorID string) (contracts.Comman
 	defer m.mu.Unlock()
 	m.checkExpiration()
 	if m.state.LeaseState == "held" && m.state.LeaseOwner != operatorID {
-		return m.state, fmt.Errorf("lease already held by %s", m.state.LeaseOwner)
+		return cloneCommandAuthorityState(m.state), fmt.Errorf("lease already held by %s", m.state.LeaseOwner)
 	}
 	m.state.LeaseState = "held"
 	m.state.LeaseOwner = operatorID
 	m.lastSeen = time.Now()
 	m.appendLog(operatorID, "lease_acquired", "Command authority lease acquired via demo request.")
 	m.state.Envelope = contracts.NewEnvelope(time.Now())
-	return m.state, nil
+	return cloneCommandAuthorityState(m.state), nil
 }
 
 func (m *InMemoryLeaseManager) ReleaseLease(operatorID string) (contracts.CommandAuthorityState, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	if m.state.LeaseState == "held" && m.state.LeaseOwner != operatorID {
-		return m.state, fmt.Errorf("cannot release lease held by %s", m.state.LeaseOwner)
+		return cloneCommandAuthorityState(m.state), fmt.Errorf("cannot release lease held by %s", m.state.LeaseOwner)
 	}
 	m.appendLog(operatorID, "lease_released", "Command authority lease released.")
 	m.state.LeaseState = "available"
 	m.state.LeaseOwner = ""
 	m.state.Envelope = contracts.NewEnvelope(time.Now())
-	return m.state, nil
+	return cloneCommandAuthorityState(m.state), nil
 }
 
 func (m *InMemoryLeaseManager) ExecuteCommand(operatorID, command string) (contracts.CommandAuthorityState, error) {
@@ -114,13 +114,19 @@ func (m *InMemoryLeaseManager) ExecuteCommand(operatorID, command string) (contr
 	defer m.mu.Unlock()
 	m.checkExpiration()
 	if m.state.LeaseState != "held" || m.state.LeaseOwner != operatorID {
-		return m.state, fmt.Errorf("lease required to execute command")
+		return cloneCommandAuthorityState(m.state), fmt.Errorf("lease required to execute command")
 	}
 	m.state.LastCommand = command
 	m.lastSeen = time.Now()
 	m.appendLog(operatorID, command, fmt.Sprintf("Command '%s' dispatched via demo interface.", command))
 	m.state.Envelope = contracts.NewEnvelope(time.Now())
-	return m.state, nil
+	return cloneCommandAuthorityState(m.state), nil
+}
+
+func cloneCommandAuthorityState(state contracts.CommandAuthorityState) contracts.CommandAuthorityState {
+	state.AllowedCommands = append([]string(nil), state.AllowedCommands...)
+	state.OperatorLog = append([]contracts.OperatorLogEntry(nil), state.OperatorLog...)
+	return state
 }
 
 func (m *InMemoryLeaseManager) checkExpiration() {
@@ -566,19 +572,42 @@ func (s *Server) static(w http.ResponseWriter, r *http.Request) {
 	if rel == "" || strings.HasSuffix(r.URL.Path, "/") {
 		rel = "index.html"
 	}
-	candidate := filepath.Join(s.staticDir, filepath.FromSlash(rel))
-	if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
+	if candidate, ok := resolveExistingStaticFile(s.staticDir, rel); ok {
 		w.Header().Set("Cache-Control", cacheControlNoStore)
 		http.ServeFile(w, r, candidate)
 		return
 	}
-	index := filepath.Join(s.staticDir, "index.html")
-	if _, err := os.Stat(index); err != nil {
+	index, ok := resolveExistingStaticFile(s.staticDir, "index.html")
+	if !ok {
 		http.NotFound(w, r)
 		return
 	}
 	w.Header().Set("Cache-Control", cacheControlNoStore)
 	http.ServeFile(w, r, index)
+}
+
+func resolveExistingStaticFile(root, rel string) (string, bool) {
+	candidate, err := safepath.ResolveUnderRoot(root, rel)
+	if err != nil {
+		return "", false
+	}
+	info, err := os.Stat(candidate)
+	if err != nil || info.IsDir() {
+		return "", false
+	}
+	rootResolved, err := filepath.EvalSymlinks(root)
+	if err != nil {
+		return "", false
+	}
+	candidateResolved, err := filepath.EvalSymlinks(candidate)
+	if err != nil {
+		return "", false
+	}
+	relative, err := filepath.Rel(rootResolved, candidateResolved)
+	if err != nil || relative == ".." || strings.HasPrefix(relative, ".."+string(filepath.Separator)) || filepath.IsAbs(relative) {
+		return "", false
+	}
+	return candidateResolved, true
 }
 
 func (s *Server) dataBundle(w http.ResponseWriter, r *http.Request) {
@@ -587,8 +616,15 @@ func (s *Server) dataBundle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	rel := strings.TrimPrefix(r.URL.Path, "/data/")
-	candidate, err := safepath.ResolveUnderRoot(filepath.Join(s.root, "fixtures", "public_tiles"), rel)
-	if err != nil {
+	root := filepath.Join(s.root, "fixtures", "public_tiles")
+	candidate, ok := resolveExistingDataFile(root, rel)
+	if !ok && strings.HasSuffix(rel, ".arrow") {
+		if gzipCandidate, gzipOK := resolveExistingDataFile(root, rel+".gz"); gzipOK {
+			candidate = strings.TrimSuffix(gzipCandidate, ".gz")
+			ok = true
+		}
+	}
+	if !ok {
 		http.NotFound(w, r)
 		return
 	}
@@ -615,6 +651,30 @@ func (s *Server) dataBundle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.NotFound(w, r)
+}
+
+func resolveExistingDataFile(root, rel string) (string, bool) {
+	candidate, err := safepath.ResolveUnderRoot(root, rel)
+	if err != nil {
+		return "", false
+	}
+	info, err := os.Stat(candidate)
+	if err != nil || info.IsDir() {
+		return "", false
+	}
+	rootResolved, err := filepath.EvalSymlinks(root)
+	if err != nil {
+		return "", false
+	}
+	candidateResolved, err := filepath.EvalSymlinks(candidate)
+	if err != nil {
+		return "", false
+	}
+	relative, err := filepath.Rel(rootResolved, candidateResolved)
+	if err != nil || relative == ".." || strings.HasPrefix(relative, ".."+string(filepath.Separator)) || filepath.IsAbs(relative) {
+		return "", false
+	}
+	return candidateResolved, true
 }
 
 func serveFile(w http.ResponseWriter, path string) {
@@ -673,6 +733,15 @@ func (s *Server) telemetryQuery(w http.ResponseWriter, r *http.Request, id strin
 		http.Error(w, "missing query", http.StatusBadRequest)
 		return
 	}
+	if query != "preview" {
+		http.Error(w, "unsupported query", http.StatusBadRequest)
+		return
+	}
+	limit, err := boundedQueryLimit(r.URL.Query().Get("limit"), 100, 10000)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	parquetPath := filepath.Join(s.root, "fixtures", "public", "telemetry", id+".parquet")
 	if _, err := os.Stat(parquetPath); err != nil {
@@ -680,9 +749,7 @@ func (s *Server) telemetryQuery(w http.ResponseWriter, r *http.Request, id strin
 		return
 	}
 
-	// We'll replace 'telemetry' with the read_parquet function call.
-	// This allows the caller to use 'telemetry' as a table name.
-	fullQuery := strings.ReplaceAll(query, "telemetry", fmt.Sprintf("read_parquet('%s')", parquetPath))
+	fullQuery := fmt.Sprintf("SELECT * FROM read_parquet('%s') LIMIT %d", duckdbString(parquetPath), limit)
 
 	rows, err := s.db.QueryContext(r.Context(), fullQuery)
 	if err != nil {
@@ -721,13 +788,33 @@ func (s *Server) telemetryQuery(w http.ResponseWriter, r *http.Request, id strin
 		}
 		results = append(results, row)
 	}
+	if err := rows.Err(); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	writeJSON(w, map[string]any{
 		"schema_version": 1,
 		"generated_at":   time.Now().UTC().Format(time.RFC3339),
 		"campaign_id":    id,
+		"query":          query,
 		"results":        results,
 	})
+}
+
+func boundedQueryLimit(raw string, defaultLimit, maxLimit int) (int, error) {
+	if raw == "" {
+		return defaultLimit, nil
+	}
+	limit, err := strconv.Atoi(raw)
+	if err != nil || limit < 1 || limit > maxLimit {
+		return 0, fmt.Errorf("limit must be between 1 and %d", maxLimit)
+	}
+	return limit, nil
+}
+
+func duckdbString(s string) string {
+	return strings.ReplaceAll(s, "'", "''")
 }
 
 func headers(w http.ResponseWriter) {

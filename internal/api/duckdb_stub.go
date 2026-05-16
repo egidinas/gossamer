@@ -28,9 +28,11 @@ func (stubStmt) NumInput() int                       { return -1 }
 func (stubStmt) Exec([]driver.Value) (driver.Result, error) {
 	return nil, errors.New("duckdb: built without DuckDB support")
 }
-func (stubStmt) Query([]driver.Value) (driver.Rows, error) { return stubRows{}, nil }
-func (stubRows) Columns() []string                         { return nil }
-func (stubRows) Close() error                              { return nil }
-func (stubRows) Next([]driver.Value) error                 { return io.EOF }
-func (stubTx) Commit() error                               { return nil }
-func (stubTx) Rollback() error                             { return nil }
+func (stubStmt) Query([]driver.Value) (driver.Rows, error) {
+	return nil, errors.New("duckdb: built without DuckDB support")
+}
+func (stubRows) Columns() []string         { return nil }
+func (stubRows) Close() error              { return nil }
+func (stubRows) Next([]driver.Value) error { return io.EOF }
+func (stubTx) Commit() error               { return nil }
+func (stubTx) Rollback() error             { return nil }

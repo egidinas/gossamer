@@ -76,6 +76,29 @@ func TestMissingCampaignReturnsNotFound(t *testing.T) {
 	}
 }
 
+func TestTelemetryQueryRejectsCallerSQL(t *testing.T) {
+	server := newTestServer(t)
+	req := httptest.NewRequest(http.MethodGet, "/api/campaigns/thermal_acceptance_fat/query?q=SELECT%20*%20FROM%20telemetry", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusBadRequest {
+		t.Fatalf("status = %d, want 400", rec.Code)
+	}
+	if !strings.Contains(rec.Body.String(), "unsupported query") {
+		t.Fatalf("body = %q", rec.Body.String())
+	}
+}
+
+func TestTelemetryQueryRejectsOutOfRangeLimit(t *testing.T) {
+	server := newTestServer(t)
+	req := httptest.NewRequest(http.MethodGet, "/api/campaigns/thermal_acceptance_fat/query?q=preview&limit=10001", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusBadRequest {
+		t.Fatalf("status = %d, want 400", rec.Code)
+	}
+}
+
 func TestCommandRequiresLease(t *testing.T) {
 	server := newTestServer(t)
 	req := httptest.NewRequest(http.MethodPost, "/api/command-authority/mock-command", nil)
@@ -84,6 +107,21 @@ func TestCommandRequiresLease(t *testing.T) {
 	server.ServeHTTP(rec, req)
 	if rec.Code != http.StatusForbidden {
 		t.Fatalf("status = %d, want 403", rec.Code)
+	}
+}
+
+func TestLeaseManagerReturnsImmutableStateCopies(t *testing.T) {
+	leases := NewInMemoryLeaseManager()
+	state := leases.GetState()
+	state.AllowedCommands[0] = "mutated"
+	state.OperatorLog[0].Action = "mutated"
+
+	fresh := leases.GetState()
+	if fresh.AllowedCommands[0] == "mutated" {
+		t.Fatalf("AllowedCommands alias leaked into manager state")
+	}
+	if fresh.OperatorLog[0].Action == "mutated" {
+		t.Fatalf("OperatorLog alias leaked into manager state")
 	}
 }
 
@@ -341,6 +379,34 @@ func TestStaticAssetServedWhenConfigured(t *testing.T) {
 	}
 }
 
+func TestStaticSymlinkOutsideWebDirIsNotServed(t *testing.T) {
+	dir := t.TempDir()
+	webDir := filepath.Join(dir, "web")
+	if err := os.MkdirAll(webDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(webDir, "index.html"), []byte("index"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	outside := filepath.Join(dir, "secret.txt")
+	if err := os.WriteFile(outside, []byte("secret"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(outside, filepath.Join(webDir, "leak")); err != nil {
+		t.Skipf("symlink unavailable: %v", err)
+	}
+	server := NewWithStatic(dir, webDir)
+	req := httptest.NewRequest(http.MethodGet, "/leak", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code == http.StatusOK && strings.Contains(rec.Body.String(), "secret") {
+		t.Fatalf("symlink leak served status=%d body=%q", rec.Code, rec.Body.String())
+	}
+	if rec.Code != http.StatusOK && rec.Code != http.StatusNotFound && rec.Code != http.StatusForbidden {
+		t.Fatalf("symlink request status=%d body=%q", rec.Code, rec.Body.String())
+	}
+}
+
 func TestStaticDataBundleServedWhenConfigured(t *testing.T) {
 	server := newTestServerWithStatic(t)
 	dataDir := filepath.Join(server.root, "fixtures", "public_tiles", "current")
@@ -361,6 +427,31 @@ func TestStaticDataBundleServedWhenConfigured(t *testing.T) {
 	}
 	if !strings.Contains(rec.Body.String(), `"data_version":"test"`) {
 		t.Fatalf("body = %s", rec.Body.String())
+	}
+}
+
+func TestStaticDataBundleSymlinkOutsideRootIsNotServed(t *testing.T) {
+	server := newTestServerWithStatic(t)
+	dataDir := filepath.Join(server.root, "fixtures", "public_tiles", "current")
+	if err := os.MkdirAll(dataDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	outside := filepath.Join(server.root, "secret.json")
+	if err := os.WriteFile(outside, []byte(`{"secret":true}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(outside, filepath.Join(dataDir, "leak.json")); err != nil {
+		t.Skipf("symlink unavailable: %v", err)
+	}
+
+	req := httptest.NewRequest(http.MethodGet, "/data/current/leak.json", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code == http.StatusOK && strings.Contains(rec.Body.String(), "secret") {
+		t.Fatalf("data symlink leak served status=%d body=%q", rec.Code, rec.Body.String())
+	}
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("symlink request status=%d body=%q", rec.Code, rec.Body.String())
 	}
 }
 
