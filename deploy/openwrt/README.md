@@ -24,7 +24,7 @@ ssh root@192.168.8.1 'mkdir -p /opt/gossamer && tar -C /opt/gossamer -xzf /tmp/g
 The init script starts:
 
 ```text
-/opt/gossamer/gossamer-server -addr 0.0.0.0:8095 -root /opt/gossamer -web-dir /opt/gossamer/web/dist
+/opt/gossamer/gossamer-server -addr 0.0.0.0:8095 -allow-remote -root /opt/gossamer -web-dir /opt/gossamer/web/dist
 ```
 
 This leaves the router firewall untouched. On the current Brume2/OpenWrt profile, verify the origin through `localhost` or IPv6 loopback for the tunnel path. Direct IPv4 LAN access can still be blocked by the router firewall policy.

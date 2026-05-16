@@ -11,7 +11,7 @@ GOSSAMER_WEB_DIR="${GOSSAMER_WEB_DIR:-$GOSSAMER_DIR/web/dist}"
 
 start_service() {
 	procd_open_instance
-	procd_set_param command "$GOSSAMER_BIN" -addr "$GOSSAMER_ADDR" -root "$GOSSAMER_DIR" -web-dir "$GOSSAMER_WEB_DIR"
+	procd_set_param command "$GOSSAMER_BIN" -addr "$GOSSAMER_ADDR" -allow-remote -root "$GOSSAMER_DIR" -web-dir "$GOSSAMER_WEB_DIR"
 	procd_set_param cwd "$GOSSAMER_DIR"
 	procd_set_param respawn 3600 5 5
 	procd_set_param stdout 1
