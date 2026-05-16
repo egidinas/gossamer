@@ -471,6 +471,41 @@ func TestTileManifestExposesBackendOwnedTileArchitecture(t *testing.T) {
 	}
 }
 
+func TestTileManifestEvidenceLinksResolveRequirements(t *testing.T) {
+	set := Build()
+	for campaignID, model := range set.GraphModels {
+		if model.TileManifest == nil {
+			continue
+		}
+		requirements := requirementIDsForGraph(set, campaignID, model)
+		if len(requirements) == 0 {
+			t.Fatalf("%s has no requirements to resolve evidence links", campaignID)
+		}
+		for _, link := range model.TileManifest.EvidenceLinks {
+			if !requirements[link.RequirementID] {
+				t.Fatalf("%s evidence link %s requirement_id = %s, not in generated requirements", campaignID, link.ID, link.RequirementID)
+			}
+		}
+	}
+}
+
+func requirementIDsForGraph(set FixtureSet, campaignID string, model contracts.GraphModel) map[string]bool {
+	out := map[string]bool{}
+	if campaign, ok := set.Campaigns[campaignID]; ok {
+		for _, req := range campaign.Requirements {
+			out[req.ID] = true
+		}
+		return out
+	}
+	if campaignID == CommandCenterGraphCampaignID && model.ThermalProgram != nil {
+		campaign := contracts.Campaign{ID: campaignID, ThermalProgram: model.ThermalProgram, Result: "pass"}
+		for _, req := range defaultRequirements(campaign) {
+			out[req.ID] = true
+		}
+	}
+	return out
+}
+
 func TestThermalGraphModelsExposeLoomGradeHeroContract(t *testing.T) {
 	set := Build()
 	for _, campaignID := range []string{"thermal_acceptance_fat", "tvac_qualification"} {

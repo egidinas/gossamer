@@ -1330,13 +1330,29 @@ func sourceNodes() []contracts.SourceNode {
 func requirementForMarker(marker contracts.GraphMarker) string {
 	switch marker.Kind {
 	case "functional_gate":
-		return "REQ-FUNC-GATE"
+		return functionalGateRequirement(marker)
 	case "stability_achieved":
 		return "REQ-STABILITY"
 	case "interlock":
 		return "REQ-ANOMALY-REVIEW"
 	default:
 		return "REQ-DATA-QUALITY"
+	}
+}
+
+func functionalGateRequirement(marker contracts.GraphMarker) string {
+	text := strings.ToLower(marker.ID + " " + marker.Label)
+	switch {
+	case strings.Contains(text, "pre"):
+		return "REQ-FUNC-GATE-PRE"
+	case strings.Contains(text, "post"):
+		return "REQ-FUNC-GATE-POST"
+	case strings.Contains(text, "survival"):
+		return "REQ-FUNC-GATE-SURVIVAL"
+	case strings.Contains(text, "hot"), strings.Contains(text, "cold"):
+		return "REQ-FUNC-GATE-DURING"
+	default:
+		return "REQ-FUNC-GATE-DURING"
 	}
 }
 
