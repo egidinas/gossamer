@@ -120,9 +120,9 @@
       "provenance": "synthetic_fixture_generator",
       "evidence_suitability": "supporting",
       "signals": [
-        "obc_boot_state",
         "obc_command_counter",
-        "tc_packet_counter"
+        "tc_packet_counter",
+        "functional_gate_code"
       ],
       "discovery_path": {
         "node": "reference_dut",
@@ -352,10 +352,9 @@
       "provenance": "synthetic_fixture_generator",
       "evidence_suitability": "supporting",
       "signals": [
-        "active_chamber_count",
-        "chamber_interlock_any",
-        "thermal_schedule_state",
-        "thermal_supervisor_uptime_s"
+        "functional_gate_code",
+        "facility_interlock_code",
+        "source_freshness_ms"
       ],
       "discovery_path": {
         "node": "thermal_supervisor_pc",
@@ -379,12 +378,10 @@
       "provenance": "synthetic_fixture_generator",
       "evidence_suitability": "supporting",
       "signals": [
-        "facility_mains_voltage_v",
-        "facility_cooling_water_supply_bar",
-        "facility_compressed_air_bar",
-        "facility_ln2_supply_bar",
-        "facility_power_ok",
-        "facility_emergency_stop"
+        "cooling_water_temp_deg_c",
+        "pressurized_air_supply_bar",
+        "air_dewpoint_deg_c",
+        "cooling_water_freeze_margin_deg_c"
       ],
       "discovery_path": {
         "node": "house_plc",
@@ -408,14 +405,13 @@
       "provenance": "synthetic_fixture_generator",
       "evidence_suitability": "primary",
       "signals": [
-        "tvac_cryo_setpoint_deg_c",
-        "tvac_cryo_actual_deg_c",
-        "tvac_pump_state",
-        "tvac_roughing_pressure_mbar",
-        "tvac_turbo_speed_pct",
-        "ln2_fill_valve_state",
-        "ln2_vent_valve_state",
-        "facility_interlock_state"
+        "tvac_pump_mode_code",
+        "tvac_pressure_mbar",
+        "tvac_roughing_removal_mbar_per_min",
+        "tvac_turbo_removal_mbar_per_min",
+        "tvac_pump_removal_mbar_per_min",
+        "ln2_valve_duty_pct",
+        "facility_interlock_code"
       ],
       "discovery_path": {
         "node": "tvac_plc_q1",
@@ -533,10 +529,10 @@
       "provenance": "synthetic_fixture_generator",
       "evidence_suitability": "supporting",
       "signals": [
-        "tmtc_link_state",
-        "tc_queue_depth",
-        "tm_frame_rate_hz",
-        "last_tc_timestamp"
+        "tc_packet_counter",
+        "tm_packet_counter",
+        "overall_packet_counter",
+        "bus_latency_ms"
       ],
       "discovery_path": {
         "node": "tvac_computer_1",
@@ -560,10 +556,10 @@
       "provenance": "synthetic_fixture_generator",
       "evidence_suitability": "supporting",
       "signals": [
-        "tmtc_link_state",
-        "tc_queue_depth",
-        "tm_frame_rate_hz",
-        "backup_recording_state"
+        "tc_packet_counter",
+        "tm_packet_counter",
+        "overall_packet_counter",
+        "dropped_frame_count"
       ],
       "discovery_path": {
         "node": "tvac_computer_2",
@@ -616,7 +612,7 @@
       "evidence_suitability": "supporting",
       "signals": [
         "source_freshness_ms",
-        "facility_interlock_state"
+        "facility_interlock_code"
       ],
       "discovery_path": {
         "node": "archive_node_a",
@@ -640,11 +636,9 @@
       "provenance": "synthetic_fixture_generator",
       "evidence_suitability": "primary",
       "signals": [
-        "export_file_count",
-        "export_total_size_gb",
-        "latest_export_timestamp",
-        "oldest_export_timestamp",
-        "legacy_file_count"
+        "overall_packet_counter",
+        "tm_packet_counter",
+        "dropped_frame_count"
       ],
       "discovery_path": {
         "node": "nas_a",
@@ -668,11 +662,9 @@
       "provenance": "synthetic_fixture_generator",
       "evidence_suitability": "supporting",
       "signals": [
-        "indexed_file_count",
-        "live_translation_active",
-        "translation_lag_ms",
-        "last_index_scan_timestamp",
-        "legacy_formats_active"
+        "overall_packet_counter",
+        "bus_latency_ms",
+        "source_freshness_ms"
       ],
       "discovery_path": {
         "node": "librarian_a",
@@ -696,10 +688,9 @@
       "provenance": "synthetic_fixture_generator",
       "evidence_suitability": "supporting",
       "signals": [
-        "api_request_rate_hz",
-        "connected_clients",
-        "cache_hit_rate_pct",
-        "gateway_uptime_s"
+        "source_freshness_ms",
+        "bus_latency_ms",
+        "overall_packet_counter"
       ],
       "discovery_path": {
         "node": "gateway_a",
