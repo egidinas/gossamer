@@ -1,7 +1,10 @@
 package api
 
 import (
+	"crypto/rand"
+	"crypto/subtle"
 	"database/sql"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -22,6 +25,11 @@ import (
 
 const cacheControlNoStore = "no-store"
 
+type commandAuthorityLeaseResponse struct {
+	contracts.CommandAuthorityState
+	LeaseToken string `json:"lease_token"`
+}
+
 type Server struct {
 	root        string
 	staticDir   string
@@ -35,15 +43,16 @@ type Server struct {
 
 type LeaseManager interface {
 	GetState() contracts.CommandAuthorityState
-	RequestLease(operatorID string) (contracts.CommandAuthorityState, error)
-	ReleaseLease(operatorID string) (contracts.CommandAuthorityState, error)
-	ExecuteCommand(operatorID, command string) (contracts.CommandAuthorityState, error)
+	RequestLease(operatorID string) (contracts.CommandAuthorityState, string, error)
+	ReleaseLease(operatorID, leaseToken string) (contracts.CommandAuthorityState, error)
+	ExecuteCommand(operatorID, leaseToken, command string) (contracts.CommandAuthorityState, error)
 }
 
 type InMemoryLeaseManager struct {
-	mu       sync.Mutex
-	state    contracts.CommandAuthorityState
-	lastSeen time.Time
+	mu         sync.Mutex
+	state      contracts.CommandAuthorityState
+	lastSeen   time.Time
+	leaseToken string
 }
 
 func NewInMemoryLeaseManager() *InMemoryLeaseManager {
@@ -81,39 +90,49 @@ func (m *InMemoryLeaseManager) appendLog(operator, action, detail string) {
 	m.state.OperatorLog = append(m.state.OperatorLog, entry)
 }
 
-func (m *InMemoryLeaseManager) RequestLease(operatorID string) (contracts.CommandAuthorityState, error) {
+func (m *InMemoryLeaseManager) RequestLease(operatorID string) (contracts.CommandAuthorityState, string, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	m.checkExpiration()
 	if m.state.LeaseState == "held" && m.state.LeaseOwner != operatorID {
-		return cloneCommandAuthorityState(m.state), fmt.Errorf("lease already held by %s", m.state.LeaseOwner)
+		return cloneCommandAuthorityState(m.state), "", fmt.Errorf("lease already held by %s", m.state.LeaseOwner)
+	}
+	leaseToken, err := generateLeaseToken()
+	if err != nil {
+		return cloneCommandAuthorityState(m.state), "", err
 	}
 	m.state.LeaseState = "held"
 	m.state.LeaseOwner = operatorID
+	m.leaseToken = leaseToken
 	m.lastSeen = time.Now()
 	m.appendLog(operatorID, "lease_acquired", "Command authority lease acquired via demo request.")
 	m.state.Envelope = contracts.NewEnvelope(time.Now())
-	return cloneCommandAuthorityState(m.state), nil
+	return cloneCommandAuthorityState(m.state), leaseToken, nil
 }
 
-func (m *InMemoryLeaseManager) ReleaseLease(operatorID string) (contracts.CommandAuthorityState, error) {
+func (m *InMemoryLeaseManager) ReleaseLease(operatorID, leaseToken string) (contracts.CommandAuthorityState, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if m.state.LeaseState == "held" && m.state.LeaseOwner != operatorID {
-		return cloneCommandAuthorityState(m.state), fmt.Errorf("cannot release lease held by %s", m.state.LeaseOwner)
+	m.checkExpiration()
+	if m.state.LeaseState != "held" {
+		return cloneCommandAuthorityState(m.state), fmt.Errorf("lease required to release command authority")
+	}
+	if m.state.LeaseOwner != operatorID || !m.validLeaseToken(leaseToken) {
+		return cloneCommandAuthorityState(m.state), fmt.Errorf("valid lease token required for %s", m.state.LeaseOwner)
 	}
 	m.appendLog(operatorID, "lease_released", "Command authority lease released.")
 	m.state.LeaseState = "available"
 	m.state.LeaseOwner = ""
+	m.leaseToken = ""
 	m.state.Envelope = contracts.NewEnvelope(time.Now())
 	return cloneCommandAuthorityState(m.state), nil
 }
 
-func (m *InMemoryLeaseManager) ExecuteCommand(operatorID, command string) (contracts.CommandAuthorityState, error) {
+func (m *InMemoryLeaseManager) ExecuteCommand(operatorID, leaseToken, command string) (contracts.CommandAuthorityState, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	m.checkExpiration()
-	if m.state.LeaseState != "held" || m.state.LeaseOwner != operatorID {
+	if m.state.LeaseState != "held" || m.state.LeaseOwner != operatorID || !m.validLeaseToken(leaseToken) {
 		return cloneCommandAuthorityState(m.state), fmt.Errorf("lease required to execute command")
 	}
 	m.state.LastCommand = command
@@ -129,10 +148,26 @@ func cloneCommandAuthorityState(state contracts.CommandAuthorityState) contracts
 	return state
 }
 
+func (m *InMemoryLeaseManager) validLeaseToken(token string) bool {
+	if m.leaseToken == "" || token == "" {
+		return false
+	}
+	return subtle.ConstantTimeCompare([]byte(m.leaseToken), []byte(token)) == 1
+}
+
+func generateLeaseToken() (string, error) {
+	var raw [32]byte
+	if _, err := rand.Read(raw[:]); err != nil {
+		return "", fmt.Errorf("generate lease token: %w", err)
+	}
+	return hex.EncodeToString(raw[:]), nil
+}
+
 func (m *InMemoryLeaseManager) checkExpiration() {
 	if m.state.LeaseState == "held" && time.Since(m.lastSeen) > 5*time.Minute {
 		m.state.LeaseState = "available"
 		m.state.LeaseOwner = ""
+		m.leaseToken = ""
 	}
 }
 
@@ -511,12 +546,16 @@ func (s *Server) requestLease(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "X-Operator-ID header required", http.StatusUnauthorized)
 		return
 	}
-	state, err := s.leases.RequestLease(opID)
+	state, leaseToken, err := s.leases.RequestLease(opID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusConflict)
+		status := http.StatusConflict
+		if strings.Contains(err.Error(), "generate lease token") {
+			status = http.StatusInternalServerError
+		}
+		http.Error(w, err.Error(), status)
 		return
 	}
-	writeJSON(w, state)
+	writeJSON(w, commandAuthorityLeaseResponse{CommandAuthorityState: state, LeaseToken: leaseToken})
 }
 
 func (s *Server) releaseLease(w http.ResponseWriter, r *http.Request) {
@@ -529,7 +568,7 @@ func (s *Server) releaseLease(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "X-Operator-ID header required", http.StatusUnauthorized)
 		return
 	}
-	state, err := s.leases.ReleaseLease(opID)
+	state, err := s.leases.ReleaseLease(opID, r.Header.Get("X-Lease-Token"))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusForbidden)
 		return
@@ -547,7 +586,7 @@ func (s *Server) mockCommand(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "X-Operator-ID header required", http.StatusUnauthorized)
 		return
 	}
-	state, err := s.leases.ExecuteCommand(opID, "set_demo_marker")
+	state, err := s.leases.ExecuteCommand(opID, r.Header.Get("X-Lease-Token"), "set_demo_marker")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusForbidden)
 		return

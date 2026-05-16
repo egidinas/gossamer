@@ -110,6 +110,79 @@ func TestCommandRequiresLease(t *testing.T) {
 	}
 }
 
+func TestCommandRequiresLeaseToken(t *testing.T) {
+	server := newTestServer(t)
+
+	req := httptest.NewRequest(http.MethodPost, "/api/command-authority/request-lease", nil)
+	req.Header.Set("X-Operator-ID", "test-operator")
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("request lease status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+	var lease struct {
+		LeaseToken string `json:"lease_token"`
+	}
+	if err := json.Unmarshal(rec.Body.Bytes(), &lease); err != nil {
+		t.Fatalf("decode lease response: %v", err)
+	}
+	if lease.LeaseToken == "" {
+		t.Fatalf("lease response did not include token: %s", rec.Body.String())
+	}
+
+	req = httptest.NewRequest(http.MethodPost, "/api/command-authority/mock-command", nil)
+	req.Header.Set("X-Operator-ID", "test-operator")
+	rec = httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusForbidden {
+		t.Fatalf("command without token status = %d, want 403", rec.Code)
+	}
+
+	req = httptest.NewRequest(http.MethodPost, "/api/command-authority/mock-command", nil)
+	req.Header.Set("X-Operator-ID", "test-operator")
+	req.Header.Set("X-Lease-Token", lease.LeaseToken)
+	rec = httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("command with token status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+}
+
+func TestReleaseRequiresLeaseToken(t *testing.T) {
+	server := newTestServer(t)
+
+	req := httptest.NewRequest(http.MethodPost, "/api/command-authority/request-lease", nil)
+	req.Header.Set("X-Operator-ID", "test-operator")
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("request lease status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+	var lease struct {
+		LeaseToken string `json:"lease_token"`
+	}
+	if err := json.Unmarshal(rec.Body.Bytes(), &lease); err != nil {
+		t.Fatalf("decode lease response: %v", err)
+	}
+
+	req = httptest.NewRequest(http.MethodPost, "/api/command-authority/release-lease", nil)
+	req.Header.Set("X-Operator-ID", "test-operator")
+	rec = httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusForbidden {
+		t.Fatalf("release without token status = %d, want 403", rec.Code)
+	}
+
+	req = httptest.NewRequest(http.MethodPost, "/api/command-authority/release-lease", nil)
+	req.Header.Set("X-Operator-ID", "test-operator")
+	req.Header.Set("X-Lease-Token", lease.LeaseToken)
+	rec = httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("release with token status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+}
+
 func TestLeaseManagerReturnsImmutableStateCopies(t *testing.T) {
 	leases := NewInMemoryLeaseManager()
 	state := leases.GetState()

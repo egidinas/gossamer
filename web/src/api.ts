@@ -50,6 +50,42 @@ async function getFirstJSON<T>(paths: string[]): Promise<T> {
 const tileManifestCache = new Map<string, Promise<GraphTileManifest>>();
 const graphShellCache = new Map<string, Promise<GraphModel>>();
 let currentDataVersion = "";
+const commandAuthorityOperatorID = "operator-alpha-1";
+const commandAuthorityLeaseTokenKey = "gossamer.commandAuthority.leaseToken";
+let commandAuthorityLeaseToken = readStoredLeaseToken();
+
+type CommandAuthorityLeaseResponse = CommandAuthorityState & {
+  lease_token?: string;
+};
+
+function readStoredLeaseToken() {
+  try {
+    return globalThis.localStorage?.getItem(commandAuthorityLeaseTokenKey) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function storeLeaseToken(token: string) {
+  commandAuthorityLeaseToken = token;
+  try {
+    if (token) {
+      globalThis.localStorage?.setItem(commandAuthorityLeaseTokenKey, token);
+    } else {
+      globalThis.localStorage?.removeItem(commandAuthorityLeaseTokenKey);
+    }
+  } catch {
+    // Command authority still works for the current page lifetime when storage is blocked.
+  }
+}
+
+function commandAuthorityHeaders(includeLeaseToken: boolean) {
+  const headers: Record<string, string> = { "X-Operator-ID": commandAuthorityOperatorID };
+  if (includeLeaseToken && commandAuthorityLeaseToken) {
+    headers["X-Lease-Token"] = commandAuthorityLeaseToken;
+  }
+  return headers;
+}
 
 export function invalidateCaches(dataVersion: string) {
   if (dataVersion !== currentDataVersion) {
@@ -103,9 +139,39 @@ export const api = {
   commandAuthority: () => getJSON<CommandAuthorityState>("/api/command-authority"),
   evidenceReport: (id: string) => getJSON<EvidenceReport>(`/api/campaigns/${id}/evidence-report`),
   fileViewer: (id: string) => getJSON<FileViewModel>(`/api/viewer/${id}`),
-  requestLease: () => fetch("/api/command-authority/request-lease", { method: "POST", headers: { "X-Operator-ID": "operator-alpha-1" } }).then(() => api.commandAuthority()),
-  releaseLease: () => fetch("/api/command-authority/release-lease", { method: "POST", headers: { "X-Operator-ID": "operator-alpha-1" } }).then(() => api.commandAuthority()),
-  mockCommand: () => fetch("/api/command-authority/mock-command", { method: "POST", headers: { "X-Operator-ID": "operator-alpha-1" } }).then(() => api.commandAuthority())
+  requestLease: async () => {
+    const response = await fetch("/api/command-authority/request-lease", {
+      method: "POST",
+      headers: commandAuthorityHeaders(false),
+    });
+    if (!response.ok) {
+      throw new Error(`/api/command-authority/request-lease returned ${response.status}`);
+    }
+    const state = await response.json() as CommandAuthorityLeaseResponse;
+    storeLeaseToken(state.lease_token ?? "");
+    return api.commandAuthority();
+  },
+  releaseLease: async () => {
+    const response = await fetch("/api/command-authority/release-lease", {
+      method: "POST",
+      headers: commandAuthorityHeaders(true),
+    });
+    if (!response.ok) {
+      throw new Error(`/api/command-authority/release-lease returned ${response.status}`);
+    }
+    storeLeaseToken("");
+    return api.commandAuthority();
+  },
+  mockCommand: async () => {
+    const response = await fetch("/api/command-authority/mock-command", {
+      method: "POST",
+      headers: commandAuthorityHeaders(true),
+    });
+    if (!response.ok) {
+      throw new Error(`/api/command-authority/mock-command returned ${response.status}`);
+    }
+    return api.commandAuthority();
+  }
 };
 
 // React Query Hooks
