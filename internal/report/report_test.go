@@ -1,9 +1,14 @@
 package report
 
 import (
+	"encoding/json"
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/egidinas/gossamer/internal/environmentalsim"
+	"github.com/egidinas/gossamer/internal/synthetic"
 )
 
 func TestBuildThermalFATReport(t *testing.T) {
@@ -76,7 +81,7 @@ func TestBuildThermalReportsCarryProgramAndPhaseEvidence(t *testing.T) {
 }
 
 func TestBuildReportForEveryCampaign(t *testing.T) {
-	for _, campaignID := range []string{"flatsat_derisking", "thermal_acceptance_fat", "tvac_qualification", "integrated_system_fat"} {
+	for _, campaignID := range CampaignIDs() {
 		report, err := Build(campaignID)
 		if err != nil {
 			t.Fatalf("%s: %v", campaignID, err)
@@ -102,5 +107,91 @@ func TestBuildReportForEveryCampaign(t *testing.T) {
 		if report.Reproducibility == nil {
 			t.Fatalf("%s reproducibility is nil", campaignID)
 		}
+	}
+}
+
+func TestWriteCreatesReportNamesUsedByGraphEvidence(t *testing.T) {
+	dir := t.TempDir()
+	for _, campaignID := range CampaignIDs() {
+		if err := Write(dir, campaignID); err != nil {
+			t.Fatalf("%s: %v", campaignID, err)
+		}
+		for _, name := range []string{campaignID + ".json", campaignID + "_report.json"} {
+			path := filepath.Join(dir, "fixtures", "public", "reports", name)
+			if _, err := os.Stat(path); err != nil {
+				t.Fatalf("%s missing: %v", path, err)
+			}
+		}
+	}
+}
+
+func TestGeneratedGraphEvidenceReportRefsResolve(t *testing.T) {
+	dir := t.TempDir()
+	if err := synthetic.WritePublicFixtures(dir); err != nil {
+		t.Fatal(err)
+	}
+	for _, campaignID := range CampaignIDs() {
+		if err := Write(dir, campaignID); err != nil {
+			t.Fatalf("%s: %v", campaignID, err)
+		}
+	}
+
+	graphDir := filepath.Join(dir, "fixtures", "public", "graph_models")
+	entries, err := os.ReadDir(graphDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	checked := 0
+	for _, entry := range entries {
+		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".json") {
+			continue
+		}
+		data, err := os.ReadFile(filepath.Join(graphDir, entry.Name()))
+		if err != nil {
+			t.Fatal(err)
+		}
+		var document any
+		if err := json.Unmarshal(data, &document); err != nil {
+			t.Fatalf("%s: %v", entry.Name(), err)
+		}
+		for _, ref := range evidenceRefs(document) {
+			refPath, _, _ := strings.Cut(ref, "#")
+			if !strings.HasPrefix(refPath, "reports/") {
+				continue
+			}
+			checked++
+			fullPath := filepath.Join(dir, "fixtures", "public", filepath.FromSlash(refPath))
+			if _, err := os.Stat(fullPath); err != nil {
+				t.Fatalf("%s references missing report %s: %v", entry.Name(), refPath, err)
+			}
+		}
+	}
+	if checked == 0 {
+		t.Fatal("no report evidence refs checked")
+	}
+}
+
+func evidenceRefs(value any) []string {
+	switch typed := value.(type) {
+	case map[string]any:
+		refs := []string{}
+		for key, child := range typed {
+			if key == "evidence_ref" {
+				if ref, ok := child.(string); ok && ref != "" {
+					refs = append(refs, ref)
+				}
+				continue
+			}
+			refs = append(refs, evidenceRefs(child)...)
+		}
+		return refs
+	case []any:
+		refs := []string{}
+		for _, child := range typed {
+			refs = append(refs, evidenceRefs(child)...)
+		}
+		return refs
+	default:
+		return nil
 	}
 }
