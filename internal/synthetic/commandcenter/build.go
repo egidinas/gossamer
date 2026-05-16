@@ -463,6 +463,9 @@ func commandCenterState(fixedTime time.Time, start, end time.Time) (string, stri
 func commandCenterOperatorNext(fixedTime time.Time, state string, breakdownStart, breakdownEnd, resetEnd time.Time) string {
 	switch state {
 	case "complete":
+		if fixedTime.Before(breakdownStart) {
+			return fmt.Sprintf("prepare breakdown slot %s", breakdownStart.Format("Mon 15:04"))
+		}
 		if fixedTime.Before(breakdownEnd) {
 			return "breakdown in progress"
 		}
