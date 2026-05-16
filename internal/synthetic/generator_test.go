@@ -594,6 +594,7 @@ func TestThermalGraphModelsExposeLoomGradeHeroContract(t *testing.T) {
 			t.Fatalf("%s state swimlane missing pressure gate trace", campaignID)
 		}
 		if campaignID == "tvac_qualification" {
+			assertLogPressureAxisUsesScientificFormat(t, campaignID, model.HeroGraph.Axes, "pressure_mbar")
 			pressureGroup := companionGroup(model.HeroGraph.CompanionGroups, "tvac_pressure_response")
 			if pressureGroup == nil {
 				t.Fatalf("%s missing TVac pressure companion group", campaignID)
@@ -601,8 +602,31 @@ func TestThermalGraphModelsExposeLoomGradeHeroContract(t *testing.T) {
 			if len(pressureGroup.Axes) == 0 || pressureGroup.Axes[0].Scale != "log10" {
 				t.Fatalf("%s TVac pressure axis scale = %q, want log10", campaignID, pressureGroup.Axes[0].Scale)
 			}
+			assertLogPressureAxisUsesScientificFormat(t, campaignID, pressureGroup.Axes, "pressure_mbar")
+			sourcesGroup := companionGroup(model.HeroGraph.CompanionGroups, "tvac_pressure_sources")
+			if sourcesGroup == nil {
+				t.Fatalf("%s missing TVac pressure sources companion group", campaignID)
+			}
+			assertLogPressureAxisUsesScientificFormat(t, campaignID, sourcesGroup.Axes, "pressure_rate")
 		}
 	}
+}
+
+func assertLogPressureAxisUsesScientificFormat(t *testing.T, campaignID string, axes []contracts.GraphYAxis, axisID string) {
+	t.Helper()
+	for _, axis := range axes {
+		if axis.ID != axisID {
+			continue
+		}
+		if axis.Scale != "log10" || axis.Min >= 1e-6 {
+			t.Fatalf("%s %s axis scale/min = %s/%g, want log10 below 1e-6", campaignID, axisID, axis.Scale, axis.Min)
+		}
+		if axis.Format != "scientific" {
+			t.Fatalf("%s %s axis format = %q, want scientific", campaignID, axisID, axis.Format)
+		}
+		return
+	}
+	t.Fatalf("%s missing %s axis", campaignID, axisID)
 }
 
 func TestThermalGhostTraceFollowsNominalChamberCommand(t *testing.T) {

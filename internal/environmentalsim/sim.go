@@ -633,7 +633,7 @@ func buildHeroGraph(campaignID string, program *contracts.ThermalProgram, proven
 	execution := buildExecutionState(program, start, end)
 	axes := []contracts.GraphYAxis{
 		{ID: "temperature_c", Label: "Temperature", Units: "degC", Scale: "linear", Min: program.ColdTargetDegC - 12, Max: program.HotTargetDegC + 12, Side: "left", Format: "0.0"},
-		{ID: "pressure_mbar", Label: "Pressure", Units: "mbar", Scale: "log10", Min: 0.00000001, Max: 1013.25, Side: "right", Format: "0.000000"},
+		{ID: "pressure_mbar", Label: "Pressure", Units: "mbar", Scale: "log10", Min: 0.00000001, Max: 1013.25, Side: "right", Format: "scientific"},
 		{ID: "percent", Label: "Duty", Units: "%", Scale: "linear", Min: 0, Max: 100, Side: "right", Format: "0"},
 		{ID: "bus_ms", Label: "Bus latency", Units: "ms", Scale: "linear", Min: 0, Max: 80, Side: "right", Format: "0"},
 		{ID: "state", Label: "State", Units: "state", Scale: "step", Min: 0, Max: 5, Side: "left", Format: "0"},
@@ -1093,7 +1093,7 @@ func companionGroups(campaignID string, axes []contracts.GraphYAxis, trace sampl
 				ID:    "tvac_pressure_sources",
 				Label: "Pump, leak, and outgassing balance",
 				Axes: []contracts.GraphYAxis{
-					{ID: "pressure_rate", Label: "Pressure rate", Units: "mbar/min", Scale: "log10", Min: 0.00000001, Max: 1000, Side: "left", Format: "0.000000"},
+					{ID: "pressure_rate", Label: "Pressure rate", Units: "mbar/min", Scale: "log10", Min: 0.00000001, Max: 1000, Side: "left", Format: "scientific"},
 					{ID: "percent", Label: "Inventory", Units: "%", Scale: "linear", Min: 0, Max: 100, Side: "right", Format: "0"},
 				},
 				Traces: []contracts.GraphTrace{
