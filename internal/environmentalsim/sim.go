@@ -21,6 +21,20 @@ type Result struct {
 	HeroGraph  contracts.HeroGraphModel
 }
 
+func emptyResult(seed int64, dt time.Duration, source string) Result {
+	return Result{
+		Provenance: contracts.SimulationProvenance{
+			Model:         ModelName,
+			ModelVersion:  ModelVersion,
+			Seed:          seed,
+			StepSeconds:   int(dt.Seconds()),
+			Source:        source,
+			Deterministic: true,
+			Parameters:    map[string]float64{},
+		},
+	}
+}
+
 type state struct {
 	chamberAir             float64
 	table                  float64
@@ -72,6 +86,9 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 	}
 	rng := rand.New(rand.NewSource(seed))
 	dt := 5 * time.Minute
+	if program == nil || len(program.Cycles) == 0 {
+		return emptyResult(seed, dt, "gossamer internal/environmentalsim invalid thermal program")
+	}
 	st := state{chamberAir: 22, table: 22, shroud: 22.4, shroudInlet: 22.2, shroudOutlet: 22.7, exhaustCryoTemp: 20, exhaustScavengedTemp: 20, scavengerWaterReturn: 15.8, fastComponent: 21.2, lazyComponent: 22.6, pressure: 101325, volatilePool: 1, tmPackets: 6000, tcPackets: 120}
 	fastNode := componentParams{
 		capacitanceJPerK: 3200, airConductanceWPerK: 0.34, tableConductanceWPerK: 0.52,
