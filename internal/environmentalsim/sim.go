@@ -490,6 +490,7 @@ func Simulate(campaignID string, program *contracts.ThermalProgram, start time.T
 
 type sampleTrace struct {
 	command       []contracts.GraphPoint
+	acceptance    []contracts.GraphPoint
 	ghost         []contracts.GraphPoint
 	actual        []contracts.GraphPoint
 	zone1         []contracts.GraphPoint
@@ -559,6 +560,7 @@ type sampleTrace struct {
 func (t *sampleTrace) add(sample contracts.TelemetrySample, command, acceptance, tvacTarget float64, gate, interlock bool) {
 	ts := sample.Timestamp
 	t.command = append(t.command, point(ts, command))
+	t.acceptance = append(t.acceptance, point(ts, acceptance))
 	t.ghost = append(t.ghost, point(ts, command))
 	t.actual = append(t.actual, point(ts, sample.Signals["chamber_air_deg_c"]))
 	t.zone1 = append(t.zone1, point(ts, sample.Signals["dut_fast_component_deg_c"]))
@@ -644,7 +646,7 @@ func buildHeroGraph(campaignID string, program *contracts.ThermalProgram, proven
 		{ID: "trace.dut_temp_b", Label: "Vacuum-detached DUT node", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: "dut_thermal", Values: trace.zone2},
 		{ID: "trace.table_loop", Label: "Interface plate", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: "facility_thermal", Values: trace.table},
 		{ID: "trace.shroud", Label: "Thermal shroud", Role: "actual", Units: "degC", AxisID: "temperature_c", Source: "facility_thermal", Values: trace.shroud},
-		{ID: "trace.acceptance.temperature", Label: "Acceptance band center", Role: "acceptance_band", Units: "degC", AxisID: "temperature_c", Source: "requirements", Values: trace.command},
+		{ID: "trace.acceptance.temperature", Label: "Acceptance band center", Role: "acceptance_band", Units: "degC", AxisID: "temperature_c", Source: "requirements", Values: trace.acceptance},
 		{ID: "trace.event.functional", Label: "Functional gate", Role: "event", Units: "state", AxisID: "state", Source: "test_conductor", Values: trace.gates},
 		{ID: "trace.interlock.facility", Label: "Interlock review", Role: "interlock", Units: "state", AxisID: "state", Source: "facility_safety", Values: trace.interlocks},
 		{ID: "trace.evidence.markers", Label: "Evidence capture", Role: "evidence", Units: "state", AxisID: "state", Source: "evidence_report", Values: trace.evidence},

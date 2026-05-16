@@ -628,6 +628,41 @@ func TestThermalGhostTraceFollowsNominalChamberCommand(t *testing.T) {
 	}
 }
 
+func TestThermalAcceptanceTraceUsesRequirementTarget(t *testing.T) {
+	set := Build()
+	for _, campaignID := range []string{"thermal_acceptance_fat", "tvac_qualification"} {
+		model := set.GraphModels[campaignID]
+		program := set.Campaigns[campaignID].ThermalProgram
+		command := traceValues(model.HeroGraph.Traces, "trace.command.chamber")
+		acceptance := traceValues(model.HeroGraph.Traces, "trace.acceptance.temperature")
+		if len(command) == 0 || len(acceptance) == 0 {
+			t.Fatalf("%s missing command or acceptance trace", campaignID)
+		}
+
+		commandByTime := pointsByTimestamp(command)
+		sawRampSeparation := false
+		for _, point := range acceptance {
+			commandPoint, ok := commandByTime[point.Timestamp]
+			if !ok {
+				t.Fatalf("%s acceptance trace missing command point at %s", campaignID, point.Timestamp)
+			}
+			want := program.ColdTargetDegC
+			if math.Abs(commandPoint.Value-program.HotTargetDegC) < math.Abs(commandPoint.Value-program.ColdTargetDegC) {
+				want = program.HotTargetDegC
+			}
+			if abs(point.Value-want) > 0.05 {
+				t.Fatalf("%s acceptance trace at %s = %.2f, want target %.2f from command %.2f", campaignID, point.Timestamp, point.Value, want, commandPoint.Value)
+			}
+			if abs(point.Value-commandPoint.Value) > 0.05 {
+				sawRampSeparation = true
+			}
+		}
+		if !sawRampSeparation {
+			t.Fatalf("%s acceptance trace mirrors command trace", campaignID)
+		}
+	}
+}
+
 func TestTVacPressureTargetAndBakeoutDepletion(t *testing.T) {
 	set := Build()
 	model := set.GraphModels["tvac_qualification"]
