@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"os"
 	"path/filepath"
@@ -104,5 +105,25 @@ func TestReplaceDirRestoresExistingDestinationOnFinalRenameFailure(t *testing.T)
 	}
 	if _, err := os.Stat(filepath.Join(dst, "new.txt")); !os.IsNotExist(err) {
 		t.Fatalf("new file exists after failed replace, err=%v", err)
+	}
+}
+
+func TestCopyFilePreservesLargeFileContent(t *testing.T) {
+	root := t.TempDir()
+	src := filepath.Join(root, "src.bin")
+	dst := filepath.Join(root, "nested", "dst.bin")
+	want := bytes.Repeat([]byte("0123456789abcdef"), 128*1024)
+	if err := os.WriteFile(src, want, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := copyFile(src, dst); err != nil {
+		t.Fatal(err)
+	}
+	got, err := os.ReadFile(dst)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(got, want) {
+		t.Fatalf("copied file content mismatch: got %d bytes, want %d", len(got), len(want))
 	}
 }
