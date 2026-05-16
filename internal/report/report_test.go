@@ -37,6 +37,32 @@ func TestBuildTVACReportCarriesAnomaly(t *testing.T) {
 	}
 }
 
+func TestBuildIntegratedSystemFATReportReflectsDataQualityFailure(t *testing.T) {
+	report, err := Build("integrated_system_fat")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if report.Result != "fail" {
+		t.Fatalf("result = %s, want fail", report.Result)
+	}
+
+	workspace := synthetic.Build()
+	campaign := workspace.Campaigns["integrated_system_fat"]
+	if campaign.Result != report.Result {
+		t.Fatalf("campaign result = %s, report result = %s", campaign.Result, report.Result)
+	}
+
+	for _, req := range report.Requirements {
+		if req.ID == "REQ-DATA-QUALITY" {
+			if req.Result != "fail" {
+				t.Fatalf("REQ-DATA-QUALITY = %s, want fail", req.Result)
+			}
+			return
+		}
+	}
+	t.Fatal("missing REQ-DATA-QUALITY")
+}
+
 func TestBuildThermalReportsCarryProgramAndPhaseEvidence(t *testing.T) {
 	cases := []struct {
 		campaignID string
