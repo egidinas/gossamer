@@ -38,6 +38,33 @@ func TestValidateDataVersionAcceptsConservativeSegments(t *testing.T) {
 	}
 }
 
+func TestResolveTileOutputRejectsUnsafeOutPaths(t *testing.T) {
+	root := t.TempDir()
+	invalid := []string{
+		"/tmp/public_tiles",
+		"../public_tiles",
+		"fixtures/../outside",
+		"tmp",
+	}
+	for _, out := range invalid {
+		if _, err := resolveTileOutput(root, out, "v7b7e73e7"); err == nil {
+			t.Fatalf("resolveTileOutput(%q) succeeded, want error", out)
+		}
+	}
+}
+
+func TestResolveTileOutputUsesFixtureTileRoot(t *testing.T) {
+	root := t.TempDir()
+	got, err := resolveTileOutput(root, "fixtures/public_tiles", "v7b7e73e7")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := filepath.Join(root, "fixtures", "public_tiles", "v7b7e73e7")
+	if got != want {
+		t.Fatalf("resolveTileOutput() = %q, want %q", got, want)
+	}
+}
+
 func TestReplaceDirRestoresExistingDestinationOnFinalRenameFailure(t *testing.T) {
 	root := t.TempDir()
 	src := filepath.Join(root, "src")

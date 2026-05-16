@@ -42,7 +42,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	versionedOut := filepath.Join(*root, *out, version)
+	versionedOut, err := resolveTileOutput(*root, *out, version)
+	if err != nil {
+		log.Fatal(err)
+	}
 	if err := os.RemoveAll(versionedOut); err != nil {
 		log.Fatal(err)
 	}
@@ -63,7 +66,10 @@ func main() {
 		log.Fatal(err)
 	}
 	if *current {
-		currentOut := filepath.Join(*root, *out, "current")
+		currentOut, err := resolveTileOutput(*root, *out, "current")
+		if err != nil {
+			log.Fatal(err)
+		}
 		if err := replaceDir(currentOut, versionedOut); err != nil {
 			log.Fatal(err)
 		}
@@ -104,6 +110,33 @@ func validateDataVersion(version string) error {
 		return fmt.Errorf("data-version %q must not contain path separators", version)
 	}
 	return nil
+}
+
+func resolveTileOutput(root, out, version string) (string, error) {
+	if err := validateDataVersion(version); err != nil {
+		return "", err
+	}
+	cleanOut := filepath.Clean(out)
+	if filepath.IsAbs(cleanOut) || cleanOut == "." || cleanOut == ".." || strings.HasPrefix(cleanOut, ".."+string(os.PathSeparator)) {
+		return "", fmt.Errorf("out must be a relative path under fixtures/public_tiles")
+	}
+	if filepath.ToSlash(cleanOut) != "fixtures/public_tiles" {
+		return "", fmt.Errorf("out %q must be fixtures/public_tiles", out)
+	}
+	absRoot, err := filepath.Abs(root)
+	if err != nil {
+		return "", err
+	}
+	outputRoot := filepath.Join(absRoot, cleanOut)
+	target := filepath.Join(outputRoot, version)
+	rel, err := filepath.Rel(outputRoot, target)
+	if err != nil {
+		return "", err
+	}
+	if rel == "." || strings.HasPrefix(rel, ".."+string(os.PathSeparator)) || rel == ".." {
+		return "", fmt.Errorf("resolved output target escapes fixtures/public_tiles")
+	}
+	return target, nil
 }
 
 func splitCSV(value string) []string {
