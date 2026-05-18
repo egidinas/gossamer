@@ -650,7 +650,7 @@ func resolveExistingStaticFile(root, rel string) (string, bool) {
 	if err != nil || info.IsDir() {
 		return "", false
 	}
-	rootResolved, err := filepath.EvalSymlinks(root)
+	rootResolved, err := resolveRootSymlinks(root)
 	if err != nil {
 		return "", false
 	}
@@ -717,7 +717,7 @@ func resolveExistingDataFile(root, rel string) (string, bool) {
 	if err != nil || info.IsDir() {
 		return "", false
 	}
-	rootResolved, err := filepath.EvalSymlinks(root)
+	rootResolved, err := resolveRootSymlinks(root)
 	if err != nil {
 		return "", false
 	}
@@ -730,6 +730,14 @@ func resolveExistingDataFile(root, rel string) (string, bool) {
 		return "", false
 	}
 	return candidateResolved, true
+}
+
+func resolveRootSymlinks(root string) (string, error) {
+	rootAbs, err := filepath.Abs(root)
+	if err != nil {
+		return "", err
+	}
+	return filepath.EvalSymlinks(rootAbs)
 }
 
 func serveFile(w http.ResponseWriter, path string) {

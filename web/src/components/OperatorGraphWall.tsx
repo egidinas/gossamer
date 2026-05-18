@@ -942,7 +942,6 @@ function railLabelPlacements<T extends { id: string; label: string; timestamp: s
       const labelLeft = Math.max(0, left - labelWidth / 2);
       const labelRight = Math.min(100, left + labelWidth / 2);
       occupied[row].push({ left: labelLeft, right: labelRight });
-      showLabel = true;
       overflow = true;
     }
     placements.set(item.id, { left, row, showLabel, overflow });

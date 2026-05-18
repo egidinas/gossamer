@@ -58,6 +58,7 @@ export function invalidateArrowCache() {
 type ArrowTelemetry = {
   bySensor: Map<string, ArrowRow[]>;
   sensorIDs: string[];
+  signalSensorIndex: Map<string, string[]>;
   t0: string;
   t1: string;
 };
@@ -186,12 +187,41 @@ async function fetchArrowTelemetry(campaignId: string, dataVersion?: string): Pr
     if (rows) rows.push(row);
     else bySensor.set(signalID, [row]);
   }
+  const sensorIDs = Array.from(bySensor.keys()).sort();
   return {
     bySensor,
-    sensorIDs: Array.from(bySensor.keys()).sort(),
+    sensorIDs,
+    signalSensorIndex: buildSignalSensorIndex(sensorIDs),
     t0: new Date(minT).toISOString(),
     t1: new Date(maxT).toISOString()
   };
+}
+
+function buildSignalSensorIndex(sensorIDs: string[]) {
+  const index = new Map<string, string[]>();
+  for (const sensorID of sensorIDs) {
+    const normalized = sensorID.toLowerCase();
+    addSignalSensorIndexEntry(index, normalized, sensorID);
+    const tokens = normalized.split(/_+/).filter(Boolean);
+    for (let start = 0; start < tokens.length; start++) {
+      let token = "";
+      for (let end = start; end < tokens.length; end++) {
+        token = token ? `${token}_${tokens[end]}` : tokens[end];
+        addSignalSensorIndexEntry(index, token, sensorID);
+      }
+    }
+  }
+  return index;
+}
+
+function addSignalSensorIndexEntry(index: Map<string, string[]>, token: string, sensorID: string) {
+  if (!token) return;
+  const sensors = index.get(token);
+  if (!sensors) {
+    index.set(token, [sensorID]);
+    return;
+  }
+  if (sensors[sensors.length - 1] !== sensorID) sensors.push(sensorID);
 }
 
 async function fetchArrowBuffer(campaignId: string, dataVersion?: string) {
@@ -263,18 +293,7 @@ function rowsForSignal(signal: GraphWallSignal, telemetry: ArrowTelemetry) {
 function signalSensorCandidates(signal: GraphWallSignal, telemetry: ArrowTelemetry) {
   const stripped = signal.id.replace(/^trace\./, "").replace(/^archive\./, "");
   const looseToken = stripped.replace(/[^a-z0-9]+/gi, "_").replace(/^_+|_+$/g, "").toLowerCase();
-  const candidates = [signal.id, ...(signalSensorAliases[signal.id] ?? []), stripped, looseToken];
-  for (const sensorID of telemetry.sensorIDs) {
-    const normalized = sensorID.toLowerCase();
-    if (
-      normalized === looseToken ||
-      normalized.startsWith(`${looseToken}_`) ||
-      normalized.endsWith(`_${looseToken}`) ||
-      normalized.includes(`_${looseToken}_`)
-    ) {
-      candidates.push(sensorID);
-    }
-  }
+  const candidates = [signal.id, ...(signalSensorAliases[signal.id] ?? []), stripped, looseToken, ...(telemetry.signalSensorIndex.get(looseToken) ?? [])];
   return Array.from(new Set(candidates.filter(Boolean)));
 }
 

@@ -503,6 +503,28 @@ func TestStaticDataBundleServedWhenConfigured(t *testing.T) {
 	}
 }
 
+func TestStaticDataBundleServedWithRelativeRoot(t *testing.T) {
+	dir := t.TempDir()
+	t.Chdir(dir)
+	dataDir := filepath.Join("fixtures", "public_tiles", "current")
+	if err := os.MkdirAll(dataDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dataDir, "manifest.json"), []byte(`{"schema_version":1,"data_version":"relative"}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	server := New(".")
+	req := httptest.NewRequest(http.MethodGet, "/data/current/manifest.json", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, body: %s", rec.Code, rec.Body.String())
+	}
+	if !strings.Contains(rec.Body.String(), `"data_version":"relative"`) {
+		t.Fatalf("body = %s", rec.Body.String())
+	}
+}
+
 func TestStaticDataBundleSymlinkOutsideRootIsNotServed(t *testing.T) {
 	server := newTestServerWithStatic(t)
 	dataDir := filepath.Join(server.root, "fixtures", "public_tiles", "current")
