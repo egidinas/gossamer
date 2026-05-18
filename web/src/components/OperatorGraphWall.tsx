@@ -4,17 +4,22 @@ import uPlot from "uplot";
 import "uplot/dist/uPlot.min.css";
 import {
   CANONICAL_TILE_RENDERER,
+  clampTime,
   commandCenterGapBreaks,
   commandCenterProjectedSeries,
   commandCenterTraceGapMs,
   decimationValue,
   displayValue,
   drawTileOverlays,
+  legendReadouts,
   inTimeRange,
   lttb,
+  markerColor,
   renderKindFor,
   resampleSeries,
   scaleForSeries,
+  shortGateLabel,
+  stateLabel,
   stateBlocks,
   uplotData,
   viewportSeries,
@@ -27,7 +32,6 @@ import type { GraphTileManifest, HeroGraphModel } from "../types";
 import { graphCardPriority, graphSectionPriority, tileCardPriority, orderLegendSignals, colorForSignal, blockLabel, eventColor } from "./tiles/visualPolicy";
 import { clampRange, timeTicks, SharedTimeAxis, HeroTopTimeAxis, TimeAxisTrack } from "./tiles/timeAxis";
 import type { TimeRange } from "./tiles/timeAxis";
-import { legendReadouts, clampTime, shortGateLabel, markerColor, stateLabel } from "./tiles/markers";
 
 export type { TimeRange };
 
@@ -958,6 +962,6 @@ export function scheduleTileWork(work: () => void, delayMs: number) {
 // Re-export sub-module items that may be imported by other consumers
 export { TimeAxisTrack, timeTicks, clampRange } from "./tiles/timeAxis";
 export { colorForSignal, roleColors, signalColors, orderLegendSignals, graphCardPriority, graphSectionPriority, blockLabel, eventColor } from "./tiles/visualPolicy";
-export { legendReadouts, clampTime, markerColor, shortGateLabel, rawValueAt, stateAt, formatLegendValue, formatScientific, formatPressure, unitForAxis } from "./tiles/markers";
+export { legendReadouts, clampTime, markerColor, shortGateLabel, rawValueAt, stateAt, stateLabel, formatLegendValue, formatScientific, formatPressure, unitForAxis } from "signalforge-web";
 export { viewportSeries, lttb, decimationValue, resampleSeries, commandCenterGapBreaks, commandCenterTraceGapMs, commandCenterProjectedSeries, displayValue } from "signalforge-web";
 export { uplotData, seriesDrawOrder, lineWidthFor, sharedTimeGrid, buildScales, buildAxes, paddedRange, logScale, logSplits, ySplits, axisLabel, scaleForSeries, stateBlocks, inTimeRange, renderKindFor, drawTileOverlays } from "signalforge-web";

@@ -13,7 +13,7 @@ export type { SeriesRoleMeta, RenderedTileSeries } from './render/tileModel';
 export { clampRange, timeTicks, chooseTickStep, tickLabel, TimeAxisTrack, HeroTopTimeAxis, SharedTimeAxis, } from './render/timeAxis';
 export { roleColors, signalColors, distinctivePalette, palette, paletteForID, colorForSignal, semanticColor, signalPriority, orderLegendSignals, graphCardPriority, graphSectionPriority, graphSectionRank, graphCardRank, cardPriority, tileCardPriority, eventColor, blockLabel, } from './render/visualPolicy';
 export { viewportSeries, commandCenterGapBreaks, resampleSeries, decimationValue, commandCenterProjectedSeries, displayValue, lttb, commandCenterTraceGapMs, interpolationValue, isDiscreteSeries, valueFromInterpolation, } from './render/decimation';
-export { markerColor, operatorMarkerLines, formatMarkerDateTime, placeMarkerLabel, rectanglesOverlap, fitCanvasText, shortGateLabel, legendReadouts, clampTime, rawValueAt, stateAt, formatLegendValue, formatScientific, formatPressure, unitForAxis, } from './render/markers';
+export { markerColor, operatorMarkerLines, formatMarkerDateTime, placeMarkerLabel, rectanglesOverlap, fitCanvasText, shortGateLabel, legendReadouts, clampTime, rawValueAt, stateAt, stateLabel, formatLegendValue, formatScientific, formatPressure, unitForAxis, } from './render/markers';
 export { SignalDictionary } from './dict/SignalDictionary';
 export type { SignalDictionaryProps } from './dict/SignalDictionary';
 export { WallManager } from './walls/WallManager';
