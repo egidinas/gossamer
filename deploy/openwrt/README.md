@@ -1,6 +1,6 @@
-# Brume2 OpenWrt Deployment
+# Brume2 OpenWrt Fallback Deployment
 
-This deployment profile targets the GL-MT2500/Brume2 class router as a small, private Gossamer origin for one or two clients. It keeps the HTTP service local to the router/LAN and expects public access to be mediated through Cloudflare Tunnel plus Cloudflare Access.
+This deployment profile targets the GL-MT2500/Brume2 class router as a legacy fallback origin for one or two clients. The preferred public deployment is Linux-hosted `gossamer-server` plus `cloudflared`, with the router only routing or proxying traffic. Use this OpenWrt package only when intentionally testing router-hosted compatibility.
 
 Do not place Cloudflare tokens, tunnel IDs, account IDs, router passwords, or client emails in this repository.
 
@@ -12,9 +12,19 @@ From the repository root:
 deploy/openwrt/package_brume2.sh
 ```
 
-The script regenerates fixtures, builds the web UI, cross-compiles `gossamer-server` for `linux/arm64`, and writes `/tmp/gossamer-brume2.tar.gz`.
+The script regenerates fixtures, builds the web UI, cross-compiles `gossamer-server` for `linux/arm64`, and writes `/tmp/gossamer-brume2.tar.gz`. It defaults the fallback router artifact to the known-good OpenWrt runtime toolchain (`GOTOOLCHAIN=go1.22.12`) while the canonical Linux deployment uses the normal current Go toolchain. Set `GOSSAMER_BRUME2_GOTOOLCHAIN` only for an intentional router-runtime compatibility test. The OpenWrt binary is built with `-tags noduckdb` because the public demo is served from static tile bundles and does not need the CGO-only Parquet preview endpoint.
 
 ## Install On Router
+
+The preferred current router role is a loopback-only proxy for an origin on the Linux host. In that mode, keep the Linux host on the current Go/Node toolchains and run:
+
+```text
+gossamer-server -addr 0.0.0.0:8095 -allow-remote -root /home/svc_pmg_testbed_b/gossamer -web-dir /home/svc_pmg_testbed_b/gossamer/web/dist
+```
+
+Then configure the router service to listen only on `127.0.0.1:8095` and `[::1]:8095`, forwarding to the Linux host's trusted LAN address. The Cloudflare public hostname can continue pointing at `http://localhost:8095` on the router while the application itself is served by Linux.
+
+Use the package below only for the legacy router-origin fallback.
 
 ```bash
 scp /tmp/gossamer-brume2.tar.gz root@192.168.8.1:/tmp/

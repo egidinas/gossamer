@@ -7,12 +7,20 @@ const appSource = await readFile(join(root, "web", "src", "App.tsx"), "utf8");
 const architectureSource = await readFile(join(root, "docs", "architecture.md"), "utf8");
 const generatorSource = await readFile(join(root, "internal", "synthetic", "generator.go"), "utf8");
 const backlogSource = await readFile(join(root, "docs", "backlog", "BACKLOG.md"), "utf8");
+const apiSource = await readFile(join(root, "web", "src", "api.ts"), "utf8");
+const arrowTilesSource = await readFile(join(root, "web", "src", "arrowTiles.ts"), "utf8");
 const graphWallSource = await readFile(join(root, "web", "src", "components", "OperatorGraphWall.tsx"), "utf8");
 const graphCardCSS = await readFile(join(root, "web", "src", "styles", "graph-card.css"), "utf8");
 const markerSource = await readFile(join(root, "web", "src", "components", "tiles", "markers.ts"), "utf8");
-const uPlotAdapterSource = await readFile(join(root, "web", "src", "components", "tiles", "uPlotAdapter.ts"), "utf8");
+const visualPolicySource = await readFile(join(root, "web", "src", "components", "tiles", "visualPolicy.ts"), "utf8");
+const timeAxisSource = await readFile(join(root, "web", "src", "components", "tiles", "timeAxis.tsx"), "utf8");
+const viteConfigSource = await readFile(join(root, "web", "vite.config.ts"), "utf8");
+const webTsConfig = JSON.parse(await readFile(join(root, "web", "tsconfig.json"), "utf8"));
+const signalForgeSourceMap = JSON.parse(await readFile(join(root, "web", "vendor", "signalforge-web", "dist", "signalforge-web.es.js.map"), "utf8"));
+const signalForgeUPlotAdapterSource = signalForgeSourceMap.sourcesContent?.[signalForgeSourceMap.sources?.indexOf("../src/render/uPlotAdapter.ts")] ?? "";
 const viewsCSS = await readFile(join(root, "web", "src", "styles", "views.css"), "utf8");
 const semanticsChecklist = await readFile(join(root, "docs", "backend_semantics_checklist.md"), "utf8");
+const webPackage = JSON.parse(await readFile(join(root, "web", "package.json"), "utf8"));
 
 function requireEnvelope(name, value) {
   if (value.schema_version !== 1) throw new Error(`${name} has invalid schema_version`);
@@ -159,6 +167,17 @@ for (const term of [
 }
 if (!viewsCSS.includes('.graph-wall-card[data-render-kind="event_rail"] .graph-card-plot-shell')) throw new Error("event rail cards need a plot-shell height cap");
 if (!viewsCSS.includes("max-height: 480px") || !viewsCSS.includes("overflow-y: auto")) throw new Error("event rail plot shell must cap height and scroll overflow");
+if (!graphWallSource.includes('data-tile-backed="true"')) throw new Error("operator graph wall must advertise tile-backed rendering");
+if (!graphWallSource.includes("api.tileManifest(campaignId)")) throw new Error("operator graph wall must load the tile manifest before graph cards");
+if (!graphWallSource.includes("manifestError") || !graphWallSource.includes("api.invalidateTileManifest(campaignId)")) throw new Error("operator graph wall must expose retryable manifest load errors");
+if (!graphWallSource.includes("graphResetIdentity") || graphWallSource.includes("[campaignId, defaultTimeRange, manifestRetryToken]")) throw new Error("operator graph wall must not reload manifests or clear operator state on viewport-only range changes");
+if (!graphWallSource.includes('api.tile(campaignId, cardID, "minute")')) throw new Error("operator graph wall must materialize graph cards through the tile API");
+if (!graphWallSource.includes("orderedSections") || !graphWallSource.includes(".sort(graphSectionPriority)") || !graphWallSource.includes(".sort(graphCardPriority)")) throw new Error("operator graph wall must derive primary semantics from ordered sections and cards");
+if (!graphWallSource.includes("window.clearTimeout(timeoutID)")) throw new Error("operator graph wall must cancel delayed tile work on cleanup");
+if (!graphWallSource.includes("if (cancelled || loadGeneration.current !== generation) return;\n        requestedTiles.current.add(cardID);")) throw new Error("operator graph wall must only mark tile requests after delayed work starts");
+if (!graphWallSource.includes("if (cancelled || loadGeneration.current !== generation) return;\n            requestedTiles.current.delete(cardID);")) throw new Error("stale tile failures must not clear current-generation request markers");
+if (!graphWallSource.includes("const safeStart = Number.isFinite(start)") || !graphWallSource.includes("end > safeStart ? end : safeStart + 1")) throw new Error("graph time range must derive fallback end from sanitized start");
+if (!timeAxisSource.includes("finiteTimeRange") || !timeAxisSource.includes("Number.isFinite(parsedStart)") || !timeAxisSource.includes("Number.isFinite(parsedEnd)")) throw new Error("shared time axis must sanitize malformed backend ranges before ISO conversion");
 if (!graphWallSource.includes('renderKind === "event_rail" ? 360')) throw new Error("event rail resize height must stay bounded");
 if (!graphCardCSS.includes(".tile-event-rail")) throw new Error("event rail tile styles missing");
 if (!markerSource.includes("slice(0, 8)")) throw new Error("event marker labels must default to eight characters or fewer");
@@ -168,13 +187,61 @@ if (!graphWallSource.includes("showLabel")) throw new Error("event rail marker l
 if (!graphWallSource.includes("eventRailEvents") || !graphWallSource.includes("!markerIDs.has(event.id)")) throw new Error("event rail marker-derived events must not render twice");
 if (!graphWallSource.includes('title={`${marker.label} ${marker.timestamp}`}')) throw new Error("event rail markers must preserve full hover titles");
 if (!markerSource.includes("LABEL_COLLISION_PADDING = 8")) throw new Error("marker labels need a visible collision margin");
+if (!markerSource.includes("displayableLegendValue") || !markerSource.includes('axisID === "pressure_log"')) throw new Error("pressure legends must follow canonical log-axis validity policy");
+if (!markerSource.includes("function pressureLogAxis") || !markerSource.includes("!pressureLogAxis(series.axis_id) || value > 0")) throw new Error("linear pressure legends must preserve zero readouts while log pressure axes reject non-positive values");
+if (!markerSource.includes("rawValueAt(series, timeMs, tile)") || !markerSource.includes("commandCenterTraceGapMs(tile, series)")) throw new Error("legend readouts must share command-center tile gap semantics with plotted traces");
+if (!markerSource.includes("isDiscreteSeries(series)") || !markerSource.includes("valueFromInterpolation(series, interpolated)")) throw new Error("legend readouts must share discrete counter and pressure log interpolation semantics with plotted traces");
+if (!markerSource.includes("const unit = series.unit || series.units || unitForAxis(series.axis_id)")) throw new Error("legend readouts must honor both unit and units aliases");
+if (!markerSource.includes("stateLabel(series") || !markerSource.includes("series.value_table")) throw new Error("state span readouts must resolve value_table labels before numeric fallbacks");
+if (!markerSource.includes("timeMs < end") || !markerSource.includes("selectedStart")) throw new Error("state spans must use half-open transition boundaries and prefer the latest matching span");
+if (!visualPolicySource.includes('Pick<TileSeries, "id" | "role" | "render_kind" | "kind" | "color">') || !visualPolicySource.includes("configuredColor.trim()")) throw new Error("graph signal colors must honor backend contract-provided colors before local palettes");
+if (!visualPolicySource.includes("const roleColor = roleColors[signal.role]") || !visualPolicySource.includes("if (roleColor) return roleColor")) throw new Error("graph signal colors must use canonical role colors before palette fallbacks");
+if (!graphWallSource.includes("stateLabel(series, block.value")) throw new Error("swimlane labels must resolve value_table labels before generic active/idle fallbacks");
+if (!graphWallSource.includes("function stateBlockIsActive") || !graphWallSource.includes("stateBlockDisplayLabel(series, block)") || !graphWallSource.includes("return !inactiveLabels.has(label)")) throw new Error("swimlane state block activity must use semantic labels instead of numeric positivity only");
+if (!graphWallSource.includes("function heroFooterStateSeries") || !graphWallSource.includes("heroFooterStateIDs.has(series.id)") || !graphWallSource.includes('renderKind === "swimlane"')) throw new Error("hero state footer must discover state-like span series instead of only literal trace IDs");
+if (graphWallSource.includes("background: block.value > 0 ? colorForSignal(series)")) throw new Error("swimlane state block fill must not classify string-valued states as idle");
+if (!graphWallSource.includes("function observedStateBlocks") || !graphWallSource.includes("Math.min(block.left + block.width, observedPct)")) throw new Error("swimlane replay state blocks must be clipped to observed replay time");
+if (!graphWallSource.includes("event-marker-overflow") || !graphWallSource.includes("event-chip-overflow")) throw new Error("dense event rails must keep overflow labels visible instead of silently dropping them");
+if (!graphWallSource.includes('if (baseNow >= endMs)') || !graphWallSource.includes("if (next >= endMs)") || !graphWallSource.includes("window.clearInterval(timer);\n        return;")) throw new Error("accelerated replay timers must stop after reaching the replay end");
+if (!graphWallSource.includes('querySelector<HTMLElement>(".graph-card-plot-shell")') || graphWallSource.includes("const startHeight = cardRefEl.current?.getBoundingClientRect().height")) throw new Error("graph card resize must use plot-shell height, not whole-card height");
 if (!markerSource.includes("-5 * gap") || !markerSource.includes("5 * gap")) throw new Error("marker labels need enough fallback stack positions for dense graphs");
-if (!uPlotAdapterSource.includes("function commandAnchoredMarker")) throw new Error("event markers need explicit command-line anchoring policy");
-if (!uPlotAdapterSource.includes('commandAnchored && series.role === "command"')) throw new Error("command-like event markers must prefer command role series");
-if (!uPlotAdapterSource.includes("function drawExactMarkerAnchorLine")) throw new Error("event markers need an exact timestamp anchor line");
-if (!uPlotAdapterSource.includes("ctx.moveTo(x, top)") || !uPlotAdapterSource.includes("ctx.lineTo(x, top + height)")) throw new Error("marker anchor line must stay exactly on marker timestamp");
-if (uPlotAdapterSource.includes('anchorY - (marker.kind === "functional_gate" ? 5 : 0)')) throw new Error("functional gate glyph must not be vertically offset from command-line anchor");
-if (!uPlotAdapterSource.includes("drawMarkerLeader(ctx, x, anchorY")) throw new Error("attached marker labels must move independently with a leader back to the exact anchor");
+if (!graphWallSource.includes('from "signalforge-web"')) throw new Error("operator graph wall must consume SignalForge web graph primitives");
+if (graphWallSource.includes("./tiles/uPlotAdapter")) throw new Error("operator graph wall must not use a local uPlot adapter copy");
+if (graphWallSource.includes("./tiles/decimation")) throw new Error("operator graph wall must use SignalForge decimation helpers, not local forks");
+for (const helper of ["CANONICAL_TILE_RENDERER", "uplotData", "drawTileOverlays", "stateBlocks", "inTimeRange", "renderKindFor", "scaleForSeries"]) {
+  if (!graphWallSource.includes(helper)) throw new Error(`operator graph wall missing SignalForge helper ${helper}`);
+}
+for (const helper of ["viewportSeries", "lttb", "decimationValue", "resampleSeries", "commandCenterGapBreaks", "commandCenterTraceGapMs", "commandCenterProjectedSeries", "displayValue"]) {
+  if (!graphWallSource.includes(helper)) throw new Error(`operator graph wall missing SignalForge decimation helper ${helper}`);
+}
+for (const helper of ["interpolationValue", "isDiscreteSeries", "valueFromInterpolation"]) {
+  if (!markerSource.includes(helper)) throw new Error(`marker readouts missing SignalForge interpolation helper ${helper}`);
+}
+if (!timeAxisSource.includes("const requested = Number.isFinite(count) ? Math.round(count) : TIME_GRID_TICK_COUNT_DEFAULT") || !timeAxisSource.includes("const target = Math.max(2, Math.min(20, requested))")) throw new Error("shared time axis must honor compact/mobile tick budgets");
+if (!graphWallSource.includes("data-graph-renderer={CANONICAL_TILE_RENDERER}")) throw new Error("operator graph wall must advertise the canonical SignalForge renderer");
+if (!graphWallSource.includes('import uPlot from "uplot"')) throw new Error("Gossamer interaction shell must keep uPlot as the SignalForge graph engine");
+if (!viteConfigSource.includes('"signalforge-web"') || !viteConfigSource.includes("./vendor/signalforge-web/dist/signalforge-web.es.js")) throw new Error("Vite must resolve signalforge-web to the vendored public SignalForge dist build");
+if (webTsConfig.compilerOptions?.paths?.["signalforge-web"]?.[0] !== "vendor/signalforge-web/dist/index.d.ts") throw new Error("TypeScript must resolve signalforge-web to vendored SignalForge public dist types");
+if (webPackage.dependencies?.["signalforge-web"] !== "file:vendor/signalforge-web") throw new Error("web package must use the vendored SignalForge web package for reproducible builds");
+if (!signalForgeUPlotAdapterSource) throw new Error("vendored SignalForge package must include uPlot adapter source-map evidence");
+if (!signalForgeUPlotAdapterSource.includes("function commandAnchoredMarker")) throw new Error("SignalForge event markers need explicit command-line anchoring policy");
+if (!signalForgeUPlotAdapterSource.includes('commandAnchored && series.role === "command"')) throw new Error("SignalForge command-like event markers must prefer command role series");
+if (!signalForgeUPlotAdapterSource.includes("function drawExactMarkerAnchorLine")) throw new Error("SignalForge event markers need an exact timestamp anchor line");
+if (!signalForgeUPlotAdapterSource.includes("ctx.moveTo(x, top)") || !signalForgeUPlotAdapterSource.includes("ctx.lineTo(x, top + height)")) throw new Error("SignalForge marker anchor line must stay exactly on marker timestamp");
+if (signalForgeUPlotAdapterSource.includes('anchorY - (marker.kind === "functional_gate" ? 5 : 0)')) throw new Error("SignalForge functional gate glyph must not be vertically offset from command-line anchor");
+if (!signalForgeUPlotAdapterSource.includes("drawMarkerLeader(ctx, x, anchorY")) throw new Error("SignalForge attached marker labels must move independently with a leader back to the exact anchor");
+if (!signalForgeUPlotAdapterSource.includes('import uPlot from "uplot"')) throw new Error("SignalForge tile renderer must use uPlot as the canonical graph engine");
+if (!signalForgeUPlotAdapterSource.includes('(band.kind ?? "").toLowerCase()')) throw new Error("SignalForge uPlot adapter must preserve band-kind null safety");
+if (webPackage.dependencies?.uplot !== "^1.6.32") throw new Error("web package must keep uPlot dependency explicit");
+if (!apiSource.includes('currentBundle: () => getJSON<TileBundleManifest>("/data/current/manifest.json")')) throw new Error("frontend must use static tile bundle manifest");
+if (!apiSource.includes('getJSON<GraphTileManifest>(`/data/current/campaigns/${id}/manifest.json`)')) throw new Error("frontend must load campaign tile manifests from static bundle");
+if (!apiSource.includes('getJSON<GraphModel>(`/data/current/campaigns/${id}/graph-shell.json`)')) throw new Error("frontend must load graph shells from static bundle");
+if (!apiSource.includes("return arrowTile(id, card, manifest, graph")) throw new Error("frontend tile API must materialize Arrow-backed GraphTile objects");
+if (apiSource.includes("/api/campaigns/${id}/tiles")) throw new Error("frontend must not fetch legacy JSON tile endpoints for graph wall rendering");
+if (!arrowTilesSource.includes("tableFromIPC")) throw new Error("Arrow tiles must decode Apache Arrow IPC");
+if (!arrowTilesSource.includes("telemetry.arrow.gz")) throw new Error("Arrow tiles must load compressed telemetry archives from the static tile bundle");
+if (!arrowTilesSource.includes('source: "arrow_telemetry"')) throw new Error("GraphTile diagnostics must preserve Arrow telemetry provenance");
+if (!arrowTilesSource.includes('mode: "browser_native_arrow"')) throw new Error("GraphTile diagnostics must identify browser-native Arrow mode");
 
 const supervisor = await readJSON("supervisor_overview.json");
 requireEnvelope("supervisor", supervisor);

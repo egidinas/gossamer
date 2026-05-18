@@ -18,6 +18,10 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/egidinas/signalforge v0.2.0 h1:kutu0uekX4Hhx8Y1Qj8q2tudNCbvt/9h2UkQzTahHhg=
 github.com/egidinas/signalforge v0.2.0/go.mod h1:fyAEIcD2H0PWcq7HgGZEBY5bbJxKNj8ihC5q6mhb38o=
+github.com/egidinas/signalforge v0.2.1 h1:xcxA8Ak+vZWUvNK+GU3I4NbvG2mbNKPWwkucDGZg4JA=
+github.com/egidinas/signalforge v0.2.1/go.mod h1:fyAEIcD2H0PWcq7HgGZEBY5bbJxKNj8ihC5q6mhb38o=
+github.com/egidinas/signalforge v0.2.2 h1:GatPC8idRQguCbXjy5MKW7hmDeoLfQul3s8iFjuPEsk=
+github.com/egidinas/signalforge v0.2.2/go.mod h1:BnVsaUKrHm+3RiTQyAS33MzOccIEDrmEvIhMtqzFkIM=
 github.com/go-viper/mapstructure/v2 v2.4.0 h1:EBsztssimR/CONLSZZ04E8qAkxNYq4Qp9LvH92wZUgs=
 github.com/go-viper/mapstructure/v2 v2.4.0/go.mod h1:oJDH3BJKyqBA2TXFhDsKDGDTlndYOZ6rGS0BRZIxGhM=
 github.com/goccy/go-json v0.10.6 h1:p8HrPJzOakx/mn/bQtjgNjdTcN+/S6FcG2CTtQOrHVU=

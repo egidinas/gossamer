@@ -616,6 +616,10 @@ func (s *Server) static(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, candidate)
 		return
 	}
+	if isStaticAssetPath(rel) {
+		http.NotFound(w, r)
+		return
+	}
 	index, ok := resolveExistingStaticFile(s.staticDir, "index.html")
 	if !ok {
 		http.NotFound(w, r)
@@ -623,6 +627,18 @@ func (s *Server) static(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Cache-Control", cacheControlNoStore)
 	http.ServeFile(w, r, index)
+}
+
+func isStaticAssetPath(rel string) bool {
+	if strings.HasPrefix(rel, "assets/") {
+		return true
+	}
+	switch rel {
+	case "favicon.ico", "manifest.webmanifest", "robots.txt":
+		return true
+	default:
+		return path.Ext(rel) != ""
+	}
 }
 
 func resolveExistingStaticFile(root, rel string) (string, bool) {

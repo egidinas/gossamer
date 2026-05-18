@@ -131,7 +131,9 @@ function checkPackageJSON(normalizedPath, content, findings) {
     const deps = parsed[section] ?? {};
     for (const [name, spec] of Object.entries(deps)) {
       const dependencyName = name.toLowerCase();
-      if (dependencyName.includes("loom") || String(spec).startsWith("file:")) {
+      const dependencySpec = String(spec);
+      const isApprovedSignalForgeWebFile = dependencyName === "signalforge-web" && dependencySpec === "file:vendor/signalforge-web";
+      if (dependencyName.includes("loom") || (dependencySpec.startsWith("file:") && !isApprovedSignalForgeWebFile)) {
         findings.push({
           path: normalizedPath,
           line: 1,

@@ -41,17 +41,15 @@ const textTargets = [
   },
 ];
 
-const binaryTargets = [
-  {
-    name: "screenshots",
-    root: join(repoRoot, "web/test-artifacts/screenshots"),
-  },
-];
+// Raster screenshots are intentionally excluded from this static text scan:
+// compressed pixels cannot prove rendered text content. Hosted/browser smoke
+// checks rendered DOM text and canvas pixels before screenshots are trusted.
+const binaryTargets = [];
 
 const forbiddenPatterns = [
   {
     id: "private-ipv4",
-    regex: /\b(?:10|172\.(?:1[6-9]|2\d|3[0-1])|192\.168|169\.254)\.(?:\d{1,3}\.){2}\d{1,3}\b/g,
+    regex: /\b(?:10\.(?:\d{1,3}\.){2}\d{1,3}|172\.(?:1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|169\.254\.\d{1,3}\.\d{1,3})\b/g,
     message: "private network address",
   },
   {

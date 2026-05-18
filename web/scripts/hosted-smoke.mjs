@@ -4,23 +4,38 @@ const baseURL = process.env.GOSSAMER_HOSTED_URL || "https://gossamer.jmeyer.spac
 const expectedDataVersion = process.env.GOSSAMER_EXPECT_DATA_VERSION || "";
 
 const routes = [
-  { name: "landing", hash: "#landing", expectedGraphs: 0, textNeedle: "Complete Operator Surfaces", minReadouts: 0 },
+  { name: "landing", hash: "#landing", expectedCards: 0, expectedCanvases: 0, textNeedle: "Complete Operator Surfaces", minReadouts: 0 },
   {
     name: "acceptance",
     hash: "#acceptance",
-    expectedGraphs: 8,
+    expectedCards: 9,
+    expectedCanvases: 7,
     textNeedle: "Thermal Chamber FAT",
     minReadouts: 10,
     requiredSignals: ["trace.power_total", "trace.power_payload", "trace.dut_temp_a"],
   },
-  { name: "command-center", hash: "#command-center-fat", expectedGraphs: 4, textNeedle: "Command Center FAT", minReadouts: 8 },
+  { name: "command-center", hash: "#command-center-fat", expectedCards: 4, expectedCanvases: 4, textNeedle: "Command Center FAT", minReadouts: 8 },
   {
     name: "qualification",
     hash: "#qualification",
-    expectedGraphs: 12,
+    graphShellPath: "/data/current/campaigns/tvac_qualification/graph-shell.json",
+    expectedCards: 12,
+    expectedCanvases: 10,
     textNeedle: "TVac Qualification",
     minReadouts: 12,
-    requiredSignals: ["trace.power_total", "trace.power_payload", "trace.dut_temp_a", "trace.tvac_pressure"],
+    requiredSignals: ["trace.power_total", "trace.power_payload", "trace.dut_temp_a", "trace.tvac_pressure_target"],
+    requiredTileSignals: ["trace.tvac_pressure"],
+  },
+];
+
+const forbiddenVisiblePatterns = [
+  {
+    id: "private-ipv4",
+    regex: /\b(?:10\.(?:\d{1,3}\.){2}\d{1,3}|172\.(?:1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|169\.254\.\d{1,3}\.\d{1,3})\b/g,
+  },
+  {
+    id: "credential-assignment",
+    regex: /\b(?:api[_-]?key|access[_-]?token|auth(?:entication)?[_-]?token|refresh[_-]?token|bearer[_-]?token|password|passwd|private[_-]?key|secret)\s*[:=]\s*["']?[A-Za-z0-9+/._-]{12,}/gi,
   },
 ];
 
@@ -62,6 +77,29 @@ async function assertRequiredSignalReadouts(page, route) {
     }), route.requiredSignals);
     throw new Error(`${route.name}: missing populated required readouts: ${JSON.stringify(observed)}`);
   });
+}
+
+async function assertRequiredTileSignals(route) {
+  if (!route.requiredTileSignals?.length) return;
+  if (!route.graphShellPath) {
+    throw new Error(`${route.name}: requiredTileSignals need graphShellPath`);
+  }
+  const response = await fetch(url(route.graphShellPath));
+  if (!response.ok) {
+    throw new Error(`${route.name}: graph shell failed: ${response.status} ${response.statusText}`);
+  }
+  const shell = await response.json();
+  const cards = shell.tile_manifest?.cards ?? [];
+  const observed = new Set();
+  for (const card of cards) {
+    for (const signal of card.signals ?? card.traces ?? []) {
+      observed.add(signal.signal_id ?? signal.id ?? signal);
+    }
+  }
+  const missing = route.requiredTileSignals.filter((signalID) => !observed.has(signalID));
+  if (missing.length > 0) {
+    throw new Error(`${route.name}: graph shell missing required tile signals: ${missing.join(", ")}`);
+  }
 }
 
 async function assertNoVisibleEventLabelOverlaps(page, routeName) {
@@ -134,6 +172,8 @@ async function assertGraphWallStackGeometry(page, routeName) {
       if (!title || !plot) continue;
       const cardRect = rect(card);
       const titleRect = rect(title);
+      const titleStyle = getComputedStyle(title);
+      if (titleStyle.display === "none" || titleRect.width < 1 || titleRect.height < 1) continue;
       const plotRect = rect(plot);
       const titleOverlapsPlot = titleRect.bottom > plotRect.top + 1 && titleRect.top < plotRect.bottom - 1;
       const titleOverflows = titleRect.left < cardRect.left - 1 || titleRect.right > cardRect.right + 1 || titleRect.top < cardRect.top - 1 || titleRect.bottom > cardRect.bottom + 1;
@@ -159,6 +199,19 @@ async function assertGraphWallStackGeometry(page, routeName) {
   }
   if (geometry.titleProblems.length > 0) {
     throw new Error(`${routeName}: hosted graph title placement problems: ${JSON.stringify(geometry.titleProblems)}`);
+  }
+}
+
+async function assertNoForbiddenVisibleText(page, routeName) {
+  const bodyText = await page.evaluate(() => document.body.innerText);
+  const findings = [];
+  for (const rule of forbiddenVisiblePatterns) {
+    for (const match of bodyText.matchAll(rule.regex)) {
+      findings.push({ id: rule.id, match: match[0] });
+    }
+  }
+  if (findings.length > 0) {
+    throw new Error(`${routeName}: forbidden visible text: ${JSON.stringify(findings.slice(0, 8))}`);
   }
 }
 
@@ -192,16 +245,19 @@ try {
   });
 
   for (const route of routes) {
-    const { name, hash, expectedGraphs, textNeedle, minReadouts } = route;
+    const { name, hash, expectedCards, expectedCanvases, textNeedle, minReadouts } = route;
     await page.goto(url(hash), { waitUntil: "networkidle", timeout: 60000 });
     await page.locator(".shell").waitFor({ state: "visible", timeout: 30000 });
     await page.getByText(textNeedle, { exact: false }).first().waitFor({ timeout: 30000 });
+    await assertNoForbiddenVisibleText(page, name);
 
-    if (expectedGraphs > 0) {
+    if (expectedCanvases > 0) {
       await page.locator("canvas").first().waitFor({ timeout: 30000 });
       await page.waitForFunction(
-        (minimumGraphs) => document.querySelectorAll("canvas").length >= minimumGraphs,
-        expectedGraphs,
+        ({ minimumCards, minimumCanvases }) =>
+          document.querySelectorAll(".graph-wall-card").length >= minimumCards &&
+          document.querySelectorAll("canvas").length >= minimumCanvases,
+        { minimumCards: expectedCards, minimumCanvases: expectedCanvases },
         { timeout: 30000 }
       );
     }
@@ -219,6 +275,7 @@ try {
         { timeout: 30000 }
       );
       await assertRequiredSignalReadouts(page, route);
+      await assertRequiredTileSignals(route);
       await assertNoVisibleEventLabelOverlaps(page, name);
       await assertGraphWallStackGeometry(page, name);
     }
@@ -256,14 +313,20 @@ try {
       const readouts = [...document.querySelectorAll(".graph-card-legend-rail em")]
         .map((element) => (element.textContent ?? "").trim())
         .filter((value) => value && value !== "-");
-      return { loadingText, canvases, largeText, readouts };
+      const cardKinds = [...document.querySelectorAll(".graph-wall-card")]
+        .map((element) => element.getAttribute("data-render-kind") ?? "");
+      return { loadingText, canvases, largeText, readouts, cardKinds };
     });
 
-    const graphCount = routeState.canvases.length;
-    if (graphCount < expectedGraphs) {
-      throw new Error(`${name}: expected at least ${expectedGraphs} canvases, got ${graphCount}`);
+    const cardCount = routeState.cardKinds.length;
+    if (cardCount < expectedCards) {
+      throw new Error(`${name}: expected at least ${expectedCards} graph cards, got ${cardCount}: ${routeState.cardKinds.join(", ")}`);
     }
-    if (expectedGraphs > 0 && routeState.loadingText.length > 0) {
+    const canvasCount = routeState.canvases.length;
+    if (canvasCount < expectedCanvases) {
+      throw new Error(`${name}: expected at least ${expectedCanvases} canvases, got ${canvasCount}; cards: ${routeState.cardKinds.join(", ")}`);
+    }
+    if (expectedCanvases > 0 && routeState.loadingText.length > 0) {
       throw new Error(`${name}: still showing loading text: ${routeState.loadingText.join(" | ")}`);
     }
     for (const [index, canvas] of routeState.canvases.entries()) {
@@ -278,7 +341,7 @@ try {
       throw new Error(`${name}: expected at least ${minReadouts} populated legend readouts, got ${routeState.readouts.length}`);
     }
 
-    console.log(`${name}: ok graphs=${graphCount} readouts=${routeState.readouts.length}`);
+    console.log(`${name}: ok cards=${cardCount} canvases=${canvasCount} readouts=${routeState.readouts.length}`);
   }
 
   if (pageErrors.length > 0) {

@@ -1,5 +1,11 @@
-import type { GraphMarker, GraphTile, TileSeries } from "../../types";
-import { commandCenterProjectedSeries } from "./decimation";
+import type { GraphMarker, GraphTile, TileSeries } from "signalforge-web";
+import {
+  commandCenterProjectedSeries,
+  commandCenterTraceGapMs,
+  interpolationValue,
+  isDiscreteSeries,
+  valueFromInterpolation,
+} from "signalforge-web";
 
 export type TimeRange = {
   start: number;
@@ -140,7 +146,7 @@ export function shortGateLabel(label: string) {
 
 export function legendReadouts(tile: GraphTile, visibleSignals: Array<{ id: string; label: string }>, timeMs?: number, currentTimeMs?: number) {
   const readouts = new Map<string, string>();
-  if (!timeMs) return readouts;
+  if (timeMs === undefined || !Number.isFinite(timeMs)) return readouts;
   const visible = new Set(visibleSignals.map((signal) => signal.id));
   tile.series.forEach((series) => {
     if (!visible.has(series.id)) return;
@@ -150,11 +156,27 @@ export function legendReadouts(tile: GraphTile, visibleSignals: Array<{ id: stri
       if (state) readouts.set(series.id, state);
       return;
     }
-    const value = rawValueAt(series, timeMs);
+    const value = rawValueAt(series, timeMs, tile);
     if (value === undefined) return;
+    if (!displayableLegendValue(series, value)) return;
     readouts.set(series.id, formatLegendValue(series, value));
   });
   return readouts;
+}
+
+export function displayableLegendValue(series: TileSeries, value: number) {
+  return Number.isFinite(value) && (!pressureAxis(series.axis_id) || !pressureLogAxis(series.axis_id) || value > 0);
+}
+
+function pressureAxis(axisID?: string) {
+  return axisID === "pressure_mbar"
+    || axisID === "pressure_rate"
+    || axisID === "pressure_log"
+    || axisID === "pressure_rate_log";
+}
+
+function pressureLogAxis(axisID?: string) {
+  return axisID === "pressure_log" || axisID === "pressure_rate_log";
 }
 
 export function clampTime(timeMs: number, domain: number[]) {
@@ -165,34 +187,60 @@ export function clampTime(timeMs: number, domain: number[]) {
   return Math.max(first, Math.min(last, timeMs));
 }
 
-export function rawValueAt(series: TileSeries, timeMs: number) {
+export function rawValueAt(series: TileSeries, timeMs: number, tile?: GraphTile) {
   const points = [...(series.points ?? [])]
-    .map((point) => ({ t: Date.parse(point.timestamp), v: point.value }))
-    .filter((point) => Number.isFinite(point.t) && Number.isFinite(point.v))
+    .map((point) => ({ t: Date.parse(point.timestamp), v: interpolationValue(series, point.value) }))
+    .filter((point) => Number.isFinite(point.t))
     .sort((a, b) => a.t - b.t);
   if (!points.length) return undefined;
-  if (timeMs <= points[0].t) return points[0].v;
-  if (timeMs >= points[points.length - 1].t) return points[points.length - 1].v;
+  if (timeMs < points[0].t || timeMs > points[points.length - 1].t) return undefined;
+  if (timeMs === points[0].t) return valueFromInterpolation(series, points[0].v);
+  if (timeMs === points[points.length - 1].t) return valueFromInterpolation(series, points[points.length - 1].v);
   let cursor = 0;
   while (cursor + 1 < points.length && points[cursor + 1].t <= timeMs) cursor += 1;
   const current = points[cursor];
   const next = points[Math.min(cursor + 1, points.length - 1)];
-  if (series.step || series.render_kind === "counter" || series.kind === "counter" || next.t === current.t) return current.v;
+  const gapThreshold = tile ? commandCenterTraceGapMs(tile, series) : 0;
+  if (gapThreshold > 0 && next.t - current.t > gapThreshold && timeMs > current.t && timeMs < next.t) return undefined;
+  if (!Number.isFinite(current.v) || !Number.isFinite(next.v)) return undefined;
+  if (isDiscreteSeries(series) || next.t === current.t) return valueFromInterpolation(series, current.v);
   const ratio = (timeMs - current.t) / (next.t - current.t);
-  return current.v + (next.v - current.v) * Math.max(0, Math.min(1, ratio));
+  const interpolated = current.v + (next.v - current.v) * Math.max(0, Math.min(1, ratio));
+  return valueFromInterpolation(series, interpolated);
 }
 
 export function stateAt(series: TileSeries, timeMs: number) {
-  const span = series.spans?.find((candidate) => {
+  let span: NonNullable<TileSeries["spans"]>[number] | undefined;
+  let selectedStart = Number.NEGATIVE_INFINITY;
+  (series.spans ?? []).forEach((candidate, index, spans) => {
     const start = Date.parse(candidate.start);
     const end = Date.parse(candidate.end);
-    return Number.isFinite(start) && Number.isFinite(end) && timeMs >= start && timeMs <= end;
+    const finalSpan = index === spans.length - 1;
+    const contains = Number.isFinite(start) && Number.isFinite(end) && timeMs >= start && (timeMs < end || (finalSpan && timeMs <= end));
+    if (contains && start >= selectedStart) {
+      span = candidate;
+      selectedStart = start;
+    }
   });
-  return span?.label ?? span?.state ?? (span?.value !== undefined ? String(span.value) : undefined);
+  if (!span) return undefined;
+  return stateLabel(series, span.value, span.state, span.label);
+}
+
+export function stateLabel(series: Pick<TileSeries, "value_table">, value?: number | string, state?: string, label?: string) {
+  const table = series.value_table ?? {};
+  const fromTable = (candidate: unknown) => {
+    if (candidate === undefined || candidate === null) return undefined;
+    const key = String(candidate).trim();
+    if (!key) return undefined;
+    return table[key] ?? key;
+  };
+  return fromTable(label) ?? fromTable(state) ?? fromTable(value);
 }
 
 export function formatLegendValue(series: TileSeries, value: number) {
-  const unit = series.unit || unitForAxis(series.axis_id);
+  const unit = series.unit || series.units || unitForAxis(series.axis_id);
+  if (series.axis_id === "pressure_log") return `${formatPressure(value)} mbar`;
+  if (series.axis_id === "pressure_rate_log") return `${formatScientific(value)} mbar/min`;
   if (series.axis_id === "pressure_mbar") return `${formatPressure(value)} mbar`;
   if (series.axis_id === "pressure_rate") return `${formatScientific(value)} mbar/min`;
   if (series.axis_id === "counter") {
@@ -222,10 +270,12 @@ export function formatPressure(value: number) {
 
 export function unitForAxis(axisID?: string) {
   if (axisID === "temperature_c") return "degC";
+  if (axisID === "pressure_log") return "mbar";
   if (axisID === "pressure_mbar") return "mbar";
   if (axisID === "power_w" || axisID === "heat_flux_w") return "W";
   if (axisID === "bus_ms") return "ms";
   if (axisID === "pressure_bar") return "bar";
+  if (axisID === "pressure_rate_log") return "mbar/min";
   if (axisID === "pressure_rate") return "mbar/min";
   if (axisID === "percent") return "%";
   if (axisID === "voltage_v") return "V";

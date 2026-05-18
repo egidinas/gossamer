@@ -2,11 +2,16 @@
 set -eu
 
 ROOT=${GOSSAMER_ROOT:-$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)}
-BRUME2_HOST=${BRUME2_HOST:-root@192.168.8.1}
+BRUME2_HOST=${BRUME2_HOST:-}
 REMOTE_ROOT=${GOSSAMER_REMOTE_ROOT:-/opt/gossamer}
 UI_VERSION=${UI_VERSION:-$(date -u +%Y%m%dT%H%M%SZ)}
 ARCHIVE=${1:-$ROOT/dist/releases/gossamer-ui-$UI_VERSION.tgz}
 REMOTE_TMP="/tmp/gossamer-ui-$UI_VERSION.tgz"
+
+if [ -z "$BRUME2_HOST" ]; then
+  echo "set BRUME2_HOST to a local SSH host alias or user@host target" >&2
+  exit 2
+fi
 
 if [ ! -f "$ARCHIVE" ]; then
   echo "missing UI archive: $ARCHIVE" >&2

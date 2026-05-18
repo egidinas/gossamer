@@ -16,6 +16,11 @@ npm --prefix web run build
 rm -rf "$out_dir" "$archive"
 mkdir -p "$out_dir/fixtures" "$out_dir/web" "$out_dir/deploy/openwrt"
 
+# This OpenWrt package is a legacy fallback. The canonical public origin should
+# run on the Linux server with the normal, current Go toolchain; the router
+# should only route/proxy. Keep the fallback artifact on the known-good router
+# runtime unless GOSSAMER_BRUME2_GOTOOLCHAIN is explicitly set for a compatibility
+# test. The fallback static-tile demo does not need the CGO-only DuckDB preview.
 router_toolchain="${GOSSAMER_BRUME2_GOTOOLCHAIN:-go1.22.12}"
 go_mod_backup="$(mktemp)"
 cp go.mod "$go_mod_backup"
@@ -24,11 +29,8 @@ restore_go_mod() {
 	rm -f "$go_mod_backup"
 }
 trap restore_go_mod EXIT
-
-# OpenWrt 21 on the Brume2 accepts connections but stalls HTTP handlers with
-# newer Go runtime builds. Keep the router artifact on a known-good toolchain.
 go mod edit -go=1.22
-GOTOOLCHAIN="$router_toolchain" CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -trimpath -ldflags="-s -w" -o "$out_dir/gossamer-server" ./cmd/gossamer-server
+GOTOOLCHAIN="$router_toolchain" CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -tags noduckdb -trimpath -ldflags="-s -w" -o "$out_dir/gossamer-server" ./cmd/gossamer-server
 restore_go_mod
 trap - EXIT
 

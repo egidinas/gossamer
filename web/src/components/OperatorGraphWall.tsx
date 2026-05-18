@@ -2,15 +2,32 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import uPlot from "uplot";
 import "uplot/dist/uPlot.min.css";
+import {
+  CANONICAL_TILE_RENDERER,
+  commandCenterGapBreaks,
+  commandCenterProjectedSeries,
+  commandCenterTraceGapMs,
+  decimationValue,
+  displayValue,
+  drawTileOverlays,
+  inTimeRange,
+  lttb,
+  renderKindFor,
+  resampleSeries,
+  scaleForSeries,
+  stateBlocks,
+  uplotData,
+  viewportSeries,
+} from "signalforge-web";
+import type { GraphTile, GraphTileCardRef, GraphWallCard, GraphWallModel } from "signalforge-web";
 import { api } from "../api";
-import type { GraphTile, GraphTileCardRef, GraphTileManifest, GraphWallCard, GraphWallModel, HeroGraphModel } from "../types";
+import type { GraphTileManifest, HeroGraphModel } from "../types";
 
 // Sub-module imports
 import { graphCardPriority, graphSectionPriority, tileCardPriority, orderLegendSignals, colorForSignal, blockLabel, eventColor } from "./tiles/visualPolicy";
 import { clampRange, timeTicks, SharedTimeAxis, HeroTopTimeAxis, TimeAxisTrack } from "./tiles/timeAxis";
 import type { TimeRange } from "./tiles/timeAxis";
-import { legendReadouts, clampTime, shortGateLabel, markerColor } from "./tiles/markers";
-import { uplotData, drawTileOverlays, stateBlocks, inTimeRange, renderKindFor, scaleForSeries } from "./tiles/uPlotAdapter";
+import { legendReadouts, clampTime, shortGateLabel, markerColor, stateLabel } from "./tiles/markers";
 
 export type { TimeRange };
 
@@ -38,12 +55,16 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [pinOverrides, setPinOverrides] = useState<Record<string, boolean>>({});
   const [cardHeights, setCardHeights] = useState<Record<string, number>>({});
+  const [manifestError, setManifestError] = useState<string | null>(null);
+  const [manifestRetryToken, setManifestRetryToken] = useState(0);
+  const [tileErrors, setTileErrors] = useState<Record<string, string>>({});
   const [hoverTimeMs, setHoverTimeMs] = useState<number | undefined>(undefined);
   const [peekTimeMs, setPeekTimeMs] = useState<number | undefined>(undefined);
   const [timeAxisBounds, setTimeAxisBounds] = useState<{ left: number; right: number } | undefined>(undefined);
   const viewportWidth = useViewportWidth();
   const tickCount = useViewportTickCount();
   const fullTimeRange = useMemo(() => graphTimeRange(heroGraph), [heroGraph]);
+  const graphResetIdentity = `${heroGraph.id ?? "graph"}:${fullTimeRange.start}:${fullTimeRange.end}`;
   const defaultTimeRange = useMemo(() => defaultGraphTimeRange(campaignId, heroGraph, fullTimeRange, viewportWidth), [campaignId, heroGraph, fullTimeRange, viewportWidth]);
   const [viewRange, setViewRange] = useState<TimeRange>(defaultTimeRange);
   const scrollFrameRef = useRef<HTMLDivElement | null>(null);
@@ -59,7 +80,9 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
     loadGeneration.current += 1;
     setViewRange(defaultTimeRange);
     setManifest(null);
+    setManifestError(null);
     setTiles({});
+    setTileErrors({});
     setPinOverrides({});
     setCardHeights({});
     requestedTiles.current.clear();
@@ -71,38 +94,90 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
         initialCollapsed[card.card_id] = card.collapsible && !card.default_expanded;
       });
       setCollapsed(initialCollapsed);
-    }).catch((err) => console.error(err));
+    }).catch((err) => {
+      console.error(err);
+      if (cancelled) return;
+      setManifestError(err instanceof Error ? err.message : String(err));
+    });
     return () => {
       cancelled = true;
     };
-  }, [campaignId, defaultTimeRange]);
+  }, [campaignId, graphResetIdentity, manifestRetryToken]);
 
   const manifestCards = useMemo(() => new Map((manifest?.cards ?? []).map((card) => [card.card_id, card])), [manifest]);
-  const firstSectionID = wall.sections[0]?.id;
-  const primaryCardID = wall.sections[0]?.cards[0]?.id;
+  const orderedSections = useMemo(
+    () => wall.sections
+      .map((section) => ({ ...section, cards: [...section.cards].sort(graphCardPriority) }))
+      .sort(graphSectionPriority),
+    [wall.sections],
+  );
+  const firstSectionID = orderedSections[0]?.id;
+  const primaryCardID = orderedSections[0]?.cards[0]?.id;
   useEffect(() => {
     if (!manifest) return;
     const generation = loadGeneration.current;
+    let cancelled = false;
+    const timeoutIDs: number[] = [];
     const cardsToFetch = manifest.cards
-      .filter((card) => !collapsed[card.card_id] && !tiles[card.card_id] && !requestedTiles.current.has(card.card_id))
+      .filter((card) => !collapsed[card.card_id] && !tiles[card.card_id] && !tileErrors[card.card_id] && !requestedTiles.current.has(card.card_id))
       .sort(tileCardPriority)
       .slice(0, 8)
       .map((card) => card.card_id);
     if (!cardsToFetch.length) return;
     const fetchCard = (cardID: string, index: number) => {
-      requestedTiles.current.add(cardID);
-      scheduleTileWork(() => {
-        if (loadGeneration.current !== generation) return;
+      const timeoutID = scheduleTileWork(() => {
+        if (cancelled || loadGeneration.current !== generation) return;
+        requestedTiles.current.add(cardID);
         api.tile(campaignId, cardID, "minute")
           .then((tile) => {
-            if (loadGeneration.current !== generation) return;
+            if (cancelled || loadGeneration.current !== generation) return;
             setTiles((existing) => ({ ...existing, [tile.card_id]: tile }));
+            setTileErrors((existing) => {
+              if (!existing[tile.card_id]) return existing;
+              const next = { ...existing };
+              delete next[tile.card_id];
+              return next;
+            });
           })
-          .catch((err) => console.error(err));
+          .catch((err) => {
+            console.error(err);
+            if (cancelled || loadGeneration.current !== generation) return;
+            requestedTiles.current.delete(cardID);
+            setTileErrors((existing) => ({
+              ...existing,
+              [cardID]: err instanceof Error ? err.message : String(err),
+            }));
+          });
       }, index < 3 ? index * 35 : 130 + index * 45);
+      timeoutIDs.push(timeoutID);
     };
     cardsToFetch.forEach(fetchCard);
-  }, [campaignId, collapsed, manifest, tiles]);
+    return () => {
+      cancelled = true;
+      timeoutIDs.forEach((timeoutID) => window.clearTimeout(timeoutID));
+    };
+  }, [campaignId, collapsed, manifest, tileErrors, tiles]);
+
+  const retryManifest = () => {
+    loadGeneration.current += 1;
+    requestedTiles.current.clear();
+    api.invalidateTileManifest(campaignId);
+    setManifest(null);
+    setTiles({});
+    setTileErrors({});
+    setManifestError(null);
+    setManifestRetryToken((token) => token + 1);
+  };
+
+  const retryTile = (cardID: string) => {
+    requestedTiles.current.delete(cardID);
+    setTileErrors((existing) => {
+      if (!existing[cardID]) return existing;
+      const next = { ...existing };
+      delete next[cardID];
+      return next;
+    });
+  };
 
   useEffect(() => {
     const frame = scrollFrameRef.current;
@@ -154,15 +229,21 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
         onTimeRange={setViewRange}
         tickCount={tickCount}
       />
+      {manifestError && (
+        <div className="operator-wall-manifest-error graph-card-loading graph-card-error" role="alert">
+          <span>Tile manifest unavailable</span>
+          <button type="button" onClick={retryManifest}>Retry</button>
+        </div>
+      )}
       <div className="operator-wall-scrollframe" ref={scrollFrameRef}>
-        {[...wall.sections].sort(graphSectionPriority).map((section) => (
+        {orderedSections.map((section) => (
           <section className="operator-wall-section" key={section.id} data-section-id={section.id}>
             {!(section.id === firstSectionID && primaryCardID) && <div className="operator-wall-section-title">
               <strong>{section.title}</strong>
               <span>{section.transport} / {section.direction}</span>
             </div>}
             <div className="operator-wall-cards">
-              {[...section.cards].sort(graphCardPriority).map((card) => {
+              {section.cards.map((card) => {
                 const isPrimary = card.id === primaryCardID;
                 const cardRef = manifestCards.get(card.id);
                 const isCollapsed = collapsed[card.id] ?? false;
@@ -185,8 +266,10 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
                     timeRange={viewRange}
                     onTimeRange={setViewRange}
                     tile={tiles[card.id]}
+                    tileError={tileErrors[card.id]}
                     onToggle={() => setCollapsed((existing) => ({ ...existing, [card.id]: !isCollapsed }))}
                     onPinToggle={() => setPinOverrides((existing) => ({ ...existing, [card.id]: !isPinned }))}
+                    onRetryTile={() => retryTile(card.id)}
                     onHeightChange={(height) => setCardHeights((existing) => ({ ...existing, [card.id]: height }))}
                   />
                 );
@@ -198,7 +281,7 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
       {afterProgress}
       {execution && <ExecutionProgress execution={execution} heroGraph={heroGraph} currentTimeMs={currentTimeMs} />}
       <div className="operator-wall-meta" aria-label="Graph wall provenance">
-        <span><b>Tiles</b><strong>{manifest ? "manifest ready" : "loading manifest"}</strong></span>
+        <span><b>Tiles</b><strong>{manifest ? "manifest ready" : manifestError ? "manifest error" : "loading manifest"}</strong></span>
         <span><b>Contract</b><strong>{wall.graph_version}</strong></span>
         <span><b>Source</b><strong>{wall.source_mode}</strong></span>
         <span><b>Timebase</b><strong>{wall.time_range.mode}</strong></span>
@@ -212,9 +295,10 @@ export function OperatorGraphWall({ campaignId, wall, heroGraph, afterProgress }
 function graphTimeRange(heroGraph: HeroGraphModel): TimeRange {
   const start = Date.parse(heroGraph.time_axis.start);
   const end = Date.parse(heroGraph.time_axis.end);
+  const safeStart = Number.isFinite(start) ? start : 0;
   return {
-    start: Number.isFinite(start) ? start : 0,
-    end: Number.isFinite(end) && end > start ? end : start + 1,
+    start: safeStart,
+    end: Number.isFinite(end) && end > safeStart ? end : safeStart + 1,
   };
 }
 
@@ -267,9 +351,18 @@ export function useAnimatedReplayTime(campaignId: string, heroGraph: HeroGraphMo
   useEffect(() => {
     if (streaming) return;
     if (!Number.isFinite(baseNow) || !Number.isFinite(startMs) || !Number.isFinite(endMs)) return;
+    if (baseNow >= endMs) {
+      setNow(endMs);
+      return;
+    }
     const timer = window.setInterval(() => {
       const elapsed = Date.now() - wallStart;
       const next = Math.min(endMs, Math.max(startMs, baseNow + elapsed * acceleration));
+      if (next >= endMs) {
+        setNow(endMs);
+        window.clearInterval(timer);
+        return;
+      }
       setNow(next);
     }, 1000);
     return () => window.clearInterval(timer);
@@ -337,8 +430,10 @@ function GraphWallCardView({
   timeRange,
   onTimeRange,
   tile,
+  tileError,
   onToggle,
   onPinToggle,
+  onRetryTile,
   onHeightChange
 }: {
   card: GraphWallCard;
@@ -356,8 +451,10 @@ function GraphWallCardView({
   timeRange: TimeRange;
   onTimeRange: (range: TimeRange) => void;
   tile?: GraphTile;
+  tileError?: string;
   onToggle: () => void;
   onPinToggle: () => void;
+  onRetryTile: () => void;
   onHeightChange: (height: number) => void;
 }) {
   const renderKind = cardRef?.render_kind ?? card.render_kind ?? renderKindFor(card.kind);
@@ -374,7 +471,8 @@ function GraphWallCardView({
     event.preventDefault();
     event.stopPropagation();
     const startY = event.clientY;
-    const startHeight = cardRefEl.current?.getBoundingClientRect().height ?? height ?? defaultPlotHeight;
+    const plotShell = cardRefEl.current?.querySelector<HTMLElement>(".graph-card-plot-shell");
+    const startHeight = plotShell?.getBoundingClientRect().height ?? height ?? defaultPlotHeight;
     const pointerID = event.pointerId;
     event.currentTarget.setPointerCapture?.(pointerID);
     const move = (moveEvent: PointerEvent) => {
@@ -418,7 +516,13 @@ function GraphWallCardView({
             <div className="graph-card-inline-title">
               <strong>{card.title}</strong>
             </div>
-            {!tile && <div className="graph-card-loading">Loading decimated tile...</div>}
+            {!tile && tileError && (
+              <div className="graph-card-loading graph-card-error">
+                <span>Tile unavailable</span>
+                <button type="button" onClick={onRetryTile}>Retry</button>
+              </div>
+            )}
+            {!tile && !tileError && <div className="graph-card-loading">Loading decimated tile...</div>}
             {tile && renderKind === "swimlane" && <SwimlaneTile tile={tile} heroGraph={heroGraph} currentTimeMs={currentTimeMs} hoverTimeMs={hoverTimeMs} readoutTimeMs={readoutTimeMs} timeRange={timeRange} />}
             {tile && renderKind === "event_rail" && <EventRailTile tile={tile} heroGraph={heroGraph} currentTimeMs={currentTimeMs} hoverTimeMs={hoverTimeMs} readoutTimeMs={readoutTimeMs} timeRange={timeRange} />}
             {tile && renderKind !== "swimlane" && renderKind !== "event_rail" && (
@@ -474,8 +578,7 @@ function HeroStateFooter({ tile, heroGraph, currentTimeMs, timeRange }: { tile: 
   const end = timeRange.end;
   const now = currentTimeMs ?? Date.parse(heroGraph.time_axis.now ?? heroGraph.execution?.now ?? "");
   const span = Math.max(1, end - start);
-  const stateIDs = new Set(["trace.phase_enum", "trace.stability_reached", "trace.dwell_active", "trace.functional_gate_active"]);
-  const states = tile.series.filter((series) => stateIDs.has(series.id));
+  const states = tile.series.filter(heroFooterStateSeries);
   if (!states.length) return null;
   return (
     <div className="hero-state-footer" aria-label="Integrated test stage status">
@@ -488,13 +591,28 @@ function HeroStateFooter({ tile, heroGraph, currentTimeMs, timeRange }: { tile: 
               const blockEnd = blockStart + (block.width / 100) * span;
               if (Number.isFinite(now) && blockStart > now) return null;
               const clippedWidth = Number.isFinite(now) && blockEnd > now ? ((now - blockStart) / span) * 100 : block.width;
-              return <i key={block.key} style={{ left: `${block.left}%`, width: `${Math.max(0.1, clippedWidth)}%`, background: block.value > 0 ? colorForSignal(series) : "rgba(64,82,99,0.45)" }} />;
+              return <i key={block.key} style={{ left: `${block.left}%`, width: `${Math.max(0.1, clippedWidth)}%`, background: stateBlockFill(series, block, "rgba(64,82,99,0.45)") }} />;
             })}
           </div>
         </div>
       ))}
     </div>
   );
+}
+
+const heroFooterStateIDs = new Set(["trace.phase_enum", "trace.stability_reached", "trace.dwell_active", "trace.functional_gate_active"]);
+
+function heroFooterStateSeries(series: GraphTile["series"][number]) {
+  if (!series.spans?.length) return false;
+  if (heroFooterStateIDs.has(series.id)) return true;
+  const role = String(series.role ?? "").toLowerCase();
+  const renderKind = String(series.render_kind ?? series.kind ?? "").toLowerCase();
+  return role === "state"
+    || role === "source_quality"
+    || role === "event"
+    || renderKind === "state"
+    || renderKind === "swimlane"
+    || Object.keys(series.value_table ?? {}).length > 0;
 }
 
 function UPlotTile({
@@ -522,6 +640,8 @@ function UPlotTile({
   const onHoverTimeRef = useRef(onHoverTime);
   const onPeekTimeRef = useRef(onPeekTime);
   const hoverTimeRef = useRef(hoverTimeMs);
+  const currentTimeRef = useRef(currentTimeMs);
+  const plotRef = useRef<uPlot | null>(null);
   const pointerInsideRef = useRef(false);
   const draggingRef = useRef(false);
   const onTimeRangeRef = useRef(onTimeRange);
@@ -539,6 +659,18 @@ function UPlotTile({
   }, [hoverTimeMs]);
 
   useEffect(() => {
+    currentTimeRef.current = currentTimeMs;
+    const plot = plotRef.current;
+    const host = hostRef.current;
+    if (!plot || !host) return;
+    const rect = host.getBoundingClientRect();
+    const width = Math.max(240, Math.floor(rect.width));
+    const { data } = uplotData(tile, currentTimeMs, width);
+    plot.setData(data, false);
+    plot.redraw();
+  }, [currentTimeMs, tile]);
+
+  useEffect(() => {
     onTimeRangeRef.current = onTimeRange;
   }, [onTimeRange]);
 
@@ -550,7 +682,7 @@ function UPlotTile({
       const rect = host.getBoundingClientRect();
       const width = Math.max(240, Math.floor(rect.width));
       const height = Math.max(42, Math.floor(rect.height));
-      const { data, series, scales, axes } = uplotData(tile, currentTimeMs, width);
+      const { data, series, scales, axes } = uplotData(tile, currentTimeRef.current, width);
       let u: uPlot;
       const timeFromPointer = (event: PointerEvent | MouseEvent) => {
         const over = host.querySelector(".u-over");
@@ -590,12 +722,13 @@ function UPlotTile({
           ],
           drawClear: [
             (plot: uPlot) => {
-              drawTileOverlays(plot, tile, heroGraph, currentTimeMs, hoverTimeRef.current, timeRange);
+              drawTileOverlays(plot, tile, heroGraph, currentTimeRef.current, hoverTimeRef.current, timeRange);
             }
           ]
         }
       } as uPlot.Options & { sync: { key: string } };
       u = new uPlot(opts as uPlot.Options, data, host);
+      plotRef.current = u;
       const movePointer = (event: PointerEvent) => {
         pointerInsideRef.current = true;
         const next = timeFromPointer(event);
@@ -639,6 +772,7 @@ function UPlotTile({
         host.removeEventListener("pointerup", stopDrag);
         host.removeEventListener("pointercancel", stopDrag);
         host.removeEventListener("mouseleave", clearHover);
+        if (plotRef.current === u) plotRef.current = null;
         originalDestroy();
       };
       return u;
@@ -653,9 +787,38 @@ function UPlotTile({
       resize.disconnect();
       plot?.destroy();
     };
-  }, [currentTimeMs, heroGraph, renderKind, tile, timeRange]);
+  }, [heroGraph, renderKind, tile, timeRange]);
 
-  return <div className="graph-card-uplot" ref={hostRef} data-uplot-card={tile.card_id} />;
+  return <div className="graph-card-uplot" ref={hostRef} data-uplot-card={tile.card_id} data-graph-renderer={CANONICAL_TILE_RENDERER} />;
+}
+
+function observedStateBlocks(series: GraphTile["series"][number], start: number, span: number, now: number) {
+  const observedPct = Number.isFinite(now)
+    ? Math.max(0, Math.min(100, ((now - start) / span) * 100))
+    : 100;
+  return stateBlocks(series, start, span)
+    .map((block) => {
+      const right = Math.min(block.left + block.width, observedPct);
+      return { ...block, width: Math.max(0, right - block.left) };
+    })
+    .filter((block) => block.width > 0);
+}
+
+type StateBlock = ReturnType<typeof stateBlocks>[number];
+
+function stateBlockDisplayLabel(series: GraphTile["series"][number], block: StateBlock) {
+  return blockLabel(stateLabel(series, block.value, block.label, block.label) ?? "", block.value);
+}
+
+function stateBlockIsActive(series: GraphTile["series"][number], block: StateBlock) {
+  if (Number.isFinite(block.value) && block.value > 0) return true;
+  const label = stateBlockDisplayLabel(series, block).trim().toLowerCase();
+  const inactiveLabels = new Set(["", "0", "idle", "inactive", "off", "false", "no", "none"]);
+  return !inactiveLabels.has(label);
+}
+
+function stateBlockFill(series: GraphTile["series"][number], block: StateBlock, inactiveColor: string) {
+  return stateBlockIsActive(series, block) ? colorForSignal(series) : inactiveColor;
 }
 
 function SwimlaneTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTimeMs, timeRange }: { tile: GraphTile; heroGraph: HeroGraphModel; currentTimeMs?: number; hoverTimeMs?: number; readoutTimeMs?: number; timeRange: TimeRange }) {
@@ -672,11 +835,14 @@ function SwimlaneTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTime
           <div className="tile-swimlane-row" key={series.id}>
             <span>{series.label}</span>
             <div>
-              {stateBlocks(series, start, span).map((block) => (
-                <i key={block.key} style={{ left: `${block.left}%`, width: `${block.width}%`, background: block.value > 0 ? colorForSignal(series) : "rgba(64,82,99,0.35)" }}>
-                  {block.width > 7 && <small>{blockLabel(block.label, block.value)}</small>}
-                </i>
-              ))}
+              {observedStateBlocks(series, start, span, now).map((block) => {
+                const label = stateBlockDisplayLabel(series, block);
+                return (
+                  <i key={block.key} style={{ left: `${block.left}%`, width: `${block.width}%`, background: stateBlockFill(series, block, "rgba(64,82,99,0.35)") }}>
+                    {block.width > 7 && <small>{label}</small>}
+                  </i>
+                );
+              })}
               {Number.isFinite(now) && <b style={{ left: `${Math.max(0, Math.min(100, ((now - start) / span) * 100))}%` }} />}
               {Number.isFinite(hoverTimeMs) && <em style={{ left: `${Math.max(0, Math.min(100, (((hoverTimeMs as number) - start) / span) * 100))}%` }} />}
               {Number.isFinite(readoutTimeMs) && readoutTimeMs !== hoverTimeMs && <em className="peek" style={{ left: `${Math.max(0, Math.min(100, (((readoutTimeMs as number) - start) / span) * 100))}%` }} />}
@@ -709,7 +875,7 @@ function EventRailTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTim
           const color = markerColor(marker);
           return (
             <span
-              className={`event-marker-wrap event-marker-${marker.kind ?? marker.role ?? "marker"}`}
+              className={`event-marker-wrap event-marker-${marker.kind ?? marker.role ?? "marker"} ${placement?.overflow ? "event-marker-overflow" : ""}`}
               key={marker.id}
               style={{ left: `${left}%`, top: `${12 + (placement?.row ?? index % 3) * 44}px`, color }}
               title={`${marker.label} ${marker.timestamp}`}
@@ -725,7 +891,7 @@ function EventRailTile({ tile, heroGraph, currentTimeMs, hoverTimeMs, readoutTim
           const color = eventColor(event.kind);
           return (
             <span
-              className={`event-chip-wrap event-chip-${event.kind}`}
+              className={`event-chip-wrap event-chip-${event.kind} ${placement?.overflow ? "event-chip-overflow" : ""}`}
               key={event.id}
               style={{ left: `${left}%`, top: `${164 + (placement?.row ?? index % 2) * 42}px`, color }}
               title={`${event.label} ${event.timestamp}`}
@@ -747,6 +913,7 @@ type RailLabelPlacement = {
   left: number;
   row: number;
   showLabel: boolean;
+  overflow?: boolean;
 };
 
 function railLabelPlacements<T extends { id: string; label: string; timestamp: string }>(items: T[], range: TimeRange, rows: number, minGapPct: number, widthScale: number) {
@@ -759,6 +926,7 @@ function railLabelPlacements<T extends { id: string; label: string; timestamp: s
     const labelWidth = Math.min(18, Math.max(5.5, shortGateLabel(item.label).length * widthScale));
     let row = index % rows;
     let showLabel = false;
+    let overflow = false;
     for (let candidate = 0; candidate < rows; candidate++) {
       const labelLeft = Math.max(0, left - labelWidth / 2);
       const labelRight = Math.min(100, left + labelWidth / 2);
@@ -770,13 +938,20 @@ function railLabelPlacements<T extends { id: string; label: string; timestamp: s
         break;
       }
     }
-    placements.set(item.id, { left, row, showLabel });
+    if (!showLabel) {
+      const labelLeft = Math.max(0, left - labelWidth / 2);
+      const labelRight = Math.min(100, left + labelWidth / 2);
+      occupied[row].push({ left: labelLeft, right: labelRight });
+      showLabel = true;
+      overflow = true;
+    }
+    placements.set(item.id, { left, row, showLabel, overflow });
   });
   return placements;
 }
 
 export function scheduleTileWork(work: () => void, delayMs: number) {
-  window.setTimeout(() => {
+  return window.setTimeout(() => {
     work();
   }, delayMs);
 }
@@ -785,5 +960,5 @@ export function scheduleTileWork(work: () => void, delayMs: number) {
 export { TimeAxisTrack, timeTicks, clampRange } from "./tiles/timeAxis";
 export { colorForSignal, roleColors, signalColors, orderLegendSignals, graphCardPriority, graphSectionPriority, blockLabel, eventColor } from "./tiles/visualPolicy";
 export { legendReadouts, clampTime, markerColor, shortGateLabel, rawValueAt, stateAt, formatLegendValue, formatScientific, formatPressure, unitForAxis } from "./tiles/markers";
-export { viewportSeries, lttb, decimationValue, resampleSeries, commandCenterGapBreaks, commandCenterTraceGapMs, commandCenterProjectedSeries, displayValue } from "./tiles/decimation";
-export { uplotData, seriesDrawOrder, lineWidthFor, sharedTimeGrid, buildScales, buildAxes, paddedRange, logScale, logSplits, ySplits, axisLabel, scaleForSeries, stateBlocks, inTimeRange, renderKindFor, drawTileOverlays } from "./tiles/uPlotAdapter";
+export { viewportSeries, lttb, decimationValue, resampleSeries, commandCenterGapBreaks, commandCenterTraceGapMs, commandCenterProjectedSeries, displayValue } from "signalforge-web";
+export { uplotData, seriesDrawOrder, lineWidthFor, sharedTimeGrid, buildScales, buildAxes, paddedRange, logScale, logSplits, ySplits, axisLabel, scaleForSeries, stateBlocks, inTimeRange, renderKindFor, drawTileOverlays } from "signalforge-web";

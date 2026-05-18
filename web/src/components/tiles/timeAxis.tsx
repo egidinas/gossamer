@@ -5,6 +5,12 @@ export type TimeRange = {
   end: number;
 };
 
+export function finiteTimeRange(range: TimeRange): TimeRange {
+  const start = Number.isFinite(range.start) ? range.start : 0;
+  const end = Number.isFinite(range.end) && range.end > start ? range.end : start + 1;
+  return { start, end };
+}
+
 export function clampRange(range: TimeRange, fullRange: TimeRange, minSpan: number): TimeRange {
   const fullSpan = Math.max(1, fullRange.end - fullRange.start);
   const span = Math.max(minSpan, Math.min(fullSpan, range.end - range.start));
@@ -24,10 +30,13 @@ export function clampRange(range: TimeRange, fullRange: TimeRange, minSpan: numb
 const TIME_GRID_TICK_COUNT_DEFAULT = 14;
 
 export function timeTicks(startISO: string, endISO: string, count: number) {
-  const start = Date.parse(startISO);
-  const end = Date.parse(endISO);
+  const parsedStart = Date.parse(startISO);
+  const parsedEnd = Date.parse(endISO);
+  const start = Number.isFinite(parsedStart) ? parsedStart : 0;
+  const end = Number.isFinite(parsedEnd) && parsedEnd > start ? parsedEnd : start + 1;
   const span = Math.max(1, end - start);
-  const target = Math.max(10, Math.min(20, count || TIME_GRID_TICK_COUNT_DEFAULT));
+  const requested = Number.isFinite(count) ? Math.round(count) : TIME_GRID_TICK_COUNT_DEFAULT;
+  const target = Math.max(2, Math.min(20, requested));
   const step = chooseTickStep(span, target);
   const first = Math.ceil(start / step) * step;
   const ticks: Array<{ iso: string; ratio: number; label: string }> = [];
@@ -86,8 +95,9 @@ export function TimeAxisTrack({ ticks, start, end, nowRatio, hoverTimeMs, peekTi
 }
 
 export function HeroTopTimeAxis({ timeRange, currentTimeMs, hoverTimeMs, readoutTimeMs, tickCount }: { timeRange: TimeRange; currentTimeMs?: number; hoverTimeMs?: number; readoutTimeMs?: number; tickCount?: number }) {
-  const start = timeRange.start;
-  const end = timeRange.end;
+  const finiteRange = finiteTimeRange(timeRange);
+  const start = finiteRange.start;
+  const end = finiteRange.end;
   const nowRatio = typeof currentTimeMs === "number" && Number.isFinite(currentTimeMs) ? Math.max(0, Math.min(1, (currentTimeMs - start) / Math.max(1, end - start))) : undefined;
   const ticks = timeTicks(new Date(start).toISOString(), new Date(end).toISOString(), tickCount ?? TIME_GRID_TICK_COUNT_DEFAULT);
   return (
@@ -116,14 +126,16 @@ export function SharedTimeAxis({
   onTimeRange: (range: TimeRange) => void;
   tickCount: number;
 }) {
-  const ticks = timeTicks(new Date(timeRange.start).toISOString(), new Date(timeRange.end).toISOString(), tickCount);
-  const start = timeRange.start;
-  const end = timeRange.end;
+  const finiteFullRange = finiteTimeRange(fullRange);
+  const finiteRange = finiteTimeRange(timeRange);
+  const ticks = timeTicks(new Date(finiteRange.start).toISOString(), new Date(finiteRange.end).toISOString(), tickCount);
+  const start = finiteRange.start;
+  const end = finiteRange.end;
   const now = currentTimeMs;
   const nowRatio = typeof now === "number" && Number.isFinite(now) ? Math.max(0, Math.min(1, (now - start) / Math.max(1, end - start))) : undefined;
   const spanHours = Math.max(0, (end - start) / 3_600_000);
-  const fullSpan = Math.max(1, fullRange.end - fullRange.start);
-  const viewSpan = Math.max(1, timeRange.end - timeRange.start);
+  const fullSpan = Math.max(1, finiteFullRange.end - finiteFullRange.start);
+  const viewSpan = Math.max(1, end - start);
   const isZoomed = viewSpan < fullSpan * 0.995;
   const minSpan = Math.max(60_000, fullSpan / 600);
   const axisStyle = plotBounds ? ({
@@ -134,15 +146,15 @@ export function SharedTimeAxis({
   } as CSSProperties) : undefined;
   const zoomBy = (factor: number) => {
     const nextSpan = Math.max(minSpan, Math.min(fullSpan, viewSpan * factor));
-    const center = (timeRange.start + timeRange.end) / 2;
-    onTimeRange(clampRange({ start: Math.round(center - nextSpan / 2), end: Math.round(center + nextSpan / 2) }, fullRange, minSpan));
+    const center = (start + end) / 2;
+    onTimeRange(clampRange({ start: Math.round(center - nextSpan / 2), end: Math.round(center + nextSpan / 2) }, finiteFullRange, minSpan));
   };
   const setScroll = (value: number) => {
     const maxOffset = Math.max(0, fullSpan - viewSpan);
     const offset = (Number(value) / 1000) * maxOffset;
-    onTimeRange({ start: Math.round(fullRange.start + offset), end: Math.round(fullRange.start + offset + viewSpan) });
+    onTimeRange({ start: Math.round(finiteFullRange.start + offset), end: Math.round(finiteFullRange.start + offset + viewSpan) });
   };
-  const scrollValue = Math.round(((timeRange.start - fullRange.start) / Math.max(1, fullSpan - viewSpan)) * 1000);
+  const scrollValue = Math.round(((start - finiteFullRange.start) / Math.max(1, fullSpan - viewSpan)) * 1000);
   return (
     <div className="operator-shared-time-axis" aria-label="Shared graph time axis" style={axisStyle}>
       <span className="time-axis-label">TIME</span>

@@ -204,6 +204,30 @@
   overflow: hidden;
 }
 
+.graph-card-loading {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  min-height: 0;
+  color: var(--color-text-300);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.graph-card-error {
+  gap: 10px;
+  color: var(--color-danger, #f87171);
+}
+
+.graph-card-error button {
+  border: 1px solid var(--color-border-default);
+  background: var(--color-bg-panel);
+  color: var(--color-text-100);
+  font: inherit;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
 .graph-wall-card.panel-live .graph-card-plot-shell,
 .graph-wall-card[data-state="live"] .graph-card-plot-shell {
   border-bottom-color: var(--color-border-live);

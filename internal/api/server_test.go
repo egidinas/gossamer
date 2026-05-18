@@ -577,6 +577,26 @@ func TestUnknownStaticPathFallsBackToIndex(t *testing.T) {
 	}
 }
 
+func TestUnknownStaticAssetReturnsNotFound(t *testing.T) {
+	server := newTestServerWithStatic(t)
+	req := httptest.NewRequest(http.MethodGet, "/assets/missing-hash.js", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("status = %d, want 404; body: %s", rec.Code, rec.Body.String())
+	}
+}
+
+func TestUnknownStaticFileReturnsNotFound(t *testing.T) {
+	server := newTestServerWithStatic(t)
+	req := httptest.NewRequest(http.MethodGet, "/ui-version.txt", nil)
+	rec := httptest.NewRecorder()
+	server.ServeHTTP(rec, req)
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("status = %d, want 404; body: %s", rec.Code, rec.Body.String())
+	}
+}
+
 func newTestServerWithStatic(t *testing.T) *Server {
 	t.Helper()
 	dir := t.TempDir()

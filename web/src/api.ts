@@ -106,6 +106,14 @@ function cachedTileManifest(id: string) {
   return cached;
 }
 
+function invalidateTileManifestCache(id?: string) {
+  if (!id) {
+    tileManifestCache.clear();
+    return;
+  }
+  tileManifestCache.delete(`${id}@${currentDataVersion}`);
+}
+
 function cachedGraphShell(id: string) {
   const key = `${id}@${currentDataVersion}`;
   let cached = graphShellCache.get(key);
@@ -130,6 +138,7 @@ export const api = {
   graphModel: (id: string) => getJSON<GraphModel>(`/api/campaigns/${id}/graph-model`),
   graphShell: (id: string) => cachedGraphShell(id),
   tileManifest: (id: string) => cachedTileManifest(id),
+  invalidateTileManifest: (id?: string) => invalidateTileManifestCache(id),
   tile: async (id: string, cardID: string, level = "minute", t0?: string, t1?: string) => {
     const [manifest, graph] = await Promise.all([cachedTileManifest(id), cachedGraphShell(id)]);
     const card = manifest.cards.find((candidate) => candidate.card_id === cardID);

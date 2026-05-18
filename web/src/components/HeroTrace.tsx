@@ -2,6 +2,14 @@ import type { GraphPoint } from "../types";
 
 export function HeroTrace({ points, units }: { points: GraphPoint[]; units: string }) {
   const values = points.map((point) => point.value).filter((value) => Number.isFinite(value));
+  if (values.length === 0) {
+    return (
+      <div className="hero-trace-wrap">
+        <svg className="hero-trace" viewBox="0 0 100 46" preserveAspectRatio="none" role="img" aria-label={`hero trace ${units} unavailable`} />
+        <strong>No data</strong>
+      </div>
+    );
+  }
   const min = Math.min(...values);
   const max = Math.max(...values);
   const range = max - min || 1;

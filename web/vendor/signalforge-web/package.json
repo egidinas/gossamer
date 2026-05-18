@@ -1,0 +1,24 @@
+{
+  "name": "signalforge-web",
+  "version": "0.1.0",
+  "description": "Vendored SignalForge public web primitives for reproducible Gossamer builds.",
+  "type": "module",
+  "license": "MIT",
+  "main": "./dist/signalforge-web.es.js",
+  "module": "./dist/signalforge-web.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/signalforge-web.es.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "uplot": ">=1.6.0"
+  }
+}

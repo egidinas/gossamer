@@ -1,10 +1,12 @@
-import type { GraphTileCardRef, GraphWallCard, GraphWallModel, TileSeries } from "../../types";
+import type { GraphTileCardRef, GraphWallCard, GraphWallModel, TileSeries } from "signalforge-web";
 
 export const roleColors: Record<string, string> = {
   command: "#ffd85f",
   ghost: "#8aa7c4",
   acceptance_band: "#3ddc84",
   actual: "#56d6df",
+  dut: "#ff6b35",
+  aux: "#9db4c8",
   source_quality: "#66b8ef",
   counter: "#b8a6ff",
   interlock: "#ff6374",
@@ -100,13 +102,18 @@ export function paletteForID(id: string, fallbackIndex: number) {
   return distinctivePalette[Math.abs(hash) % distinctivePalette.length];
 }
 
-export function colorForSignal(signal: Pick<TileSeries, "id" | "role" | "render_kind" | "kind"> | { id: string; role: string; kind?: string }, index = 0) {
+export function colorForSignal(signal: Pick<TileSeries, "id" | "role" | "render_kind" | "kind" | "color"> | { id: string; role: string; kind?: string; color?: string }, index = 0) {
   const kind = "kind" in signal ? signal.kind : ("render_kind" in signal ? signal.render_kind : undefined);
+  const configuredColor = "color" in signal ? signal.color : undefined;
+  if (typeof configuredColor === "string" && configuredColor.trim()) return configuredColor.trim();
   if (signalColors[signal.id]) return signalColors[signal.id];
   const semantic = semanticColor(signal.id);
   if (semantic) return semantic;
-  if (signal.role === "command" || signal.role === "ghost" || signal.role === "acceptance_band" || signal.role === "interlock" || signal.role === "evidence") return roleColors[signal.role];
-  return paletteForID(signal.id, index) ?? roleColors[signal.role] ?? (kind ? roleColors[kind] : undefined) ?? palette(index);
+  const roleColor = roleColors[signal.role];
+  if (roleColor) return roleColor;
+  const kindColor = kind ? roleColors[kind] : undefined;
+  if (kindColor) return kindColor;
+  return paletteForID(signal.id, index) ?? palette(index);
 }
 
 export function semanticColor(id: string) {
